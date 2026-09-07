@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ARTICLES_DATA } from '@/data/articles';
+import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
@@ -52,15 +53,15 @@ export default function ArticleDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-neutral-900">
+    <div className="min-h-screen bg-[#f0f9fb] text-neutral-900">
       {/* パンくずリスト */}
-      <div className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-sky-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-1.5 text-xs text-neutral-500 overflow-x-auto">
             <Link href="/" className="hover:text-neutral-900 shrink-0">ホーム</Link>
             <ChevronRight className="w-3.5 h-3.5 shrink-0" />
             <Link href={`/?game=${article.game}`} className="hover:text-neutral-900 shrink-0">
-              {article.game === 'sf6' ? 'スト6攻略' : article.game === 'sf7' ? 'スト7展望' : '共通上達論'}
+              {article.game === 'sf6' ? 'スト6攻略' : '共通上達論'}
             </Link>
             {article.character && (
               <>
@@ -77,41 +78,42 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white p-6 sm:p-10 rounded-2xl border border-neutral-200 shadow-sm">
+          <main className="lg:col-span-8 bg-white p-6 sm:p-10 rounded-2xl border border-sky-100 shadow-sm">
             {/* 記事ヘッダー */}
             <header className="mb-8 pb-6 border-b border-neutral-100">
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 text-neutral-700">
-                  {article.game === 'sf6' ? 'スト6' : article.game === 'sf7' ? 'スト7' : '共通理論'}
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#008ba8]">
+                  {article.game === 'sf6' ? 'スト6' : '共通理論'}
                 </span>
                 {article.character && (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-800">
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-800">
                     {article.character}
                   </span>
                 )}
                 {article.isPaid ? (
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-900 text-white">
+                  <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                     有料記事（¥{article.price}）
                   </span>
                 ) : (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                     無料公開
                   </span>
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 leading-tight mb-4">
+              <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 leading-tight mb-4">
                 {article.title}
               </h1>
 
               <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100">
-                <div className="flex items-center gap-2 text-neutral-600">
-                  <span className="font-semibold text-neutral-800">{article.author.name}</span>
-                  {article.author.mrRating && (
-                    <span className="text-[10px] bg-neutral-100 px-1.5 py-0.5 rounded font-mono text-neutral-700">
-                      {article.author.mrRating}
-                    </span>
-                  )}
+                <div className="flex items-center gap-2.5 text-neutral-600">
+                  <div className="w-7 h-7 rounded-full overflow-hidden border border-neutral-900 bg-[#00a3c4] inline-block shrink-0">
+                    <Image src="/icon.png" alt="にこ太郎" width={28} height={28} className="w-full h-full object-cover" />
+                  </div>
+                  <span className="font-bold text-neutral-900">{article.author.name}</span>
+                  <span className="text-[10px] bg-sky-50 text-[#008ba8] border border-sky-200 px-2 py-0.5 rounded-full font-bold">
+                    {article.author.mrRating}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1">
@@ -336,30 +338,28 @@ export default function ArticleDetailPage() {
           {/* 右サイドバー（4 / 12）：遊覧性・回遊性の高い導線 */}
           <aside className="lg:col-span-4 space-y-6">
             {/* 著者プロフィール */}
-            <div className="p-5 bg-white rounded-xl border border-neutral-200">
-              <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-3">
-                執筆者について
+            <div className="p-5 bg-white rounded-2xl border-2 border-sky-100 shadow-sm text-center">
+              <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-neutral-900 mx-auto mb-3 bg-[#00a3c4] shadow-md">
+                <Image
+                  src="/icon.png"
+                  alt="にこ太郎"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-base">
-                  {article.author.avatar}
-                </div>
-                <div>
-                  <div className="font-bold text-sm text-neutral-900">{article.author.name}</div>
-                  <div className="text-xs text-neutral-500 font-mono">{article.author.mrRating}</div>
-                </div>
+              <h3 className="font-black text-base text-neutral-900">{article.author.name}</h3>
+              <div className="inline-block text-[11px] font-bold text-[#008ba8] bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full my-1">
+                {article.author.mrRating}
               </div>
-              <p className="text-xs text-neutral-600 leading-relaxed mb-3">
+              <p className="text-xs text-neutral-600 leading-relaxed mt-2 text-left">
                 {article.author.bio}
               </p>
-              <div className="text-[11px] text-neutral-400">
-                note有料記事累計1,000部突破。スト6〜スト7の攻略を継続発信。
-              </div>
             </div>
 
             {/* この記事を読んだ人におすすめ（関連記事） */}
-            <div className="p-5 bg-white rounded-xl border border-neutral-200">
-              <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-3">
+            <div className="p-5 bg-white rounded-2xl border border-neutral-200">
+              <div className="text-xs font-black text-neutral-900 uppercase tracking-wider mb-3">
                 あわせて読みたい記事
               </div>
               <div className="space-y-4">
@@ -370,9 +370,9 @@ export default function ArticleDetailPage() {
                     className="block group"
                   >
                     <span className="text-[10px] text-neutral-400 block mb-1">
-                      {rel.game === 'sf6' ? 'スト6' : rel.game === 'sf7' ? 'スト7' : '共通理論'}
+                      {rel.game === 'sf6' ? 'スト6' : '共通理論'}
                     </span>
-                    <h4 className="text-xs font-semibold text-neutral-800 group-hover:text-neutral-900 line-clamp-2 leading-snug mb-1">
+                    <h4 className="text-xs font-bold text-neutral-800 group-hover:text-[#00a3c4] line-clamp-2 leading-snug mb-1">
                       {rel.title}
                     </h4>
                     <p className="text-[11px] text-neutral-500 line-clamp-2 leading-relaxed">
@@ -384,18 +384,21 @@ export default function ArticleDetailPage() {
             </div>
 
             {/* 月額マガジンCTA */}
-            <div className="p-5 bg-neutral-900 text-white rounded-xl">
-              <h3 className="text-sm font-bold text-white mb-2">
-                月額マガジン案内
+            <div className="p-5 bg-gradient-to-br from-[#00a3c4] to-sky-700 text-white rounded-2xl shadow-md shadow-sky-500/10">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full inline-block mb-2">
+                MEMBERSHIP
+              </span>
+              <h3 className="text-sm font-black text-white mb-1.5">
+                月額マガジンで読み放題
               </h3>
-              <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                月額¥980で全有料記事が読み放題。最新の攻略情報が随時追加されます。
+              <p className="text-xs text-sky-100 leading-relaxed mb-4">
+                月額¥980でスト6全キャラ攻略＆実戦添削がすべて読み放題。noteよりお得に最新版を購読できます。
               </p>
               <Link
                 href="/membership"
-                className="block w-full py-2 rounded-lg bg-white hover:bg-neutral-100 text-neutral-900 text-xs font-bold text-center transition-colors"
+                className="block w-full py-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#008ba8] text-xs font-black text-center transition-transform active:scale-98"
               >
-                マガジンに参加する
+                マガジン詳細を見る
               </Link>
             </div>
           </aside>

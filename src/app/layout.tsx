@@ -4,11 +4,26 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "FGC LAB | 格闘ゲーム攻略メディア（スト6・スト7対応）",
-  description: "最高MR2080到達者によるストリートファイター6攻略・普遍的格ゲー上達理論・スト7展望。note有料記事からの公式移行メディア。",
+  title: "にこ太郎の格ゲーLAB | スト6徹底攻略 & 格ゲー共通上達論",
+  description: "全キャラ1800MR以上の筆者「にこ太郎」によるストリートファイター6攻略・実戦添削・共通上達論メディア。note有料記事からの公式移行プラットフォーム（nikotaro.com）。",
+  metadataBase: new URL("https://nikotaro.com"),
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
   openGraph: {
-    title: "FGC LAB | 格闘ゲーム攻略メディア",
-    description: "最高MR2080到達者による実践的勝率直結メソッド。",
+    title: "にこ太郎の格ゲーLAB",
+    description: "全キャラ1800MR以上の筆者「にこ太郎」による実践的勝率直結メソッド。",
+    url: "https://nikotaro.com",
+    siteName: "にこ太郎の格ゲーLAB",
+    images: [
+      {
+        url: "/icon.png",
+        width: 500,
+        height: 500,
+        alt: "にこ太郎の格ゲーLAB アイコン",
+      },
+    ],
     type: "website",
   },
 };
@@ -20,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full">
-      <body className="min-h-full flex flex-col bg-[#fafafa] text-neutral-900 selection:bg-neutral-900 selection:text-white">
+      <body className="min-h-full flex flex-col bg-[#f0f9fb] text-neutral-900 selection:bg-[#00a3c4] selection:text-white">
         <Header />
         <div className="flex-1">
           {children}

@@ -3,15 +3,15 @@ export interface Article {
   slug: string;
   title: string;
   summary: string;
-  game: 'sf6' | 'sf7' | 'general';
-  category: 'character' | 'system' | 'mindset' | 'news';
+  game: 'sf6' | 'general';
+  category: 'character' | 'system' | 'mindset' | 'coaching';
   character?: string;
   characterColor?: string;
   youtubeVideoId?: string;
   author: {
     name: string;
     avatar: string;
-    mrRating?: string;
+    mrRating: string;
     bio: string;
   };
   publishedAt: string;
@@ -59,15 +59,22 @@ export interface Article {
 }
 
 export const CHARACTERS_SF6 = [
+  { id: 'chunli', name: '春麗 (Chun-Li)', type: '変幻自在', color: 'from-cyan-500 to-blue-600' },
   { id: 'gouki', name: '豪鬼 (Akuma)', type: '攻撃特化', color: 'from-red-600 to-amber-700' },
   { id: 'ken', name: 'ケン (Ken)', type: '万能攻勢', color: 'from-orange-500 to-red-600' },
   { id: 'ryu', name: 'リュウ (Ryu)', type: '胴着道', color: 'from-blue-600 to-indigo-800' },
   { id: 'luke', name: 'ルーク (Luke)', type: '制空・中距離', color: 'from-amber-500 to-yellow-600' },
   { id: 'cammy', name: 'キャミィ (Cammy)', type: '高速ラッシュ', color: 'from-emerald-600 to-teal-800' },
-  { id: 'chunli', name: '春麗 (Chun-Li)', type: '変幻自在', color: 'from-cyan-500 to-blue-600' },
   { id: 'ed', name: 'エド (Ed)', type: 'アウトボクシング', color: 'from-purple-600 to-indigo-700' },
   { id: 'mai', name: '不知火舞 (Mai)', type: 'DLC第2弾', color: 'from-pink-600 to-rose-700' },
 ];
+
+export const AUTHOR_INFO = {
+  name: 'にこ太郎',
+  avatar: '/icon.png',
+  mrRating: '全キャラ1800MR以上',
+  bio: 'スト6全キャラ1800MR以上。note有料記事で総計1,000部突破。実戦添削コーチングや勝率直結の攻略メソッドを発信中。',
+};
 
 export const ARTICLES_DATA: Article[] = [
   {
@@ -76,16 +83,11 @@ export const ARTICLES_DATA: Article[] = [
     title: '【スト6実戦添削】春麗リプレイコーチング：BOを防ぐゲージ管理・シミー後の最大コンボ・守りの3大原則',
     summary: '中足覇山のリスク回避、シミー後の前中P追突ルート、中足ラッシュ頼りからの脱却、相手の癖（豪鬼のジャスパ）への対処、そして起き攻め・弾持ち・ゲージ管理の3大お悩み解決。実戦動画付き完全レビュー。',
     game: 'sf6',
-    category: 'character',
+    category: 'coaching',
     character: '春麗 (Chun-Li)',
     characterColor: 'from-cyan-500 to-blue-600',
     youtubeVideoId: '_46InYOb8Go',
-    author: {
-      name: 'nikotaro',
-      avatar: '🥋',
-      mrRating: 'MR 2080',
-      bio: 'スト6最高MR2080。note有料記事で総計1000部突破。実戦添削コーチングも多数実施中。',
-    },
+    author: AUTHOR_INFO,
     publishedAt: '2026-09-07',
     updatedAt: '2026-09-07',
     readTime: '10分',
@@ -94,7 +96,7 @@ export const ARTICLES_DATA: Article[] = [
     tags: ['スト6', '春麗', 'リプレイ添削', 'ゲージ管理', 'コンボ', '立ち回り'],
     likesCount: 148,
     freeContent: {
-      intro: 'こんにちは、nikotaroです。今回は実戦対戦リプレイの添削・コーチング内容をまとめました。特に「中足ラッシュ頼りでBOしやすい」「シミー後のダメージが伸びない」という課題を持つ春麗使いの方に必見の内容です。',
+      intro: 'こんにちは、にこ太郎です。今回は実戦対戦リプレイの添削・コーチング内容をまとめました。特に「中足ラッシュ頼りでBOしやすい」「シミー後のダメージが伸びない」という課題を持つ春麗使いの方に必見の内容です。',
       sections: [],
     },
     paidContent: {
@@ -162,27 +164,22 @@ export const ARTICLES_DATA: Article[] = [
   {
     id: 'sf6-gouki-master-guide',
     slug: 'sf6-gouki-mr2000-guide',
-    title: '【スト6】豪鬼でMR2000到達するための実践的立ち回りと「百鬼・朧」の暴れ潰し完全マニュアル',
+    title: '【スト6】豪鬼で勝ち切るための実践的立ち回りと「百鬼・朧」の暴れ潰し完全マニュアル',
     summary: 'noteで大反響だった豪鬼徹底攻略の決定版。体力9000の脆さを圧倒的制圧力でカバーする立ち回り理論と、相手の防御を完全崩壊させるセットプレイを網羅。',
     game: 'sf6',
     category: 'character',
     character: '豪鬼 (Akuma)',
     characterColor: 'from-red-600 to-amber-700',
-    author: {
-      name: 'nikotaro',
-      avatar: '🥋',
-      mrRating: 'MR 2080 (豪鬼/ケン)',
-      bio: 'スト6最高MR2080。note有料記事で総計1000部突破。スト7以降も格闘ゲーム攻略を追求し続ける攻略執筆者。',
-    },
+    author: AUTHOR_INFO,
     publishedAt: '2026-08-15',
     updatedAt: '2026-09-01',
     readTime: '12分',
     isPaid: true,
     price: 680,
-    tags: ['スト6', '豪鬼', 'MR2000', '確定反撃', 'セットプレイ'],
+    tags: ['スト6', '豪鬼', '確定反撃', 'セットプレイ', '立ち回り'],
     likesCount: 342,
     freeContent: {
-      intro: 'こんにちは、nikotaroです。スト6において豪鬼は体力9000というリスクを背負いながらも、全キャラ最高峰の攻撃力・弾速・弾道変化を持っています。しかし、MR1600〜1800帯で「火力を出そうとして突っ込んで逆転負けする」プレイヤーが非常に多いのが実情です。本記事では、無駄な被弾をゼロにし、相手に地獄の読み合いを押し付ける理論を解説します。',
+      intro: 'こんにちは、にこ太郎です。スト6において豪鬼は体力9000というリスクを背負いながらも、全キャラ最高峰の攻撃力・弾速・弾道変化を持っています。しかし、MR帯で「火力を出そうとして突っ込んで逆転負けする」プレイヤーが非常に多いのが実情です。本記事では、無駄な被弾をゼロにし、相手に地獄の読み合いを押し付ける理論を解説します。',
       sections: [
         {
           title: '第1章：豪鬼の基本哲学「歩きと豪波動拳の制圧ライン」',
@@ -238,8 +235,8 @@ export const ARTICLES_DATA: Article[] = [
           ],
         },
         {
-          title: '【有料限定】第4章：トッププロ対策（対ケン・ルーク・キャミィ戦のMR別勝率改善法）',
-          body: 'MR1900以上のプロ・猛者プレイヤーとの対戦において、キャラ別の微細な間合い管理とファジーコパ潰しのタイミングを徹底解説します。',
+          title: '【有料限定】第4章：トッププロ対策（対ケン・ルーク・キャミィ戦の勝率改善法）',
+          body: '高MR帯での対戦において、キャラ別の微細な間合い管理とファジーコパ潰しのタイミングを徹底解説します。',
           tips: [
             '対ケン：迅雷脚の初段ガード後の最速OD昇龍ファジー潰し',
             '対キャミィ：フーリガンの軌道変化に対する斬空波動拳の迎撃高度',
@@ -252,16 +249,11 @@ export const ARTICLES_DATA: Article[] = [
   {
     id: 'fighting-game-mental-mindset',
     slug: 'fgc-mental-and-growth-mindset',
-    title: '【格ゲー共通上達論】スト6でもスト7でも一生使える「ランクマ連敗の泥沼から脱出する思考法」',
+    title: '【格ゲー共通上達論】一生使える「ランクマ連敗の泥沼から脱出する思考法」',
     summary: 'ゲームタイトルが変わっても色褪せない、対戦格闘ゲームで勝ち続けるためのメンタルコントロールと客観的リプレイ分析のフレームワーク。',
     game: 'general',
     category: 'mindset',
-    author: {
-      name: 'nikotaro',
-      avatar: '🥋',
-      mrRating: 'MR 2080',
-      bio: 'スト6最高MR2080。note有料記事で総計1000部突破。',
-    },
+    author: AUTHOR_INFO,
     publishedAt: '2026-08-28',
     updatedAt: '2026-08-28',
     readTime: '8分',
@@ -269,7 +261,7 @@ export const ARTICLES_DATA: Article[] = [
     tags: ['格ゲー上達論', 'メンタル', 'ランクマ', '初心者向け', 'スト6'],
     likesCount: 512,
     freeContent: {
-      intro: '格闘ゲームで最も辛いのは「練習しているのに勝てない」「ランクマでLP/MRが急降下してコントローラーを投げたくなる」瞬間です。これはあなたの才能の問題ではなく、「対戦中の認知負荷」と「課題設定の方法」に原因があります。本作スト6はもちろん、今後出るストリートファイター7や他タイトルでも共通するメンタル上達理論をお伝えします。',
+      intro: '格闘ゲームで最も辛いのは「練習しているのに勝てない」「ランクマでLP/MRが急降下してコントローラーを投げたくなる」瞬間です。これはあなたの才能の問題ではなく、「対戦中の認知負荷」と「課題設定の方法」に原因があります。本作スト6はもちろん、他タイトルでも共通するメンタル上達理論をお伝えします。',
       sections: [
         {
           title: '1. 「勝敗」ではなく「決めた行動ができたか」を評価指標にする',
@@ -278,38 +270,6 @@ export const ARTICLES_DATA: Article[] = [
         {
           title: '2. 3連敗したら必ず席を立つ「ティルト防止ルール」',
           body: '感情が高ぶった状態（ティルト）では、前ジャンプやインパクトのボタンを無意識に連打するようになります。3連敗した時点で一旦トレモに行くか、水分補給をするルーティンを徹底しましょう。',
-        },
-      ],
-    },
-    paidContent: {
-      sections: [],
-    },
-  },
-  {
-    id: 'sf7-future-prediction-prep',
-    slug: 'sf7-evolution-and-drive-system-future',
-    title: '【スト7展望・考察】次回作で生きるスト6のプレイスキルと、ドメイン＆コミュニティの未来',
-    summary: 'ストリートファイター7を見据えた長期的な格ゲープレイヤーの立ち位置。システムが変わっても通用する「間合い」「差し返し」「ファジー」の普遍的スキルを整理。',
-    game: 'sf7',
-    category: 'news',
-    author: {
-      name: 'nikotaro',
-      avatar: '🥋',
-      mrRating: 'MR 2080',
-      bio: 'スト6最高MR2080。note有料記事で総計1000部突破。',
-    },
-    publishedAt: '2026-09-05',
-    updatedAt: '2026-09-05',
-    readTime: '6分',
-    isPaid: false,
-    tags: ['スト7', '考察', '格ゲーの未来', 'システム論'],
-    likesCount: 189,
-    freeContent: {
-      intro: 'ストリートファイターシリーズは4、5、6と進化を遂げてきました。システムやゲージ構造は変化しますが、トッププレイヤーが常に勝ち続けられる理由は「不変のファンダメンタルズ（基礎技術）」を磨いているからです。本サイトでは、スト6の現役攻略はもちろん、将来のスト7発売時にも最速でトップティアの攻略情報をお届けできるよう設計しています。',
-      sections: [
-        {
-          title: 'スト4・スト5からスト6へ引き継がれたもの、スト7へ残るもの',
-          body: 'ヒット確認、差し返し、起き攻めのフレーム計算、相手の癖のプロファイリング。これらはゲームタイトルが変わっても100%転用できます。当メディアでは、単なるコンボ暗記ではなく「なぜその選択肢が強いのか」の原理原則を発信し続けます。',
         },
       ],
     },

@@ -79,7 +79,7 @@ export const ARTICLES_DATA: Article[] = [
     category: 'character',
     character: '春麗 (Chun-Li)',
     characterColor: 'from-cyan-500 to-blue-600',
-    youtubeVideoId: 'dQw4w9WgXcQ', // ※ ご自身のYouTube動画ID（URL末尾の英数字）に変更可能です
+    youtubeVideoId: '_46InYOb8Go',
     author: {
       name: 'nikotaro',
       avatar: '🥋',
@@ -94,7 +94,10 @@ export const ARTICLES_DATA: Article[] = [
     tags: ['スト6', '春麗', 'リプレイ添削', 'ゲージ管理', 'コンボ', '立ち回り'],
     likesCount: 148,
     freeContent: {
-      intro: 'こんにちは、nikotaroです。今回は実戦対戦リプレイの添削・コーチング内容をまとめました。冒頭に対戦リプレイ動画を掲載していますので、動画と合わせてラウンドごとの改善ポイントを確認してください。特に「中足ラッシュ頼りでBOしやすい」「シミー後のダメージが伸びない」という課題を持つ春麗使いの方に必見の内容です。',
+      intro: 'こんにちは、nikotaroです。今回は実戦対戦リプレイの添削・コーチング内容をまとめました。特に「中足ラッシュ頼りでBOしやすい」「シミー後のダメージが伸びない」という課題を持つ春麗使いの方に必見の内容です。',
+      sections: [],
+    },
+    paidContent: {
       sections: [
         {
           title: 'Round 1 添削ポイント：中足後の選択肢とシミー後の最大化',
@@ -112,10 +115,6 @@ export const ARTICLES_DATA: Article[] = [
             '中足がヒットした時も繋がらない覇山をしてしまっているのでコンボルートを見直す。中足 > 中スピバがベスト。次が中足 > 中百烈脚 > A中攻撃 > 強気功拳。',
           ],
         },
-      ],
-    },
-    paidContent: {
-      sections: [
         {
           title: 'Round 3 添削ポイント：SAゲージ運用とスタン時判断',
           body: '最終ラウンドの勝敗を分けたゲージ判断とコンボ精度の見直しです。',

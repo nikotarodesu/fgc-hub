@@ -133,8 +133,8 @@ export default function ArticleDetailPage() {
                 {article.freeContent.intro}
               </div>
 
-              {/* YouTube動画の埋め込み（設定されている場合） */}
-              {article.youtubeVideoId && (
+              {/* 無料記事の場合のみ、無料エリアでYouTube動画を表示 */}
+              {!article.isPaid && article.youtubeVideoId && (
                 <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
               )}
 
@@ -216,6 +216,16 @@ export default function ArticleDetailPage() {
                         <Sparkles className="w-4 h-4 text-neutral-600 shrink-0" />
                         <span>ここから先は有料会員・購入者限定の攻略セクションです。</span>
                       </div>
+
+                      {/* 有料限定：YouTube動画プレイヤー */}
+                      {article.youtubeVideoId && (
+                        <div className="my-6">
+                          <h3 className="text-sm font-bold text-neutral-900 mb-2">
+                            ▶ 添削対象リプレイ動画（フルHD）
+                          </h3>
+                          <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
+                        </div>
+                      )}
 
                       {article.paidContent.sections.map((section, idx) => (
                         <div key={idx} className="pt-4">

@@ -6,7 +6,8 @@ import { useParams } from 'next/navigation';
 import { ARTICLES_DATA } from '@/data/articles';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
-import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkles, ChevronRight, Check } from 'lucide-react';
+import YouTubeEmbed from '@/components/YouTubeEmbed';
+import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkles, ChevronRight, Check, HelpCircle } from 'lucide-react';
 
 export default function ArticleDetailPage() {
   const params = useParams();
@@ -132,6 +133,11 @@ export default function ArticleDetailPage() {
                 {article.freeContent.intro}
               </div>
 
+              {/* YouTube動画の埋め込み（設定されている場合） */}
+              {article.youtubeVideoId && (
+                <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
+              )}
+
               {/* 目次 */}
               <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200/80 my-6">
                 <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
@@ -164,6 +170,18 @@ export default function ArticleDetailPage() {
                   <p className="text-neutral-700 leading-relaxed mb-4">
                     {section.body}
                   </p>
+
+                  {/* 箇条書きポイント */}
+                  {section.bulletPoints && (
+                    <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
+                      {section.bulletPoints.map((bp, bpIdx) => (
+                        <li key={bpIdx} className="flex items-start gap-2">
+                          <span className="text-neutral-900 font-bold shrink-0 mt-0.5">▶</span>
+                          <span className="leading-relaxed">{bp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   {/* コンボレシピ */}
                   {section.combo && section.combo.map((c, cIdx) => (
@@ -207,6 +225,39 @@ export default function ArticleDetailPage() {
                           <p className="text-neutral-700 leading-relaxed mb-4">
                             {section.body}
                           </p>
+
+                          {/* 箇条書きポイント */}
+                          {section.bulletPoints && (
+                            <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
+                              {section.bulletPoints.map((bp, bpIdx) => (
+                                <li key={bpIdx} className="flex items-start gap-2">
+                                  <span className="text-neutral-900 font-bold shrink-0 mt-0.5">▶</span>
+                                  <span className="leading-relaxed">{bp}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {/* Q&A相談リスト */}
+                          {section.qaList && (
+                            <div className="my-6 space-y-4">
+                              {section.qaList.map((qa, qaIdx) => (
+                                <div key={qaIdx} className="p-5 rounded-xl bg-neutral-50 border border-neutral-200 shadow-xs">
+                                  <div className="flex items-start gap-2.5 mb-3">
+                                    <span className="px-2 py-0.5 rounded bg-neutral-900 text-white font-bold text-xs shrink-0">
+                                      Q{qa.number}
+                                    </span>
+                                    <h4 className="font-bold text-sm sm:text-base text-neutral-900 leading-snug">
+                                      {qa.question}
+                                    </h4>
+                                  </div>
+                                  <div className="pt-3 border-t border-neutral-200/80 text-xs sm:text-sm text-neutral-700 whitespace-pre-line leading-relaxed">
+                                    {qa.answer}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
 
                           {section.tips && (
                             <div className="my-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200">

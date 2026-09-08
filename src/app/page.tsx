@@ -299,6 +299,16 @@ export default function HomePage() {
               <p className="text-xs text-neutral-600 leading-relaxed mt-2 text-left">
                 {AUTHOR_INFO.bio}
               </p>
+              <div className="mt-3 pt-3 border-t border-sky-100">
+                <a
+                  href={AUTHOR_INFO.xUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 text-white transition-all shadow-xs hover:scale-[1.02]"
+                >
+                  <span>公式X ({AUTHOR_INFO.xHandle})</span>
+                </a>
+              </div>
             </div>
 
             {/* スト6 キャラクター別クイックアクセス */}

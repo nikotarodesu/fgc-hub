@@ -71,7 +71,7 @@ export function constructMetadata({
       title: fullTitle,
       description,
       images: [imageUrl],
-      creator: '@nikotaro',
+      creator: '@nikotarosun',
     },
     robots: {
       index: !noIndex,

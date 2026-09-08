@@ -25,12 +25,12 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a
-                href="https://twitter.com"
+                href="https://x.com/nikotarosun"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-neutral-700 hover:text-[#00a3c4] font-medium"
               >
-                <span>公式X (@nikotaro)</span>
+                <span>公式X (@nikotarosun)</span>
                 <ExternalLink className="w-3 h-3 text-neutral-400" />
               </a>
               <span className="text-neutral-300">|</span>

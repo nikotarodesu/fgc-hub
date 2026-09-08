@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
         <section className="bg-white rounded-2xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs space-y-3 text-xs sm:text-sm text-neutral-700">
           <h2 className="font-black text-base text-neutral-900">5. お問い合わせ</h2>
           <p className="leading-relaxed">
-            本ポリシーに関するご質問や、掲載内容に関する修正・削除のご要望は、当サイト運営者の公式X（旧Twitter: @nikotaro）のダイレクトメッセージ、またはnote公式アカウントよりお問い合わせください。
+            本ポリシーに関するご質問や、掲載内容に関する修正・削除のご要望は、当サイト運営者の<a href="https://x.com/nikotarosun" target="_blank" rel="noopener noreferrer" className="text-[#00a3c4] hover:underline font-bold">公式X（@nikotarosun）</a>のダイレクトメッセージ、またはnote公式アカウントよりお問い合わせください。
           </p>
         </section>
       </main>

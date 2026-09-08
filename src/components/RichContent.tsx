@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+import { findMoveFrame } from '@/data/sf6/ryuFrameData';
+import MoveFrameCard from './MoveFrameCard';
 
 interface RichContentProps {
   content: string;
@@ -13,7 +17,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <strong
           key={i}
-          className="font-bold text-neutral-900 border-b border-neutral-900/40 pb-0.5"
+          className="font-bold text-neutral-900 dark:text-white border-b border-neutral-900/40 dark:border-neutral-100/40 pb-0.5"
         >
           {inner}
         </strong>
@@ -77,9 +81,9 @@ export default function RichContent({ content }: RichContentProps) {
   }
 
   return (
-    <div className="space-y-4 text-neutral-700 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
+    <div className="space-y-4 text-neutral-700 dark:text-neutral-300 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
       {groups.map((group, gIdx) => {
-        // 1. 引用・コールアウト（シンプルで洗練された左バー）
+        // 1. 引用・コールアウト
         if (group.type === 'quote') {
           const quoteText = group.lines
             .map((l) => l.trim().replace(/^>\s*/, ''))
@@ -87,7 +91,7 @@ export default function RichContent({ content }: RichContentProps) {
           return (
             <div
               key={gIdx}
-              className="my-4 pl-4 py-1.5 border-l-2 border-neutral-800 text-neutral-800 font-medium text-sm sm:text-[15px]"
+              className="my-4 pl-4 py-1.5 border-l-2 border-neutral-800 dark:border-neutral-200 text-neutral-800 dark:text-neutral-200 font-medium text-sm sm:text-[15px]"
             >
               {renderInline(quoteText)}
             </div>
@@ -97,9 +101,9 @@ export default function RichContent({ content }: RichContentProps) {
         // 1.5 大見出し・カテゴリ（⚡️, ⭐️, ①, ❶ 等）
         if (group.type === 'heading') {
           return (
-            <div key={gIdx} className="pt-4 pb-1 border-t border-neutral-100 first:border-t-0 first:pt-0">
+            <div key={gIdx} className="pt-4 pb-1 border-t border-neutral-100 dark:border-neutral-800 first:border-t-0 first:pt-0">
               {group.lines.map((line, lIdx) => (
-                <h3 key={lIdx} className="text-base sm:text-lg font-bold text-neutral-900 flex items-center gap-2 py-1">
+                <h3 key={lIdx} className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2 py-1">
                   {renderInline(line)}
                 </h3>
               ))}
@@ -119,11 +123,11 @@ export default function RichContent({ content }: RichContentProps) {
 
                 return (
                   <div key={lIdx} className="flex items-center gap-2 flex-wrap my-1">
-                    <span className="inline-flex items-center bg-neutral-900 text-white font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800">
+                    <span className="inline-flex items-center bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800 dark:border-neutral-200">
                       【{badgeContent}】
                     </span>
                     {extraText && (
-                      <span className="text-xs sm:text-sm font-bold text-neutral-700">
+                      <span className="text-xs sm:text-sm font-bold text-neutral-700 dark:text-neutral-300">
                         {renderInline(extraText)}
                       </span>
                     )}
@@ -138,8 +142,8 @@ export default function RichContent({ content }: RichContentProps) {
         if (group.type === 'combo') {
           return (
             <div key={gIdx} className="my-2.5 space-y-1.5 pl-0.5">
-              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-600" />
+              <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
                 <span>締め技・コンボルート</span>
               </div>
               <div className="space-y-1.5">
@@ -148,7 +152,7 @@ export default function RichContent({ content }: RichContentProps) {
                   return (
                     <div
                       key={lIdx}
-                      className="flex items-center gap-2.5 py-1.5 px-3 bg-neutral-50/90 hover:bg-neutral-100/90 border border-neutral-200/90 rounded-md text-xs sm:text-sm font-mono text-neutral-900 transition-colors"
+                      className="flex items-center gap-2.5 py-1.5 px-3 bg-neutral-50/90 dark:bg-neutral-800/80 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700/80 rounded-md text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 transition-colors"
                     >
                       <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
                         コンボ
@@ -170,17 +174,24 @@ export default function RichContent({ content }: RichContentProps) {
             <div key={gIdx} className="pt-2 pb-1">
               {group.lines.map((line, lIdx) => {
                 const cleanText = line.trim().replace(/^[●■・\-\*]\s*/, '');
+                const frameData = findMoveFrame(cleanText);
+
                 return (
-                  <h4 key={lIdx} className="text-sm sm:text-[15px] font-bold text-neutral-900 bg-neutral-100/90 px-3 py-1.5 rounded-lg border border-neutral-200/90 my-1 inline-block">
-                    {renderInline(cleanText)}
-                  </h4>
+                  <div key={lIdx} className="my-1.5">
+                    <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 my-1 inline-block">
+                      {renderInline(cleanText)}
+                    </h4>
+                    {frameData && (
+                      <MoveFrameCard data={frameData} />
+                    )}
+                  </div>
                 );
               })}
             </div>
           );
         }
 
-        // 2. 箇条書き・選択肢リスト（「・」「- 」「* 」「▶︎」「▶」）
+        // 2. 箇条書き・選択肢リスト
         if (group.type === 'bullet') {
           return (
             <ul key={gIdx} className="my-2 space-y-1.5 pl-1">
@@ -191,14 +202,14 @@ export default function RichContent({ content }: RichContentProps) {
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-neutral-800 text-xs sm:text-sm leading-relaxed"
+                    className="flex items-start gap-2.5 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed"
                   >
                     {isAction ? (
-                      <span className="text-cyan-600 font-bold text-xs mt-0.5 shrink-0 select-none">
+                      <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs mt-0.5 shrink-0 select-none">
                         ▶
                       </span>
                     ) : (
-                      <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 mt-2 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 mt-2 shrink-0" />
                     )}
                     <div className="flex-1">
                       {renderInline(itemText)}
@@ -210,7 +221,7 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 3. 番号付きリスト（すっきりしたナンバリング）
+        // 3. 番号付きリスト
         if (group.type === 'numbered') {
           return (
             <ol key={gIdx} className="my-3 space-y-2 pl-1">
@@ -222,9 +233,9 @@ export default function RichContent({ content }: RichContentProps) {
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-neutral-800 text-sm sm:text-[15px] leading-relaxed"
+                    className="flex items-start gap-2.5 text-neutral-800 dark:text-neutral-200 text-sm sm:text-[15px] leading-relaxed"
                   >
-                    <span className="font-bold text-neutral-900 font-mono text-sm shrink-0 mt-0.5">
+                    <span className="font-bold text-neutral-900 dark:text-white font-mono text-sm shrink-0 mt-0.5">
                       {num}.
                     </span>
                     <div className="flex-1">
@@ -237,7 +248,7 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 4. 矢印行（結論・効果）：すっきりインデントされた強調
+        // 4. 矢印行（結論・効果）
         if (group.type === 'arrow') {
           return (
             <div key={gIdx} className="my-2 space-y-1.5 pl-2">
@@ -246,9 +257,9 @@ export default function RichContent({ content }: RichContentProps) {
                 return (
                   <div
                     key={lIdx}
-                    className="flex items-center gap-2 text-sm sm:text-[15px] text-neutral-900 font-medium"
+                    className="flex items-center gap-2 text-sm sm:text-[15px] text-neutral-900 dark:text-white font-medium"
                   >
-                    <span className="text-cyan-600 shrink-0 font-bold">➔</span>
+                    <span className="text-cyan-600 dark:text-cyan-400 shrink-0 font-bold">➔</span>
                     <span>{renderInline(itemText)}</span>
                   </div>
                 );

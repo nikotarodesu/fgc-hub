@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
@@ -38,8 +38,13 @@ export async function POST(req: NextRequest) {
             quantity: 1,
           },
         ],
+        metadata: {
+          planType: 'membership',
+          slug: slug || 'ryu-complete-guide',
+          title: '月額プレミアムマガジン',
+        },
         mode: 'subscription',
-        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&planType=membership`,
         cancel_url: `${origin}/membership`,
       });
 
@@ -62,8 +67,13 @@ export async function POST(req: NextRequest) {
             quantity: 1,
           },
         ],
+        metadata: {
+          planType: 'article',
+          slug: slug || '',
+          title: title || '',
+        },
         mode: 'payment',
-        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${encodeURIComponent(slug || '')}`,
+        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${encodeURIComponent(slug || '')}&planType=article`,
         cancel_url: `${origin}/articles/${slug || ''}`,
       });
 

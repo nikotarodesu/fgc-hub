@@ -45,6 +45,7 @@ export default function ArticleDetailPage() {
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [activeSectionId, setActiveSectionId] = useState<string>('sec-free-0');
   const [showQuickJump, setShowQuickJump] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
     if (!article) return;
@@ -57,6 +58,82 @@ export default function ArticleDetailPage() {
       // ignore
     }
   }, [article]);
+
+  // 有料記事トークンの自動検証とアンロック
+  useEffect(() => {
+    if (!article || !article.isPaid) return;
+
+    const targetSlug = article.slug;
+
+    async function checkTokenAccess() {
+      try {
+        let tokenToVerify: string | null = null;
+
+        // 1. URLパラメータから ?token= を取得
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          const urlToken = params.get('token');
+          if (urlToken) {
+            tokenToVerify = urlToken;
+          }
+        }
+
+        // 2. なければLocalStorageから取得
+        if (!tokenToVerify && typeof window !== 'undefined') {
+          tokenToVerify =
+            localStorage.getItem(`fgc_unlocked_${targetSlug}`) ||
+            localStorage.getItem('fgc_membership_token');
+        }
+
+        if (!tokenToVerify) return;
+
+        // 3. サーバーへ検証リクエスト
+        const res = await fetch('/api/verify-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: tokenToVerify, slug: targetSlug }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.valid) {
+          setIsUnlocked(true);
+          if (data.email) {
+            setUserEmail(data.email);
+            localStorage.setItem('fgc_user_email', data.email);
+          }
+          localStorage.setItem(`fgc_unlocked_${targetSlug}`, tokenToVerify);
+        }
+      } catch (e) {
+        console.error('Failed to verify access token:', e);
+      }
+    }
+
+    checkTokenAccess();
+  }, [article]);
+
+  const handleApplyToken = async (manualToken: string): Promise<boolean> => {
+    if (!article) return false;
+    try {
+      const res = await fetch('/api/verify-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: manualToken, slug: article.slug }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setIsUnlocked(true);
+        if (data.email) {
+          setUserEmail(data.email);
+          localStorage.setItem('fgc_user_email', data.email);
+        }
+        localStorage.setItem(`fgc_unlocked_${article.slug}`, manualToken);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
 
   const currentVariant = article?.variants ? article.variants[activeControlType] : null;
   const introText = currentVariant ? currentVariant.intro : article?.freeContent.intro || '';
@@ -516,17 +593,26 @@ export default function ArticleDetailPage() {
                   <PaywallCard
                     price={article.price}
                     isUnlocked={isUnlocked}
+                    userEmail={userEmail}
                     onToggleUnlock={() => setIsUnlocked(!isUnlocked)}
                     onBuyArticle={handleBuyArticle}
                     onJoinMembership={() => { window.location.href = '/membership'; }}
+                    onApplyToken={handleApplyToken}
                   />
 
                   {/* アンロック時の有料限定コンテンツ */}
                   {isUnlocked && (
                     <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-6">
-                      <div className="p-3.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs flex items-center gap-2 font-medium">
-                        <Sparkles className="w-4 h-4 text-neutral-600 dark:text-neutral-400 shrink-0" />
-                        <span>ここから先は有料会員・購入者限定の攻略セクションです。</span>
+                      <div className="p-3.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs flex flex-wrap items-center justify-between gap-2 font-medium border border-emerald-200 dark:border-emerald-800">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span>ここから先は有料会員・購入者限定の攻略セクションです。</span>
+                        </div>
+                        {userEmail && (
+                          <span className="text-[11px] opacity-80 font-mono">
+                            購入認証: {userEmail}
+                          </span>
+                        )}
                       </div>
 
                       {/* 有料限定：YouTube動画プレイヤー */}

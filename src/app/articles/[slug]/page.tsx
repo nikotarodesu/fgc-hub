@@ -454,7 +454,10 @@ export default function ArticleDetailPage() {
                   </div>
 
                   <div className="mb-4">
-                    <RichContent content={section.body} />
+                    <RichContent
+                      content={section.body}
+                      isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                    />
                   </div>
 
                   {/* 図解ダイアグラム */}
@@ -561,7 +564,10 @@ export default function ArticleDetailPage() {
                           </div>
 
                           <div className="mb-4">
-                            <RichContent content={section.body} />
+                            <RichContent
+                              content={section.body}
+                              isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                            />
                           </div>
 
                           {/* 図解ダイアグラム */}

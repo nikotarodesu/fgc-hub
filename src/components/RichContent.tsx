@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { findMoveFrame } from '@/data/sf6/ryuFrameData';
-import MoveFrameCard from './MoveFrameCard';
+import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
 
 interface RichContentProps {
   content: string;
+  isNeutralMovesSection?: boolean;
 }
 
 // インライン装飾（**太字** 等）のスマートなパース
@@ -48,7 +48,7 @@ interface BlockGroup {
   lines: string[];
 }
 
-export default function RichContent({ content }: RichContentProps) {
+export default function RichContent({ content, isNeutralMovesSection = false }: RichContentProps) {
   if (!content) return null;
 
   const rawLines = content.split('\n');
@@ -174,16 +174,41 @@ export default function RichContent({ content }: RichContentProps) {
             <div key={gIdx} className="pt-2 pb-1">
               {group.lines.map((line, lIdx) => {
                 const cleanText = line.trim().replace(/^[●■・\-\*]\s*/, '');
-                const frameData = findMoveFrame(cleanText);
+                // ②の立ち回りで振る技セクションかつ通常技・特殊技のみフレームデータを取得（必殺技や他セクションは除外）
+                const frameData = isNeutralMovesSection ? findNeutralMoveKeyFrame(cleanText) : null;
 
                 return (
-                  <div key={lIdx} className="my-1.5">
-                    <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 my-1 inline-block">
-                      {renderInline(cleanText)}
-                    </h4>
-                    {frameData && (
-                      <MoveFrameCard data={frameData} />
-                    )}
+                  <div key={lIdx} className="my-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block">
+                        {renderInline(cleanText)}
+                      </h4>
+
+                      {/* アコーディオン展開せず、重要な部分だけをインラインバッジで常時表示 */}
+                      {frameData && (
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {frameData.items.map((item, iIdx) => {
+                            let badgeClass = 'px-2 py-0.5 rounded text-[11px] font-bold border flex items-center gap-1 shadow-2xs ';
+                            if (item.variant === 'positive') {
+                              badgeClass += 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
+                            } else if (item.variant === 'negative') {
+                              badgeClass += 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800';
+                            } else if (item.variant === 'accent') {
+                              badgeClass += 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
+                            } else {
+                              badgeClass += 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border-neutral-200/90 dark:border-neutral-700';
+                            }
+
+                            return (
+                              <span key={iIdx} className={badgeClass}>
+                                <span className="opacity-70 font-normal text-[10px]">{item.label}</span>
+                                <span>{item.value}</span>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}

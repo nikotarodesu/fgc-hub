@@ -1,364 +1,198 @@
-export interface MoveFrameData {
-  id: string;
-  name: string;
-  command: string;
-  startup: number;          // 発生F
-  active: string;           // 持続F (例: "3F" または "3-5F")
-  recovery: number;         // 硬直F
-  onBlock: number;          // ガード硬直差 (例: -1, +1)
-  onHit: number | string;   // ヒット硬直差 (例: +4, "ダウン")
-  attribute: '上段' | '中段' | '下段' | '投げ' | '空中';
-  damage: number;
-  cancel: string;           // キャンセル可否 (例: "必殺技/SA/DR", "SA3のみ", "×")
-  summary: string;          // 立ち回りでの使い所・強み
+/**
+ * スト6 リュウの立ち回りで振る技（通常技・特殊技）の重要フレームデータ
+ * ユーザー指定の重要値のみをシンプルに表示するためのデータセット
+ */
+
+export interface FrameItem {
+  label: string;
+  value: string;
+  variant?: 'positive' | 'negative' | 'neutral' | 'accent';
 }
 
-export const RYU_FRAME_DATA: Record<string, MoveFrameData> = {
-  // 小技
-  '5lp': {
-    id: '5lp',
-    name: '立ち弱P',
-    command: '5LP / 弱攻撃',
-    startup: 4,
-    active: '3F',
-    recovery: 7,
-    onBlock: -1,
-    onHit: 4,
-    attribute: '上段',
-    damage: 300,
-    cancel: '連打/必殺技/SA/DR',
-    summary: '最速4F小技。暴れ・割り込み・固めの起点。連打キャンセル可能でヒット確認からコンボへ。',
-  },
-  '2lp': {
-    id: '2lp',
-    name: 'しゃがみ弱P',
-    command: '2LP / 下弱P',
-    startup: 4,
-    active: '2F',
-    recovery: 8,
-    onBlock: -1,
-    onHit: 5,
-    attribute: '上段',
-    damage: 300,
-    cancel: '連打/必殺技/SA/DR',
-    summary: '密着4F暴れの主力。姿勢が低く、ヒット時+5Fで弱昇竜や立ち弱Pに繋がる。',
-  },
-  '5lk': {
-    id: '5lk',
-    name: '立ち弱K',
-    command: '5LK / 弱K',
-    startup: 5,
-    active: '3F',
-    recovery: 10,
-    onBlock: -2,
-    onHit: 2,
-    attribute: '下段',
-    damage: 300,
-    cancel: '必殺技/SA/DR',
-    summary: '足元を蹴る下段技。OD竜巻やDRを仕込んで牽制や崩しに機能。',
-  },
-  '2lk': {
-    id: '2lk',
-    name: 'しゃがみ弱K',
-    command: '2LK / 下弱K',
-    startup: 4,
-    active: '2F',
-    recovery: 10,
-    onBlock: -2,
-    onHit: 3,
-    attribute: '下段',
-    damage: 200,
-    cancel: '連打キャンセルのみ',
-    summary: '発生4Fの下段始動。立ちガードを崩し、しゃがみ弱Pへ連打キャンセルで繋ぐ。',
-  },
+export interface KeyFrameInfo {
+  moveKey: string;
+  name: string;
+  items: FrameItem[];
+}
 
-  // 中技
-  '5mp': {
-    id: '5mp',
-    name: '立ち中P',
-    command: '5MP / 中P',
-    startup: 6,
-    active: '3F',
-    recovery: 12,
-    onBlock: 1,
-    onHit: 6,
-    attribute: '上段',
-    damage: 600,
-    cancel: '必殺技/SA/DR',
-    summary: 'ガードさせて+1F有利の主力圧技。ヒット時は立ち中Pやしゃがみ中Pが連続ヒット。シミーの起点。',
+export const RYU_NEUTRAL_MOVES_FRAME_DATA: Record<string, KeyFrameInfo> = {
+  // 弱P: 発生4F、カウンターヒット+6
+  'lp': {
+    moveKey: 'lp',
+    name: '弱P',
+    items: [
+      { label: '発生', value: '4F', variant: 'neutral' },
+      { label: 'カウンターヒット', value: '+6F', variant: 'positive' },
+    ],
   },
+  // 弱K: 発生5F
+  'lk': {
+    moveKey: 'lk',
+    name: '弱K',
+    items: [
+      { label: '発生', value: '5F', variant: 'neutral' },
+    ],
+  },
+  // 中P: 発生6F、持続6-9F
+  'mp': {
+    moveKey: 'mp',
+    name: '中P',
+    items: [
+      { label: '発生', value: '6F', variant: 'neutral' },
+      { label: '持続', value: '6-9F', variant: 'neutral' },
+    ],
+  },
+  // 下中P: 発生6F、ガード＋０
   '2mp': {
-    id: '2mp',
-    name: 'しゃがみ中P',
-    command: '2MP / 下中P',
-    startup: 6,
-    active: '3F',
-    recovery: 12,
-    onBlock: 1,
-    onHit: 5,
-    attribute: '上段',
-    damage: 600,
-    cancel: '必殺技/SA/DR',
-    summary: 'ガード+1F。リーチと判定に優れ、ラッシュ止めや置き技、コンボパーツとして超優秀。',
+    moveKey: '2mp',
+    name: '下中P',
+    items: [
+      { label: '発生', value: '6F', variant: 'neutral' },
+      { label: 'ガード', value: '+0F', variant: 'positive' },
+    ],
   },
-  '5mk': {
-    id: '5mk',
-    name: '立ち中K',
-    command: '5MK / 中K',
-    startup: 9,
-    active: '3F',
-    recovery: 17,
-    onBlock: -4,
-    onHit: 2,
-    attribute: '上段',
-    damage: 700,
-    cancel: 'SA2/SA3のみ',
-    summary: '中距離の主力牽制蹴り。リーチが長く相手の牽制の外から刺さる。クラシック専用技。',
+  // 中K: 発生9F、ガード-4F、キャンセルが効かない
+  'mk': {
+    moveKey: 'mk',
+    name: '中K',
+    items: [
+      { label: '発生', value: '9F', variant: 'neutral' },
+      { label: 'ガード', value: '-4F', variant: 'negative' },
+      { label: 'キャンセル', value: '効かない', variant: 'neutral' },
+    ],
   },
+  // 下中K: 発生8F、ガード-6F
   '2mk': {
-    id: '2mk',
-    name: 'しゃがみ中K (中足)',
-    command: '2MK / 下中K',
-    startup: 8,
-    active: '3F',
-    recovery: 17,
-    onBlock: -4,
-    onHit: 1,
-    attribute: '下段',
-    damage: 500,
-    cancel: '必殺技/SA/DR',
-    summary: 'リュウの立ち回りの生命線。波動拳・キャンセルラッシュ・波掌撃を仕込んで中距離を制圧。',
+    moveKey: '2mk',
+    name: '下中K (中足)',
+    items: [
+      { label: '発生', value: '8F', variant: 'neutral' },
+      { label: 'ガード', value: '-6F', variant: 'negative' },
+    ],
   },
-
-  // 強技
-  '5hp': {
-    id: '5hp',
-    name: '立ち強P (大P)',
-    command: '5HP / 大P',
-    startup: 9,
-    active: '3F',
-    recovery: 18,
-    onBlock: -1,
-    onHit: 3,
-    attribute: '上段',
-    damage: 800,
-    cancel: '必殺技/SA/DR',
-    summary: 'ガードで-1Fしか隙がない最強クラスの牽制・置き技。パニカン時はクラッシュカウンターで+7F。',
+  // 大P: 発生10F、ガード-2F
+  'hp': {
+    moveKey: 'hp',
+    name: '大P',
+    items: [
+      { label: '発生', value: '10F', variant: 'neutral' },
+      { label: 'ガード', value: '-2F', variant: 'neutral' },
+    ],
   },
-  '2hp': {
-    id: '2hp',
-    name: 'しゃがみ強P (下大P)',
-    command: '2HP / 下大P',
-    startup: 8,
-    active: '4F',
-    recovery: 22,
-    onBlock: -9,
-    onHit: 2,
-    attribute: '上段',
-    damage: 900,
-    cancel: '必殺技/SA/DR',
-    summary: '真上への対空迎撃、および高火力コンボの繋ぎ技。大ダメージコンボに必須のパーツ。',
-  },
-  '5hk': {
-    id: '5hk',
-    name: '立ち強K (大K)',
-    command: '5HK / 大K',
-    startup: 12,
-    active: '3F',
-    recovery: 18,
-    onBlock: -4,
-    onHit: 3,
-    attribute: '上段',
-    damage: 900,
-    cancel: '× (パニカン時コンボ)',
-    summary: 'ダメージ900の高威力技。無敵技ガード後の確定反撃始動や、対空からSA1繋ぎに重宝。',
-  },
-  '2hk': {
-    id: '2hk',
-    name: 'しゃがみ強K (大足)',
-    command: '2HK / 大足',
-    startup: 9,
-    active: '3F',
-    recovery: 25,
-    onBlock: -10,
-    onHit: 'ダウン(+37F)',
-    attribute: '下段',
-    damage: 900,
-    cancel: '× (パニカン時ダウン+42F)',
-    summary: '発生9Fで相手の空振りを差し返す下段。ヒットで+37F、パニカンで+42F詐欺飛びへ移行。',
-  },
-
-  // 特殊技
+  // 前大P（通称大ゴス）: 発生20F、ヒット＋６、カウンター＋８、パニカン＋１０、ガード＋３投げ間合い
   '6hp': {
-    id: '6hp',
-    name: '鳩尾砕き (大ゴス / 前大P)',
-    command: '6HP / 前大P',
-    startup: 20,
-    active: '3F',
-    recovery: 18,
-    onBlock: 1,
-    onHit: 6,
-    attribute: '上段',
-    damage: 900,
-    cancel: '× (ヒット時目押し可能)',
-    summary: 'ガードさせて+1F有利。ヒット時は立ち中Pやしゃがみ中Pがノーキャンセルで連続ヒットする攻めの要。',
+    moveKey: '6hp',
+    name: '前大P (大ゴス)',
+    items: [
+      { label: '発生', value: '20F', variant: 'neutral' },
+      { label: 'ガード', value: '+3F (投げ間合い)', variant: 'positive' },
+      { label: 'ヒット', value: '+6F', variant: 'positive' },
+      { label: 'カウンター', value: '+8F', variant: 'positive' },
+      { label: 'パニカン', value: '+10F', variant: 'accent' },
+    ],
   },
-  '6mp': {
-    id: '6mp',
-    name: '鎖骨割り (前中P / 中段)',
-    command: '6MP / 前中P',
-    startup: 20,
-    active: '2F',
-    recovery: 19,
-    onBlock: -3,
-    onHit: 1,
-    attribute: '中段',
-    damage: 600,
-    cancel: '× (ラッシュ時+5F)',
-    summary: 'しゃがみガード不能の中段攻撃。キャンセルラッシュから出すとヒット時+5Fでコンボ可能。',
+  // 大K: 発生12F、パニカンで膝崩れ
+  'hk': {
+    moveKey: 'hk',
+    name: '大K',
+    items: [
+      { label: '発生', value: '12F', variant: 'neutral' },
+      { label: 'パニカン', value: '膝崩れ', variant: 'accent' },
+    ],
   },
-  '4hp': {
-    id: '4hp',
-    name: '引き強P (引大 / 肘打ち)',
-    command: '4HP / 引大P',
-    startup: 8,
-    active: '3F',
-    recovery: 16,
-    onBlock: -2,
-    onHit: 3,
-    attribute: '上段',
-    damage: 800,
-    cancel: '必殺技/SA/DR',
-    summary: '発生8Fでシミー（投げ抜け狩り）に最適。微後退から叩き込み、画面端の高火力コンボへ直結。',
+  // 下大K（通称大足）: 発生9F、ガードでー12F
+  '2hk': {
+    moveKey: '2hk',
+    name: '下大K (大足)',
+    items: [
+      { label: '発生', value: '9F', variant: 'neutral' },
+      { label: 'ガード', value: '-12F', variant: 'negative' },
+    ],
   },
+  // 前大K: 発生16F、ガードー4F
   '6hk': {
-    id: '6hk',
-    name: '旋風脚 (前大K)',
-    command: '6HK / 前大K',
-    startup: 15,
-    active: '3F',
-    recovery: 18,
-    onBlock: -3,
-    onHit: 2,
-    attribute: '上段',
-    damage: 800,
-    cancel: '× (パニカン時+6F)',
-    summary: '前方に大きく踏み込む蹴り。ガードされても-3Fで反撃を受けず、足払いの上から踏み込める。',
-  },
-
-  // 必殺技
-  'hadoken': {
-    id: 'hadoken',
-    name: '波動拳',
-    command: '236P / 必殺技',
-    startup: 14,
-    active: '弾',
-    recovery: 33,
-    onBlock: -6,
-    onHit: 1,
-    attribute: '上段',
-    damage: 600,
-    cancel: 'SA3のみ',
-    summary: '全体動作47Fの伝統的な飛び道具。中〜遠距離で相手に飛びやパリィを強制させる「質問」の技。',
-  },
-  'shoryuken': {
-    id: 'shoryuken',
-    name: '昇龍拳',
-    command: '623P / 前+必殺技',
-    startup: 5,
-    active: '多段',
-    recovery: 38,
-    onBlock: -25,
-    onHit: 'ダウン(+35F)',
-    attribute: '上段',
-    damage: 1100,
-    cancel: 'SA3のみ',
-    summary: '弱は発生5Fで対空無敵(1-10F)、強は発生7Fで対空無敵(1-12F)、ODは発生6Fで完全無敵(1-9F)。',
-  },
-  'tatsumaki': {
-    id: 'tatsumaki',
-    name: '竜巻旋風脚',
-    command: '214K / 後+必殺技',
-    startup: 12,
-    active: '多段',
-    recovery: 24,
-    onBlock: -10,
-    onHit: 'ダウン',
-    attribute: '上段',
-    damage: 800,
-    cancel: '×',
-    summary: '画面端への運びに長けた回転蹴り。OD版は空中の相手を高く浮かせ、追撃コンボが可能。',
-  },
-  'hashogeki': {
-    id: 'hashogeki',
-    name: '波掌撃',
-    command: '214P / 下+必殺技',
-    startup: 14,
-    active: '3F',
-    recovery: 19,
-    onBlock: -3,
-    onHit: 2,
-    attribute: '上段',
-    damage: 600,
-    cancel: 'SA3のみ',
-    summary: '弱はガード-3Fで反撃なしの安全連携。強は溜めでガード+4F有利を作れる固めの切り札。',
-  },
-  'sokuto': {
-    id: 'sokuto',
-    name: '上段足刀破り',
-    command: '236K / 足刀',
-    startup: 15,
-    active: '3F',
-    recovery: 22,
-    onBlock: -10,
-    onHit: 'ダウン(+37F)',
-    attribute: '上段',
-    damage: 1000,
-    cancel: 'SA3のみ',
-    summary: 'ヒット時に相手を画面端へ大きく吹き飛ばす。強ヒット後は+37Fで安全に電刃溜めが可能。',
-  },
-  'denjin': {
-    id: 'denjin',
-    name: '電刃錬気',
-    command: '22P / 下下+P',
-    startup: 0,
-    active: '強化',
-    recovery: 52,
-    onBlock: -52,
-    onHit: '強化完了',
-    attribute: '上段',
-    damage: 0,
-    cancel: '×',
-    summary: '波動拳と波掌撃を1回だけ電刃版に強化。52Fの大きな隙があるため、強足刀ヒット後など安全な状況で発動。',
+    moveKey: '6hk',
+    name: '前大K',
+    items: [
+      { label: '発生', value: '16F', variant: 'neutral' },
+      { label: 'ガード', value: '-4F', variant: 'negative' },
+    ],
   },
 };
 
 /**
- * テキストから技名を検出し、該当するフレームデータを返すヘルパー
+ * ②「立ち回りで振る技」の通常技・特殊技にのみマッチし、必殺技は除外する高精度マッチャー
  */
-export function findMoveFrame(text: string): MoveFrameData | null {
-  const t = text.toLowerCase().replace(/\s+/g, '');
-  if (t.includes('5lp') || t.includes('立ち弱p') || t.includes('立弱p')) return RYU_FRAME_DATA['5lp'];
-  if (t.includes('2lp') || t.includes('下弱p') || t.includes('しゃがみ弱p')) return RYU_FRAME_DATA['2lp'];
-  if (t.includes('5lk') || t.includes('立ち弱k') || t.includes('立弱k')) return RYU_FRAME_DATA['5lk'];
-  if (t.includes('2lk') || t.includes('下弱k') || t.includes('しゃがみ弱k')) return RYU_FRAME_DATA['2lk'];
-  if (t.includes('5mp') || t.includes('立ち中p') || t.includes('立中p')) return RYU_FRAME_DATA['5mp'];
-  if (t.includes('2mp') || t.includes('下中p') || t.includes('しゃがみ中p')) return RYU_FRAME_DATA['2mp'];
-  if (t.includes('5mk') || t.includes('立ち中k') || t.includes('立中k')) return RYU_FRAME_DATA['5mk'];
-  if (t.includes('2mk') || t.includes('中足') || t.includes('下中k') || t.includes('しゃがみ中k')) return RYU_FRAME_DATA['2mk'];
-  if (t.includes('5hp') || t.includes('大p') || t.includes('立ち強p') || t.includes('強p')) return RYU_FRAME_DATA['5hp'];
-  if (t.includes('2hp') || t.includes('下大p') || t.includes('しゃがみ強p')) return RYU_FRAME_DATA['2hp'];
-  if (t.includes('5hk') || t.includes('大k') || t.includes('立ち強k') || t.includes('強k')) return RYU_FRAME_DATA['5hk'];
-  if (t.includes('2hk') || t.includes('大足') || t.includes('下強k') || t.includes('しゃがみ強k')) return RYU_FRAME_DATA['2hk'];
-  if (t.includes('大ゴス') || t.includes('前大p') || t.includes('6hp') || t.includes('鳩尾')) return RYU_FRAME_DATA['6hp'];
-  if (t.includes('前中p') || t.includes('6mp') || t.includes('鎖骨')) return RYU_FRAME_DATA['6mp'];
-  if (t.includes('引大') || t.includes('引き強') || t.includes('4hp')) return RYU_FRAME_DATA['4hp'];
-  if (t.includes('前大k') || t.includes('6hk') || t.includes('旋風脚')) return RYU_FRAME_DATA['6hk'];
-  if (t.includes('波動') || t.includes('弾')) return RYU_FRAME_DATA['hadoken'];
-  if (t.includes('昇竜') || t.includes('昇龍')) return RYU_FRAME_DATA['shoryuken'];
-  if (t.includes('竜巻')) return RYU_FRAME_DATA['tatsumaki'];
-  if (t.includes('波掌')) return RYU_FRAME_DATA['hashogeki'];
-  if (t.includes('足刀')) return RYU_FRAME_DATA['sokuto'];
-  if (t.includes('電刃')) return RYU_FRAME_DATA['denjin'];
+export function findNeutralMoveKeyFrame(cleanText: string): KeyFrameInfo | null {
+  const t = cleanText.toLowerCase().replace(/\s+/g, '');
+
+  // 必殺技（足刀、波動、昇竜、竜巻、波掌など）は一切マッチさせない
+  if (
+    t.includes('足刀') ||
+    t.includes('波動') ||
+    t.includes('昇竜') ||
+    t.includes('昇龍') ||
+    t.includes('竜巻') ||
+    t.includes('波掌') ||
+    t.includes('電刃')
+  ) {
+    return null;
+  }
+
+  // 1. 前大P / 大ゴス / A大 (モダン) / 6hp
+  if (t === '前大p' || t.includes('大ゴス') || t === 'a大' || t === '6hp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['6hp'];
+  }
+
+  // 2. 前大K / 前大 (モダン) / 6hk
+  if (t === '前大k' || t === '前大' || t === '6hk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['6hk'];
+  }
+
+  // 3. 下大K / 大足 / 2hk (例: 大足（3大）)
+  if (t.includes('下大k') || t.includes('大足') || t === '2hk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['2hk'];
+  }
+
+  // 4. 大K / 5hk
+  if (t === '大k' || t === '5hk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['hk'];
+  }
+
+  // 5. 大P / 大 (モダン) / 5hp
+  if (t === '大p' || t === '大' || t === '5hp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['hp'];
+  }
+
+  // 6. 下中K / 中足 / 2mk (例: 中足（下中）)
+  if (t.includes('下中k') || t.includes('中足') || t === '2mk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['2mk'];
+  }
+
+  // 7. 下中P / A中 (モダン) / 2mp
+  if (t.includes('下中p') || t === 'a中' || t === '2mp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['2mp'];
+  }
+
+  // 8. 中K / 5mk
+  if (t === '中k' || t === '5mk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['mk'];
+  }
+
+  // 9. 中P / 中 (モダン) / 5mp
+  if (t === '中p' || t === '中' || t === '5mp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['mp'];
+  }
+
+  // 10. 弱K / A弱 (モダン) / 5lk
+  if (t === '弱k' || t === 'a弱' || t === '5lk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['lk'];
+  }
+
+  // 11. 弱P / 弱 (モダン) / 5lp
+  if (t === '弱p' || t === '弱' || t === '5lp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['lp'];
+  }
+
   return null;
 }

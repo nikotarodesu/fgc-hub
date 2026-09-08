@@ -168,11 +168,14 @@ export default function RichContent({ content }: RichContentProps) {
         if (group.type === 'subheading') {
           return (
             <div key={gIdx} className="pt-2 pb-1">
-              {group.lines.map((line, lIdx) => (
-                <h4 key={lIdx} className="text-sm sm:text-[15px] font-bold text-neutral-900 bg-neutral-100/90 px-3 py-1.5 rounded-lg border border-neutral-200/90 my-1 inline-block">
-                  {renderInline(line)}
-                </h4>
-              ))}
+              {group.lines.map((line, lIdx) => {
+                const cleanText = line.trim().replace(/^[●■・\-\*]\s*/, '');
+                return (
+                  <h4 key={lIdx} className="text-sm sm:text-[15px] font-bold text-neutral-900 bg-neutral-100/90 px-3 py-1.5 rounded-lg border border-neutral-200/90 my-1 inline-block">
+                    {renderInline(cleanText)}
+                  </h4>
+                );
+              })}
             </div>
           );
         }

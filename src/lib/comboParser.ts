@@ -3,7 +3,7 @@
  * 矢印表記（↓, ↓↙←, →↓↘等）とカラーボタン（黄色いパンチボタン、赤いパンチボタン等）を生成
  */
 
-export type ButtonColor = 'blue' | 'yellow' | 'red' | 'purple' | 'gold' | 'neutral';
+export type ButtonColor = 'blue' | 'yellow' | 'red' | 'purple' | 'gold' | 'emerald' | 'orange' | 'neutral';
 export type ButtonKind = 'punch' | 'kick' | 'both' | 'parry' | 'special';
 
 export interface VisualStep {
@@ -169,7 +169,300 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 2. 必殺技：波掌撃 (214+P: ↓↙← + P)
+  // 2. モダン：アシスト攻撃（A中, A弱, A大 / A強）
+  if (lower.startsWith('a中') || lower.startsWith('アシスト中')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: 'A中',
+        description: '黄色いボタン（アシスト中攻撃）',
+        iconText: 'A中',
+      },
+      suffix,
+      tip: 'アシストボタンを押しながら中攻撃',
+    };
+  }
+
+  if (lower.startsWith('a弱') || lower.startsWith('アシスト弱')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'blue',
+        label: 'A弱',
+        description: '青いボタン（アシスト弱攻撃）',
+        iconText: 'A弱',
+      },
+      suffix,
+      tip: 'アシストボタンを押しながら弱攻撃',
+    };
+  }
+
+  if (lower.startsWith('a大') || lower.startsWith('a強') || lower.startsWith('アシスト大') || lower.startsWith('アシスト強')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: 'A大',
+        description: '赤いボタン（アシスト強攻撃）',
+        iconText: 'A大',
+      },
+      suffix,
+      tip: 'アシストボタンを押しながら強攻撃',
+    };
+  }
+
+  // 3. 必殺技：上段足刀破り（モダン対応：弱=↙+SP, 中=↓+SP, 強=↘+SP, OD=↓+A+SP）
+  if (lower.includes('足刀')) {
+    const isOD = lower.includes('od');
+    const isWeak = lower.includes('弱');
+    const isMed = lower.includes('中');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓'],
+        arrowStr: '↓',
+        button: {
+          kind: 'special',
+          color: 'purple',
+          label: 'OD足刀',
+          description: 'OD足刀ボタン',
+          iconText: 'A+SP',
+        },
+        suffix,
+        tip: '↓＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      };
+    }
+
+    if (isWeak) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↙'],
+        arrowStr: '↙',
+        button: {
+          kind: 'special',
+          color: 'emerald',
+          label: '弱足刀',
+          description: '弱足刀ボタン',
+          iconText: 'SP',
+        },
+        suffix,
+        tip: '↙＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      };
+    }
+
+    if (isHeavy) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↘'],
+        arrowStr: '↘',
+        button: {
+          kind: 'special',
+          color: 'emerald',
+          label: '強足刀',
+          description: '強足刀ボタン',
+          iconText: 'SP',
+        },
+        suffix,
+        tip: '↘＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      };
+    }
+
+    // デフォルト（中足刀 または 足刀）
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓'],
+      arrowStr: '↓',
+      button: {
+        kind: 'special',
+        color: 'emerald',
+        label: isMed ? '中足刀' : '足刀',
+        description: '中足刀ボタン',
+        iconText: 'SP',
+      },
+      suffix,
+      tip: '↓＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+    };
+  }
+
+  // 4. 必殺技：竜巻旋風脚（モダン対応：中竜巻=後ろ+SP, OD竜巻=後ろ+A+SP）
+  if (lower.includes('竜巻')) {
+    const isOD = lower.includes('od');
+    const isWeak = lower.includes('弱');
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['←'],
+        arrowStr: '←',
+        button: {
+          kind: 'special',
+          color: 'purple',
+          label: 'OD竜巻',
+          description: 'OD竜巻ボタン',
+          iconText: 'A+SP',
+        },
+        suffix,
+        tip: '後ろ＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      };
+    }
+
+    if (isWeak) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↙', '←'],
+        arrowStr: '↓↙←',
+        button: {
+          kind: 'kick',
+          color: 'blue',
+          label: '弱竜巻',
+          description: '弱竜巻ボタン',
+          iconText: 'K',
+        },
+        suffix,
+        tip: 'テンキー214+弱K（またはA弱アシストコンボ派生）',
+      };
+    }
+
+    // 中竜巻（または単に竜巻）
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['←'],
+      arrowStr: '←',
+      button: {
+        kind: 'special',
+        color: 'emerald',
+        label: '中竜巻',
+        description: '中竜巻ボタン',
+        iconText: 'SP',
+      },
+      suffix,
+      tip: '後ろ＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+    };
+  }
+
+  // 5. 必殺技：昇竜拳 / キャノンスパイク（モダン強昇竜=前+SP）
+  if (lower.includes('昇竜') || lower.includes('昇龍') || lower.includes('スパイク')) {
+    const isKick = lower.includes('スパイク');
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
+    const isLight = lower.includes('弱');
+    const isMed = lower.includes('中');
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['→'],
+        arrowStr: '前',
+        button: {
+          kind: 'special',
+          color: 'purple',
+          label: 'OD昇竜',
+          description: 'OD昇竜ボタン',
+          iconText: 'A+SP',
+        },
+        suffix,
+        tip: '前＋A＋SP（または手動テンキー623+PP）',
+      };
+    }
+
+    if (isHeavy) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['→'],
+        arrowStr: '前',
+        button: {
+          kind: isKick ? 'kick' : 'punch',
+          color: 'red',
+          label: isKick ? '強スパイク' : '強昇竜',
+          description: '強昇竜ボタン',
+          iconText: 'SP',
+        },
+        suffix,
+        tip: '前＋SP（または手動テンキー623+強P）',
+      };
+    }
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→', '↓', '↘'],
+      arrowStr: '→↓↘',
+      button: {
+        kind: isKick ? 'kick' : 'punch',
+        color: isLight ? 'blue' : 'yellow',
+        label: isLight ? '弱昇竜' : '中昇竜',
+        description: isLight ? '青いボタン' : '黄色いボタン',
+        iconText: isKick ? 'K' : 'P',
+      },
+      suffix,
+      tip: `テンキー623+${isLight ? '弱P' : '中P'}（前・下・斜め前）`,
+    };
+  }
+
+  // 6. 必殺技：波掌撃 (214+P: ↓↙← + P)
   if (lower.includes('波掌')) {
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
@@ -199,107 +492,53 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 3. 必殺技：竜巻旋風脚 (214+K: ↓↙← + K)
-  if (lower.includes('竜巻')) {
-    const isOD = lower.includes('od');
-    const isHeavy = lower.includes('強') || lower.includes('大');
-    const isLight = lower.includes('弱');
-    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
-    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const label = isOD ? 'OD竜巻' : `${strength}K`;
-    const tipBtn = isOD ? 'KK（2ボタン同時）' : `${strength}K`;
-
-    return {
-      original: remaining,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['↓', '↙', '←'],
-      arrowStr: '↓↙←',
-      button: {
-        kind: 'kick',
-        color,
-        label,
-        description: isOD ? 'ODボタン' : `${strength}キックボタン`,
-        iconText: isOD ? 'KK' : 'K',
-      },
-      suffix,
-      tip: `テンキー214+${tipBtn}（下・斜め後ろ・後ろ）`,
-    };
-  }
-
-  // 4. 必殺技：昇竜拳 / キャノンスパイク (623+P/K: →↓↘ + P/K)
-  if (lower.includes('昇竜') || lower.includes('昇龍') || lower.includes('スパイク')) {
-    const isKick = lower.includes('スパイク');
-    const isOD = lower.includes('od');
-    const isHeavy = lower.includes('強') || lower.includes('大');
-    const isLight = lower.includes('弱');
-    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
-    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const btnType = isKick ? 'K' : 'P';
-    const label = isOD ? (isKick ? 'ODスパイク' : 'OD昇竜') : `${strength}${btnType}`;
-    const tipBtn = isOD ? (isKick ? 'KK（2ボタン同時）' : 'PP（2ボタン同時）') : `${strength}${btnType}`;
-
-    return {
-      original: remaining,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['→', '↓', '↘'],
-      arrowStr: '→↓↘',
-      button: {
-        kind: isKick ? 'kick' : 'punch',
-        color,
-        label,
-        description: isOD ? 'ODボタン' : `${strength}ボタン`,
-        iconText: isOD ? (isKick ? 'KK' : 'PP') : btnType,
-      },
-      suffix,
-      tip: `テンキー623+${tipBtn}（前・下・斜め前）`,
-    };
-  }
-
-  // 5. 必殺技：上段足刀破り / スパイラルアロー (236+K: ↓↘→ + K)
-  if (lower.includes('足刀') || lower.includes('アロー') || lower.includes('百裂')) {
-    const isOD = lower.includes('od');
-    const isHeavy = lower.includes('強') || lower.includes('大');
-    const isLight = lower.includes('弱');
-    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
-    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const label = isOD ? 'OD技' : `${strength}K`;
-    const tipBtn = isOD ? 'KK（2ボタン同時）' : `${strength}K`;
-
-    return {
-      original: remaining,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['↓', '↘', '→'],
-      arrowStr: '↓↘→',
-      button: {
-        kind: 'kick',
-        color,
-        label,
-        description: isOD ? 'ODボタン' : `${strength}キックボタン`,
-        iconText: isOD ? 'KK' : 'K',
-      },
-      suffix,
-      tip: `テンキー236+${tipBtn}（下・斜め前・前）`,
-    };
-  }
-
-  // 6. 必殺技：波動拳 / 弾 / 気功拳 (236+P: ↓↘→ + P)
+  // 7. 必殺技：波動拳 / 弾（モダン強波動=N+SP）
   if (lower.includes('波動') || lower.includes('弾') || lower.includes('気功')) {
     const isOD = lower.includes('od');
-    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
     const isLight = lower.includes('弱');
-    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
-    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const label = isOD ? 'OD弾' : `${strength}P`;
-    const tipBtn = isOD ? 'PP（2ボタン同時）' : `${strength}P`;
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: [],
+        arrowStr: 'N',
+        button: {
+          kind: 'special',
+          color: 'purple',
+          label: 'OD弾',
+          description: 'OD弾ボタン',
+          iconText: 'A+SP',
+        },
+        suffix,
+        tip: 'N＋A＋SP（ニュートラル＋A＋SP、または手動236+PP）',
+      };
+    }
+
+    if (isHeavy) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: [],
+        arrowStr: 'N',
+        button: {
+          kind: 'special',
+          color: 'red',
+          label: '強波動',
+          description: '強波動ボタン',
+          iconText: 'SP',
+        },
+        suffix,
+        tip: 'N＋SP（ニュートラル＋SP、または手動テンキー236+強P）',
+      };
+    }
 
     return {
       original: remaining,
@@ -311,17 +550,17 @@ function parseSinglePart(text: string): VisualStep {
       arrowStr: '↓↘→',
       button: {
         kind: 'punch',
-        color,
-        label,
-        description: isOD ? 'ODボタン' : `${strength}パンチボタン`,
-        iconText: isOD ? 'PP' : 'P',
+        color: isLight ? 'blue' : 'yellow',
+        label: isLight ? '弱弾' : '中弾',
+        description: isLight ? '青いボタン' : '黄色いボタン',
+        iconText: 'P',
       },
       suffix,
-      tip: `テンキー236+${tipBtn}（下・斜め前・前）`,
+      tip: `テンキー236+${isLight ? '弱P' : '中P'}（下・斜め前・前）`,
     };
   }
 
-  // 7. 二連撃 / ターゲットコンボ
+  // 8. 二連撃 / ターゲットコンボ
   if (lower.includes('二連撃') || lower.includes('ターゲット')) {
     return {
       original: remaining,
@@ -343,12 +582,11 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 8. 後ろ入れ特殊技（引大P, 引き強P, 4HP, 後大K等）
+  // 9. 後ろ入れ特殊技（引大P, 引大, 引き強P, 4HP, 後大K等）
   if (lower.includes('引') || lower.startsWith('4') || lower.includes('後大') || lower.includes('後強')) {
     const isKick = lower.includes('k');
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const iconText = isKick ? 'K' : 'P';
-    const label = isKick ? '引大K' : '引大P';
+    const label = lower.includes('引大p') ? '引大P' : '引大';
 
     return {
       original: remaining,
@@ -363,21 +601,20 @@ function parseSinglePart(text: string): VisualStep {
         color: 'red',
         label,
         description: '赤いボタン',
-        iconText,
+        iconText: label,
       },
       suffix,
-      tip: '後ろキー（ガード方向）を入力しながら強P',
+      tip: '後ろキー（ガード方向）を入力しながら強攻撃',
     };
   }
 
-  // 9. 前入れ特殊技（前大P, 前大K, 大ゴス, 6HP, 6HK等）
+  // 10. 前入れ特殊技（前大P, 前大, 前大K, 大ゴス, 6HP, 6HK等）
   if (lower.startsWith('前') || lower.startsWith('6') || lower.includes('大ゴス')) {
     const isKick = lower.includes('k');
     const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('大ゴス');
     const color: ButtonColor = isHeavy ? 'red' : 'yellow';
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const iconText = isKick ? 'K' : 'P';
-    const label = lower.includes('大ゴス') ? '前大P' : isKick ? '前大K' : '前大P';
+    const label = lower.includes('大ゴス') ? '前大P' : lower.includes('前大p') ? '前大P' : lower.includes('前大k') ? '前大K' : '前大';
 
     return {
       original: remaining,
@@ -392,14 +629,14 @@ function parseSinglePart(text: string): VisualStep {
         color,
         label,
         description: isHeavy ? '赤いボタン' : '黄色いボタン',
-        iconText,
+        iconText: label,
       },
       suffix,
       tip: '前キーを押しながらボタン',
     };
   }
 
-  // 10. しゃがみ通常技（下中P, 下中K, 下大P, 下弱P, 中足, 大足等）
+  // 11. しゃがみ通常技（下中P, 下中K, 下大P, 下弱P, 下中, 下大, 下弱, 中足, 大足等）
   if (
     lower.startsWith('下') ||
     lower.startsWith('2') ||
@@ -413,12 +650,16 @@ function parseSinglePart(text: string): VisualStep {
     const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('コパ');
     const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const iconText = isKick ? 'K' : 'P';
-    const label = isLight
+
+    let label = isLight
       ? (isKick ? '下弱K' : '下弱P')
       : isHeavy
       ? (isKick ? '下大K' : '下大P')
       : (isKick ? '下中K' : '下中P');
+
+    if (lower === '下中' || lower === '下弱' || lower === '下大') {
+      label = remaining;
+    }
 
     return {
       original: remaining,
@@ -433,14 +674,14 @@ function parseSinglePart(text: string): VisualStep {
         color,
         label,
         description: isLight ? '青いボタン' : isHeavy ? '赤いボタン' : '黄色いボタン',
-        iconText,
+        iconText: label,
       },
       suffix,
       tip: '下キー（しゃがみ）を入力しながらボタン',
     };
   }
 
-  // 11. 移動技（微後退、歩き等）
+  // 12. 移動技（微後退、歩き等）
   if (lower.includes('微後退') || lower.includes('後退') || lower.includes('歩き') || lower.includes('歩')) {
     return {
       original: remaining,
@@ -461,7 +702,29 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 12. 立ち通常技（弱P, 弱K, 中P, 中K, 大P, 大K等）
+  // 13. モダン単体攻撃（「中」「弱」「大」）
+  if (lower === '中' || lower === '弱' || lower === '大') {
+    const color: ButtonColor = lower === '大' ? 'red' : lower === '弱' ? 'blue' : 'yellow';
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color,
+        label: remaining,
+        description: color === 'red' ? '赤いボタン' : color === 'blue' ? '青いボタン' : '黄色いボタン',
+        iconText: remaining,
+      },
+      suffix,
+    };
+  }
+
+  // 14. 立ち通常技（弱P, 弱K, 中P, 中K, 大P, 大K等）
   const isKick = lower.includes('k') || lower.includes('キック');
   const isHeavy = lower.includes('大') || lower.includes('強');
   const isLight = lower.includes('弱') || lower.includes('小');

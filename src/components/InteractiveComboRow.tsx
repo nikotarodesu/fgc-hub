@@ -53,14 +53,14 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
             {steps.map((step, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-2xs">
-                  {/* キャンセル（青い文字） */}
+                  {/* キャンセル（黄色） */}
                   {step.isCancel && (
-                    <span className="text-xs font-bold text-blue-600 dark:text-cyan-400 shrink-0">
+                    <span className="text-xs font-bold text-amber-500 dark:text-amber-400 shrink-0">
                       キャンセル
                     </span>
                   )}
 
-                  {/* ラッシュ（青い文字） */}
+                  {/* ラッシュ（青色） */}
                   {step.isRush && (
                     <span className="text-xs font-bold text-blue-600 dark:text-cyan-400 shrink-0">
                       {step.rushText || 'ラッシュ'}
@@ -86,7 +86,7 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
                     <span className="text-neutral-400 text-xs font-bold">+</span>
                   )}
 
-                  {/* カラフルなアーケードボタン（小さい文章は削除し、ボタン画像とラベルのみ） */}
+                  {/* カラフルなアーケードボタン（小さい文章は削除し、ボタン画像を表示） */}
                   <div className="flex items-center gap-1.5">
                     <ArcadeButton
                       color={step.button.color}
@@ -94,9 +94,11 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
                       label={step.button.label}
                       size="sm"
                     />
-                    <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
-                      {step.button.label}
-                    </span>
+                    {step.button.label !== step.button.iconText && (
+                      <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
+                        {step.button.label}
+                      </span>
+                    )}
                   </div>
 
                   {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}

@@ -5,17 +5,9 @@ import Image from 'next/image';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neutral-200/80 text-neutral-900 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-      {/* 控えめでスマートなアナウンスバー */}
-      <div className="bg-neutral-900 text-neutral-300 text-[11px] py-1.5 px-4 text-center font-medium flex items-center justify-center gap-2">
-        <span className="bg-white/15 text-white px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide">
-          OFFICIAL
-        </span>
-        <span>にこ太郎の格ゲーLAB：スト6実戦攻略＆リプレイ添削を配信中</span>
-      </div>
-
+    <header className="bg-white border-b border-neutral-200/80 text-neutral-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           {/* ブランドロゴ */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-neutral-200 shadow-xs group-hover:scale-105 transition-transform bg-neutral-100">

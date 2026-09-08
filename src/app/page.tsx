@@ -68,7 +68,7 @@ export default function HomePage() {
                 にこ太郎の格ゲーLAB
               </h1>
               <p className="text-sm text-neutral-600 leading-relaxed">
-                全キャラ1800MR以上の筆者による、勝率直結のスト6実践データベース＆リプレイ添削。<br className="hidden sm:inline" />
+                全キャラ1800MR以上の筆者による、勝率直結のスト6実践データベース＆徹底攻略記事。<br className="hidden sm:inline" />
                 対戦・トレモ中の高速参照に特化したコンボ検索や、普遍的な格ゲー上達理論を発信しています。
               </p>
             </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
                     攻略記事を準備中です
                   </h3>
                   <p className="text-xs text-neutral-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-                    全キャラ1800MR以上の筆者「にこ太郎」による実戦添削・解説記事を順次公開予定です。まずは上部の「スト6攻略データベース（Webツール）」をご利用ください。
+                    全キャラ1800MR以上の筆者「にこ太郎」による実戦立ち回り・解説記事を順次公開予定です。まずは上部の「スト6攻略データベース（Webツール）」をご利用ください。
                   </p>
                 </div>
                 <div className="pt-2">
@@ -384,7 +384,7 @@ export default function HomePage() {
                 月額マガジンで読み放題
               </h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                月額¥980でスト6全キャラ攻略＆実戦添削がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
+                月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
               </p>
               <Link
                 href="/membership"

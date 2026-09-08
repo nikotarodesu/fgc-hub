@@ -596,7 +596,7 @@ export default function ArticleDetailPage() {
                 月額マガジンで読み放題
               </h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                月額¥980でスト6全キャラ攻略＆実戦添削がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
+                月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
               </p>
               <Link
                 href="/membership"

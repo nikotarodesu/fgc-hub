@@ -12,7 +12,7 @@ export interface SeoProps {
 const SITE_NAME = 'にこ太郎の格ゲーLAB';
 const DEFAULT_TITLE = 'にこ太郎の格ゲーLAB | スト6徹底攻略 & 格ゲー共通上達論';
 const DEFAULT_DESCRIPTION =
-  '全キャラ1800MR以上の筆者「にこ太郎」による格闘ゲーム攻略メディア。スト6実戦コンボ・起き攻めデータ・リーサル計算機・動画付きリプレイ添削を提供。アップデート追従最速対応。';
+  '全キャラ1800MR以上の筆者「にこ太郎」による格闘ゲーム攻略メディア。スト6実戦コンボ・起き攻めデータ・リーサル計算機・立ち回り徹底解説を提供。アップデート追従最速対応。';
 const DEFAULT_IMAGE = '/icon.png';
 const BASE_URL = 'https://nikotaro.com';
 

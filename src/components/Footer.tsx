@@ -21,7 +21,7 @@ export default function Footer() {
               <span className="font-bold text-neutral-900 text-sm tracking-tight">にこ太郎の格ゲーLAB</span>
             </div>
             <p className="text-neutral-500 leading-relaxed max-w-md text-xs">
-              ストリートファイター6全キャラ1800MR以上の筆者「にこ太郎」による攻略メディア。対戦リプレイ添削、フレームデータ、実戦セットプレイ、普遍的な共通上達論を発信しています。
+              ストリートファイター6全キャラ1800MR以上の筆者「にこ太郎」による攻略メディア。フレームデータ、実戦セットプレイ、普遍的な共通上達論を発信しています。
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a

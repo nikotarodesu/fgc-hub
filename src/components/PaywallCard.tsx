@@ -48,7 +48,7 @@ export default function PaywallCard({
           この続きは有料エリアです
         </h3>
         <p className="text-xs text-neutral-600 max-w-md mx-auto mb-6 leading-relaxed font-normal">
-          実戦添削動画、勝率を直結させる「セットプレイ手順」「有利フレームの技選択」「お悩み相談Q&A」を解説しています。
+          勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています。
         </p>
 
         {/* 料金・購入ボタンカード */}
@@ -90,7 +90,7 @@ export default function PaywallCard({
                 ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
               </div>
               <p className="text-[11px] text-neutral-300 mb-4 leading-relaxed">
-                スト6全キャラ攻略＆実戦添削がすべて読み放題。
+                スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
               </p>
             </div>
             <button

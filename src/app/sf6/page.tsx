@@ -130,10 +130,10 @@ export default function SF6HubPage() {
         <section className="bg-white rounded-xl p-5 sm:p-6 border border-neutral-200/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-neutral-900 text-sm sm:text-base">
-              スト6実戦添削 &amp; 格ゲー共通上達論
+              スト6実践攻略 &amp; 格ゲー共通上達論
             </h3>
             <p className="text-xs text-neutral-500 mt-0.5">
-              動画付きリプレイ添削や、全キャラ共通の立ち回り・メンタル構築の解説記事を公開しています。
+              全キャラ1800MR以上の視点による立ち回り・状況判断・メンタル構築の解説記事を公開しています。
             </p>
           </div>
           <Link

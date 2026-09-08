@@ -109,7 +109,7 @@ export const AUTHOR_INFO = {
   name: 'にこ太郎',
   avatar: '/icon.png',
   mrRating: '全キャラ1800MR以上',
-  bio: 'スト6全キャラ1800MR以上。note有料記事で総計1,000部突破。実戦添削コーチングや勝率直結の攻略メソッドを発信中。',
+  bio: 'スト6全キャラ1800MR以上。note有料記事で総計1,000部突破。勝率直結の攻略メソッドや立ち回り理論を発信中。',
   xUrl: 'https://x.com/nikotarosun',
   xHandle: '@nikotarosun',
 };

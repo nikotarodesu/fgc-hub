@@ -65,7 +65,7 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     name: '春麗',
     nameEn: 'Chun-Li',
     archetype: 'リーチ制圧・行雲流水構え・万能オールラウンダー',
-    description: '長い牽制技と気功拳、行雲流水による超多彩なコンボルートを持つ。当サイトにてリプレイ添削動画も公開中。',
+    description: '長い牽制技と気功拳、行雲流水による超多彩なコンボルートを持つ。当サイトにて実戦立ち回り解説も公開中。',
     strengths: ['追突拳・立ち強Pの圧倒的リーチ', '気功拳盾の前進', '画面端での空中百裂脚セットプレイ'],
     defaultHp: 10000,
     hasTool: false,

@@ -39,7 +39,7 @@ export default function MembershipPage() {
             スト6完全攻略マガジン（読み放題）
           </h1>
           <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
-            全キャラ1800MR以上の筆者による実戦添削、最新アップデート時の新コンボ・立ち回り解説がすべて読み放題。<br className="hidden sm:inline" />
+            全キャラ1800MR以上の筆者による徹底攻略、最新アップデート時の新コンボ・立ち回り解説がすべて読み放題。<br className="hidden sm:inline" />
             単体購入よりも圧倒的にお得に最新の攻略情報へアクセスいただけます。
           </p>
         </div>
@@ -50,7 +50,7 @@ export default function MembershipPage() {
           <div className="p-6 rounded-xl bg-white border border-neutral-200/80 flex flex-col justify-between shadow-xs">
             <div>
               <h3 className="text-sm font-bold text-neutral-900 mb-1">単体記事の買い切り</h3>
-              <p className="text-xs text-neutral-500 mb-4">特定のキャラクターや添削記事だけ読みたい方に</p>
+              <p className="text-xs text-neutral-500 mb-4">特定のキャラクターの攻略記事だけ読みたい方に</p>
               <div className="text-2xl font-bold text-neutral-900 mb-4">
                 ¥500〜980 <span className="text-xs font-normal text-neutral-500">/ 1記事</span>
               </div>
@@ -83,7 +83,7 @@ export default function MembershipPage() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-neutral-900 mb-1">月額プレミアムマガジン</h3>
-              <p className="text-xs text-neutral-500 mb-4">スト6全キャラ攻略・実戦添削・共通理論まで全記事アクセス</p>
+              <p className="text-xs text-neutral-500 mb-4">スト6全キャラ攻略・立ち回り徹底解説・共通理論まで全記事アクセス</p>
               <div className="text-3xl font-bold text-neutral-900 mb-4">
                 ¥980 <span className="text-xs font-normal text-neutral-500">/ 月（税込）</span>
               </div>
@@ -94,11 +94,11 @@ export default function MembershipPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-neutral-900" />
-                  <span>全キャラ1800MR以上の視点による実戦添削・対策</span>
+                  <span>全キャラ1800MR以上の視点による実戦立ち回り・キャラ対策</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-neutral-900" />
-                  <span>動画付きリプレイ添削記事もすべて閲覧可能</span>
+                  <span>最新パッチ追記・アップデート検証記事もすべて閲覧可能</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-neutral-900" />

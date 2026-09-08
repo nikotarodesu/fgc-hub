@@ -97,3 +97,19 @@ export interface ComboFilterCriteria {
   selectedTagId?: string;           // 選択された起き攻めタグ
   targetLethalHp?: number;          // リーサル計算用の相手残り体力
 }
+
+// キャラクター別JSONデータファイルの型定義 (data/sf6/characters/*.json)
+export interface CharacterDataFile {
+  slug: string;
+  name: string;
+  nameEn: string;
+  version: string;                  // ゲームバージョン (例: "Ver.1.05 (Season 2)")
+  updatedAt: string;                // 最終更新日 (例: "2026-05-20")
+  archetype: string;                // キャラクター特性
+  description: string;              // 立ち回り概要
+  strengths: string[];              // 主な強みリスト
+  defaultHp: number;                // 基準体力 (10000 / 豪鬼は9000等)
+  hasTool: boolean;
+  moves: Move[];                    // 技データリスト
+  combos: Combo[];                  // コンボデータリスト
+}

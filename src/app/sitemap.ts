@@ -58,7 +58,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...characterComboUrls,
     // 記事詳細
     ...articleUrls,
-    // 規約・特商法
+    // 規約・特商法・プライバシーポリシー
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
     {
       url: `${baseUrl}/legal/tokusho`,
       lastModified: now,

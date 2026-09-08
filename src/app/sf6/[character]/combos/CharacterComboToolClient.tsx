@@ -2,8 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { CharacterDetail, SF6_CHARACTERS } from '@/data/sf6/characters';
-import { CAMMY_COMBOS } from '@/data/sf6/cammy';
+import { CharacterDetail, SF6_CHARACTERS, SF6_CHARACTER_DATA } from '@/data/sf6/characters';
 import { Combo, ComboFilterCriteria } from '@/types/sf6';
 import ComboCard from '@/components/sf6/ComboCard';
 import ComboFilter from '@/components/sf6/ComboFilter';
@@ -25,13 +24,11 @@ interface ClientProps {
 }
 
 export default function CharacterComboToolClient({ character }: ClientProps) {
-  // コンボデータの取得（現在はCammy、今後キャラクターごとに拡張）
+  // キャラクター別JSONデータから動的取得（データとコードの完全分離）
+  const charData = SF6_CHARACTER_DATA[character.slug];
   const allCombos: Combo[] = useMemo(() => {
-    if (character.slug === 'cammy') {
-      return CAMMY_COMBOS;
-    }
-    return [];
-  }, [character.slug]);
+    return charData ? charData.combos : [];
+  }, [charData]);
 
   // フィルター状態
   const [filter, setFilter] = useState<ComboFilterCriteria>({
@@ -167,12 +164,20 @@ export default function CharacterComboToolClient({ character }: ClientProps) {
                   実戦コンボ＆起き攻めDB
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex flex-wrap items-center gap-2">
                 <span>{character.name}</span>
                 <span className="text-sm font-normal text-neutral-500">({character.nameEn})</span>
                 <span className="text-xs font-black px-2 py-0.5 rounded-full bg-[#00a3c4] text-white">
                   {allCombos.length}レシピ
                 </span>
+                {charData?.version && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-neutral-900 text-white flex items-center gap-1">
+                    <span>⚡ {charData.version}</span>
+                    {charData.updatedAt && (
+                      <span className="text-neutral-400 font-normal">({charData.updatedAt}更新)</span>
+                    )}
+                  </span>
+                )}
               </h1>
               <p className="text-xs sm:text-sm text-neutral-600 mt-1 max-w-2xl leading-relaxed">
                 {character.description}

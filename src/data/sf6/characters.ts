@@ -1,3 +1,6 @@
+import cammyJson from './characters/cammy.json';
+import { CharacterDataFile } from '@/types/sf6';
+
 export interface CharacterDetail {
   slug: string;
   name: string;
@@ -8,19 +11,28 @@ export interface CharacterDetail {
   defaultHp: number;
   hasTool: boolean;
   comboCount: number;
+  version?: string;
+  updatedAt?: string;
 }
+
+// キャラクター別JSONデータ（完全分離されたデータストア）
+export const SF6_CHARACTER_DATA: Record<string, CharacterDataFile> = {
+  cammy: cammyJson as unknown as CharacterDataFile,
+};
 
 export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
   cammy: {
     slug: 'cammy',
-    name: 'キャミィ',
-    nameEn: 'Cammy',
-    archetype: '超高速スピード・密着柔道・+42F詐欺飛び',
-    description: '圧倒的な歩き速度と鋭いキャノンストライクによる急降下、端到達後の+42F詐欺飛びループで相手を封殺するトップメタキャラクター。',
-    strengths: ['最速クラスの前歩き速度', '中アロー・強スパイクからの+42F詐欺飛び', '低空ストライクによるガード崩しと有利維持'],
-    defaultHp: 10000,
-    hasTool: true,
-    comboCount: 9,
+    name: cammyJson.name,
+    nameEn: cammyJson.nameEn,
+    archetype: cammyJson.archetype,
+    description: cammyJson.description,
+    strengths: cammyJson.strengths,
+    defaultHp: cammyJson.defaultHp,
+    hasTool: cammyJson.hasTool,
+    comboCount: cammyJson.combos.length,
+    version: cammyJson.version,
+    updatedAt: cammyJson.updatedAt,
   },
   ryu: {
     slug: 'ryu',
@@ -32,6 +44,8 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     defaultHp: 10000,
     hasTool: false,
     comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-05-20',
   },
   akuma: {
     slug: 'akuma',
@@ -43,6 +57,8 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     defaultHp: 9000,
     hasTool: false,
     comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-05-20',
   },
   chunli: {
     slug: 'chunli',
@@ -54,6 +70,8 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     defaultHp: 10000,
     hasTool: false,
     comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-05-20',
   },
   ken: {
     slug: 'ken',
@@ -65,6 +83,8 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     defaultHp: 10000,
     hasTool: false,
     comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-05-20',
   },
   luke: {
     slug: 'luke',
@@ -76,5 +96,7 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     defaultHp: 10000,
     hasTool: false,
     comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-05-20',
   },
 };

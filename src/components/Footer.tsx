@@ -57,10 +57,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-bold text-neutral-900 mb-3">特定商取引・規約</h4>
+            <h4 className="font-bold text-neutral-900 mb-3">法務・免責事項</h4>
             <ul className="space-y-2 text-neutral-500">
+              <li><Link href="/privacy" className="hover:text-[#00a3c4] font-medium text-neutral-700">プライバシーポリシー &amp; 免責事項</Link></li>
               <li><Link href="/legal/tokusho" className="hover:text-[#00a3c4]">特定商取引法に基づく表記</Link></li>
-              <li><Link href="/legal/privacy" className="hover:text-[#00a3c4]">プライバシーポリシー</Link></li>
               <li>
                 <div className="flex items-center gap-1 text-emerald-700 mt-1 font-semibold">
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="border-t border-neutral-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-400">
           <p>© {new Date().getFullYear()} にこ太郎の格ゲーLAB (nikotaro.com). All rights reserved.</p>
-          <p>※ 本サイトは個人の攻略メディアであり、株式会社カプコンの公式サービスではありません。</p>
+          <p>※ 本サイトは個人の非公式攻略メディアであり、株式会社カプコンの公式サービスではありません。ゲーム内著作物の権利は各著作権元に帰属します。</p>
         </div>
       </div>
     </footer>

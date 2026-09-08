@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full">
-      <body className="min-h-full flex flex-col bg-[#f0f9fb] text-neutral-900 selection:bg-[#00a3c4] selection:text-white">
+      <body className="min-h-full flex flex-col bg-[#f8fafc] text-neutral-900 selection:bg-neutral-900 selection:text-white antialiased">
         <Header />
         <div className="flex-1">
           {children}

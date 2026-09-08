@@ -1,33 +1,33 @@
 export default function TokushoPage() {
   return (
-    <div className="min-h-screen bg-[#f0f9fb] text-neutral-900">
+    <div className="min-h-screen bg-[#f8fafc] text-neutral-900">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div className="bg-white p-6 sm:p-10 rounded-2xl border border-sky-100 shadow-sm">
-          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 mb-8 pb-4 border-b border-neutral-200">
+        <div className="bg-white p-6 sm:p-10 rounded-xl border border-neutral-200/80 shadow-xs">
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-8 pb-4 border-b border-neutral-200">
             特定商取引法に基づく表記
           </h1>
 
           <div className="space-y-4 text-sm text-neutral-700">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
-              <div className="font-bold text-neutral-500">販売事業者名</div>
+              <div className="font-semibold text-neutral-500">販売事業者名</div>
               <div className="sm:col-span-2 font-medium">にこ太郎（nikotaro）</div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
-              <div className="font-bold text-neutral-500">サイトURL</div>
-              <div className="sm:col-span-2 font-mono font-medium text-[#008ba8]">https://nikotaro.com</div>
+              <div className="font-semibold text-neutral-500">サイトURL</div>
+              <div className="sm:col-span-2 font-mono font-medium text-neutral-900">https://nikotaro.com</div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
-              <div className="font-bold text-neutral-500">お問い合わせ先</div>
+              <div className="font-semibold text-neutral-500">お問い合わせ先</div>
               <div className="sm:col-span-2 leading-relaxed">
                 <a
                   href="https://x.com/nikotarosun"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-[#00a3c4] hover:underline"
+                  className="font-medium text-neutral-900 underline hover:text-neutral-600"
                 >
                   公式X（@nikotarosun）のダイレクトメッセージ
                 </a>
-                <span className="block text-xs text-neutral-500 mt-1">
+                <span className="block text-xs text-neutral-400 mt-1">
                   ※ メールアドレス等についてご請求があった場合は、特定商取引法に基づき遅滞なく電子メール等にて開示いたします。
                 </span>
               </div>

@@ -2,57 +2,66 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Flame, BookOpen, ShieldCheck, Zap } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-sky-100 text-neutral-900 shadow-xs">
-      {/* 爽やかな告知アナウンスバー */}
-      <div className="bg-[#00a3c4] text-white text-[11px] py-1.5 px-4 text-center font-bold flex items-center justify-center gap-2">
-        <span className="bg-white/20 px-2 py-0.5 rounded text-[10px] tracking-wide">nikotaro.com</span>
-        <span>noteから「にこ太郎の格ゲーLAB」へ移行中！動画付きリプレイ添削＆コンボ攻略を配信中</span>
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neutral-200/80 text-neutral-900 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+      {/* 控えめでスマートなアナウンスバー */}
+      <div className="bg-neutral-900 text-neutral-300 text-[11px] py-1.5 px-4 text-center font-medium flex items-center justify-center gap-2">
+        <span className="bg-white/15 text-white px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide">
+          OFFICIAL
+        </span>
+        <span>にこ太郎の格ゲーLAB：スト6実戦攻略＆リプレイ添削を配信中</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* ロゴ：添付された手描きにこちゃんアイコンを使用！ */}
+          {/* ブランドロゴ */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-neutral-900 shadow-sm group-hover:scale-105 transition-transform bg-[#00a3c4]">
+            <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-neutral-200 shadow-xs group-hover:scale-105 transition-transform bg-neutral-100">
               <Image
                 src="/icon.png"
                 alt="にこ太郎 アイコン"
-                width={40}
-                height={40}
+                width={36}
+                height={36}
                 className="w-full h-full object-cover"
                 priority
               />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-black text-lg tracking-tight text-neutral-900 group-hover:text-[#00a3c4] transition-colors">
+                <span className="font-bold text-base tracking-tight text-neutral-900 group-hover:text-neutral-600 transition-colors">
                   にこ太郎の格ゲーLAB
                 </span>
               </div>
-              <p className="text-[10px] text-neutral-500 font-semibold">
-                全キャラ1800MR以上のスト6攻略
+              <p className="text-[10px] text-neutral-400 font-medium tracking-wide">
+                全キャラ1800MR+ スト6攻略メディア
               </p>
             </div>
           </Link>
 
-          {/* ナビゲーション */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-neutral-700">
-            <Link href="/sf6" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5 text-[#00a3c4]">
-              <Zap className="w-4 h-4 text-[#00a3c4]" />
-              <span>攻略DBツール</span>
-              <span className="px-1.5 py-0.2 text-[9px] font-black bg-cyan-100 text-[#00a3c4] rounded-full">New</span>
+          {/* ナビゲーション（アイコンを廃止し、視認性と品格の高いタイポグラフィに統一） */}
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600">
+            <Link
+              href="/sf6"
+              className="hover:text-neutral-950 transition-colors flex items-center gap-1.5"
+            >
+              <span>スト6攻略DB</span>
+              <span className="px-1.5 py-0.2 text-[9px] font-bold bg-neutral-100 text-neutral-600 rounded">
+                TOOL
+              </span>
             </Link>
-            <Link href="/?game=sf6" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5">
-              <Flame className="w-4 h-4 text-orange-500" />
-              <span>スト6記事</span>
+            <Link
+              href="/?game=sf6"
+              className="hover:text-neutral-950 transition-colors"
+            >
+              スト6攻略記事
             </Link>
-            <Link href="/?game=general" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-sky-500" />
-              <span>共通上達論</span>
+            <Link
+              href="/?game=general"
+              className="hover:text-neutral-950 transition-colors"
+            >
+              格ゲー共通上達論
             </Link>
           </nav>
 
@@ -60,10 +69,9 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <Link
               href="/membership"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black bg-[#00a3c4] hover:bg-[#008ba8] text-white shadow-md shadow-sky-500/20 transition-all hover:scale-105"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 text-white transition-colors shadow-xs"
             >
-              <ShieldCheck className="w-4 h-4 text-white" />
-              <span>月額マガジン</span>
+              月額マガジン
             </Link>
           </div>
         </div>

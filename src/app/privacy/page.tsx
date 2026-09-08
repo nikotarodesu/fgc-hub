@@ -12,31 +12,30 @@ export const metadata = constructMetadata({
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen pb-16 bg-[#f0f9fb]">
+    <div className="min-h-screen pb-16 bg-[#f8fafc]">
       {/* ページ上部パンくず */}
       <div className="bg-white border-b border-neutral-200/80 sticky top-0 z-30 shadow-xs">
         <div className="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between text-xs">
           <nav className="flex items-center gap-1.5 text-neutral-500 overflow-x-auto py-1">
-            <Link href="/" className="hover:text-[#00a3c4] transition-colors shrink-0">
+            <Link href="/" className="hover:text-neutral-900 transition-colors shrink-0">
               ホーム
             </Link>
             <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300" />
-            <span className="font-bold text-neutral-900 shrink-0">プライバシーポリシー &amp; 免責事項</span>
+            <span className="font-semibold text-neutral-900 shrink-0">プライバシーポリシー &amp; 免責事項</span>
           </nav>
         </div>
       </div>
 
       <main className="max-w-4xl mx-auto px-4 pt-8 space-y-6">
         {/* ヘッダー */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#00a3c4]/10 text-[#00a3c4] mb-3">
-            <ShieldCheck className="w-3.5 h-3.5" />
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs">
+          <div className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-neutral-100 text-neutral-600 mb-3">
             <span>LEGAL &amp; COMPLIANCE</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
             プライバシーポリシー &amp; 免責事項
           </h1>
-          <p className="text-xs text-neutral-500 mt-2 font-mono">
+          <p className="text-xs text-neutral-400 mt-2 font-mono">
             最終改定日: 2026年9月8日
           </p>
         </div>

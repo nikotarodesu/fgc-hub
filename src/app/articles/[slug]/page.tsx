@@ -22,7 +22,7 @@ export default function ArticleDetailPage() {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-4">
         <h1 className="text-xl font-bold mb-3 text-neutral-900">記事が見つかりませんでした</h1>
         <Link href="/" className="text-neutral-600 hover:text-neutral-900 text-sm underline">
           トップページへ戻る
@@ -52,24 +52,47 @@ export default function ArticleDetailPage() {
     }
   };
 
+  const handleBuyArticle = async () => {
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planType: 'article',
+          slug: article.slug,
+          title: article.title,
+          price: article.price || 500,
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Stripe APIキーの設定後に本番決済が有効化されます。');
+      }
+    } catch {
+      alert('決済処理の呼び出しに失敗しました。');
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#f0f9fb] text-neutral-900">
+    <div className="min-h-screen bg-[#f8fafc] text-neutral-900">
       {/* パンくずリスト */}
-      <div className="bg-white border-b border-sky-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+      <div className="bg-white border-b border-neutral-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5">
           <div className="flex items-center gap-1.5 text-xs text-neutral-500 overflow-x-auto">
             <Link href="/" className="hover:text-neutral-900 shrink-0">ホーム</Link>
-            <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300" />
             <Link href={`/?game=${article.game}`} className="hover:text-neutral-900 shrink-0">
               {article.game === 'sf6' ? 'スト6攻略' : '共通上達論'}
             </Link>
             {article.character && (
               <>
-                <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300" />
                 <span className="text-neutral-700 shrink-0">{article.character}</span>
               </>
             )}
-            <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300" />
             <span className="text-neutral-400 truncate max-w-[200px]">{article.title}</span>
           </div>
         </div>
@@ -78,30 +101,27 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white p-6 sm:p-10 rounded-2xl border border-sky-100 shadow-sm">
+          <main className="lg:col-span-8 bg-white p-6 sm:p-10 rounded-xl border border-neutral-200/80 shadow-xs">
             {/* 記事ヘッダー */}
             <header className="mb-8 pb-6 border-b border-neutral-100">
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#008ba8]">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-700">
                   {article.game === 'sf6' ? 'スト6' : '共通理論'}
                 </span>
                 {article.character && (
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-800">
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-800">
                     {article.character}
                   </span>
                 )}
                 {article.isPaid ? (
-                  <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-900">
                     有料記事（¥{article.price}）
                   </span>
                 ) : (
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-500">
                     無料公開
                   </span>
                 )}
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  ⚡ 最新アプデ対応・実戦検証済み
-                </span>
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 leading-tight mb-4">
@@ -210,8 +230,8 @@ export default function ArticleDetailPage() {
                     price={article.price}
                     isUnlocked={isUnlocked}
                     onToggleUnlock={() => setIsUnlocked(!isUnlocked)}
-                    onBuyArticle={() => setIsUnlocked(true)}
-                    onJoinMembership={() => setIsUnlocked(true)}
+                    onBuyArticle={handleBuyArticle}
+                    onJoinMembership={() => { window.location.href = '/membership'; }}
                   />
 
                   {/* アンロック時の有料限定コンテンツ */}
@@ -232,16 +252,17 @@ export default function ArticleDetailPage() {
                         </div>
                       )}
 
+                      {/* 有料セクション */}
                       {article.paidContent.sections.map((section, idx) => (
-                        <div key={idx} className="pt-4">
-                          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-200">
+                        <div key={idx} className="pt-6">
+                          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">
                             {section.title}
                           </h2>
-                          <p className="text-neutral-700 leading-relaxed mb-4">
+                          <p className="text-neutral-700 leading-relaxed mb-4 whitespace-pre-line">
                             {section.body}
                           </p>
 
-                          {/* 箇条書きポイント */}
+                          {/* 箇条書き */}
                           {section.bulletPoints && (
                             <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
                               {section.bulletPoints.map((bp, bpIdx) => (
@@ -338,31 +359,31 @@ export default function ArticleDetailPage() {
             </div>
           </main>
 
-          {/* 右サイドバー（4 / 12）：遊覧性・回遊性の高い導線 */}
-          <aside className="lg:col-span-4 space-y-6">
+          {/* 右サイドバー（4 / 12） */}
+          <aside className="lg:col-span-4 space-y-5">
             {/* 著者プロフィール */}
-            <div className="p-5 bg-white rounded-2xl border-2 border-sky-100 shadow-sm text-center">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-neutral-900 mx-auto mb-3 bg-[#00a3c4] shadow-md">
+            <div className="p-5 bg-white rounded-xl border border-neutral-200/80 shadow-xs text-center">
+              <div className="w-14 h-14 rounded-full overflow-hidden ring-1 ring-neutral-200 mx-auto mb-3 bg-neutral-100">
                 <Image
                   src="/icon.png"
                   alt="にこ太郎"
-                  width={64}
-                  height={64}
+                  width={56}
+                  height={56}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="font-black text-base text-neutral-900">{article.author.name}</h3>
-              <div className="inline-block text-[11px] font-bold text-[#008ba8] bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full my-1">
+              <h3 className="font-bold text-sm text-neutral-900">{article.author.name}</h3>
+              <div className="inline-block text-[11px] font-medium text-neutral-600 bg-neutral-100 px-2.5 py-0.5 rounded-full my-1.5">
                 {article.author.mrRating}
               </div>
-              <p className="text-xs text-neutral-600 leading-relaxed mt-2 text-left">
+              <p className="text-xs text-neutral-500 leading-relaxed mt-1 text-left">
                 {article.author.bio}
               </p>
             </div>
 
             {/* この記事を読んだ人におすすめ（関連記事） */}
-            <div className="p-5 bg-white rounded-2xl border border-neutral-200">
-              <div className="text-xs font-black text-neutral-900 uppercase tracking-wider mb-3">
+            <div className="p-5 bg-white rounded-xl border border-neutral-200/80 shadow-xs">
+              <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-3">
                 あわせて読みたい記事
               </div>
               <div className="space-y-4">
@@ -375,7 +396,7 @@ export default function ArticleDetailPage() {
                     <span className="text-[10px] text-neutral-400 block mb-1">
                       {rel.game === 'sf6' ? 'スト6' : '共通理論'}
                     </span>
-                    <h4 className="text-xs font-bold text-neutral-800 group-hover:text-[#00a3c4] line-clamp-2 leading-snug mb-1">
+                    <h4 className="text-xs font-bold text-neutral-800 group-hover:text-neutral-600 line-clamp-2 leading-snug mb-1">
                       {rel.title}
                     </h4>
                     <p className="text-[11px] text-neutral-500 line-clamp-2 leading-relaxed">
@@ -386,20 +407,20 @@ export default function ArticleDetailPage() {
               </div>
             </div>
 
-            {/* 月額マガジンCTA */}
-            <div className="p-5 bg-gradient-to-br from-[#00a3c4] to-sky-700 text-white rounded-2xl shadow-md shadow-sky-500/10">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full inline-block mb-2">
+            {/* 月額マガジン案内カード */}
+            <div className="p-5 bg-neutral-900 text-white rounded-xl border border-neutral-800 shadow-sm">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                 MEMBERSHIP
               </span>
-              <h3 className="text-sm font-black text-white mb-1.5">
+              <h3 className="text-sm font-bold text-white mb-1">
                 月額マガジンで読み放題
               </h3>
-              <p className="text-xs text-sky-100 leading-relaxed mb-4">
-                月額¥980でスト6全キャラ攻略＆実戦添削がすべて読み放題。noteよりお得に最新版を購読できます。
+              <p className="text-xs text-neutral-400 leading-relaxed mb-4">
+                月額¥980でスト6全キャラ攻略＆実戦添削がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
               </p>
               <Link
                 href="/membership"
-                className="block w-full py-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#008ba8] text-xs font-black text-center transition-transform active:scale-98"
+                className="block w-full py-2 rounded-lg bg-white hover:bg-neutral-100 text-neutral-950 text-xs font-semibold text-center transition-colors"
               >
                 マガジン詳細を見る
               </Link>

@@ -15,7 +15,18 @@ import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkl
 export default function ArticleDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const article = ARTICLES_DATA.find((a) => a.slug === slug);
+  const baseArticle = ARTICLES_DATA.find((a) => a.slug === slug);
+  const companionArticle = baseArticle?.relatedGuideSlug
+    ? ARTICLES_DATA.find((a) => a.slug === baseArticle.relatedGuideSlug)
+    : null;
+
+  const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
+    baseArticle?.controlType || 'classic'
+  );
+
+  const article = companionArticle && activeControlType !== baseArticle?.controlType
+    ? companionArticle
+    : baseArticle;
 
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [likes, setLikes] = useState(article ? article.likesCount : 0);
@@ -34,7 +45,9 @@ export default function ArticleDetailPage() {
   }
 
   // 関連記事（同じゲームまたは他のおすすめ記事）
-  const relatedArticles = ARTICLES_DATA.filter((a) => a.slug !== article.slug).slice(0, 2);
+  const relatedArticles = ARTICLES_DATA.filter(
+    (a) => a.slug !== baseArticle?.slug && a.slug !== companionArticle?.slug
+  ).slice(0, 2);
 
   const handleLike = () => {
     if (!hasLiked) {
@@ -115,6 +128,11 @@ export default function ArticleDetailPage() {
                     {article.character}
                   </span>
                 )}
+                {article.controlType && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800">
+                    {article.controlType === 'classic' ? 'クラシック (C)' : 'モダン (M)'}
+                  </span>
+                )}
                 {article.isPaid ? (
                   <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-900">
                     有料記事（¥{article.price}）
@@ -155,6 +173,47 @@ export default function ArticleDetailPage() {
 
             {/* 本文 */}
             <article className="text-neutral-800 leading-relaxed text-sm sm:text-base space-y-6">
+              {/* クラシック / モダン切り替えスイッチ */}
+              {companionArticle && (
+                <div className="p-2.5 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 rounded-2xl border border-neutral-200/90 shadow-2xs">
+                  <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider px-2 pt-1 pb-1.5 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 font-sans text-neutral-700 font-bold">
+                      <span className="w-2 h-2 rounded-full bg-cyan-600 animate-pulse" />
+                      操作タイプ切り替え（クラシック / モダン）
+                    </span>
+                    <span className="text-[10px] text-neutral-500 bg-white px-2 py-0.5 rounded-md border border-neutral-200/80 font-medium">
+                      ワンクリックで即座に切り替え
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setActiveControlType('classic')}
+                      className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        activeControlType === 'classic'
+                          ? 'bg-neutral-900 text-white shadow-sm ring-1 ring-neutral-900'
+                          : 'bg-white/80 text-neutral-600 hover:text-neutral-900 hover:bg-white border border-neutral-200/60'
+                      }`}
+                    >
+                      <span className="text-base">🥋</span>
+                      <span>クラシック (Classic)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveControlType('modern')}
+                      className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        activeControlType === 'modern'
+                          ? 'bg-neutral-900 text-white shadow-sm ring-1 ring-neutral-900'
+                          : 'bg-white/80 text-neutral-600 hover:text-neutral-900 hover:bg-white border border-neutral-200/60'
+                      }`}
+                    >
+                      <span className="text-base">⚡️</span>
+                      <span>モダン (Modern)</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* 無料記事：YouTube動画プレイヤー（記事冒頭に配置） */}
               {!article.isPaid && article.youtubeVideoId && (
                 <div className="mb-6">
@@ -447,6 +506,48 @@ export default function ArticleDetailPage() {
                 {article.author.bio}
               </p>
             </div>
+
+            {/* 操作タイプ切り替えウィジェット */}
+            {companionArticle && (
+              <div className="p-4 bg-white rounded-xl border border-neutral-200/80 shadow-xs">
+                <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                  <span>操作タイプ切り替え</span>
+                  <span className="text-[10px] font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200/60">
+                    {activeControlType === 'classic' ? 'クラシック表示中' : 'モダン表示中'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveControlType('classic');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeControlType === 'classic'
+                        ? 'bg-neutral-900 text-white shadow-xs'
+                        : 'bg-neutral-100 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200'
+                    }`}
+                  >
+                    🥋 クラシック
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveControlType('modern');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      activeControlType === 'modern'
+                        ? 'bg-neutral-900 text-white shadow-xs'
+                        : 'bg-neutral-100 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200'
+                    }`}
+                  >
+                    ⚡️ モダン
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* この記事を読んだ人におすすめ（関連記事） */}
             <div className="p-5 bg-white rounded-xl border border-neutral-200/80 shadow-xs">

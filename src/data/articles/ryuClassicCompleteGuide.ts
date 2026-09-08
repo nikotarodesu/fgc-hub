@@ -23,6 +23,8 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
   price: 500,
   tags: ['スト6', 'リュウ', 'クラシック', 'コンボ', '起き攻め', '確定反撃', 'フレーム'],
   likesCount: 134,
+  controlType: 'classic',
+  relatedGuideSlug: 'ryu-modern-complete-guide',
   freeContent: {
     intro:
       'リュウの全てをまとめました。通勤、通学の隙間時間に「読んで強くなる」をコンセプトに記事を作っています。「いいね」と「高評価」を頂けたらとても嬉しいです！これからも攻略記事つくっていくのでよければフォローもよろしくお願いします。\n\n※このラインより上のエリア（①基本の立ち回り〜④対空について）が無料で表示されます。',

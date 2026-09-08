@@ -1,4 +1,5 @@
 import { RYU_CLASSIC_COMPLETE_GUIDE } from './articles/ryuClassicCompleteGuide';
+import { RYU_MODERN_COMPLETE_GUIDE } from './articles/ryuModernCompleteGuide';
 
 export interface Article {
   id: string;
@@ -78,6 +79,8 @@ export interface Article {
       }[];
     }[];
   };
+  controlType?: 'classic' | 'modern';
+  relatedGuideSlug?: string;
 }
 
 export const CHARACTERS_SF6 = [
@@ -174,4 +177,5 @@ export const ARTICLES_DATA: Article[] = [
     },
   },
   RYU_CLASSIC_COMPLETE_GUIDE,
+  RYU_MODERN_COMPLETE_GUIDE,
 ];

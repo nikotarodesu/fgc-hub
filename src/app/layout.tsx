@@ -13,8 +13,7 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   verification: {
-    // Google Search Console 認証コード（環境変数または直指定）
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google: 'WpGRRdF0HHY0wFdMrd-s_AfzySf7Ge10orooBjtflP8',
   },
   openGraph: {
     title: "にこ太郎の格ゲーLAB",

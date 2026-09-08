@@ -37,9 +37,14 @@ function SuccessContent() {
 
         if (res.ok && data.paid) {
           setSessionData(data);
-          // ローカルストレージにトークンを保存し、次回アクセス時も自動アンロック
+          // ローカルストレージにトークンを保存し、次回アクセス時も自動アンロック（クラシック・モダン相互連動）
           if (data.token) {
-            localStorage.setItem(`fgc_unlocked_${data.slug}`, data.token);
+            const relatedSlugs = data.slug.includes('ryu')
+              ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+              : [data.slug];
+            relatedSlugs.forEach((s) => {
+              localStorage.setItem(`fgc_unlocked_${s}`, data.token);
+            });
             if (data.planType === 'membership') {
               localStorage.setItem('fgc_membership_token', data.token);
             }

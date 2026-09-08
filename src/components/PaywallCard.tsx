@@ -51,7 +51,7 @@ export default function PaywallCard({
         <div className="flex items-center gap-2 text-xs font-semibold">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>
-            【購入認証完了】有料限定の全コンテンツ（フレーム表・厳選コンボ・解説動画）を表示中
+            【購入認証完了】有料限定の全コンテンツ（クラシック・モダン両対応）を表示中
             {userEmail ? `（購入者: ${userEmail}）` : ''}
           </span>
         </div>
@@ -80,7 +80,7 @@ export default function PaywallCard({
           この続きは有料エリアです
         </h3>
         <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-6 leading-relaxed font-normal">
-          勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています。
+          勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。
         </p>
 
         {/* 料金・購入ボタンカード */}
@@ -95,7 +95,7 @@ export default function PaywallCard({
                 ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500">（買い切り）</span>
               </div>
               <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
-                追加料金なしでアプデ追記も含め永久閲覧できます。
+                クラシック・モダン両対応（1回の購入で両方読み放題）。アプデ追記も含め永久閲覧できます。
               </p>
             </div>
             <button

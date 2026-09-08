@@ -243,19 +243,9 @@ export default function HomePage() {
                       {article.title}
                     </h2>
 
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed mb-3">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
                       {article.summary}
                     </p>
-
-                    <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500 pt-2.5 border-t border-neutral-100 dark:border-neutral-800">
-                      <div className="text-neutral-500 dark:text-neutral-400">
-                        <span>読了 {article.readTime}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-neutral-900 dark:text-white font-semibold group-hover:translate-x-0.5 transition-transform">
-                        <span>読む</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
                   </Link>
                 ))}
               </div>

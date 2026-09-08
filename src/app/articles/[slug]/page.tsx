@@ -12,7 +12,6 @@ import RichContent from '@/components/RichContent';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import {
-  Clock,
   Heart,
   Share2,
   BookOpen,
@@ -63,6 +62,9 @@ export default function ArticleDetailPage() {
     if (!article || !article.isPaid) return;
 
     const targetSlug = article.slug;
+    const candidateSlugs = targetSlug.includes('ryu')
+      ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+      : [targetSlug];
 
     async function checkTokenAccess() {
       try {
@@ -77,11 +79,18 @@ export default function ArticleDetailPage() {
           }
         }
 
-        // 2. なければLocalStorageから取得
+        // 2. なければLocalStorageから取得（クラシック・モダン相互連動）
         if (!tokenToVerify && typeof window !== 'undefined') {
-          tokenToVerify =
-            localStorage.getItem(`fgc_unlocked_${targetSlug}`) ||
-            localStorage.getItem('fgc_membership_token');
+          for (const s of candidateSlugs) {
+            const saved = localStorage.getItem(`fgc_unlocked_${s}`);
+            if (saved) {
+              tokenToVerify = saved;
+              break;
+            }
+          }
+          if (!tokenToVerify) {
+            tokenToVerify = localStorage.getItem('fgc_membership_token');
+          }
         }
 
         if (!tokenToVerify) return;
@@ -100,7 +109,10 @@ export default function ArticleDetailPage() {
             setUserEmail(data.email);
             localStorage.setItem('fgc_user_email', data.email);
           }
-          localStorage.setItem(`fgc_unlocked_${targetSlug}`, tokenToVerify);
+          // クラシック・モダンの全エイリアスにトークンを保存（相互買い切り閲覧保証）
+          candidateSlugs.forEach((s) => {
+            localStorage.setItem(`fgc_unlocked_${s}`, tokenToVerify!);
+          });
         }
       } catch (e) {
         console.error('Failed to verify access token:', e);
@@ -112,6 +124,10 @@ export default function ArticleDetailPage() {
 
   const handleApplyToken = async (manualToken: string): Promise<boolean> => {
     if (!article) return false;
+    const candidateSlugs = article.slug.includes('ryu')
+      ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+      : [article.slug];
+
     try {
       const res = await fetch('/api/verify-token', {
         method: 'POST',
@@ -125,7 +141,10 @@ export default function ArticleDetailPage() {
           setUserEmail(data.email);
           localStorage.setItem('fgc_user_email', data.email);
         }
-        localStorage.setItem(`fgc_unlocked_${article.slug}`, manualToken);
+        // クラシック・モダン全エイリアスに保存
+        candidateSlugs.forEach((s) => {
+          localStorage.setItem(`fgc_unlocked_${s}`, manualToken);
+        });
         return true;
       }
       return false;
@@ -326,27 +345,9 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white leading-tight mb-4">
+              <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
                 {article.title}
               </h1>
-
-              <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500 pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                <div className="flex items-center gap-2.5 text-neutral-600 dark:text-neutral-300">
-                  <div className="w-7 h-7 rounded-full overflow-hidden border border-neutral-900 dark:border-neutral-700 bg-[#00a3c4] inline-block shrink-0">
-                    <Image src="/icon.png" alt="にこ太郎" width={28} height={28} className="w-full h-full object-cover" />
-                  </div>
-                  <span className="font-bold text-neutral-900 dark:text-white">{article.author.name}</span>
-                  <span className="text-[10px] bg-sky-50 dark:bg-sky-950/50 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800 px-2 py-0.5 rounded-full font-bold">
-                    {article.author.mrRating}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-neutral-400" />
-                    <span>読了 {article.readTime}</span>
-                  </div>
-                </div>
-              </div>
             </header>
 
             {/* 本文 */}

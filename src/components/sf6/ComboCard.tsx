@@ -6,6 +6,8 @@ import { OKIZEME_TAGS } from '@/data/sf6/okizemeTags';
 import CommandRenderer from './CommandRenderer';
 import { Copy, Check, ChevronDown, ChevronUp, Flame, ShieldAlert, Zap } from 'lucide-react';
 
+import { trackRecipeCopy } from '@/lib/analytics';
+
 interface ComboCardProps {
   combo: Combo;
   isLethal?: boolean;
@@ -20,6 +22,11 @@ export default function ComboCard({ combo, isLethal = false, onTagClick }: Combo
     e.stopPropagation();
     navigator.clipboard.writeText(combo.recipeText);
     setIsCopied(true);
+    trackRecipeCopy({
+      character: combo.characterId,
+      comboId: combo.id,
+      title: combo.title,
+    });
     setTimeout(() => setIsCopied(false), 2000);
   };
 

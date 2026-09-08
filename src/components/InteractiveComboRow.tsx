@@ -89,7 +89,8 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
                     !step.button.label.includes('前ステ') &&
                     !step.button.label.includes('バクステ') &&
                     !step.button.label.includes('歩き') &&
-                    !step.button.label.includes('後退') && (
+                    !step.button.label.includes('後退') &&
+                    !step.button.label.includes('投げ') && (
                       <span className="text-neutral-400 text-xs font-bold">+</span>
                     )}
 
@@ -101,7 +102,8 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
                   ) : step.button.label.includes('前ステ') ||
                     step.button.label.includes('バクステ') ||
                     step.button.label.includes('歩き') ||
-                    step.button.label.includes('後退') ? (
+                    step.button.label.includes('後退') ||
+                    step.button.label.includes('投げ') ? (
                     <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
                       {step.button.label}
                     </span>

@@ -8,6 +8,7 @@ import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
+import RichContent from '@/components/RichContent';
 import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkles, ChevronRight, Check, HelpCircle } from 'lucide-react';
 
 export default function ArticleDetailPage() {
@@ -153,15 +154,21 @@ export default function ArticleDetailPage() {
 
             {/* 本文 */}
             <article className="text-neutral-800 leading-relaxed text-sm sm:text-base space-y-6">
-              {/* リード文 */}
-              <div className="p-4 sm:p-5 rounded-xl bg-neutral-50 border border-neutral-100 text-neutral-700 leading-relaxed text-sm">
-                {article.freeContent.intro}
-              </div>
-
-              {/* 無料記事の場合のみ、無料エリアでYouTube動画を表示 */}
+              {/* 無料記事：YouTube動画プレイヤー（記事冒頭に配置） */}
               {!article.isPaid && article.youtubeVideoId && (
-                <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
+                <div className="mb-6">
+                  <YouTubeEmbed
+                    videoId={article.youtubeVideoId}
+                    title={article.title}
+                    caption="実戦解説・対戦リプレイ動画（YouTube）"
+                  />
+                </div>
               )}
+
+              {/* リード文 */}
+              <div className="p-5 rounded-xl bg-neutral-50/90 border border-neutral-200/80 text-neutral-800 shadow-2xs">
+                <RichContent content={article.freeContent.intro} />
+              </div>
 
               {/* 目次 */}
               <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200/80 my-6">
@@ -188,17 +195,17 @@ export default function ArticleDetailPage() {
 
               {/* 無料公開セクション */}
               {article.freeContent.sections.map((section, idx) => (
-                <div key={idx} className="pt-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">
+                <div key={idx} className="pt-6">
+                  <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-200/80">
                     {section.title}
                   </h2>
-                  <p className="text-neutral-700 leading-relaxed mb-4">
-                    {section.body}
-                  </p>
+                  <div className="mb-4">
+                    <RichContent content={section.body} />
+                  </div>
 
                   {/* 箇条書きポイント */}
                   {section.bulletPoints && (
-                    <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
+                    <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
                       {section.bulletPoints.map((bp, bpIdx) => (
                         <li key={bpIdx} className="flex items-start gap-2">
                           <span className="text-neutral-900 font-bold shrink-0 mt-0.5">▶</span>
@@ -255,12 +262,12 @@ export default function ArticleDetailPage() {
                       {/* 有料セクション */}
                       {article.paidContent.sections.map((section, idx) => (
                         <div key={idx} className="pt-6">
-                          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-3 pb-2 border-b border-neutral-100">
+                          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-200/80">
                             {section.title}
                           </h2>
-                          <p className="text-neutral-700 leading-relaxed mb-4 whitespace-pre-line">
-                            {section.body}
-                          </p>
+                          <div className="mb-4">
+                            <RichContent content={section.body} />
+                          </div>
 
                           {/* 箇条書き */}
                           {section.bulletPoints && (

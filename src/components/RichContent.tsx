@@ -23,14 +23,16 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
-type LineType = 'empty' | 'quote' | 'heading' | 'subheading' | 'bullet' | 'numbered' | 'arrow' | 'text';
+type LineType = 'empty' | 'quote' | 'heading' | 'frame' | 'combo' | 'subheading' | 'bullet' | 'numbered' | 'arrow' | 'text';
 
 function getLineType(line: string): LineType {
   const trimmed = line.trim();
   if (!trimmed) return 'empty';
   if (trimmed.startsWith('>')) return 'quote';
   if (trimmed.startsWith('⚡️') || trimmed.startsWith('⭐️') || /^[①-⑳❶-❿]/.test(trimmed)) return 'heading';
-  if (trimmed.startsWith('●') || trimmed.startsWith('■') || /^【.+】/.test(trimmed)) return 'subheading';
+  if (trimmed.startsWith('【') && trimmed.includes('】')) return 'frame';
+  if ((trimmed.startsWith('●') || trimmed.startsWith('・') || trimmed.startsWith('-')) && trimmed.includes('〆')) return 'combo';
+  if (trimmed.startsWith('●') || trimmed.startsWith('■')) return 'subheading';
   if (trimmed.startsWith('・') || trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('▶︎') || trimmed.startsWith('▶')) return 'bullet';
   if (/^\d+[\.|\)|）]\s*/.test(trimmed)) return 'numbered';
   if (trimmed.startsWith('→') || trimmed.startsWith('=>')) return 'arrow';
@@ -105,7 +107,71 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 1.8 中見出し・技名（●, ■, 【...】等）
+        // 1.6 起き攻めフレーム状況ヘッダー（【+37】など）
+        if (group.type === 'frame') {
+          return (
+            <div key={gIdx} className="pt-4 pb-0.5">
+              {group.lines.map((line, lIdx) => {
+                const trimmed = line.trim();
+                const match = trimmed.match(/^【(.*?)】(.*)$/);
+                const badgeContent = match ? match[1] : trimmed;
+                const extraText = match ? match[2].trim() : '';
+                const isPlusFrame = badgeContent.startsWith('+') || badgeContent.includes('+');
+
+                return (
+                  <div key={lIdx} className="flex items-center gap-2.5 flex-wrap my-1">
+                    <span className="inline-flex items-center gap-1.5 bg-neutral-900 text-white font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800">
+                      <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                      【{badgeContent}】
+                    </span>
+                    {isPlusFrame && (
+                      <span className="text-xs font-bold text-cyan-800 bg-cyan-50 border border-cyan-200/90 px-2 py-0.5 rounded">
+                        起き攻め状況
+                      </span>
+                    )}
+                    {extraText && (
+                      <span className="text-xs sm:text-sm font-bold text-neutral-700">
+                        {renderInline(extraText)}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+
+        // 1.7 締め技・コンボルート（〆が付いている行）
+        if (group.type === 'combo') {
+          return (
+            <div key={gIdx} className="my-2.5 space-y-1.5 pl-0.5">
+              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-600" />
+                <span>締め技・コンボルート</span>
+              </div>
+              <div className="space-y-1.5">
+                {group.lines.map((line, lIdx) => {
+                  const cleanText = line.trim().replace(/^[●・\-]\s*/, '');
+                  return (
+                    <div
+                      key={lIdx}
+                      className="flex items-center gap-2.5 py-1.5 px-3 bg-neutral-50/90 hover:bg-neutral-100/90 border border-neutral-200/90 rounded-md text-xs sm:text-sm font-mono text-neutral-900 transition-colors"
+                    >
+                      <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
+                        〆コンボ
+                      </span>
+                      <span className="font-semibold flex-1 overflow-x-auto">
+                        {renderInline(cleanText)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+
+        // 1.8 中見出し・技名（●, ■ 等で〆が付いていないもの）
         if (group.type === 'subheading') {
           return (
             <div key={gIdx} className="pt-2 pb-1">
@@ -118,18 +184,26 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 2. 箇条書きリスト（「・」「- 」「* 」「▶︎」「▶」）
+        // 2. 箇条書き・選択肢リスト（「・」「- 」「* 」「▶︎」「▶」）
         if (group.type === 'bullet') {
           return (
-            <ul key={gIdx} className="my-2 space-y-2 pl-1">
+            <ul key={gIdx} className="my-2 space-y-1.5 pl-1">
               {group.lines.map((line, lIdx) => {
-                const itemText = line.trim().replace(/^[・\-\*▶︎▶]\s*/, '');
+                const trimmed = line.trim();
+                const isAction = trimmed.startsWith('▶︎') || trimmed.startsWith('▶');
+                const itemText = trimmed.replace(/^[・\-\*▶︎▶]\s*/, '');
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-neutral-800 text-sm sm:text-[15px] leading-relaxed"
+                    className="flex items-start gap-2.5 text-neutral-800 text-xs sm:text-sm leading-relaxed"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 mt-2.5 shrink-0" />
+                    {isAction ? (
+                      <span className="text-cyan-600 font-bold text-xs mt-0.5 shrink-0 select-none">
+                        ▶
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 mt-2 shrink-0" />
+                    )}
                     <div className="flex-1">
                       {renderInline(itemText)}
                     </div>

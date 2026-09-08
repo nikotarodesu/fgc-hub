@@ -49,7 +49,8 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-neutral-900 mb-3">カテゴリ</h4>
             <ul className="space-y-2 text-neutral-500">
-              <li><Link href="/?game=sf6" className="hover:text-[#00a3c4]">ストリートファイター6 攻略</Link></li>
+              <li><Link href="/sf6" className="hover:text-[#00a3c4] font-bold text-[#00a3c4]">⚡ スト6攻略DBツール (New)</Link></li>
+              <li><Link href="/?game=sf6" className="hover:text-[#00a3c4]">ストリートファイター6 攻略記事</Link></li>
               <li><Link href="/?game=general" className="hover:text-[#00a3c4]">格ゲー共通上達論・メンタル</Link></li>
               <li><Link href="/membership" className="hover:text-[#00a3c4]">月額マガジン案内</Link></li>
             </ul>

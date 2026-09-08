@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, CHARACTERS_SF6, AUTHOR_INFO } from '@/data/articles';
-import { Search, Flame, BookOpen, Lock, ArrowRight, TrendingUp, Tag, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Search, Flame, BookOpen, Lock, ArrowRight, TrendingUp, Tag, Sparkles, CheckCircle2, Zap } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedGame, setSelectedGame] = useState<'all' | 'sf6' | 'general'>('all');
@@ -99,6 +99,31 @@ export default function HomePage() {
                 クリア
               </button>
             )}
+          </div>
+
+          {/* 新機能バナー: スト6攻略データベース (nikotaro.com/sf6/) */}
+          <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-neutral-900 via-slate-900 to-sky-950 text-white shadow-lg border border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#00a3c4]/20 border border-[#00a3c4]/40 flex items-center justify-center text-[#00a3c4] shrink-0">
+                <Zap className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-black text-sm sm:text-base">スト6攻略データベース (Webツール)</span>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00a3c4] text-white shadow-xs">NEW</span>
+                </div>
+                <p className="text-xs text-neutral-300 mt-0.5">
+                  対戦・トレモ特化！状況別コンボ検索、+42F詐欺飛び・シミー起き攻めデータ、リーサル逆引き計算機
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/sf6"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black bg-[#00a3c4] hover:bg-[#008ba8] text-white shadow-md transition-all hover:scale-105 shrink-0 self-stretch sm:self-auto justify-center"
+            >
+              <span>ツールを開く</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>

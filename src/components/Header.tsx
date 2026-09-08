@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Flame, BookOpen, ShieldCheck } from 'lucide-react';
+import { Flame, BookOpen, ShieldCheck, Zap } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -41,9 +41,14 @@ export default function Header() {
 
           {/* ナビゲーション */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-neutral-700">
+            <Link href="/sf6" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5 text-[#00a3c4]">
+              <Zap className="w-4 h-4 text-[#00a3c4]" />
+              <span>攻略DBツール</span>
+              <span className="px-1.5 py-0.2 text-[9px] font-black bg-cyan-100 text-[#00a3c4] rounded-full">New</span>
+            </Link>
             <Link href="/?game=sf6" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5">
               <Flame className="w-4 h-4 text-orange-500" />
-              <span>スト6攻略</span>
+              <span>スト6記事</span>
             </Link>
             <Link href="/?game=general" className="hover:text-[#00a3c4] transition-colors flex items-center gap-1.5">
               <BookOpen className="w-4 h-4 text-sky-500" />

@@ -9,6 +9,7 @@ import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
 import RichContent from '@/components/RichContent';
+import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkles, ChevronRight, Check, HelpCircle } from 'lucide-react';
 
 export default function ArticleDetailPage() {
@@ -203,6 +204,29 @@ export default function ArticleDetailPage() {
                     <RichContent content={section.body} />
                   </div>
 
+                  {/* 図解ダイアグラム */}
+                  {section.diagramType === 'hadoken-flow' && <HadokenFlowDiagram />}
+                  {section.diagramType === 'distance-meter' && <DistanceMeterDiagram />}
+                  {section.diagramType === 'mindset-comparison' && <MindsetComparisonTable />}
+
+                  {/* スクショ画像（設定されている場合） */}
+                  {section.image && (
+                    <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-900 shadow-sm">
+                      <Image
+                        src={section.image.src}
+                        alt={section.image.alt}
+                        width={1200}
+                        height={675}
+                        className="w-full h-auto object-cover"
+                      />
+                      {section.image.caption && (
+                        <div className="p-2.5 bg-neutral-50 border-t border-neutral-200 text-xs text-neutral-600 text-center font-medium">
+                          {section.image.caption}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* 箇条書きポイント */}
                   {section.bulletPoints && (
                     <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
@@ -268,6 +292,29 @@ export default function ArticleDetailPage() {
                           <div className="mb-4">
                             <RichContent content={section.body} />
                           </div>
+
+                          {/* 図解ダイアグラム */}
+                          {section.diagramType === 'hadoken-flow' && <HadokenFlowDiagram />}
+                          {section.diagramType === 'distance-meter' && <DistanceMeterDiagram />}
+                          {section.diagramType === 'mindset-comparison' && <MindsetComparisonTable />}
+
+                          {/* スクショ画像（設定されている場合） */}
+                          {section.image && (
+                            <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-900 shadow-sm">
+                              <Image
+                                src={section.image.src}
+                                alt={section.image.alt}
+                                width={1200}
+                                height={675}
+                                className="w-full h-auto object-cover"
+                              />
+                              {section.image.caption && (
+                                <div className="p-2.5 bg-neutral-50 border-t border-neutral-200 text-xs text-neutral-600 text-center font-medium">
+                                  {section.image.caption}
+                                </div>
+                              )}
+                            </div>
+                          )}
 
                           {/* 箇条書き */}
                           {section.bulletPoints && (

@@ -4,9 +4,8 @@ interface RichContentProps {
   content: string;
 }
 
-// インライン装飾（**太字**、`コード` 等）のパース
+// インライン装飾（**太字** 等）のスマートなパース
 function renderInline(text: string): React.ReactNode[] {
-  // **太字** を分割して抽出
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
@@ -14,7 +13,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <strong
           key={i}
-          className="font-bold text-neutral-900 bg-amber-100/90 px-1.5 py-0.5 rounded mx-0.5 border-b-2 border-amber-400 shadow-2xs inline-block"
+          className="font-bold text-neutral-900 border-b border-neutral-900/40 pb-0.5"
         >
           {inner}
         </strong>
@@ -74,9 +73,9 @@ export default function RichContent({ content }: RichContentProps) {
   }
 
   return (
-    <div className="space-y-4 text-neutral-800 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
+    <div className="space-y-4 text-neutral-700 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
       {groups.map((group, gIdx) => {
-        // 1. 引用・コールアウト
+        // 1. 引用・コールアウト（シンプルで洗練された左バー）
         if (group.type === 'quote') {
           const quoteText = group.lines
             .map((l) => l.trim().replace(/^>\s*/, ''))
@@ -84,28 +83,26 @@ export default function RichContent({ content }: RichContentProps) {
           return (
             <div
               key={gIdx}
-              className="my-4 p-4 sm:p-5 rounded-xl bg-neutral-50 border-l-4 border-neutral-900 shadow-2xs"
+              className="my-4 pl-4 py-1.5 border-l-2 border-neutral-800 text-neutral-800 font-medium text-sm sm:text-[15px]"
             >
-              <div className="text-neutral-900 font-medium leading-relaxed">
-                {renderInline(quoteText)}
-              </div>
+              {renderInline(quoteText)}
             </div>
           );
         }
 
-        // 2. 箇条書きリスト（「・」「- 」「* 」）→ 個別の見やすい縦並びカード
+        // 2. 箇条書きリスト（過剰なカード枠を廃止し、すっきりとしたクリーンなリスト）
         if (group.type === 'bullet') {
           return (
-            <ul key={gIdx} className="my-3 space-y-2">
+            <ul key={gIdx} className="my-3 space-y-2 pl-1">
               {group.lines.map((line, lIdx) => {
                 const itemText = line.trim().replace(/^[・\-\*]\s*/, '');
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-neutral-50/90 hover:bg-neutral-100/60 border border-neutral-200/80 text-neutral-800 transition-colors shadow-2xs"
+                    className="flex items-start gap-2.5 text-neutral-800 text-sm sm:text-[15px] leading-relaxed"
                   >
-                    <span className="w-2 h-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
-                    <div className="flex-1 leading-relaxed text-sm sm:text-[15px]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 mt-2.5 shrink-0" />
+                    <div className="flex-1">
                       {renderInline(itemText)}
                     </div>
                   </li>
@@ -115,10 +112,10 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 3. 番号付きリスト（「1. 」「2. 」等）→ ナンバリングバッジ付きカード
+        // 3. 番号付きリスト（すっきりしたナンバリング）
         if (group.type === 'numbered') {
           return (
-            <ol key={gIdx} className="my-3 space-y-2">
+            <ol key={gIdx} className="my-3 space-y-2 pl-1">
               {group.lines.map((line, lIdx) => {
                 const trimmed = line.trim();
                 const match = trimmed.match(/^(\d+)[\.|\)|）]\s*(.*)$/);
@@ -127,12 +124,12 @@ export default function RichContent({ content }: RichContentProps) {
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-neutral-200 shadow-2xs text-neutral-800"
+                    className="flex items-start gap-2.5 text-neutral-800 text-sm sm:text-[15px] leading-relaxed"
                   >
-                    <span className="w-6 h-6 rounded-full bg-neutral-900 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                      {num}
+                    <span className="font-bold text-neutral-900 font-mono text-sm shrink-0 mt-0.5">
+                      {num}.
                     </span>
-                    <div className="flex-1 leading-relaxed text-sm sm:text-[15px]">
+                    <div className="flex-1">
                       {renderInline(itemText)}
                     </div>
                   </li>
@@ -142,19 +139,19 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 4. 矢印行（「→ 」）→ 結論・結果の強調バー
+        // 4. 矢印行（結論・効果）：すっきりインデントされた強調
         if (group.type === 'arrow') {
           return (
-            <div key={gIdx} className="my-3 space-y-1.5">
+            <div key={gIdx} className="my-2 space-y-1.5 pl-2">
               {group.lines.map((line, lIdx) => {
                 const itemText = line.trim().replace(/^(=>|→)\s*/, '');
                 return (
                   <div
                     key={lIdx}
-                    className="flex items-center gap-2 p-3 rounded-lg bg-sky-50/80 border border-sky-200 text-sky-950 text-sm font-medium"
+                    className="flex items-center gap-2 text-sm sm:text-[15px] text-neutral-900 font-medium"
                   >
-                    <span className="font-bold text-sky-600 shrink-0">➔</span>
-                    <span className="flex-1">{renderInline(itemText)}</span>
+                    <span className="text-cyan-600 shrink-0 font-bold">➔</span>
+                    <span>{renderInline(itemText)}</span>
                   </div>
                 );
               })}

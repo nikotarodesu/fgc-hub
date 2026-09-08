@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
+import InteractiveComboRow from './InteractiveComboRow';
 
 interface RichContentProps {
   content: string;
@@ -142,27 +143,23 @@ export default function RichContent({ content, isNeutralMovesSection = false }: 
         if (group.type === 'combo') {
           return (
             <div key={gIdx} className="my-2.5 space-y-1.5 pl-0.5">
-              <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
-                <span>締め技・コンボルート</span>
+              <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center justify-between gap-1.5 mb-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
+                  <span>締め技・コンボルート</span>
+                </div>
+                <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-normal">
+                  （タップで初心者用矢印コマンド展開）
+                </span>
               </div>
               <div className="space-y-1.5">
-                {group.lines.map((line, lIdx) => {
-                  const cleanText = line.trim().replace(/^[●・\-]\s*/, '');
-                  return (
-                    <div
-                      key={lIdx}
-                      className="flex items-center gap-2.5 py-1.5 px-3 bg-neutral-50/90 dark:bg-neutral-800/80 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700/80 rounded-md text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 transition-colors"
-                    >
-                      <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
-                        コンボ
-                      </span>
-                      <span className="font-semibold flex-1 overflow-x-auto">
-                        {renderInline(cleanText)}
-                      </span>
-                    </div>
-                  );
-                })}
+                {group.lines.map((line, lIdx) => (
+                  <InteractiveComboRow
+                    key={lIdx}
+                    comboLine={line}
+                    renderInlineText={renderInline}
+                  />
+                ))}
               </div>
             </div>
           );

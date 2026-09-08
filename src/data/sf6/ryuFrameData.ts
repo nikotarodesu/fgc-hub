@@ -124,7 +124,7 @@ export const RYU_NEUTRAL_MOVES_FRAME_DATA: Record<string, KeyFrameInfo> = {
  * ②「立ち回りで振る技」の通常技・特殊技にのみマッチし、必殺技は除外する高精度マッチャー
  */
 export function findNeutralMoveKeyFrame(cleanText: string): KeyFrameInfo | null {
-  const t = cleanText.toLowerCase().replace(/\s+/g, '');
+  const t = cleanText.normalize('NFKC').toLowerCase().replace(/\s+/g, '');
 
   // 必殺技（足刀、波動、昇竜、竜巻、波掌など）は一切マッチさせない
   if (
@@ -139,19 +139,19 @@ export function findNeutralMoveKeyFrame(cleanText: string): KeyFrameInfo | null 
     return null;
   }
 
-  // 1. 前大P / 大ゴス / A大 (モダン) / 6hp
-  if (t === '前大p' || t.includes('大ゴス') || t === 'a大' || t === '6hp') {
-    return RYU_NEUTRAL_MOVES_FRAME_DATA['6hp'];
+  // 1. 下大K / 大足 / 2hk (例: 大足（3大）) - 発生9F、ガード-12F
+  if (t.includes('下大') || t.includes('大足') || t === '2hk') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['2hk'];
   }
 
-  // 2. 前大K / 前大 (モダン) / 6hk
-  if (t === '前大k' || t === '前大' || t === '6hk') {
+  // 2. 前大K / 前大 (モダン) / 6hk - 発生16F、ガード-4F
+  if (t.includes('前大k') || t === '前大' || t === '6hk') {
     return RYU_NEUTRAL_MOVES_FRAME_DATA['6hk'];
   }
 
-  // 3. 下大K / 大足 / 2hk (例: 大足（3大）)
-  if (t.includes('下大k') || t.includes('大足') || t === '2hk') {
-    return RYU_NEUTRAL_MOVES_FRAME_DATA['2hk'];
+  // 3. 前大P / 大ゴス / A大 (モダン) / 6hp - 発生20F、ガード+3F
+  if (t.includes('前大p') || t.includes('大ゴス') || t === 'a大' || t === '6hp') {
+    return RYU_NEUTRAL_MOVES_FRAME_DATA['6hp'];
   }
 
   // 4. 大K / 5hk

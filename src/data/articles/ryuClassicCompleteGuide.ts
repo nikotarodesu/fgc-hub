@@ -26,8 +26,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
   controlType: 'classic',
   relatedGuideSlug: 'ryu-modern-complete-guide',
   freeContent: {
-    intro:
-      'リュウの全てをまとめました。通勤、通学の隙間時間に「読んで強くなる」をコンセプトに記事を作っています。「いいね」と「高評価」を頂けたらとても嬉しいです！これからも攻略記事つくっていくのでよければフォローもよろしくお願いします。\n\n※このラインより上のエリア（①基本の立ち回り〜④対空について）が無料で表示されます。',
+    intro: '',
     sections: [
       {
         title: '① 基本の立ち回り',
@@ -114,7 +113,6 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 一応ノーマルヒットでもSA1が繋がる
 
 ● 下大K
-▶︎ 発生9F、ガード-12F
 ▶︎ 相手が後退するタイミングで先端当てを狙う
 ▶︎ 下大Kを当てると+32となり、前ステ>大Pが持続当てとなる
 ▶︎ 下大Kがパニカンヒットした時は+47で相手はその場受け身しかできなくなるので前大Pフレーム消費で+7起き攻めや、前ステ>中Pフレーム消費で+8起き攻めができる

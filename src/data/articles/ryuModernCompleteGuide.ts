@@ -26,7 +26,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
   controlType: 'modern',
   relatedGuideSlug: 'ryu-classic-complete-guide',
   freeContent: {
-    intro: `リュウの全てをまとめました。通勤、通学の隙間時間に「読んで強くなる」をコンセプトに記事を作っています。「いいね」と「高評価」を頂けたらとても嬉しいです！これからも攻略記事つくっていくのでよければフォローもよろしくお願いします。`,
+    intro: '',
     sections: [
       {
         title: 'モダンにない技',
@@ -170,7 +170,6 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 電刃ゲージがあれば+3から下大>電刃波掌撃などで固めつつゲージ削りをして再度+3から攻め継続ができる
 
 ● 大足（3大）
-▶︎ 発生9F、ガード-12F
 ▶︎ 相手が後退するタイミングで先端当てを狙う
 ▶︎ 起き攻めは後で解説
 

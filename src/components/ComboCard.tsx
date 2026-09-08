@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Swords, Gauge, ChevronDown, ChevronUp, Gamepad2 } from 'lucide-react';
-import { parseComboRecipe } from '@/lib/comboParser';
+import { parseVisualCombo } from '@/lib/comboParser';
+import ArcadeButton from './ArcadeButton';
 
 interface ComboProps {
   name: string;
@@ -15,7 +16,7 @@ interface ComboProps {
 
 export default function ComboCard({ name, recipe, damage, driveGauge, situation, note }: ComboProps) {
   const [showCommands, setShowCommands] = useState(false);
-  const steps = parseComboRecipe(recipe);
+  const steps = parseVisualCombo(recipe);
 
   return (
     <div className="my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-4 shadow-xs transition-colors">
@@ -53,36 +54,56 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
       {showCommands && (
         <div className="mb-3.5 p-3.5 rounded-lg bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-900/60 animate-in fade-in-50 duration-150">
           <div className="text-[11px] font-bold text-cyan-900 dark:text-cyan-300 mb-2 flex items-center gap-1.5">
-            <span>🎮 直感コマンド入力シーケンス</span>
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-normal">
-              （矢印とボタンの順に入力）
-            </span>
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span>🎮 直感コマンド入力手順（矢印とボタンの順に入力）</span>
           </div>
 
           {/* 視覚的な矢印・ボタンフロー */}
           <div className="flex flex-wrap items-center gap-2 py-1 overflow-x-auto">
             {steps.map((step, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-white dark:bg-neutral-800 border border-neutral-300/80 dark:border-neutral-700 shadow-2xs">
+                <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-2xs">
+                  {step.prefix && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300">
+                      {step.prefix}
+                    </span>
+                  )}
+
                   {step.arrows && step.arrows.length > 0 && (
-                    <div className="flex items-center gap-0.5">
-                      {step.arrows.map((arr, aIdx) => (
-                        <span
-                          key={aIdx}
-                          className="w-5 h-5 rounded bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center font-mono shadow-2xs"
-                        >
-                          {arr}
-                        </span>
-                      ))}
-                      <span className="text-neutral-400 text-xs px-0.5">+</span>
+                    <div className="flex items-center gap-0.5 bg-neutral-900 dark:bg-black text-white px-1.5 py-0.5 rounded text-xs font-mono font-bold tracking-tight shadow-inner">
+                      {step.arrowStr}
                     </div>
                   )}
-                  <span className="font-bold text-xs text-neutral-900 dark:text-white">
-                    {step.buttonText}
-                  </span>
+
+                  {step.arrows && step.arrows.length > 0 && step.button.label && (
+                    <span className="text-neutral-400 text-xs font-bold">+</span>
+                  )}
+
+                  <div className="flex items-center gap-1.5">
+                    <ArcadeButton
+                      color={step.button.color}
+                      iconText={step.button.iconText}
+                      label={step.button.description}
+                      size="sm"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
+                        {step.button.label}
+                      </span>
+                      <span className="text-[9px] text-neutral-500 dark:text-neutral-400 leading-tight">
+                        {step.button.description}
+                      </span>
+                    </div>
+                  </div>
+
+                  {step.suffix && (
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">
+                      {step.suffix}
+                    </span>
+                  )}
                 </div>
                 {idx < steps.length - 1 && (
-                  <span className="text-neutral-400 font-bold text-xs">➔</span>
+                  <span className="text-neutral-400 dark:text-neutral-500 font-bold text-xs">➔</span>
                 )}
               </div>
             ))}

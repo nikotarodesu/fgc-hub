@@ -12,7 +12,6 @@ import RichContent from '@/components/RichContent';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import {
-  Calendar,
   Clock,
   Heart,
   Share2,
@@ -343,10 +342,6 @@ export default function ArticleDetailPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-                    <span>{article.publishedAt}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-neutral-400" />
                     <span>読了 {article.readTime}</span>
                   </div>
@@ -408,10 +403,12 @@ export default function ArticleDetailPage() {
                 </div>
               )}
 
-              {/* リード文 */}
-              <div className="p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                <RichContent content={introText} />
-              </div>
+              {/* リード文（空の場合は表示しない） */}
+              {introText && introText.trim() ? (
+                <div className="p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                  <RichContent content={introText} />
+                </div>
+              ) : null}
 
               {/* 目次 */}
               <div className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-6">

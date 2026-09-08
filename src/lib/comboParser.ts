@@ -69,28 +69,36 @@ function parseSinglePart(text: string): VisualStep {
     remaining = remaining.replace(/[（\(](.*?)[）\)]$/, '').trim();
   }
 
-  // 4. キャンセルの抽出
+  // 4. キャンセルの抽出（「キャンセルラッシュ」と書かれている場合は「キャンセル」のみとして扱う）
   let isCancel = false;
-  if (remaining.includes('キャンセル')) {
+  if (remaining.includes('キャンセルラッシュ')) {
+    isCancel = true;
+    remaining = remaining.replace(/キャンセルラッシュ/g, '').trim();
+  } else if (remaining.includes('キャンセル')) {
     isCancel = true;
     remaining = remaining.replace(/キャンセル/g, '').trim();
   }
 
-  // 5. ラッシュの抽出
+  // 5. ラッシュの抽出（キャンセルがない場合のみラッシュ表示を有効にする）
   let isRush = false;
   let rushText: string | undefined;
-  if (remaining.includes('生ラッシュ')) {
-    isRush = true;
-    rushText = '生ラッシュ';
-    remaining = remaining.replace(/生ラッシュ/g, '').trim();
-  } else if (remaining.includes('パリィラッシュ')) {
-    isRush = true;
-    rushText = 'ラッシュ';
-    remaining = remaining.replace(/パリィラッシュ/g, '').trim();
-  } else if (remaining.includes('ラッシュ')) {
-    isRush = true;
-    rushText = 'ラッシュ';
-    remaining = remaining.replace(/ラッシュ/g, '').trim();
+  if (!isCancel) {
+    if (remaining.includes('生ラッシュ')) {
+      isRush = true;
+      rushText = '生ラッシュ';
+      remaining = remaining.replace(/生ラッシュ/g, '').trim();
+    } else if (remaining.includes('パリィラッシュ')) {
+      isRush = true;
+      rushText = 'ラッシュ';
+      remaining = remaining.replace(/パリィラッシュ/g, '').trim();
+    } else if (remaining.includes('ラッシュ')) {
+      isRush = true;
+      rushText = 'ラッシュ';
+      remaining = remaining.replace(/ラッシュ/g, '').trim();
+    }
+  } else {
+    // キャンセルがある場合は余分な「ラッシュ」文字列を除去
+    remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ラッシュ/g, '').trim();
   }
 
   // 6. その他のプレフィックス（壁バウンドなど）
@@ -169,8 +177,41 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 2. モダン：アシスト攻撃（A中, A弱, A大 / A強）
-  if (lower.startsWith('a中') || lower.startsWith('アシスト中')) {
+  // 2. モダン：アシスト攻撃（A中, A弱, A大 / A強）およびジャンプアシスト攻撃
+  // ジャンプアシスト攻撃（ジャンプA大, 前JA大, 垂直JA大, 前J大, JA大等）
+  if (
+    lower.includes('ja大') ||
+    lower.includes('ジャンプa大') ||
+    lower.includes('前ja大') ||
+    lower.includes('垂直ja大') ||
+    lower.includes('前j大') ||
+    lower.includes('垂直j大')
+  ) {
+    const isForward = lower.includes('前') || lower.includes('6');
+    const isVertical = lower.includes('垂直') || lower.includes('8');
+    const jumpArrow = isForward ? '↗' : isVertical ? '↑' : '';
+    const label = isForward ? '前JA大' : isVertical ? '垂直JA大' : 'ジャンプA大';
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: jumpArrow ? [jumpArrow] : [],
+      arrowStr: jumpArrow,
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label,
+        description: '赤いボタン（ジャンプアシスト強）',
+        iconText: 'A大',
+      },
+      suffix,
+      tip: 'ジャンプ中にアシストボタンを押しながら強攻撃',
+    };
+  }
+
+  if (lower.startsWith('a中') || lower.startsWith('アシスト中') || lower === '下中p') {
     return {
       original: remaining,
       isCancel,
@@ -212,7 +253,14 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  if (lower.startsWith('a大') || lower.startsWith('a強') || lower.startsWith('アシスト大') || lower.startsWith('アシスト強')) {
+  if (
+    lower.startsWith('a大') ||
+    lower.startsWith('a強') ||
+    lower.startsWith('アシスト大') ||
+    lower.startsWith('アシスト強') ||
+    lower === '前大p' ||
+    lower === '大ゴス'
+  ) {
     return {
       original: remaining,
       isCancel,
@@ -225,11 +273,11 @@ function parseSinglePart(text: string): VisualStep {
         kind: 'punch',
         color: 'red',
         label: 'A大',
-        description: '赤いボタン（アシスト強攻撃）',
+        description: '赤いボタン（アシスト強攻撃 / 大ゴス）',
         iconText: 'A大',
       },
       suffix,
-      tip: 'アシストボタンを押しながら強攻撃',
+      tip: 'アシストボタンを押しながら強攻撃（大ゴス）',
     };
   }
 

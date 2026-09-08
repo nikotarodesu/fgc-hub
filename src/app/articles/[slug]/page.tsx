@@ -328,6 +328,19 @@ export default function ArticleDetailPage() {
                             </ul>
                           )}
 
+                          {/* コンボレシピ */}
+                          {section.combo && section.combo.map((c, cIdx) => (
+                            <ComboCard
+                              key={cIdx}
+                              name={c.name}
+                              recipe={c.recipe}
+                              damage={c.damage}
+                              driveGauge={c.driveGauge}
+                              situation={c.situation}
+                              note={c.note}
+                            />
+                          ))}
+
                           {/* Q&A相談リスト */}
                           {section.qaList && (
                             <div className="my-6 space-y-4">

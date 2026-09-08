@@ -63,15 +63,20 @@ export default function HomePage() {
 
             {/* テキストエリア */}
             <div className="text-center sm:text-left max-w-2xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-[#008ba8] text-xs font-bold mb-3 border border-sky-200">
-                <span>にこ太郎の公式格ゲー攻略メディア（nikotaro.com）</span>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-[#008ba8] text-xs font-bold border border-sky-200">
+                  <span>にこ太郎の公式格ゲー攻略メディア</span>
+                </div>
+                <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+                  <span>⚡ アプデ追従最速・実戦検証済み</span>
+                </div>
               </div>
               <h1 className="text-2xl sm:text-4xl font-black text-neutral-900 tracking-tight leading-tight mb-3">
                 にこ太郎の格ゲーLAB
               </h1>
               <p className="text-sm sm:text-base text-neutral-600 leading-relaxed font-medium">
                 全キャラ1800MR以上の筆者による、勝率直結のスト6実践攻略。<br className="hidden sm:inline" />
-                動画付きリプレイ添削、フレーム完璧なセットプレイ、一生役立つ普遍的な格ゲー上達理論をお届けします。
+                キャラ調整・パッチ変更後も最速でコンボ・立ち回りをアップデート追記。動画付きリプレイ添削や普遍的な格ゲー上達理論をお届けします。
               </p>
             </div>
           </div>
@@ -203,6 +208,9 @@ export default function HomePage() {
                             <span>▶ 動画付き</span>
                           </span>
                         )}
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                          ⚡ 最新パッチ対応
+                        </span>
                       </div>
                       {article.isPaid ? (
                         <span className="inline-flex items-center gap-1 text-[11px] font-black text-neutral-900 bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full">

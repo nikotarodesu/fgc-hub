@@ -99,6 +99,9 @@ export default function ArticleDetailPage() {
                     無料公開
                   </span>
                 )}
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  ⚡ 最新アプデ対応・実戦検証済み
+                </span>
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 leading-tight mb-4">

@@ -23,13 +23,15 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
-type LineType = 'empty' | 'quote' | 'bullet' | 'numbered' | 'arrow' | 'text';
+type LineType = 'empty' | 'quote' | 'heading' | 'subheading' | 'bullet' | 'numbered' | 'arrow' | 'text';
 
 function getLineType(line: string): LineType {
   const trimmed = line.trim();
   if (!trimmed) return 'empty';
   if (trimmed.startsWith('>')) return 'quote';
-  if (trimmed.startsWith('・') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) return 'bullet';
+  if (trimmed.startsWith('⚡️') || trimmed.startsWith('⭐️') || /^[①-⑳❶-❿]/.test(trimmed)) return 'heading';
+  if (trimmed.startsWith('●') || trimmed.startsWith('■') || /^【.+】/.test(trimmed)) return 'subheading';
+  if (trimmed.startsWith('・') || trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('▶︎') || trimmed.startsWith('▶')) return 'bullet';
   if (/^\d+[\.|\)|）]\s*/.test(trimmed)) return 'numbered';
   if (trimmed.startsWith('→') || trimmed.startsWith('=>')) return 'arrow';
   return 'text';
@@ -90,12 +92,38 @@ export default function RichContent({ content }: RichContentProps) {
           );
         }
 
-        // 2. 箇条書きリスト（過剰なカード枠を廃止し、すっきりとしたクリーンなリスト）
+        // 1.5 大見出し・カテゴリ（⚡️, ⭐️, ①, ❶ 等）
+        if (group.type === 'heading') {
+          return (
+            <div key={gIdx} className="pt-4 pb-1 border-t border-neutral-100 first:border-t-0 first:pt-0">
+              {group.lines.map((line, lIdx) => (
+                <h3 key={lIdx} className="text-base sm:text-lg font-bold text-neutral-900 flex items-center gap-2 py-1">
+                  {renderInline(line)}
+                </h3>
+              ))}
+            </div>
+          );
+        }
+
+        // 1.8 中見出し・技名（●, ■, 【...】等）
+        if (group.type === 'subheading') {
+          return (
+            <div key={gIdx} className="pt-2 pb-1">
+              {group.lines.map((line, lIdx) => (
+                <h4 key={lIdx} className="text-sm sm:text-[15px] font-bold text-neutral-900 bg-neutral-100/90 px-3 py-1.5 rounded-lg border border-neutral-200/90 my-1 inline-block">
+                  {renderInline(line)}
+                </h4>
+              ))}
+            </div>
+          );
+        }
+
+        // 2. 箇条書きリスト（「・」「- 」「* 」「▶︎」「▶」）
         if (group.type === 'bullet') {
           return (
-            <ul key={gIdx} className="my-3 space-y-2 pl-1">
+            <ul key={gIdx} className="my-2 space-y-2 pl-1">
               {group.lines.map((line, lIdx) => {
-                const itemText = line.trim().replace(/^[・\-\*]\s*/, '');
+                const itemText = line.trim().replace(/^[・\-\*▶︎▶]\s*/, '');
                 return (
                   <li
                     key={lIdx}

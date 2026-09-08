@@ -116,19 +116,12 @@ export default function RichContent({ content }: RichContentProps) {
                 const match = trimmed.match(/^【(.*?)】(.*)$/);
                 const badgeContent = match ? match[1] : trimmed;
                 const extraText = match ? match[2].trim() : '';
-                const isPlusFrame = badgeContent.startsWith('+') || badgeContent.includes('+');
 
                 return (
-                  <div key={lIdx} className="flex items-center gap-2.5 flex-wrap my-1">
-                    <span className="inline-flex items-center gap-1.5 bg-neutral-900 text-white font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800">
-                      <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                  <div key={lIdx} className="flex items-center gap-2 flex-wrap my-1">
+                    <span className="inline-flex items-center bg-neutral-900 text-white font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800">
                       【{badgeContent}】
                     </span>
-                    {isPlusFrame && (
-                      <span className="text-xs font-bold text-cyan-800 bg-cyan-50 border border-cyan-200/90 px-2 py-0.5 rounded">
-                        起き攻め状況
-                      </span>
-                    )}
                     {extraText && (
                       <span className="text-xs sm:text-sm font-bold text-neutral-700">
                         {renderInline(extraText)}

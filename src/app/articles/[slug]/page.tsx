@@ -14,19 +14,17 @@ import { Calendar, Clock, Heart, Share2, ArrowLeft, ArrowRight, BookOpen, Sparkl
 
 export default function ArticleDetailPage() {
   const params = useParams();
-  const slug = params?.slug as string;
-  const baseArticle = ARTICLES_DATA.find((a) => a.slug === slug);
-  const companionArticle = baseArticle?.relatedGuideSlug
-    ? ARTICLES_DATA.find((a) => a.slug === baseArticle.relatedGuideSlug)
-    : null;
+  const rawSlug = params?.slug as string;
+  const isModernAlias = rawSlug === 'ryu-modern-complete-guide';
+  const slug = (rawSlug === 'ryu-classic-complete-guide' || isModernAlias)
+    ? 'ryu-complete-guide'
+    : rawSlug;
+
+  const article = ARTICLES_DATA.find((a) => a.slug === slug);
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
-    baseArticle?.controlType || 'classic'
+    isModernAlias ? 'modern' : 'classic'
   );
-
-  const article = companionArticle && activeControlType !== baseArticle?.controlType
-    ? companionArticle
-    : baseArticle;
 
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [likes, setLikes] = useState(article ? article.likesCount : 0);
@@ -44,10 +42,13 @@ export default function ArticleDetailPage() {
     );
   }
 
+  const currentVariant = article.variants ? article.variants[activeControlType] : null;
+  const introText = currentVariant ? currentVariant.intro : article.freeContent.intro;
+  const freeSections = currentVariant ? currentVariant.sections : article.freeContent.sections;
+  const paidSections = currentVariant ? currentVariant.paidSections : article.paidContent.sections;
+
   // 関連記事（同じゲームまたは他のおすすめ記事）
-  const relatedArticles = ARTICLES_DATA.filter(
-    (a) => a.slug !== baseArticle?.slug && a.slug !== companionArticle?.slug
-  ).slice(0, 2);
+  const relatedArticles = ARTICLES_DATA.filter((a) => a.slug !== article.slug).slice(0, 2);
 
   const handleLike = () => {
     if (!hasLiked) {
@@ -128,11 +129,15 @@ export default function ArticleDetailPage() {
                     {article.character}
                   </span>
                 )}
-                {article.controlType && (
+                {article.controlType === 'both' ? (
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-[#008ba8] border border-sky-200">
+                    {activeControlType === 'classic' ? '🥋 クラシック (C) モード' : '⚡️ モダン (M) モード'}
+                  </span>
+                ) : article.controlType ? (
                   <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800">
                     {article.controlType === 'classic' ? 'クラシック (C)' : 'モダン (M)'}
                   </span>
-                )}
+                ) : null}
                 {article.isPaid ? (
                   <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 text-neutral-900">
                     有料記事（¥{article.price}）
@@ -174,7 +179,7 @@ export default function ArticleDetailPage() {
             {/* 本文 */}
             <article className="text-neutral-800 leading-relaxed text-sm sm:text-base space-y-6">
               {/* クラシック / モダン切り替えスイッチ */}
-              {companionArticle && (
+              {article.variants && (
                 <div className="p-2.5 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 rounded-2xl border border-neutral-200/90 shadow-2xs">
                   <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider px-2 pt-1 pb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 font-sans text-neutral-700 font-bold">
@@ -227,25 +232,32 @@ export default function ArticleDetailPage() {
 
               {/* リード文 */}
               <div className="p-5 rounded-xl bg-neutral-50/90 border border-neutral-200/80 text-neutral-800 shadow-2xs">
-                <RichContent content={article.freeContent.intro} />
+                <RichContent content={introText} />
               </div>
 
               {/* 目次 */}
               <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200/80 my-6">
-                <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-neutral-600" />
-                  <span>目次</span>
+                <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4 text-neutral-600" />
+                    <span>目次</span>
+                  </div>
+                  {currentVariant && (
+                    <span className="text-[11px] font-bold text-[#008ba8] bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                      {activeControlType === 'classic' ? '🥋 クラシック編' : '⚡️ モダン編'}
+                    </span>
+                  )}
                 </div>
                 <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-600">
-                  {article.freeContent.sections.map((sec, idx) => (
+                  {freeSections.map((sec, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <span className="text-neutral-400 font-mono text-xs">0{idx + 1}.</span>
                       <span className="hover:text-neutral-900">{sec.title}</span>
                     </li>
                   ))}
-                  {article.paidContent.sections.map((sec, idx) => (
+                  {paidSections.map((sec, idx) => (
                     <li key={idx} className="flex items-center gap-2 text-neutral-800 font-medium">
-                      <span className="text-neutral-400 font-mono text-xs">0{article.freeContent.sections.length + idx + 1}.</span>
+                      <span className="text-neutral-400 font-mono text-xs">0{freeSections.length + idx + 1}.</span>
                       <span>{sec.title}</span>
                       <span className="text-[10px] bg-neutral-200 text-neutral-700 px-1 py-0.2 rounded font-normal">有料</span>
                     </li>
@@ -254,7 +266,7 @@ export default function ArticleDetailPage() {
               </div>
 
               {/* 無料公開セクション */}
-              {article.freeContent.sections.map((section, idx) => (
+              {freeSections.map((section, idx) => (
                 <div key={idx} className="pt-6">
                   <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-200/80">
                     {section.title}
@@ -343,7 +355,7 @@ export default function ArticleDetailPage() {
                       )}
 
                       {/* 有料セクション */}
-                      {article.paidContent.sections.map((section, idx) => (
+                      {paidSections.map((section, idx) => (
                         <div key={idx} className="pt-6">
                           <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-200/80">
                             {section.title}
@@ -508,7 +520,7 @@ export default function ArticleDetailPage() {
             </div>
 
             {/* 操作タイプ切り替えウィジェット */}
-            {companionArticle && (
+            {article.variants && (
               <div className="p-4 bg-white rounded-xl border border-neutral-200/80 shadow-xs">
                 <div className="text-xs font-bold text-neutral-900 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <span>操作タイプ切り替え</span>

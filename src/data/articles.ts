@@ -1,5 +1,12 @@
-import { RYU_CLASSIC_COMPLETE_GUIDE } from './articles/ryuClassicCompleteGuide';
-import { RYU_MODERN_COMPLETE_GUIDE } from './articles/ryuModernCompleteGuide';
+import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+
+export interface ArticleVariant {
+  label: string;
+  badge: string;
+  intro: string;
+  sections: Article['freeContent']['sections'];
+  paidSections: Article['paidContent']['sections'];
+}
 
 export interface Article {
   id: string;
@@ -79,8 +86,12 @@ export interface Article {
       }[];
     }[];
   };
-  controlType?: 'classic' | 'modern';
+  controlType?: 'classic' | 'modern' | 'both';
   relatedGuideSlug?: string;
+  variants?: {
+    classic: ArticleVariant;
+    modern: ArticleVariant;
+  };
 }
 
 export const CHARACTERS_SF6 = [
@@ -176,6 +187,5 @@ export const ARTICLES_DATA: Article[] = [
       sections: [],
     },
   },
-  RYU_CLASSIC_COMPLETE_GUIDE,
-  RYU_MODERN_COMPLETE_GUIDE,
+  RYU_COMPLETE_GUIDE,
 ];

@@ -242,6 +242,15 @@ export default function HomePage() {
                             {article.character}
                           </span>
                         )}
+                        {article.controlType === 'both' ? (
+                          <span className="text-[10px] font-bold text-[#008ba8] bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                            C / M 両対応
+                          </span>
+                        ) : article.controlType ? (
+                          <span className="text-[10px] font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded">
+                            {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
+                          </span>
+                        ) : null}
                         {article.youtubeVideoId && (
                           <span className="text-[10px] font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded flex items-center gap-1">
                             <span>▶ 動画付き</span>

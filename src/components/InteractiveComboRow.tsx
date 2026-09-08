@@ -82,25 +82,44 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
                     </div>
                   )}
 
-                  {/* プラス記号（矢印とボタンがある場合） */}
-                  {step.arrows && step.arrows.length > 0 && step.button.label && (
-                    <span className="text-neutral-400 text-xs font-bold">+</span>
-                  )}
-
-                  {/* カラフルなアーケードボタン（小さい文章は削除し、ボタン画像を表示） */}
-                  <div className="flex items-center gap-1.5">
-                    <ArcadeButton
-                      color={step.button.color}
-                      iconText={step.button.iconText}
-                      label={step.button.label}
-                      size="sm"
-                    />
-                    {step.button.label !== step.button.iconText && (
-                      <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
-                        {step.button.label}
-                      </span>
+                  {/* プラス記号（矢印とボタンがある場合、移動アクションやインパクトは除く） */}
+                  {step.arrows &&
+                    step.arrows.length > 0 &&
+                    step.button.label &&
+                    !step.button.label.includes('前ステ') &&
+                    !step.button.label.includes('バクステ') &&
+                    !step.button.label.includes('歩き') &&
+                    !step.button.label.includes('後退') && (
+                      <span className="text-neutral-400 text-xs font-bold">+</span>
                     )}
-                  </div>
+
+                  {/* アクション表示（インパクトは赤文字、前ステ等は通常文字、通常技・必殺技はアーケードボタン） */}
+                  {step.button.label === 'インパクト' ? (
+                    <span className="text-xs font-black text-rose-600 dark:text-rose-400">
+                      インパクト
+                    </span>
+                  ) : step.button.label.includes('前ステ') ||
+                    step.button.label.includes('バクステ') ||
+                    step.button.label.includes('歩き') ||
+                    step.button.label.includes('後退') ? (
+                    <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                      {step.button.label}
+                    </span>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      <ArcadeButton
+                        color={step.button.color}
+                        iconText={step.button.iconText}
+                        label={step.button.label}
+                        size="sm"
+                      />
+                      {step.button.label !== step.button.iconText && (
+                        <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
+                          {step.button.label}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}
                   {step.suffix && (

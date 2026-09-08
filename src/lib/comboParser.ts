@@ -28,8 +28,11 @@ export interface VisualStep {
 export function parseVisualCombo(recipe: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
   if (!recipe) return [];
 
+  // 全角の「＞」を「>」に正規化
+  let cleanRecipe = recipe.replace(/＞/g, '>');
+
   // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), (4247ダメージ), [4247]）を除去
-  let cleanRecipe = recipe
+  cleanRecipe = cleanRecipe
     .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
     .trim();
 
@@ -115,6 +118,144 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
   remaining = remaining.replace(/〆|締め?$/, '').trim();
 
   const lower = remaining.toLowerCase();
+
+  // 0. インパクト（赤い字で「インパクト」）
+  if (lower.includes('インパクト') || lower.includes('ドライブインパクト') || /\bdi\b/.test(lower) || lower === 'di') {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'both',
+        color: 'red',
+        label: 'インパクト',
+        description: 'ドライブインパクト（強P＋強K）',
+        iconText: 'インパクト',
+      },
+      suffix,
+      tip: '強P＋強K（ドライブインパクト）',
+    };
+  }
+
+  // 0.5 前ステップ / バックステップ（※「前ステ」はそのまま表示）
+  if (lower.includes('前ステ') || lower.includes('前ダッシュ') || lower.includes('前ステップ')) {
+    const isDouble = lower.includes('×2') || lower.includes('x2') || lower.includes('2回');
+    const label = isDouble ? '前ステ×2' : '前ステ';
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label,
+        description: isDouble ? '前ステップ2回' : '前ステップ',
+        iconText: label,
+      },
+      suffix,
+      tip: isDouble
+        ? '前キーを2回素早く入力×2回（前ステップ2回: →→ →→）'
+        : '前キーを2回素早く入力（前ステップ: →→）',
+    };
+  }
+
+  if (lower.includes('バクステ') || lower.includes('バックダッシュ') || lower.includes('バックステップ')) {
+    const isDouble = lower.includes('×2') || lower.includes('x2') || lower.includes('2回');
+    const label = isDouble ? 'バクステ×2' : 'バクステ';
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label,
+        description: isDouble ? 'バックステップ2回' : 'バックステップ',
+        iconText: label,
+      },
+      suffix,
+      tip: isDouble
+        ? '後ろキーを2回素早く入力×2回（バックステップ2回: ←← ←←）'
+        : '後ろキーを2回素早く入力（バックステップ: ←←）',
+    };
+  }
+
+  // 0.6 移動（歩き、微後退など）
+  if (lower.includes('前歩き') || lower.includes('前歩') || lower === '歩き') {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: remaining,
+        description: '前歩き',
+        iconText: remaining,
+      },
+      suffix,
+      tip: '前キーを少し長めに入力して間合いを詰める',
+    };
+  }
+
+  if (lower.includes('微後退') || lower.includes('後退') || lower.includes('後ろ歩き')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: remaining,
+        description: remaining,
+        iconText: remaining,
+      },
+      suffix,
+      tip: '後ろキーを入力して少し下がって間合いを調整',
+    };
+  }
+
+  // 0.7 電刃錬気 / 電刃溜め
+  if (lower.includes('電刃錬気') || lower.includes('電刃溜め')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↓'],
+      arrowStr: '↓↓',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: '電刃錬気',
+        description: '電刃錬気',
+        iconText: 'P',
+      },
+      suffix,
+      tip: 'テンキー22+P（下・下＋パンチで電刃錬気ストックチャージ）',
+    };
+  }
 
   // 1. SA (スーパーアーツ)
   if (lower.includes('sa3') || lower.includes('真・昇龍') || lower.includes('ca')) {
@@ -598,14 +739,39 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
     };
   }
 
-  // 6. 必殺技：波掌撃 (214+P: ↓↙← + P)
+  // 6. 必殺技：波掌撃 / 電刃波掌撃 (214+P: ↓↙← + P)
   if (lower.includes('波掌')) {
     const isOD = lower.includes('od');
+    const isDenjin = lower.includes('電刃');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isLight = lower.includes('弱');
+
+    if (isDenjin) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↙', '←'],
+        arrowStr: '↓↙←',
+        button: {
+          kind: 'punch',
+          color: isOD ? 'purple' : 'gold',
+          label: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
+          description: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
+          iconText: isOD ? 'PP' : 'P',
+        },
+        suffix,
+        tip: isOD
+          ? 'テンキー214+PP（※電刃ストック消費のOD電刃波掌撃。高火力追撃・画面端コンボ用）'
+          : 'テンキー214+P（※電刃ストック消費の電刃波掌撃。ガードされても+3F有利）',
+      };
+    }
+
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const label = isOD ? 'OD波掌' : `${strength}P`;
+    const label = isOD ? 'OD波掌撃' : `${strength}波掌撃`;
     const tipBtn = isOD ? 'PP（2ボタン同時）' : `${strength}P`;
 
     return {
@@ -720,8 +886,16 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
     };
   }
 
-  // 8. 二連撃 / ターゲットコンボ
-  if (lower.includes('二連撃') || lower.includes('ターゲット')) {
+  // 8. 二連撃 / ターゲットコンボ（大TC / 大>大）
+  if (
+    lower.includes('二連撃') ||
+    lower.includes('ターゲット') ||
+    lower.includes('大tc') ||
+    lower.includes('大ptc') ||
+    lower.includes('大>大') ||
+    lower.includes('大＞大')
+  ) {
+    const isModern = controlType === 'modern';
     return {
       original: remaining,
       isCancel,
@@ -733,12 +907,12 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
       button: {
         kind: 'punch',
         color: 'red',
-        label: '強P ➔ 強K',
-        description: '赤いボタン（ターゲットコンボ）',
-        iconText: 'P',
+        label: isModern ? '大 ➔ 大' : '強P ➔ 強K',
+        description: isModern ? '赤いボタン（大 ➔ 大）' : '赤いボタン（ターゲットコンボ）',
+        iconText: isModern ? '大' : 'P',
       },
       suffix,
-      tip: '強Pヒット後にすかさず強Kを入力',
+      tip: isModern ? '強攻撃ヒット後にもう一度強攻撃を入力（大 ➔ 大）' : '強Pヒット後にすかさず強Kを入力',
     };
   }
 

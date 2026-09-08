@@ -158,7 +158,7 @@ export default function RichContent({ content }: RichContentProps) {
                       className="flex items-center gap-2.5 py-1.5 px-3 bg-neutral-50/90 hover:bg-neutral-100/90 border border-neutral-200/90 rounded-md text-xs sm:text-sm font-mono text-neutral-900 transition-colors"
                     >
                       <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
-                        〆コンボ
+                        コンボ
                       </span>
                       <span className="font-semibold flex-1 overflow-x-auto">
                         {renderInline(cleanText)}

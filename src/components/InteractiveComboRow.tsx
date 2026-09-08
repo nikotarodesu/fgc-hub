@@ -8,12 +8,13 @@ import { ChevronDown, ChevronUp, Gamepad2 } from 'lucide-react';
 interface InteractiveComboRowProps {
   comboLine: string;
   renderInlineText: (text: string) => React.ReactNode[];
+  controlType?: 'classic' | 'modern';
 }
 
-export default function InteractiveComboRow({ comboLine, renderInlineText }: InteractiveComboRowProps) {
+export default function InteractiveComboRow({ comboLine, renderInlineText, controlType = 'classic' }: InteractiveComboRowProps) {
   const [isOpen, setIsOpen] = useState(false);
   const cleanText = comboLine.trim().replace(/^[●・\-]\s*/, '');
-  const steps: VisualStep[] = parseVisualCombo(cleanText);
+  const steps: VisualStep[] = parseVisualCombo(cleanText, controlType);
 
   return (
     <div className="my-2 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 bg-neutral-50/90 dark:bg-neutral-800/80 overflow-hidden transition-all shadow-2xs">

@@ -25,7 +25,7 @@ export interface VisualStep {
   tip?: string;
 }
 
-export function parseVisualCombo(recipe: string): VisualStep[] {
+export function parseVisualCombo(recipe: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
   if (!recipe) return [];
 
   // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), (4247ダメージ), [4247]）を除去
@@ -44,10 +44,10 @@ export function parseVisualCombo(recipe: string): VisualStep[] {
   // ">" または "→" で分割
   const rawParts = cleanRecipe.split(/>|→(?!\+|↓|↘|↗|←|↙|↖)/).map((p) => p.trim()).filter(Boolean);
 
-  return rawParts.map((part) => parseSinglePart(part));
+  return rawParts.map((part) => parseSinglePart(part, controlType));
 }
 
-function parseSinglePart(text: string): VisualStep {
+function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
   let remaining = text.trim();
 
   // 1. 各パーツ内のダメージ数値を除去（例: SA3〆（4247）など各パーツ内に残っている場合）
@@ -101,11 +101,14 @@ function parseSinglePart(text: string): VisualStep {
     remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ラッシュ/g, '').trim();
   }
 
-  // 6. その他のプレフィックス（壁バウンドなど）
+  // 6. その他のプレフィックス（壁ドン、壁バウンドなど）
   let prefix: string | undefined;
-  if (remaining.includes('壁ドン') || remaining.includes('壁バウンド')) {
+  if (remaining.includes('壁ドン')) {
+    prefix = '壁ドン';
+    remaining = remaining.replace(/壁ドン/g, '').trim();
+  } else if (remaining.includes('壁バウンド')) {
     prefix = '壁バウンド';
-    remaining = remaining.replace(/壁ドン|壁バウンド/g, '').trim();
+    remaining = remaining.replace(/壁バウンド/g, '').trim();
   }
 
   // 再度〆や余分な空白を除去
@@ -115,65 +118,74 @@ function parseSinglePart(text: string): VisualStep {
 
   // 1. SA (スーパーアーツ)
   if (lower.includes('sa3') || lower.includes('真・昇龍') || lower.includes('ca')) {
+    const isModern = controlType === 'modern';
     return {
       original: remaining || 'SA3',
       isCancel,
       isRush,
       rushText,
       prefix,
-      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
-      arrowStr: '↓↘→↓↘→',
+      arrows: isModern ? ['↓'] : ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: isModern ? '↓' : '↓↘→↓↘→',
       button: {
         kind: 'punch',
         color: 'gold',
         label: 'SA3',
-        description: '金のSAボタン（パンチ）',
+        description: '金のSAボタン',
         iconText: 'SA3',
       },
       suffix,
-      tip: 'テンキー236を2回素早く入力+パンチ（またはモダン：ワンボタンSA）',
+      tip: isModern
+        ? '↓＋弱＋中 または ↓＋SP＋強P（手動テンキー236×2+Pでも入力可能）'
+        : 'テンキー236を2回素早く入力+パンチ',
     };
   }
 
   if (lower.includes('sa2') || lower.includes('真・波掌')) {
+    const isModern = controlType === 'modern';
     return {
       original: remaining || 'SA2',
       isCancel,
       isRush,
       rushText,
       prefix,
-      arrows: ['↓', '↙', '←', '↓', '↙', '←'],
-      arrowStr: '↓↙←↓↙←',
+      arrows: isModern ? ['←'] : ['↓', '↙', '←', '↓', '↙', '←'],
+      arrowStr: isModern ? '←' : '↓↙←↓↙←',
       button: {
         kind: 'punch',
         color: 'gold',
         label: 'SA2',
-        description: '金のSAボタン（パンチ）',
+        description: '金のSAボタン',
         iconText: 'SA2',
       },
       suffix,
-      tip: 'テンキー214を2回素早く入力+パンチ',
+      tip: isModern
+        ? '後ろ＋弱＋中 または 後ろ＋SP＋強P（手動テンキー214×2+Pでも入力可能）'
+        : 'テンキー214を2回素早く入力+パンチ',
     };
   }
 
   if (lower.includes('sa1') || lower.includes('真空波動')) {
+    const isModern = controlType === 'modern';
     return {
       original: remaining || 'SA1',
       isCancel,
       isRush,
       rushText,
       prefix,
-      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
-      arrowStr: '↓↘→↓↘→',
+      arrows: isModern ? [] : ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: isModern ? 'N' : '↓↘→↓↘→',
       button: {
         kind: 'punch',
         color: 'gold',
         label: 'SA1',
-        description: '金のSAボタン（パンチ）',
+        description: '金のSAボタン',
         iconText: 'SA1',
       },
       suffix,
-      tip: 'テンキー236を2回素早く入力+パンチ',
+      tip: isModern
+        ? 'N＋弱＋中 または N＋SP＋強P（手動テンキー236×2+Pでも入力可能）'
+        : 'テンキー236を2回素早く入力+パンチ',
     };
   }
 
@@ -281,14 +293,78 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 3. 必殺技：上段足刀破り（モダン対応：弱=↙+SP, 中=↓+SP, 強=↘+SP, OD=↓+A+SP）
+  // 3. 必殺技：上段足刀破り
   if (lower.includes('足刀')) {
     const isOD = lower.includes('od');
     const isWeak = lower.includes('弱');
     const isMed = lower.includes('中');
     const isHeavy = lower.includes('強') || lower.includes('大');
 
-    if (isOD) {
+    if (controlType === 'modern') {
+      if (isOD) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓'],
+          arrowStr: '↓',
+          button: {
+            kind: 'special',
+            color: 'purple',
+            label: 'OD足刀',
+            description: 'OD足刀ボタン',
+            iconText: 'A+SP',
+          },
+          suffix,
+          tip: '↓＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        };
+      }
+
+      if (isWeak) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↙'],
+          arrowStr: '↙',
+          button: {
+            kind: 'special',
+            color: 'emerald',
+            label: '弱足刀',
+            description: '弱足刀ボタン',
+            iconText: 'SP',
+          },
+          suffix,
+          tip: '↙＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        };
+      }
+
+      if (isHeavy) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↘'],
+          arrowStr: '↘',
+          button: {
+            kind: 'special',
+            color: 'emerald',
+            label: '強足刀',
+            description: '強足刀ボタン',
+            iconText: 'SP',
+          },
+          suffix,
+          tip: '↘＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        };
+      }
+
+      // デフォルト（中足刀 または 足刀）
       return {
         original: remaining,
         isCancel,
@@ -299,85 +375,90 @@ function parseSinglePart(text: string): VisualStep {
         arrowStr: '↓',
         button: {
           kind: 'special',
-          color: 'purple',
-          label: 'OD足刀',
-          description: 'OD足刀ボタン',
-          iconText: 'A+SP',
-        },
-        suffix,
-        tip: '↓＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
-      };
-    }
-
-    if (isWeak) {
-      return {
-        original: remaining,
-        isCancel,
-        isRush,
-        rushText,
-        prefix,
-        arrows: ['↙'],
-        arrowStr: '↙',
-        button: {
-          kind: 'special',
           color: 'emerald',
-          label: '弱足刀',
-          description: '弱足刀ボタン',
+          label: isMed ? '中足刀' : '足刀',
+          description: '中足刀ボタン',
           iconText: 'SP',
         },
         suffix,
-        tip: '↙＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        tip: '↓＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
       };
     }
 
-    if (isHeavy) {
-      return {
-        original: remaining,
-        isCancel,
-        isRush,
-        rushText,
-        prefix,
-        arrows: ['↘'],
-        arrowStr: '↘',
-        button: {
-          kind: 'special',
-          color: 'emerald',
-          label: '強足刀',
-          description: '強足刀ボタン',
-          iconText: 'SP',
-        },
-        suffix,
-        tip: '↘＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
-      };
-    }
-
-    // デフォルト（中足刀 または 足刀）
+    // クラシック（236+K: ↓↘→ + K）
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isWeak ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isWeak ? 'blue' : 'yellow';
     return {
       original: remaining,
       isCancel,
       isRush,
       rushText,
       prefix,
-      arrows: ['↓'],
-      arrowStr: '↓',
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
       button: {
-        kind: 'special',
-        color: 'emerald',
-        label: isMed ? '中足刀' : '足刀',
-        description: '中足刀ボタン',
-        iconText: 'SP',
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD足刀' : `${strength}足刀`,
+        description: isOD ? 'ODボタン' : `${strength}キックボタン`,
+        iconText: isOD ? 'KK' : 'K',
       },
       suffix,
-      tip: '↓＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      tip: `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前）`,
     };
   }
 
-  // 4. 必殺技：竜巻旋風脚（モダン対応：中竜巻=後ろ+SP, OD竜巻=後ろ+A+SP）
+  // 4. 必殺技：竜巻旋風脚
   if (lower.includes('竜巻')) {
     const isOD = lower.includes('od');
     const isWeak = lower.includes('弱');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isMed = lower.includes('中') || (!isWeak && !isHeavy && !isOD);
 
-    if (isOD) {
+    if (controlType === 'modern') {
+      if (isOD) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['←'],
+          arrowStr: '←',
+          button: {
+            kind: 'special',
+            color: 'purple',
+            label: 'OD竜巻',
+            description: 'OD竜巻ボタン',
+            iconText: 'A+SP',
+          },
+          suffix,
+          tip: '後ろ＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        };
+      }
+
+      if (isWeak) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓', '↙', '←'],
+          arrowStr: '↓↙←',
+          button: {
+            kind: 'kick',
+            color: 'blue',
+            label: '弱竜巻',
+            description: '弱竜巻ボタン',
+            iconText: 'K',
+          },
+          suffix,
+          tip: 'テンキー214+弱K（またはA弱アシストコンボ派生）',
+        };
+      }
+
+      // 中竜巻（または単に竜巻）
       return {
         original: remaining,
         isCancel,
@@ -388,59 +469,40 @@ function parseSinglePart(text: string): VisualStep {
         arrowStr: '←',
         button: {
           kind: 'special',
-          color: 'purple',
-          label: 'OD竜巻',
-          description: 'OD竜巻ボタン',
-          iconText: 'A+SP',
+          color: 'emerald',
+          label: '中竜巻',
+          description: '中竜巻ボタン',
+          iconText: 'SP',
         },
         suffix,
-        tip: '後ろ＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+        tip: '後ろ＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
       };
     }
 
-    if (isWeak) {
-      return {
-        original: remaining,
-        isCancel,
-        isRush,
-        rushText,
-        prefix,
-        arrows: ['↓', '↙', '←'],
-        arrowStr: '↓↙←',
-        button: {
-          kind: 'kick',
-          color: 'blue',
-          label: '弱竜巻',
-          description: '弱竜巻ボタン',
-          iconText: 'K',
-        },
-        suffix,
-        tip: 'テンキー214+弱K（またはA弱アシストコンボ派生）',
-      };
-    }
-
-    // 中竜巻（または単に竜巻）
+    // クラシック（214+K: ↓↙← + K）
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isWeak ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isWeak ? 'blue' : 'yellow';
     return {
       original: remaining,
       isCancel,
       isRush,
       rushText,
       prefix,
-      arrows: ['←'],
-      arrowStr: '←',
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
       button: {
-        kind: 'special',
-        color: 'emerald',
-        label: '中竜巻',
-        description: '中竜巻ボタン',
-        iconText: 'SP',
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD竜巻' : `${strength}竜巻`,
+        description: isOD ? 'ODボタン' : `${strength}キックボタン`,
+        iconText: isOD ? 'KK' : 'K',
       },
       suffix,
-      tip: '後ろ＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
+      tip: `テンキー214+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め後ろ・後ろ）`,
     };
   }
 
-  // 5. 必殺技：昇竜拳 / キャノンスパイク（モダン強昇竜=前+SP）
+  // 5. 必殺技：昇竜拳 / キャノンスパイク
   if (lower.includes('昇竜') || lower.includes('昇龍') || lower.includes('スパイク')) {
     const isKick = lower.includes('スパイク');
     const isOD = lower.includes('od');
@@ -448,48 +510,74 @@ function parseSinglePart(text: string): VisualStep {
     const isLight = lower.includes('弱');
     const isMed = lower.includes('中');
 
-    if (isOD) {
-      return {
-        original: remaining,
-        isCancel,
-        isRush,
-        rushText,
-        prefix,
-        arrows: ['→'],
-        arrowStr: '前',
-        button: {
-          kind: 'special',
-          color: 'purple',
-          label: 'OD昇竜',
-          description: 'OD昇竜ボタン',
-          iconText: 'A+SP',
-        },
-        suffix,
-        tip: '前＋A＋SP（または手動テンキー623+PP）',
-      };
-    }
+    if (controlType === 'modern') {
+      if (isOD) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['→'],
+          arrowStr: '前',
+          button: {
+            kind: 'special',
+            color: 'purple',
+            label: 'OD昇竜',
+            description: 'OD昇竜ボタン',
+            iconText: 'A+SP',
+          },
+          suffix,
+          tip: '前＋A＋SP（手動テンキー623+PPでも入力可能）',
+        };
+      }
 
-    if (isHeavy) {
+      if (isHeavy) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['→'],
+          arrowStr: '前',
+          button: {
+            kind: isKick ? 'kick' : 'punch',
+            color: 'red',
+            label: isKick ? '強スパイク' : '強昇竜',
+            description: '強昇竜ボタン',
+            iconText: 'SP',
+          },
+          suffix,
+          tip: '前＋SP（手動テンキー623+強Pでも入力可能）',
+        };
+      }
+
       return {
         original: remaining,
         isCancel,
         isRush,
         rushText,
         prefix,
-        arrows: ['→'],
-        arrowStr: '前',
+        arrows: ['→', '↓', '↘'],
+        arrowStr: '→↓↘',
         button: {
           kind: isKick ? 'kick' : 'punch',
-          color: 'red',
-          label: isKick ? '強スパイク' : '強昇竜',
-          description: '強昇竜ボタン',
-          iconText: 'SP',
+          color: isLight ? 'blue' : 'yellow',
+          label: isLight ? '弱昇竜' : '中昇竜',
+          description: isLight ? '青いボタン' : '黄色いボタン',
+          iconText: isKick ? 'K' : 'P',
         },
         suffix,
-        tip: '前＋SP（または手動テンキー623+強P）',
+        tip: `テンキー623+${isLight ? '弱P' : '中P'}（前・下・斜め前）`,
       };
     }
 
+    // クラシック（623+P: →↓↘ + P）
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const kind: ButtonKind = isKick ? 'kick' : 'punch';
+    const btnChar = isKick ? 'K' : 'P';
     return {
       original: remaining,
       isCancel,
@@ -499,14 +587,14 @@ function parseSinglePart(text: string): VisualStep {
       arrows: ['→', '↓', '↘'],
       arrowStr: '→↓↘',
       button: {
-        kind: isKick ? 'kick' : 'punch',
-        color: isLight ? 'blue' : 'yellow',
-        label: isLight ? '弱昇竜' : '中昇竜',
-        description: isLight ? '青いボタン' : '黄色いボタン',
-        iconText: isKick ? 'K' : 'P',
+        kind,
+        color,
+        label: isOD ? (isKick ? 'ODスパイク' : 'OD昇竜') : `${strength}${isKick ? 'スパイク' : '昇竜'}`,
+        description: isOD ? 'ODボタン' : `${strength}${isKick ? 'キック' : 'パンチ'}ボタン`,
+        iconText: isOD ? (isKick ? 'KK' : 'PP') : btnChar,
       },
       suffix,
-      tip: `テンキー623+${isLight ? '弱P' : '中P'}（前・下・斜め前）`,
+      tip: `テンキー623+${isOD ? (btnChar + btnChar + '（2ボタン同時）') : strength + btnChar}（前・下・斜め前）`,
     };
   }
 
@@ -540,54 +628,78 @@ function parseSinglePart(text: string): VisualStep {
     };
   }
 
-  // 7. 必殺技：波動拳 / 弾（モダン強波動=N+SP）
+  // 7. 必殺技：波動拳 / 弾
   if (lower.includes('波動') || lower.includes('弾') || lower.includes('気功')) {
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
     const isLight = lower.includes('弱');
 
-    if (isOD) {
+    if (controlType === 'modern') {
+      if (isOD) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: [],
+          arrowStr: 'N',
+          button: {
+            kind: 'special',
+            color: 'purple',
+            label: 'OD弾',
+            description: 'OD弾ボタン',
+            iconText: 'A+SP',
+          },
+          suffix,
+          tip: 'N＋A＋SP（手動テンキー236+PPでも入力可能）',
+        };
+      }
+
+      if (isHeavy) {
+        return {
+          original: remaining,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: [],
+          arrowStr: 'N',
+          button: {
+            kind: 'special',
+            color: 'red',
+            label: '強波動',
+            description: '強波動ボタン',
+            iconText: 'SP',
+          },
+          suffix,
+          tip: 'N＋SP（手動テンキー236+強Pでも入力可能）',
+        };
+      }
+
       return {
         original: remaining,
         isCancel,
         isRush,
         rushText,
         prefix,
-        arrows: [],
-        arrowStr: 'N',
+        arrows: ['↓', '↘', '→'],
+        arrowStr: '↓↘→',
         button: {
-          kind: 'special',
-          color: 'purple',
-          label: 'OD弾',
-          description: 'OD弾ボタン',
-          iconText: 'A+SP',
+          kind: 'punch',
+          color: isLight ? 'blue' : 'yellow',
+          label: isLight ? '弱弾' : '中弾',
+          description: isLight ? '青いボタン' : '黄色いボタン',
+          iconText: 'P',
         },
         suffix,
-        tip: 'N＋A＋SP（ニュートラル＋A＋SP、または手動236+PP）',
+        tip: `テンキー236+${isLight ? '弱P' : '中P'}（下・斜め前・前）`,
       };
     }
 
-    if (isHeavy) {
-      return {
-        original: remaining,
-        isCancel,
-        isRush,
-        rushText,
-        prefix,
-        arrows: [],
-        arrowStr: 'N',
-        button: {
-          kind: 'special',
-          color: 'red',
-          label: '強波動',
-          description: '強波動ボタン',
-          iconText: 'SP',
-        },
-        suffix,
-        tip: 'N＋SP（ニュートラル＋SP、または手動テンキー236+強P）',
-      };
-    }
-
+    // クラシック（236+P: ↓↘→ + P）
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     return {
       original: remaining,
       isCancel,
@@ -598,13 +710,13 @@ function parseSinglePart(text: string): VisualStep {
       arrowStr: '↓↘→',
       button: {
         kind: 'punch',
-        color: isLight ? 'blue' : 'yellow',
-        label: isLight ? '弱弾' : '中弾',
-        description: isLight ? '青いボタン' : '黄色いボタン',
-        iconText: 'P',
+        color,
+        label: isOD ? 'OD弾' : `${strength}弾`,
+        description: isOD ? 'ODボタン' : `${strength}パンチボタン`,
+        iconText: isOD ? 'PP' : 'P',
       },
       suffix,
-      tip: `テンキー236+${isLight ? '弱P' : '中P'}（下・斜め前・前）`,
+      tip: `テンキー236+${isOD ? 'PP（2ボタン同時）' : strength + 'P'}（下・斜め前・前）`,
     };
   }
 

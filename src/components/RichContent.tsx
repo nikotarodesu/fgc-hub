@@ -7,6 +7,7 @@ import InteractiveComboRow from './InteractiveComboRow';
 interface RichContentProps {
   content: string;
   isNeutralMovesSection?: boolean;
+  controlType?: 'classic' | 'modern';
 }
 
 // インライン装飾（**太字** 等）のスマートなパース
@@ -49,7 +50,7 @@ interface BlockGroup {
   lines: string[];
 }
 
-export default function RichContent({ content, isNeutralMovesSection = false }: RichContentProps) {
+export default function RichContent({ content, isNeutralMovesSection = false, controlType = 'classic' }: RichContentProps) {
   if (!content) return null;
 
   const rawLines = content.split('\n');
@@ -158,6 +159,7 @@ export default function RichContent({ content, isNeutralMovesSection = false }: 
                     key={lIdx}
                     comboLine={line}
                     renderInlineText={renderInline}
+                    controlType={controlType}
                   />
                 ))}
               </div>

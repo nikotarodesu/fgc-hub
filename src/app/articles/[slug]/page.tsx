@@ -406,7 +406,7 @@ export default function ArticleDetailPage() {
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
                 <div className="p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                  <RichContent content={introText} />
+                  <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
 
@@ -531,6 +531,7 @@ export default function ArticleDetailPage() {
                     <RichContent
                       content={section.body}
                       isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                      controlType={activeControlType}
                     />
                   </div>
 
@@ -650,6 +651,7 @@ export default function ArticleDetailPage() {
                             <RichContent
                               content={section.body}
                               isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                              controlType={activeControlType}
                             />
                           </div>
 

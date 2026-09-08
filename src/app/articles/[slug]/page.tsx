@@ -325,6 +325,21 @@ export default function ArticleDetailPage() {
                     {article.character}
                   </span>
                 )}
+                {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                    立ち回り
+                  </span>
+                )}
+                {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                    完全攻略
+                  </span>
+                )}
+                {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                    過去のコーチング
+                  </span>
+                )}
                 {article.controlType === 'both' ? (
                   <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800">
                     {activeControlType === 'classic' ? '🥋 クラシック (C) モード' : '⚡️ モダン (M) モード'}

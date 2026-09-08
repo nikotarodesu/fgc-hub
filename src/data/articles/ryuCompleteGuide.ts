@@ -18,7 +18,7 @@ export const RYU_COMPLETE_GUIDE: Article = {
   readTime: '20分',
   isPaid: true,
   price: 500,
-  tags: ['スト6', 'リュウ', 'クラシック', 'モダン', '完全攻略', 'コンボ', '起き攻め'],
+  tags: ['スト6', 'リュウ', 'キャラ別攻略', '完全攻略', 'クラシック', 'モダン', 'コンボ', '起き攻め'],
   likesCount: 157,
   controlType: 'both',
   freeContent: RYU_CLASSIC_COMPLETE_GUIDE.freeContent,

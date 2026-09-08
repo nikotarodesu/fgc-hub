@@ -14,7 +14,7 @@ export interface Article {
   title: string;
   summary: string;
   game: 'sf6' | 'general';
-  category: 'character' | 'system' | 'mindset' | 'coaching';
+  category: 'character' | 'neutral' | 'system' | 'mindset' | 'coaching';
   character?: string;
   characterColor?: string;
   youtubeVideoId?: string;
@@ -123,7 +123,7 @@ export const ARTICLES_DATA: Article[] = [
     summary:
       '「何でもできる」から迷うのではなく、「判断を減らす設計」として捉えることで勝率が劇的に安定する。波動拳の真の役割、中距離戦の制し方、対空が自然と落ちる仕組みを徹底解説します。',
     game: 'sf6',
-    category: 'character',
+    category: 'neutral',
     character: 'リュウ',
     characterColor: 'from-blue-600 to-indigo-800',
     youtubeVideoId: '_n0stVxs_3s',
@@ -132,7 +132,7 @@ export const ARTICLES_DATA: Article[] = [
     updatedAt: '2026-09-08',
     readTime: '5分',
     isPaid: false,
-    tags: ['スト6', 'リュウ', '立ち回り', '波動拳', '対空', '上達論'],
+    tags: ['スト6', 'リュウ', '立ち回り', '立ち回り考察', '波動拳', '対空', '上達論'],
     likesCount: 562,
     freeContent: {
       intro:

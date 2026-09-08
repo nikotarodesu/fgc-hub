@@ -7,7 +7,7 @@ import { ARTICLES_DATA, CHARACTERS_SF6, AUTHOR_INFO } from '@/data/articles';
 import { Search, Lock, ArrowRight, Sparkles, Zap } from 'lucide-react';
 
 export default function HomePage() {
-  const [selectedGame, setSelectedGame] = useState<'all' | 'sf6' | 'general'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -15,7 +15,7 @@ export default function HomePage() {
   // すべてのタグを収集
   const allTags = useMemo(() => {
     if (ARTICLES_DATA.length === 0) {
-      return ['スト6', 'キャミィ', 'コンボ', '+42F詐欺飛び', 'シミー', '上達論'];
+      return ['スト6', 'リュウ', '立ち回り', '完全攻略', 'コンボ', '上達論'];
     }
     const tags = new Set<string>();
     ARTICLES_DATA.forEach((a) => a.tags.forEach((t) => tags.add(t)));
@@ -25,7 +25,27 @@ export default function HomePage() {
   // フィルタリング処理
   const filteredArticles = useMemo(() => {
     return ARTICLES_DATA.filter((article) => {
-      if (selectedGame !== 'all' && article.game !== selectedGame) return false;
+      if (selectedCategory === 'character') {
+        const isCharGuide =
+          article.category === 'character' ||
+          article.tags.includes('完全攻略') ||
+          article.tags.includes('キャラ別攻略');
+        if (!isCharGuide) return false;
+      }
+      if (selectedCategory === 'neutral') {
+        const isNeutral =
+          article.category === 'neutral' ||
+          article.tags.includes('立ち回り') ||
+          article.tags.includes('立ち回り考察');
+        if (!isNeutral) return false;
+      }
+      if (selectedCategory === 'coaching') {
+        const isCoaching =
+          article.category === 'coaching' ||
+          article.tags.includes('過去のコーチング') ||
+          article.tags.includes('コーチング');
+        if (!isCoaching) return false;
+      }
       if (selectedCharacter && article.character !== selectedCharacter) return false;
       if (selectedTag && !article.tags.includes(selectedTag)) return false;
       if (searchQuery.trim()) {
@@ -37,7 +57,7 @@ export default function HomePage() {
       }
       return true;
     });
-  }, [selectedGame, selectedCharacter, selectedTag, searchQuery]);
+  }, [selectedCategory, selectedCharacter, selectedTag, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
@@ -93,43 +113,53 @@ export default function HomePage() {
 
       {/* メインレイアウト（2カラム） */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* セグメントコントロール（タブ） */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-neutral-200/80">
-          <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-lg border border-neutral-200/60 overflow-x-auto">
+        {/* セグメントコントロール（カテゴリ切り替えタブ） */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
+          <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/80 p-1 rounded-lg border border-neutral-200/60 dark:border-neutral-700/60 overflow-x-auto">
             <button
-              onClick={() => { setSelectedGame('all'); setSelectedCharacter(null); setSelectedTag(null); }}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                selectedGame === 'all'
-                  ? 'bg-white text-neutral-900 shadow-xs font-semibold'
-                  : 'text-neutral-600 hover:text-neutral-900'
+              onClick={() => { setSelectedCategory('all'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'all'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
               全記事一覧
             </button>
             <button
-              onClick={() => { setSelectedGame('sf6'); setSelectedCharacter(null); setSelectedTag(null); }}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                selectedGame === 'sf6'
-                  ? 'bg-white text-neutral-900 shadow-xs font-semibold'
-                  : 'text-neutral-600 hover:text-neutral-900'
+              onClick={() => { setSelectedCategory('character'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'character'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              ストリートファイター6
+              キャラ別攻略
             </button>
             <button
-              onClick={() => { setSelectedGame('general'); setSelectedCharacter(null); setSelectedTag(null); }}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                selectedGame === 'general'
-                  ? 'bg-white text-neutral-900 shadow-xs font-semibold'
-                  : 'text-neutral-600 hover:text-neutral-900'
+              onClick={() => { setSelectedCategory('neutral'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'neutral'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              共通上達論
+              立ち回り
+            </button>
+            <button
+              onClick={() => { setSelectedCategory('coaching'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'coaching'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              過去のコーチング
             </button>
           </div>
 
-          <div className="text-xs text-neutral-500 font-medium">
-            全 <span className="text-neutral-900 font-bold">{filteredArticles.length}</span> 件
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+            全 <span className="text-neutral-900 dark:text-white font-bold">{filteredArticles.length}</span> 件
           </div>
         </div>
 
@@ -137,29 +167,34 @@ export default function HomePage() {
           {/* メイン記事カラム（8 / 12） */}
           <div className="lg:col-span-8 space-y-4">
             {/* 絞り込み条件表示 */}
-            {(selectedCharacter || selectedTag || searchQuery) && (
-              <div className="p-3 rounded-lg bg-white border border-neutral-200 flex items-center justify-between text-xs shadow-xs">
-                <div className="flex items-center gap-2">
-                  <span className="text-neutral-500">絞り込み:</span>
+            {(selectedCategory !== 'all' || selectedCharacter || selectedTag || searchQuery) && (
+              <div className="p-3 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between text-xs shadow-xs">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-neutral-500 dark:text-neutral-400">絞り込み:</span>
+                  {selectedCategory !== 'all' && (
+                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
+                      {selectedCategory === 'character' ? 'カテゴリ: キャラ別攻略' : selectedCategory === 'neutral' ? 'カテゴリ: 立ち回り' : 'カテゴリ: 過去のコーチング'}
+                    </span>
+                  )}
                   {selectedCharacter && (
-                    <span className="bg-neutral-100 text-neutral-800 font-medium px-2 py-0.5 rounded">
+                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
                       キャラ: {selectedCharacter}
                     </span>
                   )}
                   {selectedTag && (
-                    <span className="bg-neutral-100 text-neutral-800 font-medium px-2 py-0.5 rounded">
+                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
                       #{selectedTag}
                     </span>
                   )}
                   {searchQuery && (
-                    <span className="bg-neutral-100 text-neutral-800 font-medium px-2 py-0.5 rounded">
+                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
                       &quot;{searchQuery}&quot;
                     </span>
                   )}
                 </div>
                 <button
-                  onClick={() => { setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
-                  className="text-neutral-500 hover:text-neutral-900 underline font-medium cursor-pointer"
+                  onClick={() => { setSelectedCategory('all'); setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
+                  className="text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline font-medium cursor-pointer shrink-0"
                 >
                   解除
                 </button>
@@ -191,8 +226,17 @@ export default function HomePage() {
                 </div>
               </div>
             ) : filteredArticles.length === 0 ? (
-              <div className="p-10 text-center bg-white rounded-xl border border-neutral-200 text-neutral-500 text-sm">
-                該当する記事が見つかりませんでした。別の条件でお試しください。
+              <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
+                <p className="font-bold text-neutral-800 dark:text-neutral-200">
+                  {selectedCategory === 'coaching'
+                    ? '過去のコーチング記事は現在準備中です'
+                    : '該当する記事が見つかりませんでした'}
+                </p>
+                <p className="text-xs text-neutral-400">
+                  {selectedCategory === 'coaching'
+                    ? '全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！'
+                    : '別の条件やキーワードでお試しください。'}
+                </p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -203,13 +247,28 @@ export default function HomePage() {
                     className="group block p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-xs transition-all"
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
                           {article.game === 'sf6' ? 'スト6' : '共通理論'}
                         </span>
                         {article.character && (
                           <span className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
                             {article.character}
+                          </span>
+                        )}
+                        {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
+                          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
+                            立ち回り
+                          </span>
+                        )}
+                        {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
+                          <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
+                            完全攻略
+                          </span>
+                        )}
+                        {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
+                          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                            過去のコーチング
                           </span>
                         )}
                         {article.controlType === 'both' ? (
@@ -294,7 +353,6 @@ export default function HomePage() {
                   <button
                     key={char.id}
                     onClick={() => {
-                      setSelectedGame('sf6');
                       setSelectedCharacter(selectedCharacter === char.name ? null : char.name);
                     }}
                     className={`text-left px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${

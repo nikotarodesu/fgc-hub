@@ -14,6 +14,9 @@ export default function HomePage() {
 
   // すべてのタグを収集
   const allTags = useMemo(() => {
+    if (ARTICLES_DATA.length === 0) {
+      return ['スト6', 'キャミィ', 'コンボ', '+42F詐欺飛び', 'シミー', '上達論'];
+    }
     const tags = new Set<string>();
     ARTICLES_DATA.forEach((a) => a.tags.forEach((t) => tags.add(t)));
     return Array.from(tags);
@@ -206,7 +209,30 @@ export default function HomePage() {
             )}
 
             {/* 記事カード一覧 */}
-            {filteredArticles.length === 0 ? (
+            {ARTICLES_DATA.length === 0 ? (
+              <div className="p-8 sm:p-12 text-center bg-white rounded-2xl border border-neutral-200/80 shadow-xs space-y-4">
+                <div className="w-14 h-14 rounded-full bg-cyan-50 flex items-center justify-center mx-auto text-[#00a3c4]">
+                  <Sparkles className="w-7 h-7" />
+                </div>
+                <div>
+                  <h3 className="font-black text-neutral-900 text-lg sm:text-xl">
+                    攻略記事を準備中です
+                  </h3>
+                  <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-md mx-auto leading-relaxed">
+                    全キャラ1800MR以上の筆者「にこ太郎」による実戦解説記事を順次公開予定です。まずは上部の「スト6攻略データベース（コンボ＆起き攻め検索ツール）」をぜひご利用ください！
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <Link
+                    href="/sf6"
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-black bg-[#00a3c4] hover:bg-[#008ba8] text-white transition-all shadow-md hover:scale-105"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>スト6攻略データベースを開く</span>
+                  </Link>
+                </div>
+              </div>
+            ) : filteredArticles.length === 0 ? (
               <div className="p-12 text-center bg-white rounded-2xl border border-neutral-200 text-neutral-500 text-sm">
                 該当する記事が見つかりませんでした。別の条件でお試しください。
               </div>
@@ -344,25 +370,31 @@ export default function HomePage() {
                 <span>注目・人気記事</span>
               </h3>
               <div className="space-y-3">
-                {ARTICLES_DATA.map((art, idx) => (
-                  <Link
-                    key={art.id}
-                    href={`/articles/${art.slug}`}
-                    className="flex items-start gap-2.5 group"
-                  >
-                    <span className="font-mono font-black text-xs text-neutral-400 group-hover:text-[#00a3c4] shrink-0 mt-0.5">
-                      0{idx + 1}
-                    </span>
-                    <div>
-                      <h4 className="text-xs font-bold text-neutral-800 group-hover:text-[#00a3c4] line-clamp-2 leading-snug">
-                        {art.title}
-                      </h4>
-                      <span className="text-[10px] text-neutral-400">
-                        {art.isPaid ? `¥${art.price}・有料` : '無料'}
+                {ARTICLES_DATA.length > 0 ? (
+                  ARTICLES_DATA.map((art, idx) => (
+                    <Link
+                      key={art.id}
+                      href={`/articles/${art.slug}`}
+                      className="flex items-start gap-2.5 group"
+                    >
+                      <span className="font-mono font-black text-xs text-neutral-400 group-hover:text-[#00a3c4] shrink-0 mt-0.5">
+                        0{idx + 1}
                       </span>
-                    </div>
-                  </Link>
-                ))}
+                      <div>
+                        <h4 className="text-xs font-bold text-neutral-800 group-hover:text-[#00a3c4] line-clamp-2 leading-snug">
+                          {art.title}
+                        </h4>
+                        <span className="text-[10px] text-neutral-400">
+                          {art.isPaid ? `¥${art.price}・有料` : '無料'}
+                        </span>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-xs text-neutral-400 py-3 text-center">
+                    記事公開後に人気ランキングが表示されます
+                  </p>
+                )}
               </div>
             </div>
 

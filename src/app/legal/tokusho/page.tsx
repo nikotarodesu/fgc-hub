@@ -17,8 +17,20 @@ export default function TokushoPage() {
               <div className="sm:col-span-2 font-mono font-medium text-[#008ba8]">https://nikotaro.com</div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
-              <div className="font-bold text-neutral-500">連絡先メールアドレス</div>
-              <div className="sm:col-span-2 font-mono">gomadouhu.k@gmail.com</div>
+              <div className="font-bold text-neutral-500">お問い合わせ先</div>
+              <div className="sm:col-span-2 leading-relaxed">
+                <a
+                  href="https://x.com/nikotarosun"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-[#00a3c4] hover:underline"
+                >
+                  公式X（@nikotarosun）のダイレクトメッセージ
+                </a>
+                <span className="block text-xs text-neutral-500 mt-1">
+                  ※ メールアドレス等についてご請求があった場合は、特定商取引法に基づき遅滞なく電子メール等にて開示いたします。
+                </span>
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
               <div className="font-bold text-neutral-500">販売価格</div>

@@ -41,41 +41,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
-      {/* ヒーローセクション：洗練されたミニマル・エディトリアルデザイン */}
-      <section className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-10 sm:py-14">
+      {/* 検索・クイックアクセスセクション */}
+      <section className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-6 sm:py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
-            {/* にこ太郎アイコン */}
-            <div className="relative shrink-0">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 shadow-xs bg-neutral-100 dark:bg-neutral-800">
-                <Image
-                  src="/icon.png"
-                  alt="にこ太郎 アイコン"
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-cover"
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* テキストエリア */}
-            <div className="text-center sm:text-left flex-1 max-w-2xl">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 text-[11px] font-medium mb-3">
-                <span>全キャラ1800MR+ 監修・実践攻略メディア</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight mb-2">
-                にこ太郎の格ゲーLAB
-              </h1>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                全キャラ1800MR以上の筆者による、勝率直結のスト6実践データベース＆徹底攻略記事。<br className="hidden sm:inline" />
-                対戦・トレモ中の高速参照に特化したコンボ検索や、普遍的な格ゲー上達理論を発信しています。
-              </p>
-            </div>
-          </div>
-
           {/* 検索バー */}
-          <div className="mt-8 max-w-xl relative">
+          <div className="max-w-xl relative">
             <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -278,11 +248,7 @@ export default function HomePage() {
                     </p>
 
                     <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500 pt-2.5 border-t border-neutral-100 dark:border-neutral-800">
-                      <div className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400">
-                        <span className="font-medium text-neutral-700 dark:text-neutral-300">{article.author.name}</span>
-                        <span>・</span>
-                        <span>{article.publishedAt}</span>
-                        <span>・</span>
+                      <div className="text-neutral-500 dark:text-neutral-400">
                         <span>読了 {article.readTime}</span>
                       </div>
                       <div className="flex items-center gap-1 text-neutral-900 dark:text-white font-semibold group-hover:translate-x-0.5 transition-transform">

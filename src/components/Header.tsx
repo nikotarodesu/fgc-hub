@@ -2,11 +2,21 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+
   return (
-    <header className="bg-white dark:bg-neutral-950 border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors">
+    <header
+      className={`${
+        isHome
+          ? 'sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md'
+          : 'relative bg-white dark:bg-neutral-950'
+      } border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
           {/* ブランドロゴ */}
@@ -23,7 +33,7 @@ export default function Header() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-base tracking-tight text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
+                <span className="font-pixel font-bold text-lg sm:text-xl tracking-wider text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
                   にこ太郎の格ゲーLAB
                 </span>
               </div>

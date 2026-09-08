@@ -53,9 +53,23 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
             {steps.map((step, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-2xs">
-                  {/* ラッシュ等のプレフィックス */}
+                  {/* キャンセル（青い文字） */}
+                  {step.isCancel && (
+                    <span className="text-xs font-bold text-blue-600 dark:text-cyan-400 shrink-0">
+                      キャンセル
+                    </span>
+                  )}
+
+                  {/* ラッシュ（青い文字） */}
+                  {step.isRush && (
+                    <span className="text-xs font-bold text-blue-600 dark:text-cyan-400 shrink-0">
+                      {step.rushText || 'ラッシュ'}
+                    </span>
+                  )}
+
+                  {/* その他プレフィックス（壁バウンド等） */}
                   {step.prefix && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300">
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200">
                       {step.prefix}
                     </span>
                   )}
@@ -72,25 +86,20 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
                     <span className="text-neutral-400 text-xs font-bold">+</span>
                   )}
 
-                  {/* カラフルなアーケードボタン（黄色いパンチボタン、赤いパンチボタン等） */}
+                  {/* カラフルなアーケードボタン（小さい文章は削除し、ボタン画像とラベルのみ） */}
                   <div className="flex items-center gap-1.5">
                     <ArcadeButton
                       color={step.button.color}
                       iconText={step.button.iconText}
-                      label={step.button.description}
+                      label={step.button.label}
                       size="sm"
                     />
-                    <div className="flex flex-col">
-                      <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
-                        {step.button.label}
-                      </span>
-                      <span className="text-[9px] text-neutral-500 dark:text-neutral-400 leading-tight">
-                        {step.button.description}
-                      </span>
-                    </div>
+                    <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
+                      {step.button.label}
+                    </span>
                   </div>
 
-                  {/* サフィックス（カス当たり等） */}
+                  {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}
                   {step.suffix && (
                     <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">
                       {step.suffix}
@@ -107,14 +116,16 @@ export default function InteractiveComboRow({ comboLine, renderInlineText }: Int
           </div>
 
           {/* 初心者向けワンポイント入力のコツ */}
-          <div className="mt-2.5 pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
-            {steps.filter((s) => s.tip).map((s, sIdx) => (
-              <div key={sIdx} className="text-[11px] text-neutral-600 dark:text-neutral-400 flex items-start gap-1.5">
-                <span className="text-cyan-700 dark:text-cyan-400 font-bold shrink-0">・[{s.original}]:</span>
-                <span>{s.tip}</span>
-              </div>
-            ))}
-          </div>
+          {steps.some((s) => s.tip) && (
+            <div className="mt-2.5 pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
+              {steps.filter((s) => s.tip).map((s, sIdx) => (
+                <div key={sIdx} className="text-[11px] text-neutral-600 dark:text-neutral-400 flex items-start gap-1.5">
+                  <span className="text-cyan-700 dark:text-cyan-400 font-bold shrink-0">・[{s.original}]:</span>
+                  <span>{s.tip}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

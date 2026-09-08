@@ -95,7 +95,7 @@ export const ARTICLES_DATA: Article[] = [
   {
     id: 'art-ryu-neutral-strategy',
     slug: 'ryu-neutral-strategy',
-    title: '【スト6】リュウの立ち回り考察｜波動拳は攻撃ではなく「質問」である',
+    title: 'リュウの立ち回り考察',
     summary:
       '「何でもできる」から迷うのではなく、「判断を減らす設計」として捉えることで勝率が劇的に安定する。波動拳の真の役割、中距離戦の制し方、対空が自然と落ちる仕組みを徹底解説します。',
     game: 'sf6',

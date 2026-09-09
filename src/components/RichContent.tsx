@@ -73,99 +73,27 @@ function getLineType(line: string): LineType {
   return 'text';
 }
 
-interface ComboUnit {
-  recipe: string;
-  notes: string[];
-}
-
 interface ParsedBlock {
-  type:
-    | 'quote'
-    | 'numbered_heading'
-    | 'star_heading'
-    | 'lightning_heading'
-    | 'frame'
-    | 'combo_group'
-    | 'subheading'
-    | 'bullet'
-    | 'numbered'
-    | 'arrow'
-    | 'text';
-  lines?: string[];
-  combos?: ComboUnit[];
-  context?: 'oki' | 'general';
+  type: Exclude<LineType, 'empty'>;
+  lines: string[];
 }
 
 function parseContentToBlocks(content: string): ParsedBlock[] {
   const rawLines = content.split('\n');
   const blocks: ParsedBlock[] = [];
   let currentBlock: ParsedBlock | null = null;
-  let currentCombo: ComboUnit | null = null;
-  let lastHeadingContext: 'oki' | 'general' = 'general';
 
-  for (let i = 0; i < rawLines.length; i++) {
-    const rawLine = rawLines[i];
+  for (const rawLine of rawLines) {
     const trimmed = rawLine.trim();
-
-    if (!trimmed) {
-      // 空行の処理：直後がbulletならコンボ紐付けを維持し、それ以外ならコンボ紐付けを終了
-      if (currentCombo) {
-        const nextNonEmpty = rawLines.slice(i + 1).find((l) => l.trim().length > 0);
-        if (nextNonEmpty) {
-          const nextType = getLineType(nextNonEmpty);
-          if (nextType !== 'bullet') {
-            currentCombo = null;
-          }
-        } else {
-          currentCombo = null;
-        }
-      }
-      continue;
-    }
+    if (!trimmed) continue;
 
     const lineType = getLineType(trimmed);
 
-    if (lineType === 'frame') {
-      lastHeadingContext = 'oki';
-    } else if (
-      lineType === 'numbered_heading' ||
-      lineType === 'star_heading' ||
-      lineType === 'lightning_heading'
-    ) {
-      lastHeadingContext = 'general';
-    }
-
-    // 1. コンボレシピ行
-    if (lineType === 'combo') {
-      currentCombo = { recipe: trimmed, notes: [] };
-      if (!currentBlock || currentBlock.type !== 'combo_group') {
-        if (currentBlock) blocks.push(currentBlock);
-        currentBlock = {
-          type: 'combo_group',
-          combos: [currentCombo],
-          context: lastHeadingContext,
-        };
-      } else {
-        currentBlock.combos!.push(currentCombo);
-      }
-      continue;
-    }
-
-    // 2. コンボに続く箇条書き行（▶︎ など）は、そのコンボの解説ノートとして紐付け
-    if (lineType === 'bullet' && currentCombo) {
-      const cleanNote = trimmed.replace(/^[・\-\*▶︎▶]\s*/, '');
-      currentCombo.notes.push(cleanNote);
-      continue;
-    }
-
-    // 3. コンボ以外の行が来たらコンボ紐付けを解除
-    currentCombo = null;
-
     if (!currentBlock || currentBlock.type !== lineType) {
       if (currentBlock) blocks.push(currentBlock);
-      currentBlock = { type: lineType as Exclude<LineType, 'empty' | 'combo'>, lines: [trimmed] };
+      currentBlock = { type: lineType as Exclude<LineType, 'empty'>, lines: [trimmed] };
     } else {
-      currentBlock.lines!.push(trimmed);
+      currentBlock.lines.push(trimmed);
     }
   }
 
@@ -306,58 +234,27 @@ export default function RichContent({
           );
         }
 
-        // 1.7 コンボグループ（各コンボと、その直下に紐付く解説箇条書き）
-        if (block.type === 'combo_group' && block.combos) {
-          const isOki = block.context === 'oki';
+        // 1.7 締め技・コンボルート（〆が付いている行）
+        if (block.type === 'combo') {
           return (
-            <div key={bIdx} className="my-2.5 sm:my-3 space-y-3 sm:space-y-3.5">
-              {/* グループ全体の小ヘッダー（コンボレシピ または 締め技ルート） */}
-              <div className="text-[10px] sm:text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center justify-between gap-1.5 select-none px-0.5">
+            <div key={bIdx} className="my-2 sm:my-2.5 space-y-1 sm:space-y-1.5 pl-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center justify-between gap-1.5 mb-1">
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
-                  <span>{isOki ? '締め技・ダウン奪取ルート' : 'コンボレシピ'}</span>
+                  <span>締め技・コンボルート</span>
                 </div>
                 <span className="text-[9px] sm:text-[10px] text-cyan-600 dark:text-cyan-400 font-normal">
-                  （タップで直感コマンド展開）
+                  （タップで初心者用矢印コマンド展開）
                 </span>
               </div>
-
-              {/* 各コンボ行とその解説 */}
-              <div className="space-y-2.5 sm:space-y-3">
-                {block.combos.map((combo, cIdx) => (
-                  <div key={cIdx} className="space-y-1">
-                    {/* コンボ行本体 */}
-                    <InteractiveComboRow
-                      comboLine={combo.recipe}
-                      renderInlineText={renderInline}
-                      controlType={controlType}
-                    />
-
-                    {/* そのコンボに紐付く解説箇条書き */}
-                    {combo.notes.length > 0 && (
-                      <div className="mt-1 ml-1 sm:ml-2.5 pl-2.5 sm:pl-3.5 border-l-2 border-cyan-500/50 dark:border-cyan-400/40 py-1 space-y-1 bg-neutral-100/50 dark:bg-neutral-850/40 rounded-r-lg">
-                        <div className="text-[10px] sm:text-[11px] font-bold text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 select-none pt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
-                          <span>{isOki ? '起き攻め解説・消費フレーム' : 'コンボ解説・使い所'}</span>
-                        </div>
-                        <ul className="space-y-1 pr-1.5">
-                          {combo.notes.map((note, nIdx) => (
-                            <li
-                              key={nIdx}
-                              className="flex items-start gap-1.5 text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed"
-                            >
-                              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs mt-0.5 shrink-0 select-none">
-                                ▶
-                              </span>
-                              <div className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
-                                {renderInline(note)}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+              <div className="space-y-1 sm:space-y-1.5">
+                {block.lines.map((line, lIdx) => (
+                  <InteractiveComboRow
+                    key={lIdx}
+                    comboLine={line}
+                    renderInlineText={renderInline}
+                    controlType={controlType}
+                  />
                 ))}
               </div>
             </div>

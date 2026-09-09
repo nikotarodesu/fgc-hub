@@ -48,6 +48,7 @@ function renderInline(text: string): React.ReactNode[] {
 
 type LineType =
   | 'empty'
+  | 'image'
   | 'quote'
   | 'numbered_heading'
   | 'star_heading'
@@ -63,6 +64,7 @@ type LineType =
 function getLineType(line: string): LineType {
   const trimmed = line.trim();
   if (!trimmed) return 'empty';
+  if (trimmed.startsWith('![') && trimmed.includes('](') && trimmed.endsWith(')')) return 'image';
   if (trimmed.startsWith('>')) return 'quote';
   if (/^[①-⑳❶-❿]/.test(trimmed)) return 'numbered_heading';
   if (trimmed.startsWith('⭐️') || trimmed.startsWith('⭐')) return 'star_heading';
@@ -250,6 +252,35 @@ export default function RichContent({
       )}
 
       {blocks.map((block, bIdx) => {
+        // 0.5 インライン画像・GIF（![キャプション](URL)）
+        if (block.type === 'image') {
+          return (
+            <div key={bIdx} className="my-3 sm:my-4 space-y-3">
+              {block.lines.map((line, lIdx) => {
+                const match = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+                if (!match) return null;
+                const caption = match[1];
+                const src = match[2];
+                return (
+                  <figure key={lIdx} className="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 shadow-sm max-w-2xl">
+                    <img
+                      src={src}
+                      alt={caption || '攻略アニメーション'}
+                      className="w-full h-auto object-cover"
+                      loading="lazy"
+                    />
+                    {caption && (
+                      <figcaption className="p-2.5 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 text-center font-medium">
+                        {caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                );
+              })}
+            </div>
+          );
+        }
+
         // 1. 引用・コールアウト
         if (block.type === 'quote' && block.lines) {
           const quoteText = block.lines

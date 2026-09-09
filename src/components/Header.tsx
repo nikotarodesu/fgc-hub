@@ -43,22 +43,6 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* ナビゲーション */}
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
-            <Link
-              href="/?game=sf6"
-              className="hover:text-neutral-950 dark:hover:text-white transition-colors"
-            >
-              スト6攻略記事
-            </Link>
-            <Link
-              href="/?game=general"
-              className="hover:text-neutral-950 dark:hover:text-white transition-colors"
-            >
-              格ゲー共通上達論
-            </Link>
-          </nav>
-
           {/* 右側アクション */}
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             <ThemeToggle />

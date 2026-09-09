@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ARTICLES_DATA } from '@/data/articles';
@@ -731,48 +731,51 @@ export default function ArticleDetailPage() {
                       )}
 
                       {/* 有料セクション */}
-                      {paidSections.map((section, idx) => (
-                        <div key={idx} id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
-                          <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
-                            <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
-                              {section.title}
-                            </h2>
-                            <button
-                              type="button"
-                              onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                              className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer ${
-                                bookmarks.includes(`sec-paid-${idx}`)
-                                  ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
-                                  : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                              }`}
-                              title={bookmarks.includes(`sec-paid-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
-                            >
-                              <Star className={`w-4 h-4 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
-                              <span className="hidden sm:inline text-[11px]">
-                                {bookmarks.includes(`sec-paid-${idx}`) ? '登録済み' : 'お気に入り'}
-                              </span>
-                            </button>
-                          </div>
+                      {paidSections.map((section, idx) => {
+                        const isCenterComboSec = section.title.includes('画面中央のコンボ');
+                        return (
+                          <React.Fragment key={idx}>
+                            {/* 完全攻略記事限定：実戦コンボ逆引きデータベース（⑥ 画面中央のコンボの直上に設置） */}
+                            {isCompleteGuide && isCenterComboSec && (
+                              <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24">
+                                <ArticleComboReverseLookup
+                                  controlType={activeControlType}
+                                  isUnlocked={true}
+                                />
+                              </div>
+                            )}
 
-                          {/* 完全攻略記事限定：実戦コンボ逆引きデータベース */}
-                          {isCompleteGuide && section.title.includes('画面中央のコンボ') && (
-                            <div id="combo-reverse-lookup" className="mb-6 scroll-mt-20">
-                              <ArticleComboReverseLookup
-                                controlType={activeControlType}
-                                isUnlocked={true}
-                              />
-                            </div>
-                          )}
+                            <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
+                              <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
+                                <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
+                                  {section.title}
+                                </h2>
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
+                                  className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer ${
+                                    bookmarks.includes(`sec-paid-${idx}`)
+                                      ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                                      : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                  }`}
+                                  title={bookmarks.includes(`sec-paid-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                                >
+                                  <Star className={`w-4 h-4 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
+                                  <span className="hidden sm:inline text-[11px]">
+                                    {bookmarks.includes(`sec-paid-${idx}`) ? '登録済み' : 'お気に入り'}
+                                  </span>
+                                </button>
+                              </div>
 
-                          <div className="mb-4">
-                            <RichContent
-                              content={section.body}
-                              sectionId={`sec-paid-${idx}`}
-                              activeSubheading={activeSubheading}
-                              isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
-                              controlType={activeControlType}
-                            />
-                          </div>
+                              <div className="mb-4">
+                                <RichContent
+                                  content={section.body}
+                                  sectionId={`sec-paid-${idx}`}
+                                  activeSubheading={activeSubheading}
+                                  isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                                  controlType={activeControlType}
+                                />
+                              </div>
 
                           {/* 図解ダイアグラム */}
                           {section.diagramType === 'hadoken-flow' && <HadokenFlowDiagram />}
@@ -876,7 +879,9 @@ export default function ArticleDetailPage() {
                             </div>
                           ))}
                         </div>
-                      ))}
+                      </React.Fragment>
+                    );
+                  })}
                     </div>
                   )}
                 </>

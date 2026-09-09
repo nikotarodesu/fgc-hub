@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   ArticleComboItem,
+  POSITION_OPTIONS,
   STARTER_CATEGORY_OPTIONS,
   LETHAL_DAMAGE_PRESETS,
   RYU_ARTICLE_COMBOS,
@@ -22,6 +23,7 @@ import {
   Layers,
   Gauge,
   SlidersHorizontal,
+  MapPin,
 } from 'lucide-react';
 
 interface ArticleComboReverseLookupProps {
@@ -35,6 +37,7 @@ export default function ArticleComboReverseLookup({
   isUnlocked,
   onScrollToPaywall,
 }: ArticleComboReverseLookupProps) {
+  const [selectedPosition, setSelectedPosition] = useState<string>('all');
   const [selectedStarter, setSelectedStarter] = useState<string>('all');
   const [targetDamage, setTargetDamage] = useState<number>(0);
   const [maxDriveCost, setMaxDriveCost] = useState<number>(6);
@@ -45,6 +48,14 @@ export default function ArticleComboReverseLookup({
   // フィルタリング処理
   const filteredCombos = useMemo(() => {
     return RYU_ARTICLE_COMBOS.filter((c) => {
+      // ステージ状況・位置（画面中央 / 画面端 / スタン）
+      if (selectedPosition !== 'all') {
+        if (selectedPosition === 'stun') {
+          if (c.position !== 'stun' && c.starterCategory !== 'stun') return false;
+        } else if (c.position !== selectedPosition && c.position !== 'any') {
+          return false;
+        }
+      }
       // 始動技
       if (selectedStarter !== 'all' && c.starterCategory !== selectedStarter) {
         return false;
@@ -80,9 +91,10 @@ export default function ArticleComboReverseLookup({
       }
       return 0;
     });
-  }, [selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword]);
+  }, [selectedPosition, selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword]);
 
   const isFilterActive =
+    selectedPosition !== 'all' ||
     selectedStarter !== 'all' ||
     targetDamage > 0 ||
     maxDriveCost < 6 ||
@@ -90,6 +102,7 @@ export default function ArticleComboReverseLookup({
     searchKeyword.length > 0;
 
   const handleReset = () => {
+    setSelectedPosition('all');
     setSelectedStarter('all');
     setTargetDamage(0);
     setMaxDriveCost(6);
@@ -155,18 +168,18 @@ export default function ArticleComboReverseLookup({
         </div>
 
         {/* プレビュー風のダミーチップ群 */}
-        <div className="mt-4 pt-3 border-t border-amber-200/60 dark:border-amber-900/40 flex flex-wrap gap-1.5 opacity-60 pointer-events-none select-none">
+        <div className="mt-4 pt-3 border-t border-amber-200/60 dark:border-amber-900/40 flex flex-wrap gap-1.5 opacity-70 pointer-events-none select-none">
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            ❶ 弱技始動
+            🥊 画面中央コンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            ❷ 中技始動
+            🧱 画面端限定コンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            ❺ シミー
+            💫 スタン最大リーサル
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            4,500+ リーサル逆引き
+            7,171 最大ダメージ逆引き
           </span>
         </div>
       </div>
@@ -221,6 +234,49 @@ export default function ArticleComboReverseLookup({
 
       {/* フィルターコントロール群 */}
       <div className="p-3 sm:p-4 space-y-3.5 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
+        {/* 0. ステージ状況・位置タブ（画面中央 / 画面端 / スタン） */}
+        <div className="pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
+          <div className="flex items-center gap-1.5 mb-2 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+            <MapPin className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span>ステージ状況・位置で表示切替:</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {POSITION_OPTIONS.map((pos) => {
+              const active = selectedPosition === pos.id;
+              const count =
+                pos.id === 'all'
+                  ? RYU_ARTICLE_COMBOS.length
+                  : pos.id === 'stun'
+                  ? RYU_ARTICLE_COMBOS.filter((c) => c.position === 'stun' || c.starterCategory === 'stun').length
+                  : RYU_ARTICLE_COMBOS.filter((c) => c.position === pos.id || c.position === 'any').length;
+
+              return (
+                <button
+                  key={pos.id}
+                  type="button"
+                  onClick={() => setSelectedPosition(pos.id)}
+                  className={`flex items-center justify-between sm:justify-center gap-1.5 py-2 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    active
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-md ring-2 ring-cyan-500'
+                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20'
+                  }`}
+                >
+                  <span>{pos.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                      active
+                        ? 'bg-white/20 dark:bg-neutral-900/20 text-white dark:text-neutral-900'
+                        : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* 1. 始動状況チップ（横スクロール可能） */}
         <div>
           <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold text-neutral-700 dark:text-neutral-300">
@@ -365,6 +421,17 @@ export default function ArticleComboReverseLookup({
                 {/* カード上部：始動・ダメージ・ゲージ情報バッジ */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 mb-2 border-b border-neutral-100 dark:border-neutral-800 text-xs">
                   <div className="flex items-center gap-1.5 flex-wrap">
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                        combo.position === 'corner'
+                          ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-800'
+                          : combo.position === 'stun'
+                          ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-300/80 dark:border-purple-800'
+                          : 'bg-sky-100 dark:bg-sky-950/60 text-sky-800 dark:text-cyan-300 border border-sky-300/80 dark:border-sky-800'
+                      }`}
+                    >
+                      {combo.positionLabel}
+                    </span>
                     <span className="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-bold text-[11px]">
                       {combo.starterLabel}
                     </span>

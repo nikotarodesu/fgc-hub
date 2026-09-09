@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ARTICLES_DATA } from '@/data/articles';
@@ -19,6 +19,7 @@ import {
   Sparkles,
   ChevronRight,
   Star,
+  X,
 } from 'lucide-react';
 
 export default function ArticleDetailPage() {
@@ -37,6 +38,10 @@ export default function ArticleDetailPage() {
   );
 
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const [likes, setLikes] = useState(article ? article.likesCount : 0);
   const [hasLiked, setHasLiked] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -46,6 +51,47 @@ export default function ArticleDetailPage() {
   const [activeSectionId, setActiveSectionId] = useState<string>('sec-free-0');
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  // 管理者モードの自動復元（localStorage）
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem('fgc_admin_mode') === 'true') {
+        setIsUnlocked(true);
+        setIsAdminMode(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+    toastTimerRef.current = setTimeout(() => {
+      setToastMessage(null);
+      toastTimerRef.current = null;
+    }, 4500);
+  };
+
+  const handleAdminUnlock = () => {
+    setIsUnlocked(true);
+    setIsAdminMode(true);
+    try {
+      localStorage.setItem('fgc_admin_mode', 'true');
+    } catch {}
+    showToast('管理者モード: 有料コンテンツを表示しました');
+  };
+
+  const handleAdminLock = () => {
+    setIsUnlocked(false);
+    setIsAdminMode(false);
+    try {
+      localStorage.removeItem('fgc_admin_mode');
+    } catch {}
+    showToast('通常表示（ロック状態）に戻しました');
+  };
 
   useEffect(() => {
     if (!article) return;
@@ -621,8 +667,10 @@ export default function ArticleDetailPage() {
                     <PaywallCard
                       price={article.price}
                       isUnlocked={isUnlocked}
+                      isAdminMode={isAdminMode}
                       userEmail={userEmail}
-                      onToggleUnlock={() => setIsUnlocked(!isUnlocked)}
+                      onAdminUnlock={handleAdminUnlock}
+                      onAdminLock={handleAdminLock}
                       onBuyArticle={handleBuyArticle}
                       onJoinMembership={() => { window.location.href = '/membership'; }}
                       onApplyToken={handleApplyToken}
@@ -942,6 +990,28 @@ export default function ArticleDetailPage() {
           </aside>
         </div>
       </div>
+
+      {/* 管理者モード用トースト通知 */}
+      {toastMessage && (
+        <aside
+          aria-label="管理者通知"
+          className="fixed bottom-5 right-5 z-50 max-w-sm w-[92%] sm:w-auto bg-neutral-900/95 dark:bg-neutral-850/95 text-white py-3 px-4 rounded-xl shadow-2xl border border-cyan-500/40 backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200"
+        >
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+              <span className="font-semibold text-neutral-100">{toastMessage}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setToastMessage(null)}
+              className="text-neutral-400 hover:text-white transition-colors cursor-pointer p-0.5 rounded"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

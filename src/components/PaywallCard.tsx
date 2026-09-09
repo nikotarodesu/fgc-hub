@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2 } from 'lucide-react';
 
 interface PaywallCardProps {
   price?: number;
   isUnlocked: boolean;
+  isAdminMode?: boolean;
   userEmail?: string | null;
-  onToggleUnlock: () => void;
+  onToggleUnlock?: () => void;
+  onAdminUnlock?: () => void;
+  onAdminLock?: () => void;
   onBuyArticle: () => void;
   onJoinMembership: () => void;
   onApplyToken?: (token: string) => Promise<boolean>;
@@ -16,8 +19,11 @@ interface PaywallCardProps {
 export default function PaywallCard({
   price = 500,
   isUnlocked,
+  isAdminMode = false,
   userEmail,
   onToggleUnlock,
+  onAdminUnlock,
+  onAdminLock,
   onBuyArticle,
   onJoinMembership,
   onApplyToken,
@@ -45,23 +51,71 @@ export default function PaywallCard({
     }
   };
 
+  // 南京錠イースターエッグ（3秒以内に素早く10回連続タップ）
+  const tapCountRef = useRef(0);
+  const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleLockIconClick = () => {
+    if (!resetTimerRef.current) {
+      resetTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+        resetTimerRef.current = null;
+      }, 3000);
+    }
+
+    tapCountRef.current += 1;
+
+    if (tapCountRef.current >= 10) {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = null;
+      }
+      tapCountRef.current = 0;
+
+      if (onAdminUnlock) {
+        onAdminUnlock();
+      } else if (onToggleUnlock) {
+        onToggleUnlock();
+      }
+    }
+  };
+
+  const handleResetLock = () => {
+    if (onAdminLock) {
+      onAdminLock();
+    } else if (onToggleUnlock) {
+      onToggleUnlock();
+    }
+  };
+
   if (isUnlocked) {
-    return (
-      <div className="my-6 p-4 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-neutral-900 dark:text-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-2 text-xs font-semibold">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>
-            【購入認証完了】有料限定の全コンテンツ（クラシック・モダン両対応）を表示中
-            {userEmail ? `（購入者: ${userEmail}）` : ''}
-          </span>
+    if (isAdminMode) {
+      return (
+        <div className="my-6 p-4 rounded-xl bg-neutral-900 text-white dark:bg-neutral-850 border border-cyan-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md animate-in fade-in duration-200">
+          <div className="flex items-center gap-2 text-xs font-semibold">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+            <span className="text-neutral-200">
+              <strong className="text-cyan-400">管理者モード（イースターエッグ発動中）:</strong> 有料限定コンテンツを全文表示しています
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleResetLock}
+            className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white text-xs font-semibold border border-neutral-600 transition-colors cursor-pointer shrink-0"
+          >
+            通常表示（ロック状態）に戻す
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={onToggleUnlock}
-          className="text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 underline font-normal shrink-0 cursor-pointer"
-        >
-          （デモ：未購入状態に戻す）
-        </button>
+      );
+    }
+
+    return (
+      <div className="my-6 p-4 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-neutral-900 dark:text-neutral-100 flex items-center gap-2 text-xs font-semibold shadow-xs">
+        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <span>
+          【購入認証完了】有料限定の全コンテンツ（クラシック・モダン両対応）を表示中
+          {userEmail ? `（購入者: ${userEmail}）` : ''}
+        </span>
       </div>
     );
   }
@@ -72,9 +126,14 @@ export default function PaywallCard({
       <div className="absolute -top-24 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-neutral-900 via-white/90 dark:via-neutral-900/90 to-transparent pointer-events-none" />
 
       <div className="relative rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 p-6 sm:p-8 shadow-sm text-center max-w-xl mx-auto">
-        <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 mx-auto flex items-center justify-center text-neutral-700 dark:text-neutral-300 mb-3">
+        <button
+          type="button"
+          onClick={handleLockIconClick}
+          className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 mx-auto flex items-center justify-center text-neutral-700 dark:text-neutral-300 mb-3 cursor-pointer select-none active:scale-95 transition-transform"
+          aria-label="ロックアイコン"
+        >
           <Lock className="w-5 h-5" />
-        </div>
+        </button>
 
         <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white mb-1.5">
           この続きは有料エリアです
@@ -175,18 +234,6 @@ export default function PaywallCard({
               )}
             </form>
           )}
-        </div>
-
-        {/* デモ用テストスイッチ */}
-        <div className="mt-3 pt-2 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-center gap-2 text-xs text-neutral-400">
-          <span>（動作確認用）</span>
-          <button
-            type="button"
-            onClick={onToggleUnlock}
-            className="text-neutral-700 dark:text-neutral-300 hover:underline font-medium cursor-pointer"
-          >
-            【デモ】ワンクリックで購入後表示をテスト
-          </button>
         </div>
       </div>
     </div>

@@ -48,11 +48,9 @@ export default function ArticleComboReverseLookup({
   // フィルタリング処理
   const filteredCombos = useMemo(() => {
     return RYU_ARTICLE_COMBOS.filter((c) => {
-      // ステージ状況・位置（画面中央 / 画面端 / スタン）
+      // ステージ状況・位置（画面中央 / 画面端）
       if (selectedPosition !== 'all') {
-        if (selectedPosition === 'stun') {
-          if (c.position !== 'stun' && c.starterCategory !== 'stun') return false;
-        } else if (c.position !== selectedPosition && c.position !== 'any') {
+        if (c.position !== selectedPosition && c.position !== 'any') {
           return false;
         }
       }
@@ -173,10 +171,7 @@ export default function ArticleComboReverseLookup({
             画面中央コンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            画面端限定コンボ
-          </span>
-          <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            スタン最大リーサル
+            画面端・スタンコンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
             7,171 最大ダメージ逆引き
@@ -234,20 +229,18 @@ export default function ArticleComboReverseLookup({
 
       {/* フィルターコントロール群 */}
       <div className="p-3 sm:p-4 space-y-3.5 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
-        {/* 0. ステージ状況・位置タブ（画面中央 / 画面端 / スタン） */}
+        {/* 0. ステージ状況・位置タブ（画面中央 / 画面端） */}
         <div className="pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
           <div className="flex items-center gap-1.5 mb-2 text-xs font-bold text-neutral-700 dark:text-neutral-300">
             <MapPin className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>ステージ状況・位置で表示切替:</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {POSITION_OPTIONS.map((pos) => {
               const active = selectedPosition === pos.id;
               const count =
                 pos.id === 'all'
                   ? RYU_ARTICLE_COMBOS.length
-                  : pos.id === 'stun'
-                  ? RYU_ARTICLE_COMBOS.filter((c) => c.position === 'stun' || c.starterCategory === 'stun').length
                   : RYU_ARTICLE_COMBOS.filter((c) => c.position === pos.id || c.position === 'any').length;
 
               return (

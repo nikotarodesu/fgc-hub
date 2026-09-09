@@ -7,8 +7,20 @@ import { Star, Zap } from 'lucide-react';
 
 interface RichContentProps {
   content: string;
+  sectionId?: string;
   isNeutralMovesSection?: boolean;
   controlType?: 'classic' | 'modern';
+  activeSubheading?: string | null;
+}
+
+// 小見出し（❶ 弱技始動 等）のクイックチップ用短縮名
+function getShortSubheadingLabel(numChar: string, titleText: string): string {
+  const label = titleText
+    .replace(/始動$/, '')
+    .replace(/(?:技)?ガード後$/, '後')
+    .replace(/パニカン$/, '')
+    .replace(/入れ替え$/, '入替');
+  return numChar ? `${numChar} ${label}` : label;
 }
 
 // インライン装飾（**太字** 等）のスマートなパース
@@ -106,15 +118,81 @@ function parseContentToBlocks(content: string): ParsedBlock[] {
 
 export default function RichContent({
   content,
+  sectionId,
   isNeutralMovesSection = false,
   controlType = 'classic',
+  activeSubheading,
 }: RichContentProps) {
   if (!content) return null;
 
   const blocks = parseContentToBlocks(content);
 
+  // 数字見出し（❶ 弱技始動, ❷ 中技始動 等）の抽出
+  const numberedHeadings = blocks
+    .filter((b) => b.type === 'numbered_heading')
+    .flatMap((b) =>
+      b.lines.map((line) => {
+        const match = line.trim().match(/^([①-⑳❶-❿])\s*(.*)$/);
+        const numChar = match ? match[1] : '';
+        const titleText = match ? match[2] : line.trim();
+        return {
+          raw: line.trim(),
+          numChar,
+          titleText,
+          fullName: `${numChar} ${titleText}`.trim(),
+          shortLabel: getShortSubheadingLabel(numChar, titleText),
+          targetId: sectionId ? `${sectionId}-sub-${numChar}` : undefined,
+        };
+      })
+    );
+
+  const handleJumpToSubheading = (targetId: string) => {
+    const el = document.getElementById(targetId);
+    if (el) {
+      const yOffset = -75; // 追従フローティングバーの高さオフセット
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="space-y-4 text-neutral-700 dark:text-neutral-300 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
+      {/* 案A：始動別クイックチップ（横スクロールボタン群） */}
+      {numberedHeadings.length >= 3 && (
+        <nav aria-label="始動別クイックジャンプ" className="my-2.5 sm:my-3 p-2 sm:p-2.5 rounded-xl bg-neutral-100/70 dark:bg-neutral-850/60 border border-neutral-200/80 dark:border-neutral-750">
+          <div className="flex items-center justify-between gap-2 mb-1.5 px-0.5 text-[11px] font-bold text-neutral-600 dark:text-neutral-300">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+              <span>始動別クイックジャンプ</span>
+            </span>
+            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-normal">
+              （スワイプで選択 ➔）
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {numberedHeadings.map((h, hIdx) => {
+              const isActive =
+                activeSubheading === h.fullName ||
+                (Boolean(h.numChar) && Boolean(activeSubheading?.startsWith(h.numChar)));
+              return (
+                <button
+                  key={hIdx}
+                  type="button"
+                  onClick={() => h.targetId && handleJumpToSubheading(h.targetId)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95 flex items-center gap-1 ${
+                    isActive
+                      ? 'bg-cyan-600 text-white border-cyan-600 shadow-xs'
+                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 hover:text-cyan-600 dark:hover:text-cyan-400 border border-neutral-300/80 dark:border-neutral-700 hover:border-cyan-400'
+                  }`}
+                >
+                  <span>{h.shortLabel}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
+
       {blocks.map((block, bIdx) => {
         // 1. 引用・コールアウト
         if (block.type === 'quote' && block.lines) {
@@ -132,7 +210,7 @@ export default function RichContent({
         }
 
         // 1.4 数字見出し（❶ 中技始動, ❷ 弱技始動, ① 等）
-        if (block.type === 'numbered_heading' && block.lines) {
+        if (block.type === 'numbered_heading') {
           return (
             <div
               key={bIdx}
@@ -142,8 +220,16 @@ export default function RichContent({
                 const match = line.trim().match(/^([①-⑳❶-❿])\s*(.*)$/);
                 const numChar = match ? match[1] : '';
                 const titleText = match ? match[2] : line.trim();
+                const fullName = `${numChar} ${titleText}`.trim();
+                const subId = sectionId ? `${sectionId}-sub-${numChar}` : undefined;
+
                 return (
-                  <div key={lIdx} className="flex items-center gap-2.5 pb-2">
+                  <div
+                    key={lIdx}
+                    id={subId}
+                    data-subheading={fullName}
+                    className="flex items-center gap-2.5 pb-2 scroll-mt-20 sm:scroll-mt-24"
+                  >
                     {numChar && (
                       <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-xs shrink-0 shadow-2xs">
                         {numChar}

@@ -12,14 +12,25 @@ export interface QuickJumpSection {
 interface ArticleQuickJumpProps {
   sections: QuickJumpSection[];
   activeSectionId: string;
+  activeSubheading?: string | null;
   bookmarks: string[];
   onToggleBookmark: (id: string) => void;
   onJumpToSection: (id: string) => void;
 }
 
+// セクションタイトルのフォーマット（小見出し表示時は「⑥ 画面中央」のように適度にスリム化）
+function formatSectionTitle(title: string, hasSubheading: boolean): string {
+  if (!hasSubheading) return title;
+  return title
+    .replace(/のコンボ$/, '')
+    .replace(/について$/, '')
+    .replace(/フレーム$/, '');
+}
+
 export default function ArticleQuickJump({
   sections,
   activeSectionId,
+  activeSubheading,
   bookmarks,
   onToggleBookmark,
   onJumpToSection,
@@ -43,13 +54,23 @@ export default function ArticleQuickJump({
       {/* 画面追従フローティングバー（スクロール時に上部に固定表示） */}
       <aside aria-label="クイック目次ナビゲーション" className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-2xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200">
         <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1.5 px-3 shadow-lg flex items-center justify-between gap-2 sm:gap-3 text-xs">
-          {/* 現在のセクション表示 */}
-          <div className="flex items-center gap-1.5 overflow-hidden max-w-[170px] sm:max-w-[280px]">
+          {/* 現在のセクション表示（小見出しもリアルタイム連動） */}
+          <div className="flex items-center gap-1.5 overflow-hidden max-w-[190px] xs:max-w-[240px] sm:max-w-[340px]">
             <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0 animate-pulse" />
             <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium shrink-0">現在:</span>
-            <span className="font-bold text-neutral-800 dark:text-neutral-100 truncate">
-              {activeSection?.title || '記事本文'}
-            </span>
+            <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden">
+              <span className="truncate shrink-0 max-w-[120px] sm:max-w-[170px]">
+                {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading))}
+              </span>
+              {activeSubheading && (
+                <>
+                  <span className="text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none">&gt;</span>
+                  <span className="text-cyan-600 dark:text-cyan-400 font-bold truncate">
+                    {activeSubheading}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
           {/* 右側アクションボタングループ */}

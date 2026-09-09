@@ -49,6 +49,7 @@ export default function ArticleDetailPage() {
   // お気に入り（ブックマーク）と現在セクションID
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [activeSectionId, setActiveSectionId] = useState<string>('sec-free-0');
+  const [activeSubheading, setActiveSubheading] = useState<string | null>(null);
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
@@ -220,7 +221,7 @@ export default function ArticleDetailPage() {
     })),
   ];
 
-  // スクロール位置の検知（現在セクション追従 & フローティングバー表示）
+  // スクロール位置の検知（現在セクション追従 & フローティングバー表示 & 小見出しリアルタイム検知）
   useEffect(() => {
     const handleScroll = () => {
       setShowQuickJump(window.scrollY > 280);
@@ -230,15 +231,39 @@ export default function ArticleDetailPage() {
         ...paidSections.map((_, i) => `sec-paid-${i}`),
       ];
 
+      let currentActiveSecId: string | null = null;
       for (let i = allIds.length - 1; i >= 0; i--) {
         const el = document.getElementById(allIds[i]);
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= 180) {
+            currentActiveSecId = allIds[i];
             setActiveSectionId(allIds[i]);
             break;
           }
         }
+      }
+
+      // 小見出し（❶〜➓）のリアルタイム検知
+      if (currentActiveSecId) {
+        const activeSecEl = document.getElementById(currentActiveSecId);
+        if (activeSecEl) {
+          const subEls = activeSecEl.querySelectorAll<HTMLElement>('[data-subheading]');
+          let currentSub: string | null = null;
+          for (let j = 0; j < subEls.length; j++) {
+            const rect = subEls[j].getBoundingClientRect();
+            if (rect.top <= 200) {
+              currentSub = subEls[j].getAttribute('data-subheading');
+            } else {
+              break;
+            }
+          }
+          setActiveSubheading(currentSub);
+        } else {
+          setActiveSubheading(null);
+        }
+      } else {
+        setActiveSubheading(null);
       }
     };
 
@@ -331,6 +356,7 @@ export default function ArticleDetailPage() {
         <ArticleQuickJump
           sections={allSectionsList}
           activeSectionId={activeSectionId}
+          activeSubheading={activeSubheading}
           bookmarks={bookmarks}
           onToggleBookmark={handleToggleBookmark}
           onJumpToSection={handleJumpToSection}
@@ -595,6 +621,8 @@ export default function ArticleDetailPage() {
                   <div className="mb-4">
                     <RichContent
                       content={section.body}
+                      sectionId={`sec-free-${idx}`}
+                      activeSubheading={activeSubheading}
                       isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
                       controlType={activeControlType}
                     />
@@ -739,6 +767,8 @@ export default function ArticleDetailPage() {
                           <div className="mb-4">
                             <RichContent
                               content={section.body}
+                              sectionId={`sec-paid-${idx}`}
+                              activeSubheading={activeSubheading}
                               isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
                               controlType={activeControlType}
                             />

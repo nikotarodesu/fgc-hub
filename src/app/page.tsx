@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, AUTHOR_INFO } from '@/data/articles';
-import ArticleThumbnail from '@/components/ArticleThumbnail';
 import { Search, Lock, Sparkles } from 'lucide-react';
 
 export default function HomePage() {
@@ -191,84 +190,72 @@ export default function HomePage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {filteredArticles.map((article) => (
                   <Link
                     key={article.id}
                     href={`/articles/${article.slug}`}
-                    className="group block p-3.5 sm:p-4 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all"
+                    className="group block p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-xs transition-all"
                   >
-                    <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-stretch">
-                      {/* アイキャッチサムネイル（オリジナル・著作権フリー） */}
-                      <div className="w-full sm:w-44 md:w-52 shrink-0">
-                        <ArticleThumbnail article={article} />
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                          {article.game === 'sf6' ? 'スト6' : '共通理論'}
+                        </span>
+                        {article.character && (
+                          <span className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                            {article.character}
+                          </span>
+                        )}
+                        {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
+                          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
+                            立ち回り
+                          </span>
+                        )}
+                        {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
+                          <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
+                            完全攻略
+                          </span>
+                        )}
+                        {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
+                          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                            コーチング
+                          </span>
+                        )}
+                        {article.controlType === 'both' ? (
+                          <span className="text-[10px] font-bold text-[#008ba8] dark:text-cyan-300 bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded border border-sky-200 dark:border-sky-800">
+                            C / M 両対応
+                          </span>
+                        ) : article.controlType ? (
+                          <span className="text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                            {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
+                          </span>
+                        ) : null}
+                        {article.youtubeVideoId && (
+                          <span className="text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded flex items-center gap-1">
+                            <span>▶ 動画付き</span>
+                          </span>
+                        )}
                       </div>
-
-                      {/* 記事テキスト・メタ情報（右側コンテンツ） */}
-                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                        <div>
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                                {article.game === 'sf6' ? 'スト6' : '共通理論'}
-                              </span>
-                              {article.character && (
-                                <span className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
-                                  {article.character}
-                                </span>
-                              )}
-                              {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
-                                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
-                                  立ち回り
-                                </span>
-                              )}
-                              {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
-                                <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
-                                  完全攻略
-                                </span>
-                              )}
-                              {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
-                                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
-                                  コーチング
-                                </span>
-                              )}
-                              {article.controlType === 'both' ? (
-                                <span className="text-[10px] font-bold text-[#008ba8] dark:text-cyan-300 bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded border border-sky-200 dark:border-sky-800">
-                                  C / M 両対応
-                                </span>
-                              ) : article.controlType ? (
-                                <span className="text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
-                                  {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
-                                </span>
-                              ) : null}
-                            </div>
-                            {article.isPaid ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
-                                <Lock className="w-3 h-3 text-neutral-600 dark:text-neutral-400" />
-                                <span>¥{article.price}</span>
-                              </span>
-                            ) : (
-                              <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
-                                無料
-                              </span>
-                            )}
-                          </div>
-
-                          <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors mb-1.5 leading-snug">
-                            {article.title}
-                          </h2>
-
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
-                            {article.summary}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500 pt-2.5 mt-2 border-t border-neutral-100 dark:border-neutral-800/80">
-                          <span>{article.publishedAt}</span>
-                          <span>{article.readTime}で読める</span>
-                        </div>
-                      </div>
+                      {article.isPaid ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                          <Lock className="w-3 h-3 text-neutral-600 dark:text-neutral-400" />
+                          <span>¥{article.price}</span>
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                          無料
+                        </span>
+                      )}
                     </div>
+
+                    <h2 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors mb-1.5 leading-snug">
+                      {article.title}
+                    </h2>
+
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
+                      {article.summary}
+                    </p>
                   </Link>
                 ))}
               </div>

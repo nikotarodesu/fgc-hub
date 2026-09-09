@@ -3,24 +3,14 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ARTICLES_DATA, CHARACTERS_SF6, AUTHOR_INFO } from '@/data/articles';
-import { Search, Lock, ArrowRight, Sparkles, Zap } from 'lucide-react';
+import { ARTICLES_DATA, AUTHOR_INFO } from '@/data/articles';
+import { Search, Lock, Sparkles } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-
-  // すべてのタグを収集
-  const allTags = useMemo(() => {
-    if (ARTICLES_DATA.length === 0) {
-      return ['スト6', 'リュウ', '立ち回り', '完全攻略', 'コンボ', '上達論'];
-    }
-    const tags = new Set<string>();
-    ARTICLES_DATA.forEach((a) => a.tags.forEach((t) => tags.add(t)));
-    return Array.from(tags);
-  }, []);
 
   // フィルタリング処理
   const filteredArticles = useMemo(() => {
@@ -306,52 +296,6 @@ export default function HomePage() {
                 >
                   <span>公式X ({AUTHOR_INFO.xHandle})</span>
                 </a>
-              </div>
-            </div>
-
-            {/* スト6 キャラクター別クイックアクセス */}
-            <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
-              <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-3">
-                キャラクター別攻略
-              </h3>
-              <div className="grid grid-cols-2 gap-1.5">
-                {CHARACTERS_SF6.map((char) => (
-                  <button
-                    key={char.id}
-                    onClick={() => {
-                      setSelectedCharacter(selectedCharacter === char.name ? null : char.name);
-                    }}
-                    className={`text-left px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                      selectedCharacter === char.name
-                        ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
-                        : 'bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300'
-                    }`}
-                  >
-                    {char.name.split(' ')[0]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* トピックタグ */}
-            <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
-              <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-3">
-                トピック
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                      selectedTag === tag
-                        ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
-                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-                    }`}
-                  >
-                    #{tag}
-                  </button>
-                ))}
               </div>
             </div>
 

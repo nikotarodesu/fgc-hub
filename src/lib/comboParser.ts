@@ -14,6 +14,7 @@ export interface VisualStep {
   prefix?: string;         // 例: "壁バウンド"
   arrows: string[];        // 例: ["↓"], ["↓", "↙", "←"], ["→", "↓", "↘"]
   arrowStr: string;        // 例: "↓", "↓↙←", "→↓↘"
+  chargeArrows?: boolean[]; // 溜めキーフラグ（各矢印に対応、trueなら溜め）
   button: {
     kind: ButtonKind;
     color: ButtonColor;
@@ -31,6 +32,12 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
 
   // 全角の「＞」を「>」に正規化
   let cleanRecipe = recipe.replace(/＞/g, '>');
+
+  // 0. 先頭のラベル（例: ベスト：、次点：、推奨：、基本：、最大：等）を除去
+  cleanRecipe = cleanRecipe.replace(/^(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃)[：:]\s*/, '').trim();
+
+  // 太字装飾（**）の除去
+  cleanRecipe = cleanRecipe.replace(/\*\*/g, '');
 
   // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), (4247ダメージ), [4247]）を除去
   cleanRecipe = cleanRecipe
@@ -552,6 +559,147 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       },
       suffix,
       tip: 'アシストボタンを押しながら強攻撃（大ゴス）',
+    };
+  }
+
+  // 2.9 春麗必殺技：スピニングバードキック (↓(溜め)↑ + K)
+  if (lower.includes('スピニング') || lower.includes('スピバ') || lower.includes('sbk')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↑'],
+      arrowStr: '↓↑',
+      chargeArrows: [true, false], // ↓が溜め
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'ODスピバ' : `${strength}スピバ`,
+        description: isOD ? 'ODスピニングバードキック' : `${strength}スピニングバードキック`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: `下溜め上＋${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下キーまたは斜め下を約0.8秒長押ししてから上＋キック）`,
+    };
+  }
+
+  // 2.91 春麗必殺技：百烈脚 / 百裂脚 (↓↘→ + K)
+  if (lower.includes('百烈') || lower.includes('百裂')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD百烈脚' : `${strength}百烈脚`,
+        description: isOD ? 'OD百烈脚' : `${strength}百烈脚`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前＋キック）`,
+    };
+  }
+
+  // 2.92 春麗必殺技：気功拳 (←(溜め)→ + P)
+  if (lower.includes('気功')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['←', '→'],
+      arrowStr: '←→',
+      chargeArrows: [true, false], // ←が溜め
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'OD気功拳' : `${strength}気功拳`,
+        description: isOD ? 'OD気功拳' : `${strength}気功拳`,
+        iconText: isOD ? 'PP' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: `後ろ溜め前＋${isOD ? 'PP（2ボタン同時）' : strength + 'P'}（後ろキーを約0.8秒長押ししてから前＋パンチ）`,
+    };
+  }
+
+  // 2.93 春麗必殺技：覇山蹴 / 覇山 (↓↙← + K)
+  if (lower.includes('覇山')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD覇山' : `${strength}覇山`,
+        description: isOD ? 'OD覇山蹴' : `${strength}覇山蹴`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー214+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め後ろ・後ろ＋キック）`,
+    };
+  }
+
+  // 2.94 春麗特殊技：追突拳 / 追突 (前中P)
+  if (lower.includes('追突')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→'],
+      arrowStr: '→',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: '追突',
+        description: '前中P（追突拳）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: '前＋中P（追突拳）',
     };
   }
 
@@ -1283,6 +1431,14 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
  * モダン表記からPやKの概念を完全に除去するポストプロセッサ（※OD技のPP/KKは除く）
  */
 function cleanupModernStep(step: VisualStep): VisualStep {
+  // スピニングバードキックはモダンでも「↓↑K」表記指定があるためそのまま維持
+  const isSbk =
+    (step.button.label && (step.button.label.includes('スピバ') || step.button.label.includes('スピニング'))) ||
+    step.arrowStr === '↓↑';
+  if (isSbk) {
+    return step;
+  }
+
   // OD必殺技（PPやKKを含む、またはA+SP、または技名がODで始まるもの）は維持
   const isOD =
     step.button.iconText === 'PP' ||

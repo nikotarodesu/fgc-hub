@@ -134,6 +134,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
         title: '③ 距離別の立ち回り',
         body: `❶ 近距離
 ⭐️ 弱Pを撃つ
+![近距離での立ち回り](/images/articles/ryu/ryu-close-range.gif)
 ▶︎ 発生の早い4Fで相手の暴れを潰すことができる
 ▶︎ ヒット時は弱Pを刻んで強昇竜や弱竜巻へと繋げる
 ▶︎ カウンターヒット時は下中Pや弱Kからコンボを伸ばす

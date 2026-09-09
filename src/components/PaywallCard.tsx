@@ -56,6 +56,8 @@ export default function PaywallCard({
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleLockIconClick = () => {
+    if (!onAdminUnlock && !onToggleUnlock) return;
+
     if (!resetTimerRef.current) {
       resetTimerRef.current = setTimeout(() => {
         tapCountRef.current = 0;
@@ -95,7 +97,7 @@ export default function PaywallCard({
           <div className="flex items-center gap-2 text-xs font-semibold">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
             <span className="text-neutral-200">
-              <strong className="text-cyan-400">管理者モード（イースターエッグ発動中）:</strong> 有料限定コンテンツを全文表示しています
+              <strong className="text-cyan-400">シークレット解放中（note購入者特典 / 管理者モード）:</strong> 有料限定コンテンツを全文表示しています
             </span>
           </div>
           <button

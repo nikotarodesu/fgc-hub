@@ -12,6 +12,7 @@ import RichContent from '@/components/RichContent';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
+import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import {
   Heart,
   Share2,
@@ -32,6 +33,7 @@ export default function ArticleDetailPage() {
 
   const article = ARTICLES_DATA.find((a) => a.slug === slug);
   const isCompleteGuide = slug.includes('ryu');
+  const secretConfig = getSecretUnlockConfig(slug);
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
     isModernAlias ? 'modern' : 'classic'
@@ -53,17 +55,28 @@ export default function ArticleDetailPage() {
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // 管理者モードの自動復元（localStorage）
+  // 管理者モード・キャラ別シークレット解放の自動復元（localStorage）
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined' && localStorage.getItem('fgc_admin_mode') === 'true') {
-        setIsUnlocked(true);
-        setIsAdminMode(true);
+      if (typeof window !== 'undefined') {
+        const isGlobalAdmin = localStorage.getItem('fgc_admin_mode') === 'true';
+        const isSecretUnlocked =
+          localStorage.getItem(`fgc_secret_unlocked_${slug}`) === 'true' ||
+          (slug.includes('ryu') &&
+            (localStorage.getItem('fgc_secret_unlocked_ryu') === 'true' ||
+              localStorage.getItem('fgc_secret_unlocked_ryu-complete-guide') === 'true' ||
+              localStorage.getItem('fgc_secret_unlocked_ryu-classic-complete-guide') === 'true' ||
+              localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true'));
+
+        if (isGlobalAdmin || isSecretUnlocked) {
+          setIsUnlocked(true);
+          setIsAdminMode(true);
+        }
       }
     } catch {
       // ignore
     }
-  }, []);
+  }, [slug]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -74,6 +87,24 @@ export default function ArticleDetailPage() {
       setToastMessage(null);
       toastTimerRef.current = null;
     }, 4500);
+  };
+
+  const handleSecretUnlock = (characterKey?: string) => {
+    setIsUnlocked(true);
+    setIsAdminMode(true);
+    try {
+      const char = characterKey || 'ryu';
+      localStorage.setItem(`fgc_secret_unlocked_${char}`, 'true');
+      localStorage.setItem(`fgc_secret_unlocked_${slug}`, 'true');
+      if (char === 'ryu' || slug.includes('ryu')) {
+        localStorage.setItem('fgc_secret_unlocked_ryu', 'true');
+        localStorage.setItem('fgc_secret_unlocked_ryu-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_ryu-classic-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_ryu-modern-complete-guide', 'true');
+      }
+    } catch {}
+    const msg = secretConfig?.toastMessage || 'シークレット解放（note購入者特典）: 有料コンテンツを開放しました！';
+    showToast(msg);
   };
 
   const handleAdminUnlock = () => {
@@ -90,6 +121,13 @@ export default function ArticleDetailPage() {
     setIsAdminMode(false);
     try {
       localStorage.removeItem('fgc_admin_mode');
+      localStorage.removeItem(`fgc_secret_unlocked_${slug}`);
+      if (slug.includes('ryu')) {
+        localStorage.removeItem('fgc_secret_unlocked_ryu');
+        localStorage.removeItem('fgc_secret_unlocked_ryu-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_ryu-classic-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_ryu-modern-complete-guide');
+      }
     } catch {}
     showToast('通常表示（ロック状態）に戻しました');
   };
@@ -622,9 +660,12 @@ export default function ArticleDetailPage() {
                     <RichContent
                       content={section.body}
                       sectionId={`sec-free-${idx}`}
+                      sectionTitle={section.title}
                       activeSubheading={activeSubheading}
                       isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
                       controlType={activeControlType}
+                      secretConfig={secretConfig}
+                      onSecretUnlock={() => handleSecretUnlock(secretConfig?.characterSlug)}
                     />
                   </div>
 
@@ -697,7 +738,7 @@ export default function ArticleDetailPage() {
                       isUnlocked={isUnlocked}
                       isAdminMode={isAdminMode}
                       userEmail={userEmail}
-                      onAdminUnlock={handleAdminUnlock}
+                      onAdminUnlock={!secretConfig ? handleAdminUnlock : undefined}
                       onAdminLock={handleAdminLock}
                       onBuyArticle={handleBuyArticle}
                       onJoinMembership={() => { window.location.href = '/membership'; }}

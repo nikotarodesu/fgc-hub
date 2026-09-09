@@ -4,13 +4,17 @@ import React from 'react';
 import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
 import { Star, Zap } from 'lucide-react';
+import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 
 interface RichContentProps {
   content: string;
   sectionId?: string;
+  sectionTitle?: string;
   isNeutralMovesSection?: boolean;
   controlType?: 'classic' | 'modern';
   activeSubheading?: string | null;
+  secretConfig?: CharacterSecretUnlockConfig;
+  onSecretUnlock?: () => void;
 }
 
 // 小見出し（❶ 弱技始動 等）のクイックチップ用短縮名
@@ -116,12 +120,64 @@ function parseContentToBlocks(content: string): ParsedBlock[] {
   return blocks;
 }
 
+interface SecretSubheadingButtonProps {
+  cleanText: string;
+  secretConfig: CharacterSecretUnlockConfig;
+  onSecretUnlock?: () => void;
+  renderInline: (text: string) => React.ReactNode[];
+}
+
+function SecretSubheadingButton({
+  cleanText,
+  secretConfig,
+  onSecretUnlock,
+  renderInline,
+}: SecretSubheadingButtonProps) {
+  const tapCountRef = React.useRef(0);
+  const resetTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleTap = () => {
+    if (!resetTimerRef.current) {
+      resetTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+        resetTimerRef.current = null;
+      }, secretConfig.timeWindowMs);
+    }
+
+    tapCountRef.current += 1;
+
+    if (tapCountRef.current >= secretConfig.requiredTaps) {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = null;
+      }
+      tapCountRef.current = 0;
+      if (onSecretUnlock) {
+        onSecretUnlock();
+      }
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleTap}
+      className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words cursor-pointer select-none active:scale-95 transition-transform touch-manipulation text-left"
+    >
+      {renderInline(cleanText)}
+    </button>
+  );
+}
+
 export default function RichContent({
   content,
   sectionId,
+  sectionTitle,
   isNeutralMovesSection = false,
   controlType = 'classic',
   activeSubheading,
+  secretConfig,
+  onSecretUnlock,
 }: RichContentProps) {
   if (!content) return null;
 
@@ -356,12 +412,29 @@ export default function RichContent({
                 // ②の立ち回りで振る技セクションかつ通常技・特殊技のみフレームデータを取得（必殺技や他セクションは除外）
                 const frameData = isNeutralMovesSection ? findNeutralMoveKeyFrame(cleanText) : null;
 
+                const isSecretTarget = Boolean(
+                  secretConfig &&
+                  onSecretUnlock &&
+                  sectionTitle &&
+                  secretConfig.sectionMatcher(sectionTitle) &&
+                  secretConfig.keywordMatcher(cleanText)
+                );
+
                 return (
                   <div key={lIdx} className="my-1.5 sm:my-2">
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                      <h4 className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
-                        {renderInline(cleanText)}
-                      </h4>
+                      {isSecretTarget ? (
+                        <SecretSubheadingButton
+                          cleanText={cleanText}
+                          secretConfig={secretConfig!}
+                          onSecretUnlock={onSecretUnlock}
+                          renderInline={renderInline}
+                        />
+                      ) : (
+                        <h4 className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
+                          {renderInline(cleanText)}
+                        </h4>
+                      )}
 
                       {/* アコーディオン展開せず、重要な部分だけをインラインバッジで常時表示 */}
                       {frameData && (

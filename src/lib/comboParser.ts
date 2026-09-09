@@ -877,7 +877,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   if (lower.includes('波掌')) {
     const isOD = lower.includes('od');
     const isDenjin = lower.includes('電刃');
-    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
     const isLight = lower.includes('弱');
     const isModern = controlType === 'modern';
 
@@ -892,18 +892,18 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         arrowStr: '↓↙←',
         button: {
           kind: 'punch',
-          color: isOD ? 'purple' : 'gold',
+          color: isOD ? 'purple' : 'red',
           label: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
-          description: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
-          iconText: isOD ? 'PP' : isModern ? '波掌' : 'P',
+          description: isOD ? 'OD電刃波掌撃' : isModern ? '強ボタン' : '強パンチボタン',
+          iconText: isOD ? 'PP' : isModern ? '強' : 'P',
           showLabel: false,
         },
         suffix,
         tip: isOD
           ? 'テンキー214+PP（※電刃ストック消費のOD電刃波掌撃。高火力追撃・画面端コンボ用）'
           : isModern
-          ? 'テンキー214+攻撃（※電刃ストック消費の電刃波掌撃。ガードされても+3F有利）'
-          : 'テンキー214+P（※電刃ストック消費の電刃波掌撃。ガードされても+3F有利）',
+          ? 'テンキー214+強（※電刃ストック消費の電刃波掌撃。ガードされても+3F有利）'
+          : 'テンキー214+強P（※電刃ストック消費の電刃波掌撃。ガードされても+3F有利）',
       };
     }
 

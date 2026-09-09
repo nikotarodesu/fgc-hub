@@ -11,6 +11,7 @@ import YouTubeEmbed from '@/components/YouTubeEmbed';
 import RichContent from '@/components/RichContent';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
+import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
 import {
   Heart,
   Share2,
@@ -29,6 +30,7 @@ export default function ArticleDetailPage() {
     : rawSlug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === slug);
+  const isCompleteGuide = slug.includes('ryu');
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
     isModernAlias ? 'modern' : 'classic'
@@ -605,15 +607,27 @@ export default function ArticleDetailPage() {
               {/* 有料記事ロック & アンロック後コンテンツ */}
               {article.isPaid && (
                 <>
-                  <PaywallCard
-                    price={article.price}
-                    isUnlocked={isUnlocked}
-                    userEmail={userEmail}
-                    onToggleUnlock={() => setIsUnlocked(!isUnlocked)}
-                    onBuyArticle={handleBuyArticle}
-                    onJoinMembership={() => { window.location.href = '/membership'; }}
-                    onApplyToken={handleApplyToken}
-                  />
+                  <div id="paywall-card-box">
+                    {isCompleteGuide && !isUnlocked && (
+                      <ArticleComboReverseLookup
+                        controlType={activeControlType}
+                        isUnlocked={false}
+                        onScrollToPaywall={() => {
+                          const el = document.getElementById('paywall-card-box');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      />
+                    )}
+                    <PaywallCard
+                      price={article.price}
+                      isUnlocked={isUnlocked}
+                      userEmail={userEmail}
+                      onToggleUnlock={() => setIsUnlocked(!isUnlocked)}
+                      onBuyArticle={handleBuyArticle}
+                      onJoinMembership={() => { window.location.href = '/membership'; }}
+                      onApplyToken={handleApplyToken}
+                    />
+                  </div>
 
                   {/* アンロック時の有料限定コンテンツ */}
                   {isUnlocked && (
@@ -663,6 +677,16 @@ export default function ArticleDetailPage() {
                               </span>
                             </button>
                           </div>
+
+                          {/* 完全攻略記事限定：実戦コンボ逆引きデータベース */}
+                          {isCompleteGuide && section.title.includes('画面中央のコンボ') && (
+                            <div id="combo-reverse-lookup" className="mb-6 scroll-mt-20">
+                              <ArticleComboReverseLookup
+                                controlType={activeControlType}
+                                isUnlocked={true}
+                              />
+                            </div>
+                          )}
 
                           <div className="mb-4">
                             <RichContent

@@ -43,17 +43,8 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* ナビゲーション（アイコンを廃止し、視認性と品格の高いタイポグラフィに統一） */}
+          {/* ナビゲーション */}
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
-            <Link
-              href="/sf6"
-              className="hover:text-neutral-950 dark:hover:text-white transition-colors flex items-center gap-1.5"
-            >
-              <span>スト6攻略DB</span>
-              <span className="px-1.5 py-0.2 text-[9px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded">
-                TOOL
-              </span>
-            </Link>
             <Link
               href="/?game=sf6"
               className="hover:text-neutral-950 dark:hover:text-white transition-colors"

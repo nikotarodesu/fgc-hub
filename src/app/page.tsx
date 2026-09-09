@@ -83,31 +83,6 @@ export default function HomePage() {
               </button>
             )}
           </div>
-
-          {/* 機能バナー: スト6攻略データベース (nikotaro.com/sf6/) */}
-          <div className="mt-6 p-5 sm:p-6 rounded-xl bg-neutral-900 text-white border border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
-                <Zap className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm sm:text-base tracking-tight">スト6攻略データベース（Webツール）</span>
-                  <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-white/15 text-neutral-200 uppercase tracking-wide">TOOL</span>
-                </div>
-                <p className="text-xs text-neutral-400 mt-0.5">
-                  状況別コンボ検索、+42F詐欺飛び・シミー起き攻めデータ、リーサル逆引き計算機
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/sf6"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-white hover:bg-neutral-100 text-neutral-950 transition-colors shrink-0 self-stretch sm:self-auto justify-center"
-            >
-              <span>ツールを開く</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -212,17 +187,8 @@ export default function HomePage() {
                     攻略記事を準備中です
                   </h3>
                   <p className="text-xs text-neutral-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-                    全キャラ1800MR以上の筆者「にこ太郎」による実戦立ち回り・解説記事を順次公開予定です。まずは上部の「スト6攻略データベース（Webツール）」をご利用ください。
+                    全キャラ1800MR以上の筆者「にこ太郎」による実戦立ち回り・完全攻略記事を順次公開予定です。新着記事をお楽しみに！
                   </p>
-                </div>
-                <div className="pt-2">
-                  <Link
-                    href="/sf6"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 text-white transition-colors"
-                  >
-                    <Zap className="w-3.5 h-3.5" />
-                    <span>スト6攻略データベースを開く</span>
-                  </Link>
                 </div>
               </div>
             ) : filteredArticles.length === 0 ? (

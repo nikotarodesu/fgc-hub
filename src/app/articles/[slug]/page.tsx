@@ -55,27 +55,47 @@ export default function ArticleDetailPage() {
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // 管理者モード・キャラ別シークレット解放の自動復元（localStorage）
+  // 管理者モード・キャラ別シークレット解放の自動復元（localStorage & カスタムイベント）
   useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        const isGlobalAdmin = localStorage.getItem('fgc_admin_mode') === 'true';
-        const isSecretUnlocked =
-          localStorage.getItem(`fgc_secret_unlocked_${slug}`) === 'true' ||
-          (slug.includes('ryu') &&
-            (localStorage.getItem('fgc_secret_unlocked_ryu') === 'true' ||
-              localStorage.getItem('fgc_secret_unlocked_ryu-complete-guide') === 'true' ||
-              localStorage.getItem('fgc_secret_unlocked_ryu-classic-complete-guide') === 'true' ||
-              localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true'));
+    const checkUnlockStatus = () => {
+      try {
+        if (typeof window !== 'undefined') {
+          const isGlobalAdmin = localStorage.getItem('fgc_admin_mode') === 'true';
+          const isSecretUnlocked =
+            localStorage.getItem(`fgc_secret_unlocked_${slug}`) === 'true' ||
+            (slug.includes('ryu') &&
+              (localStorage.getItem('fgc_secret_unlocked_ryu') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_ryu-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_ryu-classic-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true'));
 
-        if (isGlobalAdmin || isSecretUnlocked) {
-          setIsUnlocked(true);
-          setIsAdminMode(true);
+          if (isGlobalAdmin || isSecretUnlocked) {
+            setIsUnlocked(true);
+            setIsAdminMode(true);
+          } else {
+            setIsUnlocked(false);
+            setIsAdminMode(false);
+          }
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
-    }
+    };
+
+    checkUnlockStatus();
+
+    // フッターのⒸ等からの管理者モード切り替えイベントをリアルタイムにリッスン
+    const handleAdminEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ enabled: boolean }>;
+      const isEnabled = customEvent.detail ? customEvent.detail.enabled : localStorage.getItem('fgc_admin_mode') === 'true';
+      setIsUnlocked(isEnabled);
+      setIsAdminMode(isEnabled);
+    };
+
+    window.addEventListener('fgc_admin_mode_changed', handleAdminEvent);
+    return () => {
+      window.removeEventListener('fgc_admin_mode_changed', handleAdminEvent);
+    };
   }, [slug]);
 
   const showToast = (msg: string) => {

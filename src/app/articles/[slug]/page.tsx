@@ -290,9 +290,9 @@ export default function ArticleDetailPage() {
       )}
 
       {/* パンくずリスト */}
-      <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="max-w-6xl mx-auto px-2.5 sm:px-6 py-2">
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 w-full">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-2.5">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-w-0">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white shrink-0">ホーム</Link>
             <ChevronRight className="w-3 h-3 shrink-0 text-neutral-300 dark:text-neutral-600" />
             <Link href={`/?game=${article.game}`} className="hover:text-neutral-900 dark:hover:text-white shrink-0">
@@ -310,64 +310,64 @@ export default function ArticleDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-0 sm:px-6 py-1 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
+      <div className="max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 w-full min-w-0">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-2 py-3.5 sm:p-8 md:p-10 rounded-none sm:rounded-xl border-x-0 sm:border border-y border-neutral-200/80 dark:border-neutral-800 shadow-xs">
+          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-3 sm:px-8 md:p-10 py-4 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800 shadow-xs min-w-0 max-w-full">
             {/* 記事ヘッダー */}
-            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800">
+            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800 min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
-                <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 shrink-0">
                   {article.game === 'sf6' ? 'スト6' : '共通理論'}
                 </span>
                 {article.character && (
-                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+                  <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shrink-0">
                     {article.character}
                   </span>
                 )}
-                {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                {/* 立ち回り vs 完全攻略 vs コーチング の排他カテゴリバッジ（重複表示を解消） */}
+                {(article.category === 'neutral' || article.slug.includes('neutral')) ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0">
                     立ち回り
                   </span>
-                )}
-                {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                ) : (article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略') || article.slug.includes('complete')) ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shrink-0">
                     完全攻略
                   </span>
-                )}
-                {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                ) : (article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0">
                     過去のコーチング
                   </span>
-                )}
+                ) : null}
+
                 {article.controlType === 'both' ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800">
-                    <span className="sm:hidden">{activeControlType === 'classic' ? '🥋 クラシック' : '⚡️ モダン'}</span>
-                    <span className="hidden sm:inline">{activeControlType === 'classic' ? '🥋 クラシック (C) モード' : '⚡️ モダン (M) モード'}</span>
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800 shrink-0">
+                    <span>{activeControlType === 'classic' ? '🥋 クラシック' : '⚡️ モダン'}</span>
                   </span>
                 ) : article.controlType ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800">
-                    {article.controlType === 'classic' ? 'クラシック (C)' : 'モダン (M)'}
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800 shrink-0">
+                    {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
                   </span>
                 ) : null}
+
                 {article.isPaid ? (
-                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200">
+                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200 shrink-0">
                     有料記事（¥{article.price}）
                   </span>
                 ) : (
-                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
+                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 shrink-0">
                     無料公開
                   </span>
                 )}
               </div>
 
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white leading-snug sm:leading-tight tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
                 {article.title}
               </h1>
             </header>
 
             {/* 本文 */}
-            <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6">
+            <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6 min-w-0 max-w-full">
               {/* クラシック / モダン切り替えスイッチ */}
               {article.variants && (
                 <div className="p-1.5 sm:p-2.5 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
@@ -384,26 +384,26 @@ export default function ArticleDetailPage() {
                     <button
                       type="button"
                       onClick={() => setActiveControlType('classic')}
-                      className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                      className={`py-2 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'classic'
                           ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="text-base">🥋</span>
-                      <span>クラシック (Classic)</span>
+                      <span className="text-base shrink-0">🥋</span>
+                      <span className="truncate sm:inline">クラシック<span className="hidden sm:inline"> (Classic)</span></span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setActiveControlType('modern')}
-                      className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                      className={`py-2 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'modern'
                           ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="text-base">⚡️</span>
-                      <span>モダン (Modern)</span>
+                      <span className="text-base shrink-0">⚡️</span>
+                      <span className="truncate sm:inline">モダン<span className="hidden sm:inline"> (Modern)</span></span>
                     </button>
                   </div>
                 </div>

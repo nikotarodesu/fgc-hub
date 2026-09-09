@@ -20,7 +20,7 @@ export default function YouTubeEmbed({
           className="absolute inset-0 w-full h-full border-0"
         />
       </div>
-      <div className="p-2.5 sm:px-4 bg-neutral-50 border-t border-neutral-200 text-xs text-neutral-600 flex items-center justify-between">
+      <div className="p-2.5 sm:px-4 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <span className="font-medium flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-red-600 inline-block"></span>
           {caption}

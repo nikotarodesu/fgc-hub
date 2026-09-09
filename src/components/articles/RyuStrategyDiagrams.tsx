@@ -81,7 +81,7 @@ export function DistanceMeterDiagram() {
 
       {/* スケールバー */}
       <div className="space-y-3">
-        <div className="grid grid-cols-3 gap-2 text-center text-xs font-bold">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs font-bold">
           <div className="p-2.5 rounded-lg bg-neutral-100 text-neutral-500 border border-neutral-200/60">
             近距離
             <div className="text-[10px] font-normal text-neutral-400 mt-0.5">小技・投げの読み合い</div>

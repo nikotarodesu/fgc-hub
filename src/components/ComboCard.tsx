@@ -19,7 +19,7 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
   const steps = parseVisualCombo(recipe);
 
   return (
-    <div className="my-2.5 sm:my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-2.5 sm:p-4 shadow-xs transition-colors">
+    <div className="my-2.5 sm:my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-2.5 sm:p-4 shadow-xs transition-colors w-full max-w-full min-w-0">
       <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mb-2 pb-2 border-b border-neutral-100 dark:border-neutral-800">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Swords className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
@@ -52,7 +52,7 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
 
       {/* 初心者向け：矢印コマンドアコーディオン */}
       {showCommands && (
-        <div className="mb-2.5 sm:mb-3.5 p-1.5 sm:p-3.5 rounded-lg bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-900/60 animate-in fade-in-50 duration-150">
+        <div className="mb-2.5 sm:mb-3.5 p-1.5 sm:p-3.5 rounded-lg bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-900/60 animate-in fade-in-50 duration-150 w-full max-w-full min-w-0 overflow-hidden">
           <div className="text-[10px] sm:text-[11px] font-bold text-cyan-900 dark:text-cyan-300 mb-2 flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />

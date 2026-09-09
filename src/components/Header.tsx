@@ -15,10 +15,10 @@ export default function Header() {
         isHome
           ? 'sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md'
           : 'relative bg-white dark:bg-neutral-950'
-      } border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
+      } w-full border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
     >
-      <div className="max-w-6xl mx-auto px-2.5 sm:px-6">
-        <div className="flex items-center justify-between h-14 gap-2">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 w-full">
+        <div className="flex items-center justify-between h-14 gap-2 w-full">
           {/* ブランドロゴ */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
             <div className="relative w-7 h-7 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 shadow-xs group-hover:scale-105 transition-transform bg-neutral-100 dark:bg-neutral-800 shrink-0">

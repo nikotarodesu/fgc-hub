@@ -17,7 +17,7 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
   const steps: VisualStep[] = parseVisualCombo(cleanText, controlType);
 
   return (
-    <div className="my-1.5 sm:my-2 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 bg-neutral-50/90 dark:bg-neutral-800/80 overflow-hidden transition-all shadow-2xs">
+    <div className="my-1.5 sm:my-2 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 bg-neutral-50/90 dark:bg-neutral-800/80 overflow-hidden transition-all shadow-2xs w-full max-w-full min-w-0">
       {/* クリック可能なコンボ本体行 */}
       <div
         onClick={() => setIsOpen(!isOpen)}
@@ -43,7 +43,7 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
 
       {/* 初心者向け：矢印＋カラーボタンのアコーディオン展開エリア */}
       {isOpen && (
-        <div className="p-1.5 sm:p-3.5 bg-white dark:bg-neutral-900 border-t border-neutral-200/80 dark:border-neutral-700/80 animate-in fade-in-50 duration-150">
+        <div className="p-1.5 sm:p-3.5 bg-white dark:bg-neutral-900 border-t border-neutral-200/80 dark:border-neutral-700/80 animate-in fade-in-50 duration-150 w-full max-w-full min-w-0 overflow-hidden">
           <div className="text-[10px] sm:text-[11px] font-bold text-neutral-700 dark:text-neutral-300 mb-2 flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />

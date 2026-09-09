@@ -23,9 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full">
-      <body className="min-h-full flex flex-col bg-[#f8fafc] text-neutral-900 selection:bg-neutral-900 selection:text-white antialiased">
+      <body className="min-h-full flex flex-col bg-[#f8fafc] text-neutral-900 selection:bg-neutral-900 selection:text-white antialiased w-full max-w-full overflow-x-hidden">
         <Header />
-        <div className="flex-1">
+        <div className="flex-1 w-full max-w-full min-w-0">
           {children}
         </div>
         <Footer />

@@ -3,7 +3,7 @@ import { Article, AUTHOR_INFO } from '../articles';
 export const COACHING_CHUNLI_1600MR: Article = {
   id: 'art-coaching-chunli-1600mr-vs-akuma',
   slug: 'coaching-chunli-1600mr-vs-akuma',
-  title: '【コーチング添削】M春麗 1600MR（vs豪鬼）：中足ラッシュ依存の脱却とDゲージ・守りの設計',
+  title: 'M春麗1600MR(vs豪鬼)',
   summary:
     'モダン春麗（1600MR）の実戦リプレイ（vs豪鬼）を徹底添削。中足ラッシュ依存によるバーンアウト（BO）の改善、密着不利フレームの回避、相手のジャストパリィ癖への対処法、受講生からの3大お悩み（守り・様子見相手・ゲージ管理）への具体的な回答を解説します。',
   game: 'sf6',

@@ -143,17 +143,17 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
         // 1.7 締め技・コンボルート（〆が付いている行）
         if (group.type === 'combo') {
           return (
-            <div key={gIdx} className="my-2.5 space-y-1.5 pl-0.5">
-              <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center justify-between gap-1.5 mb-1">
+            <div key={gIdx} className="my-2 sm:my-2.5 space-y-1 sm:space-y-1.5 pl-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center justify-between gap-1.5 mb-1">
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400" />
                   <span>締め技・コンボルート</span>
                 </div>
-                <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-normal">
+                <span className="text-[9px] sm:text-[10px] text-cyan-600 dark:text-cyan-400 font-normal">
                   （タップで初心者用矢印コマンド展開）
                 </span>
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1 sm:space-y-1.5">
                 {group.lines.map((line, lIdx) => (
                   <InteractiveComboRow
                     key={lIdx}
@@ -177,9 +177,9 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
                 const frameData = isNeutralMovesSection ? findNeutralMoveKeyFrame(cleanText) : null;
 
                 return (
-                  <div key={lIdx} className="my-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
+                  <div key={lIdx} className="my-1.5 sm:my-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <h4 className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
                         {renderInline(cleanText)}
                       </h4>
 
@@ -218,7 +218,7 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
         // 2. 箇条書き・選択肢リスト
         if (group.type === 'bullet') {
           return (
-            <ul key={gIdx} className="my-2 space-y-1.5 pl-1">
+            <ul key={gIdx} className="my-1.5 sm:my-2 space-y-1 sm:space-y-1.5 pl-0 sm:pl-1">
               {group.lines.map((line, lIdx) => {
                 const trimmed = line.trim();
                 const isAction = trimmed.startsWith('▶︎') || trimmed.startsWith('▶');
@@ -226,7 +226,7 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed"
+                    className="flex items-start gap-2 sm:gap-2.5 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed"
                   >
                     {isAction ? (
                       <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs mt-0.5 shrink-0 select-none">
@@ -235,7 +235,7 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
                     ) : (
                       <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 mt-2 shrink-0" />
                     )}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
                       {renderInline(itemText)}
                     </div>
                   </li>
@@ -248,7 +248,7 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
         // 3. 番号付きリスト
         if (group.type === 'numbered') {
           return (
-            <ol key={gIdx} className="my-3 space-y-2 pl-1">
+            <ol key={gIdx} className="my-2 sm:my-3 space-y-1.5 sm:space-y-2 pl-0 sm:pl-1">
               {group.lines.map((line, lIdx) => {
                 const trimmed = line.trim();
                 const match = trimmed.match(/^(\d+)[\.|\)|）]\s*(.*)$/);
@@ -257,12 +257,12 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-neutral-800 dark:text-neutral-200 text-sm sm:text-[15px] leading-relaxed"
+                    className="flex items-start gap-2 sm:gap-2.5 text-neutral-800 dark:text-neutral-200 text-sm sm:text-[15px] leading-relaxed"
                   >
                     <span className="font-bold text-neutral-900 dark:text-white font-mono text-sm shrink-0 mt-0.5">
                       {num}.
                     </span>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
                       {renderInline(itemText)}
                     </div>
                   </li>

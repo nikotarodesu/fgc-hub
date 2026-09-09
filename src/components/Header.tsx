@@ -17,11 +17,11 @@ export default function Header() {
           : 'relative bg-white dark:bg-neutral-950'
       } border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-14">
+      <div className="max-w-6xl mx-auto px-2.5 sm:px-6">
+        <div className="flex items-center justify-between h-14 gap-2">
           {/* ブランドロゴ */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 shadow-xs group-hover:scale-105 transition-transform bg-neutral-100 dark:bg-neutral-800">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
+            <div className="relative w-7 h-7 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 shadow-xs group-hover:scale-105 transition-transform bg-neutral-100 dark:bg-neutral-800 shrink-0">
               <Image
                 src="/icon.png"
                 alt="にこ太郎 アイコン"
@@ -31,20 +31,20 @@ export default function Header() {
                 priority
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="font-pixel font-bold text-lg sm:text-xl tracking-wider text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
+                <span className="font-pixel font-bold text-xs sm:text-lg tracking-tight sm:tracking-wider text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors truncate block">
                   にこ太郎の格ゲーLAB
                 </span>
               </div>
-              <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium tracking-wide">
+              <p className="hidden sm:block text-[10px] text-neutral-400 dark:text-neutral-500 font-medium tracking-wide truncate">
                 全キャラ1800MR+ スト6攻略メディア
               </p>
             </div>
           </Link>
 
           {/* ナビゲーション（アイコンを廃止し、視認性と品格の高いタイポグラフィに統一） */}
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600 dark:text-neutral-300">
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
             <Link
               href="/sf6"
               className="hover:text-neutral-950 dark:hover:text-white transition-colors flex items-center gap-1.5"
@@ -69,13 +69,14 @@ export default function Header() {
           </nav>
 
           {/* 右側アクション */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             <ThemeToggle />
             <Link
               href="/membership"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-colors shadow-xs"
+              className="inline-flex items-center justify-center px-2 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-colors shadow-xs shrink-0 whitespace-nowrap"
             >
-              月額マガジン
+              <span className="sm:hidden">マガジン</span>
+              <span className="hidden sm:inline">月額マガジン</span>
             </Link>
           </div>
         </div>

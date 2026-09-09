@@ -291,76 +291,77 @@ export default function ArticleDetailPage() {
 
       {/* パンくずリスト */}
       <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5">
-          <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto">
+        <div className="max-w-6xl mx-auto px-2.5 sm:px-6 py-2">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white shrink-0">ホーム</Link>
-            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300 dark:text-neutral-600" />
+            <ChevronRight className="w-3 h-3 shrink-0 text-neutral-300 dark:text-neutral-600" />
             <Link href={`/?game=${article.game}`} className="hover:text-neutral-900 dark:hover:text-white shrink-0">
               {article.game === 'sf6' ? 'スト6攻略' : '共通上達論'}
             </Link>
             {article.character && (
               <>
-                <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300 dark:text-neutral-600" />
+                <ChevronRight className="w-3 h-3 shrink-0 text-neutral-300 dark:text-neutral-600" />
                 <span className="text-neutral-700 dark:text-neutral-300 shrink-0">{article.character}</span>
               </>
             )}
-            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-300 dark:text-neutral-600" />
-            <span className="text-neutral-400 dark:text-neutral-500 truncate max-w-[200px]">{article.title}</span>
+            <ChevronRight className="w-3 h-3 shrink-0 text-neutral-300 dark:text-neutral-600 hidden sm:inline" />
+            <span className="text-neutral-400 dark:text-neutral-500 truncate max-w-[240px] hidden sm:inline">{article.title}</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="max-w-6xl mx-auto px-1 sm:px-6 py-3 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 p-6 sm:p-10 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
+          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-2.5 py-4 sm:p-8 md:p-10 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
             {/* 記事ヘッダー */}
-            <header className="mb-8 pb-6 border-b border-neutral-100 dark:border-neutral-800">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
+                <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
                   {article.game === 'sf6' ? 'スト6' : '共通理論'}
                 </span>
                 {article.character && (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
                     {article.character}
                   </span>
                 )}
                 {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                     立ち回り
                   </span>
                 )}
                 {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                     完全攻略
                   </span>
                 )}
                 {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                     過去のコーチング
                   </span>
                 )}
                 {article.controlType === 'both' ? (
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800">
-                    {activeControlType === 'classic' ? '🥋 クラシック (C) モード' : '⚡️ モダン (M) モード'}
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800">
+                    <span className="sm:hidden">{activeControlType === 'classic' ? '🥋 クラシック' : '⚡️ モダン'}</span>
+                    <span className="hidden sm:inline">{activeControlType === 'classic' ? '🥋 クラシック (C) モード' : '⚡️ モダン (M) モード'}</span>
                   </span>
                 ) : article.controlType ? (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800">
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800">
                     {article.controlType === 'classic' ? 'クラシック (C)' : 'モダン (M)'}
                   </span>
                 ) : null}
                 {article.isPaid ? (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200">
+                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200">
                     有料記事（¥{article.price}）
                   </span>
                 ) : (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
+                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
                     無料公開
                   </span>
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white leading-snug sm:leading-tight tracking-tight">
                 {article.title}
               </h1>
             </header>
@@ -370,12 +371,12 @@ export default function ArticleDetailPage() {
               {/* クラシック / モダン切り替えスイッチ */}
               {article.variants && (
                 <div className="p-2.5 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                  <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-2 pt-1 pb-1.5 flex items-center justify-between">
+                  <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1.5 sm:px-2 pt-1 pb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 font-sans text-neutral-700 dark:text-neutral-300 font-bold">
                       <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
                       操作タイプ切り替え（クラシック / モダン）
                     </span>
-                    <span className="text-[10px] text-neutral-500 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-2 py-0.5 rounded-md border border-neutral-200/80 dark:border-neutral-700 font-medium">
+                    <span className="hidden sm:inline-block text-[10px] text-neutral-500 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-2 py-0.5 rounded-md border border-neutral-200/80 dark:border-neutral-700 font-medium">
                       ワンクリックで即座に切り替え
                     </span>
                   </div>
@@ -421,13 +422,13 @@ export default function ArticleDetailPage() {
 
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
-                <div className="p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                <div className="p-3.5 sm:p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
                   <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
 
               {/* 目次 */}
-              <div className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-6">
+              <div className="p-3.5 sm:p-5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-6">
                 <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />

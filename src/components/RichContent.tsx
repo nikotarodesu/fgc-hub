@@ -37,7 +37,7 @@ function getLineType(line: string): LineType {
   if (trimmed.startsWith('>')) return 'quote';
   if (trimmed.startsWith('⚡️') || trimmed.startsWith('⭐️') || /^[①-⑳❶-❿]/.test(trimmed)) return 'heading';
   if (trimmed.startsWith('【') && trimmed.includes('】')) return 'frame';
-  if ((trimmed.startsWith('●') || trimmed.startsWith('・') || trimmed.startsWith('-')) && trimmed.includes('〆')) return 'combo';
+  if ((trimmed.startsWith('●') || trimmed.startsWith('・') || trimmed.startsWith('-')) && (trimmed.includes('〆') || trimmed.includes('>') || trimmed.includes('＞') || trimmed.includes('→'))) return 'combo';
   if (trimmed.startsWith('●') || trimmed.startsWith('■')) return 'subheading';
   if (trimmed.startsWith('・') || trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('▶︎') || trimmed.startsWith('▶')) return 'bullet';
   if (/^\d+[\.|\)|）]\s*/.test(trimmed)) return 'numbered';
@@ -179,7 +179,7 @@ export default function RichContent({ content, isNeutralMovesSection = false, co
                 return (
                   <div key={lIdx} className="my-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block">
+                      <h4 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
                         {renderInline(cleanText)}
                       </h4>
 

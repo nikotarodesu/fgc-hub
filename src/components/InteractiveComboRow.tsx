@@ -21,20 +21,20 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
       {/* クリック可能なコンボ本体行 */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between gap-3 py-2 px-3 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 cursor-pointer transition-colors"
+        className="flex items-start sm:items-center justify-between gap-2 py-2 px-2 sm:px-3 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 cursor-pointer transition-colors"
         title="タップして矢印コマンドとボタン入力順を表示"
       >
-        <div className="flex items-center gap-2.5 overflow-x-auto flex-1 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100">
-          <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
+        <div className="flex items-start sm:items-center gap-1.5 sm:gap-2 flex-1 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 min-w-0">
+          <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide mt-0.5 sm:mt-0">
             コンボ
           </span>
-          <span className="font-semibold truncate sm:whitespace-normal">
+          <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed">
             {renderInlineText(cleanText)}
           </span>
         </div>
 
         {/* アコーディオン開閉インジケーター */}
-        <div className="flex items-center gap-1 text-[11px] text-cyan-600 dark:text-cyan-400 shrink-0 font-medium select-none">
+        <div className="flex items-center gap-1 text-[11px] text-cyan-600 dark:text-cyan-400 shrink-0 font-medium select-none mt-0.5 sm:mt-0">
           <Gamepad2 className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">{isOpen ? 'コマンドを隠す' : 'コマンド展開'}</span>
           {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -43,17 +43,17 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
 
       {/* 初心者向け：矢印＋カラーボタンのアコーディオン展開エリア */}
       {isOpen && (
-        <div className="p-3 sm:p-4 bg-white dark:bg-neutral-900 border-t border-neutral-200/80 dark:border-neutral-700/80 animate-in fade-in-50 duration-150">
+        <div className="p-2 sm:p-4 bg-white dark:bg-neutral-900 border-t border-neutral-200/80 dark:border-neutral-700/80 animate-in fade-in-50 duration-150">
           <div className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 mb-2.5 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             <span>🎮 直感コマンド入力手順（矢印とボタンの順に入力）</span>
           </div>
 
           {/* 視覚的な入力フロー（矢印 + カラーボタン） */}
-          <div className="flex flex-wrap items-center gap-2 py-1 overflow-x-auto">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 py-1 overflow-x-auto max-w-full">
             {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-2xs">
+              <div key={idx} className="flex items-center gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-2xs">
                   {/* キャンセル（黄色） */}
                   {step.isCancel && (
                     <span className="text-xs font-bold text-amber-500 dark:text-amber-400 shrink-0">
@@ -115,7 +115,7 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
                         label={step.button.label}
                         size="sm"
                       />
-                      {step.button.label !== step.button.iconText && (
+                      {step.button.showLabel && step.button.label && (
                         <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
                           {step.button.label}
                         </span>

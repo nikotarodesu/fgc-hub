@@ -20,6 +20,7 @@ export interface VisualStep {
     label: string;         // 例: "弱P", "中P", "強P", "弱K", "中K", "強K", "PP", "KK"
     description?: string;  // ツールチップ用
     iconText: string;      // "P", "K", "PP", "KK", "SA"
+    showLabel?: boolean;   // ボタン横に技名テキストを表示するかどうか（通常技・特殊技は色でわかるためfalse）
   };
   suffix?: string;         // 例: "（カス当たり）", "（最速）" ※ダメージ数値は除外
   tip?: string;
@@ -327,6 +328,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'SA3',
         description: '金のSAボタン',
         iconText: 'SA3',
+        showLabel: false,
       },
       suffix,
       tip: isModern
@@ -351,6 +353,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'SA2',
         description: '金のSAボタン',
         iconText: 'SA2',
+        showLabel: false,
       },
       suffix,
       tip: isModern
@@ -375,6 +378,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'SA1',
         description: '金のSAボタン',
         iconText: 'SA1',
+        showLabel: false,
       },
       suffix,
       tip: isModern
@@ -384,7 +388,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   }
 
   // 1.5 ジャンプ攻撃（垂直大P, 前J大P, 垂直JA大, 前JA大, ジャンプ大P, ジャンプA大, 前J中等）
-  // ※ユーザー指示：垂直大P・前J大P等は「斜め上大P」ではなく「ジャンプ大P」（モダンなら「ジャンプA大」）とし、矢印は出さない
+  // ※ユーザー指示：ボタンに大Pや横に中Kなどは不要。色は赤/黄/青で理解できる。
   const isJumpAttack =
     lower.includes('ジャンプ') ||
     lower.includes('垂直') ||
@@ -402,14 +406,14 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     const isModern = controlType === 'modern';
 
     if (isHeavy) {
-      const label = isModern ? 'ジャンプA大' : isKick ? 'ジャンプ大K' : 'ジャンプ大P';
+      const label = isModern ? 'ジャンプA大' : isKick ? 'ジャンプ強K' : 'ジャンプ強P';
       const iconText = isModern ? 'A大' : isKick ? 'K' : 'P';
       return {
         original: remaining,
         isCancel,
         isRush,
         rushText,
-        prefix,
+        prefix: prefix || 'ジャンプ',
         arrows: [],
         arrowStr: '',
         button: {
@@ -418,6 +422,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           label,
           description: isModern ? 'ジャンプアシスト強' : isKick ? 'ジャンプ強K' : 'ジャンプ強P',
           iconText,
+          showLabel: false,
         },
         suffix,
         tip: isModern
@@ -434,7 +439,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         isCancel,
         isRush,
         rushText,
-        prefix,
+        prefix: prefix || 'ジャンプ',
         arrows: [],
         arrowStr: '',
         button: {
@@ -443,6 +448,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           label,
           description: isModern ? 'ジャンプ中攻撃' : isKick ? 'ジャンプ中K' : 'ジャンプ中P',
           iconText,
+          showLabel: false,
         },
         suffix,
         tip: isModern
@@ -459,7 +465,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       isCancel,
       isRush,
       rushText,
-      prefix,
+      prefix: prefix || 'ジャンプ',
       arrows: [],
       arrowStr: '',
       button: {
@@ -468,6 +474,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label,
         description: isModern ? 'ジャンプ弱攻撃' : isKick ? 'ジャンプ弱K' : 'ジャンプ弱P',
         iconText,
+        showLabel: false,
       },
       suffix,
       tip: isModern
@@ -491,6 +498,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'A中',
         description: '黄色いボタン（アシスト中攻撃）',
         iconText: 'A中',
+        showLabel: false,
       },
       suffix,
       tip: 'アシストボタンを押しながら中攻撃',
@@ -512,6 +520,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'A弱',
         description: '青いボタン（アシスト弱攻撃）',
         iconText: 'A弱',
+        showLabel: false,
       },
       suffix,
       tip: 'アシストボタンを押しながら弱攻撃',
@@ -539,6 +548,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: 'A大',
         description: '赤いボタン（アシスト強攻撃 / 大ゴス）',
         iconText: 'A大',
+        showLabel: false,
       },
       suffix,
       tip: 'アシストボタンを押しながら強攻撃（大ゴス）',
@@ -568,6 +578,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
             label: 'OD足刀',
             description: 'OD足刀ボタン',
             iconText: 'A+SP',
+            showLabel: true,
           },
           suffix,
           tip: '↓＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -586,9 +597,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           button: {
             kind: 'special',
             color: 'emerald',
-            label: '弱足刀',
+            label: '足刀',
             description: '弱足刀ボタン',
             iconText: 'SP',
+            showLabel: true,
           },
           suffix,
           tip: '↙＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -607,9 +619,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           button: {
             kind: 'special',
             color: 'emerald',
-            label: '強足刀',
+            label: '足刀',
             description: '強足刀ボタン',
             iconText: 'SP',
+            showLabel: true,
           },
           suffix,
           tip: '↘＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -628,9 +641,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         button: {
           kind: 'special',
           color: 'emerald',
-          label: isMed ? '中足刀' : '足刀',
+          label: '足刀',
           description: '中足刀ボタン',
           iconText: 'SP',
+          showLabel: true,
         },
         suffix,
         tip: '↓＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -651,9 +665,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'kick',
         color,
-        label: isOD ? 'OD足刀' : `${strength}足刀`,
+        label: isOD ? 'OD足刀' : '足刀',
         description: isOD ? 'ODボタン' : `${strength}キックボタン`,
         iconText: isOD ? 'KK' : 'K',
+        showLabel: true,
       },
       suffix,
       tip: `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前）`,
@@ -683,6 +698,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
             label: 'OD竜巻',
             description: 'OD竜巻ボタン',
             iconText: 'A+SP',
+            showLabel: true,
           },
           suffix,
           tip: '後ろ＋A＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -701,9 +717,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           button: {
             kind: 'kick',
             color: 'blue',
-            label: '弱竜巻',
+            label: '竜巻',
             description: '弱竜巻ボタン',
             iconText: '弱',
+            showLabel: true,
           },
           suffix,
           tip: 'テンキー214+弱（またはA弱アシストコンボ派生）',
@@ -722,9 +739,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         button: {
           kind: 'special',
           color: 'emerald',
-          label: '中竜巻',
+          label: '竜巻',
           description: '中竜巻ボタン',
           iconText: 'SP',
+          showLabel: true,
         },
         suffix,
         tip: '後ろ＋SP（※モダン限定：簡単コマンドでのみ発動可能）',
@@ -745,9 +763,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'kick',
         color,
-        label: isOD ? 'OD竜巻' : `${strength}竜巻`,
+        label: isOD ? 'OD竜巻' : '竜巻',
         description: isOD ? 'ODボタン' : `${strength}キックボタン`,
         iconText: isOD ? 'KK' : 'K',
+        showLabel: true,
       },
       suffix,
       tip: `テンキー214+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め後ろ・後ろ）`,
@@ -778,6 +797,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
             label: 'OD昇竜',
             description: 'OD昇竜ボタン',
             iconText: 'A+SP',
+            showLabel: true,
           },
           suffix,
           tip: '前＋A＋SP（手動テンキー623+PPでも入力可能）',
@@ -796,9 +816,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           button: {
             kind: isKick ? 'kick' : 'punch',
             color: 'red',
-            label: isKick ? '強スパイク' : '強昇竜',
+            label: isKick ? 'スパイク' : '昇竜',
             description: '強昇竜ボタン',
             iconText: 'SP',
+            showLabel: true,
           },
           suffix,
           tip: '前＋SP（手動テンキー623+強でも入力可能）',
@@ -816,9 +837,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         button: {
           kind: isKick ? 'kick' : 'punch',
           color: isLight ? 'blue' : 'yellow',
-          label: isLight ? '弱昇竜' : '中昇竜',
+          label: isKick ? 'スパイク' : '昇竜',
           description: isLight ? '青いボタン' : '黄色いボタン',
           iconText: isLight ? '弱' : '中',
+          showLabel: true,
         },
         suffix,
         tip: `テンキー623+${isLight ? '弱' : '中'}（前・下・斜め前）`,
@@ -841,9 +863,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind,
         color,
-        label: isOD ? (isKick ? 'ODスパイク' : 'OD昇竜') : `${strength}${isKick ? 'スパイク' : '昇竜'}`,
+        label: isOD ? (isKick ? 'ODスパイク' : 'OD昇竜') : (isKick ? 'スパイク' : '昇竜'),
         description: isOD ? 'ODボタン' : `${strength}${isKick ? 'キック' : 'パンチ'}ボタン`,
         iconText: isOD ? (isKick ? 'KK' : 'PP') : btnChar,
+        showLabel: true,
       },
       suffix,
       tip: `テンキー623+${isOD ? (btnChar + btnChar + '（2ボタン同時）') : strength + btnChar}（前・下・斜め前）`,
@@ -873,6 +896,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           label: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
           description: isOD ? 'OD電刃波掌撃' : '電刃波掌撃',
           iconText: isOD ? 'PP' : isModern ? '波掌' : 'P',
+          showLabel: true,
         },
         suffix,
         tip: isOD
@@ -885,7 +909,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
 
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
-    const label = isOD ? 'OD波掌撃' : `${strength}波掌撃`;
+    const label = isOD ? 'OD波掌撃' : '波掌撃';
     const tipBtn = isOD ? 'PP（2ボタン同時）' : isModern ? strength : `${strength}P`;
     const iconText = isOD ? 'PP' : isModern ? (isLight ? '弱' : isHeavy ? '強' : '中') : 'P';
 
@@ -903,6 +927,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label,
         description: isOD ? 'ODボタン' : `${strength}パンチボタン`,
         iconText,
+        showLabel: true,
       },
       suffix,
       tip: `テンキー214+${tipBtn}（下・斜め後ろ・後ろ）`,
@@ -931,6 +956,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
             label: 'OD弾',
             description: 'OD弾ボタン',
             iconText: 'A+SP',
+            showLabel: true,
           },
           suffix,
           tip: 'N＋A＋SP（手動テンキー236+PPでも入力可能）',
@@ -949,9 +975,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
           button: {
             kind: 'special',
             color: 'red',
-            label: '強波動',
+            label: '波動',
             description: '強波動ボタン',
             iconText: 'SP',
+            showLabel: true,
           },
           suffix,
           tip: 'N＋SP（手動テンキー236+強でも入力可能）',
@@ -969,9 +996,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         button: {
           kind: 'punch',
           color: isLight ? 'blue' : 'yellow',
-          label: isLight ? '弱弾' : '中弾',
+          label: '波動',
           description: isLight ? '青いボタン' : '黄色いボタン',
           iconText: isLight ? '弱' : '中',
+          showLabel: true,
         },
         suffix,
         tip: `テンキー236+${isLight ? '弱' : '中'}（下・斜め前・前）`,
@@ -992,9 +1020,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'punch',
         color,
-        label: isOD ? 'OD弾' : `${strength}弾`,
+        label: isOD ? 'OD弾' : '波動',
         description: isOD ? 'ODボタン' : `${strength}パンチボタン`,
         iconText: isOD ? 'PP' : 'P',
+        showLabel: true,
       },
       suffix,
       tip: `テンキー236+${isOD ? 'PP（2ボタン同時）' : strength + 'P'}（下・斜め前・前）`,
@@ -1022,9 +1051,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'punch',
         color: 'red',
-        label: isModern ? '大 ➔ 大' : '強P ➔ 強K',
+        label: isModern ? '大 ➔ 大' : 'P ➔ K',
         description: isModern ? '赤いボタン（大 ➔ 大）' : '赤いボタン（ターゲットコンボ）',
         iconText: isModern ? '大' : 'P',
+        showLabel: false,
       },
       suffix,
       tip: isModern ? '強攻撃ヒット後にもう一度強攻撃を入力（大 ➔ 大）' : '強Pヒット後にすかさず強Kを入力',
@@ -1034,9 +1064,9 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   // 9. 後ろ入れ特殊技（引大P, 引大, 引き強P, 4HP, 後大K等）
   if (lower.includes('引') || lower.startsWith('4') || lower.includes('後大') || lower.includes('後強')) {
     const isModern = controlType === 'modern';
-    const isKick = lower.includes('k');
+    const isKick = lower.includes('k') || lower.includes('hk') || lower.includes('キック');
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const label = isModern ? '引大' : lower.includes('引大p') ? '引大P' : '引大';
+    const label = isModern ? '大' : isKick ? 'K' : 'P';
 
     return {
       original: remaining,
@@ -1050,30 +1080,22 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         kind,
         color: 'red',
         label,
-        description: '赤いボタン',
-        iconText: isModern ? '大' : label,
+        description: isModern ? '赤いボタン（大）' : isKick ? '赤いボタン（強K）' : '赤いボタン（強P）',
+        iconText: label,
+        showLabel: false,
       },
       suffix,
-      tip: isModern ? '後ろキー（ガード方向）を入力しながら強攻撃' : '後ろキー（ガード方向）を入力しながら強P',
     };
   }
 
   // 10. 前入れ特殊技（前大P, 前大, 前大K, 大ゴス, 6HP, 6HK等）
   if (lower.startsWith('前') || lower.startsWith('6') || lower.includes('大ゴス')) {
     const isModern = controlType === 'modern';
-    const isKick = lower.includes('k');
-    const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('大ゴス');
+    const isKick = lower.includes('k') || lower.includes('hk') || lower.includes('キック');
+    const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('大ゴス') || lower.includes('hp') || lower.includes('hk');
     const color: ButtonColor = isHeavy ? 'red' : 'yellow';
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const label = isModern
-      ? '前大'
-      : lower.includes('大ゴス')
-      ? '前大P'
-      : lower.includes('前大p')
-      ? '前大P'
-      : lower.includes('前大k')
-      ? '前大K'
-      : '前大';
+    const label = isModern ? (isHeavy ? '大' : '中') : isKick ? 'K' : 'P';
 
     return {
       original: remaining,
@@ -1087,11 +1109,21 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         kind,
         color,
         label,
-        description: isHeavy ? '赤いボタン' : '黄色いボタン',
-        iconText: isModern ? '大' : label,
+        description: isHeavy
+          ? isModern
+            ? '赤いボタン（大）'
+            : isKick
+            ? '赤いボタン（強K）'
+            : '赤いボタン（強P）'
+          : isModern
+          ? '黄色いボタン（中）'
+          : isKick
+          ? '黄色いボタン（中K）'
+          : '黄色いボタン（中P）',
+        iconText: label,
+        showLabel: false,
       },
       suffix,
-      tip: isModern ? '前キーを押しながら強攻撃' : '前キーを押しながらボタン',
     };
   }
 
@@ -1105,39 +1137,12 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     lower.includes('大足')
   ) {
     const isModern = controlType === 'modern';
-    const isKick = lower.includes('k') || lower.includes('足') || lower.includes('キック');
-    const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('大足');
-    const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('コパ');
+    const isKick = lower.includes('k') || lower.includes('足') || lower.includes('キック') || lower.includes('hk') || lower.includes('mk') || lower.includes('lk');
+    const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('大足') || lower.includes('hp') || lower.includes('hk');
+    const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('コパ') || lower.includes('lp') || lower.includes('lk');
     const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-
-    let label = isModern
-      ? isLight
-        ? '下弱'
-        : isHeavy
-        ? lower.includes('大足')
-          ? '大足'
-          : '下大'
-        : lower.includes('中足')
-        ? '中足'
-        : '下中'
-      : isLight
-      ? isKick
-        ? '下弱K'
-        : '下弱P'
-      : isHeavy
-      ? isKick
-        ? '下大K'
-        : '下大P'
-      : isKick
-      ? '下中K'
-      : '下中P';
-
-    if (!isModern && (lower === '下中' || lower === '下弱' || lower === '下大')) {
-      label = remaining;
-    }
-
-    const iconText = isModern ? (isLight ? '弱' : isHeavy ? '大' : '中') : label;
+    const label = isModern ? (isLight ? '弱' : isHeavy ? '大' : '中') : isKick ? 'K' : 'P';
 
     return {
       original: remaining,
@@ -1151,11 +1156,27 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         kind,
         color,
         label,
-        description: isLight ? '青いボタン' : isHeavy ? '赤いボタン' : '黄色いボタン',
-        iconText,
+        description: isLight
+          ? isModern
+            ? '青いボタン（弱）'
+            : isKick
+            ? '青いボタン（弱K）'
+            : '青いボタン（弱P）'
+          : isHeavy
+          ? isModern
+            ? '赤いボタン（大）'
+            : isKick
+            ? '赤いボタン（強K）'
+            : '赤いボタン（強P）'
+          : isModern
+          ? '黄色いボタン（中）'
+          : isKick
+          ? '黄色いボタン（中K）'
+          : '黄色いボタン（中P）',
+        iconText: label,
+        showLabel: false,
       },
       suffix,
-      tip: isModern ? '下キー（しゃがみ）を入力しながら攻撃' : '下キー（しゃがみ）を入力しながらボタン',
     };
   }
 
@@ -1174,6 +1195,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         color: 'neutral',
         label: remaining,
         iconText: '←',
+        showLabel: false,
       },
       suffix,
       tip: '少しだけ後ろに下がって間合いを調整',
@@ -1197,6 +1219,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         label: remaining,
         description: color === 'red' ? '赤いボタン' : color === 'blue' ? '青いボタン' : '黄色いボタン',
         iconText: remaining,
+        showLabel: false,
       },
       suffix,
     };
@@ -1204,9 +1227,9 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
 
   // 14. 立ち通常技（弱P, 弱K, 中P, 中K, 大P, 大K等）
   const isModern = controlType === 'modern';
-  const isKick = lower.includes('k') || lower.includes('キック');
-  const isHeavy = lower.includes('大') || lower.includes('強');
-  const isLight = lower.includes('弱') || lower.includes('小');
+  const isKick = lower.includes('k') || lower.includes('キック') || lower.includes('hk') || lower.includes('mk') || lower.includes('lk');
+  const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('hp') || lower.includes('hk');
+  const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('lp') || lower.includes('lk');
   const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
   const kind: ButtonKind = isKick ? 'kick' : 'punch';
   const label = isModern
@@ -1215,18 +1238,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       : isHeavy
       ? '大'
       : '中'
-    : isLight
-    ? isKick
-      ? '弱K'
-      : '弱P'
-    : isHeavy
-    ? isKick
-      ? '大K'
-      : '大P'
     : isKick
-    ? '中K'
-    : '中P';
-  const iconText = isModern ? (isLight ? '弱' : isHeavy ? '大' : '中') : isKick ? 'K' : 'P';
+    ? 'K'
+    : 'P';
+  const iconText = label;
 
   return {
     original: remaining,
@@ -1240,8 +1255,25 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       kind,
       color,
       label,
-      description: isLight ? '青いボタン' : isHeavy ? '赤いボタン' : '黄色いボタン',
+      description: isLight
+        ? isModern
+          ? '青いボタン（弱）'
+          : isKick
+          ? '青いボタン（弱K）'
+          : '青いボタン（弱P）'
+        : isHeavy
+        ? isModern
+          ? '赤いボタン（大）'
+          : isKick
+          ? '赤いボタン（強K）'
+          : '赤いボタン（強P）'
+        : isModern
+        ? '黄色いボタン（中）'
+        : isKick
+        ? '黄色いボタン（中K）'
+        : '黄色いボタン（中P）',
       iconText,
+      showLabel: false,
     },
     suffix,
   };
@@ -1261,6 +1293,7 @@ function cleanupModernStep(step: VisualStep): VisualStep {
   // 1. ラベルからP/Kを除去（OD必殺技のPP/KKは除く）
   if (!isOD) {
     step.button.label = step.button.label
+      .replace(/^[前引下後]/, '')
       .replace(/大[PK]/g, '大')
       .replace(/強[PK]/g, '強')
       .replace(/中[PK]/g, '中')
@@ -1282,8 +1315,9 @@ function cleanupModernStep(step: VisualStep): VisualStep {
         : step.button.color === 'yellow'
         ? '中'
         : '攻撃';
-  } else if (!isOD && step.button.iconText !== 'SP') {
+  } else if (!isOD && step.button.iconText !== 'SP' && step.button.iconText !== 'A+SP') {
     step.button.iconText = step.button.iconText
+      .replace(/^[前引下後]/, '')
       .replace(/大[PK]/g, '大')
       .replace(/強[PK]/g, '強')
       .replace(/中[PK]/g, '中')

@@ -113,19 +113,12 @@ export default function InteractiveComboRow({ comboLine, renderInlineText, contr
                       {step.button.label}
                     </span>
                   ) : (
-                    <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-                      <ArcadeButton
-                        color={step.button.color}
-                        iconText={step.button.iconText}
-                        label={step.button.label}
-                        size="sm"
-                      />
-                      {step.button.showLabel && step.button.label && (
-                        <span className="font-bold text-[11px] sm:text-xs text-neutral-900 dark:text-white leading-none shrink-0">
-                          {step.button.label}
-                        </span>
-                      )}
-                    </div>
+                    <ArcadeButton
+                      color={step.button.color}
+                      iconText={step.button.iconText}
+                      label={step.button.label}
+                      size="sm"
+                    />
                   )}
 
                   {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}

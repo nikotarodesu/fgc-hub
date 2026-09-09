@@ -122,19 +122,12 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
                       {step.button.label}
                     </span>
                   ) : (
-                    <div className="flex items-center gap-1.5">
-                      <ArcadeButton
-                        color={step.button.color}
-                        iconText={step.button.iconText}
-                        label={step.button.label}
-                        size="sm"
-                      />
-                      {step.button.showLabel && step.button.label && (
-                        <span className="font-bold text-xs text-neutral-900 dark:text-white leading-none">
-                          {step.button.label}
-                        </span>
-                      )}
-                    </div>
+                    <ArcadeButton
+                      color={step.button.color}
+                      iconText={step.button.iconText}
+                      label={step.button.label}
+                      size="sm"
+                    />
                   )}
 
                   {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}

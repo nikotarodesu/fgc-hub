@@ -119,7 +119,7 @@ export default function HomePage() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              過去のコーチング
+              コーチング
             </button>
           </div>
 
@@ -138,54 +138,49 @@ export default function HomePage() {
                   <span className="text-neutral-500 dark:text-neutral-400">絞り込み:</span>
                   {selectedCategory !== 'all' && (
                     <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      {selectedCategory === 'character' ? 'カテゴリ: キャラ別攻略' : selectedCategory === 'neutral' ? 'カテゴリ: 立ち回り' : 'カテゴリ: 過去のコーチング'}
+                      {selectedCategory === 'character' ? 'カテゴリ: キャラ別攻略' : selectedCategory === 'neutral' ? 'カテゴリ: 立ち回り' : 'カテゴリ: コーチング'}
                     </span>
                   )}
                   {selectedCharacter && (
                     <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      キャラ: {selectedCharacter}
+                      キャラクター: {selectedCharacter}
                     </span>
                   )}
                   {selectedTag && (
                     <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      #{selectedTag}
+                      タグ: {selectedTag}
                     </span>
                   )}
                   {searchQuery && (
                     <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      &quot;{searchQuery}&quot;
+                      検索: {searchQuery}
                     </span>
                   )}
                 </div>
                 <button
                   onClick={() => { setSelectedCategory('all'); setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
-                  className="text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline font-medium cursor-pointer shrink-0"
+                  className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 underline text-xs ml-2 cursor-pointer shrink-0"
                 >
-                  解除
+                  条件クリア
                 </button>
               </div>
             )}
 
             {/* 記事一覧 */}
-            {ARTICLES_DATA.length === 0 ? (
-              <div className="p-10 sm:p-14 text-center bg-white rounded-xl border border-neutral-200/80 shadow-xs space-y-4">
-                <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mx-auto text-neutral-500">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-neutral-900 text-base sm:text-lg">
-                    攻略記事を準備中です
-                  </h3>
-                  <p className="text-xs text-neutral-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-                    全キャラ1800MR以上の筆者「にこ太郎」による実戦立ち回り・完全攻略記事を順次公開予定です。新着記事をお楽しみに！
-                  </p>
-                </div>
+            {selectedCategory === 'coaching' && filteredArticles.length === 0 ? (
+              <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
+                <p className="font-bold text-neutral-800 dark:text-neutral-200">
+                  コーチング記事は現在準備中です
+                </p>
+                <p className="text-xs text-neutral-400">
+                  全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！
+                </p>
               </div>
             ) : filteredArticles.length === 0 ? (
               <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
                 <p className="font-bold text-neutral-800 dark:text-neutral-200">
                   {selectedCategory === 'coaching'
-                    ? '過去のコーチング記事は現在準備中です'
+                    ? 'コーチング記事は現在準備中です'
                     : '該当する記事が見つかりませんでした'}
                 </p>
                 <p className="text-xs text-neutral-400">
@@ -224,7 +219,7 @@ export default function HomePage() {
                         )}
                         {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
                           <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
-                            過去のコーチング
+                            コーチング
                           </span>
                         )}
                         {article.controlType === 'both' ? (

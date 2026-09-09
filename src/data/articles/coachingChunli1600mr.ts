@@ -1,4 +1,4 @@
-﻿import { Article, AUTHOR_INFO } from '../articles';
+import { Article, AUTHOR_INFO } from '../articles';
 
 export const COACHING_CHUNLI_1600MR: Article = {
   id: 'art-coaching-chunli-1600mr-vs-akuma',
@@ -22,7 +22,6 @@ export const COACHING_CHUNLI_1600MR: Article = {
     '春麗',
     'モダン',
     '豪鬼',
-    '過去のコーチング',
     'コーチング',
     '1600MR',
     '立ち回り',

@@ -55,6 +55,7 @@ export interface Article {
     }[];
   };
   paidContent: {
+    intro?: string;
     sections: {
       title: string;
       body: string;

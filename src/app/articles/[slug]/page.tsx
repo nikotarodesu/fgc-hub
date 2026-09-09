@@ -761,6 +761,13 @@ export default function ArticleDetailPage() {
                         )}
                       </div>
 
+                      {/* 有料限定イントロ（動画前メッセージ） */}
+                      {article.paidContent.intro && (
+                        <div className="p-4 sm:p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                          <RichContent content={article.paidContent.intro} controlType={activeControlType} />
+                        </div>
+                      )}
+
                       {/* 有料限定：YouTube動画プレイヤー */}
                       {article.youtubeVideoId && (
                         <div className="my-6">

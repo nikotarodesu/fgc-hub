@@ -600,6 +600,13 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
 
+    const isModern = controlType === 'modern';
+    const iconText = isOD
+      ? (isModern ? 'A+SP' : 'KK')
+      : isModern
+      ? (isLight ? '弱' : isHeavy ? '強' : '中')
+      : 'K';
+
     return {
       original: remaining,
       isCancel,
@@ -613,11 +620,13 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         color,
         label: isOD ? 'OD百烈脚' : `${strength}百烈脚`,
         description: isOD ? 'OD百烈脚' : `${strength}百烈脚`,
-        iconText: isOD ? 'KK' : 'K',
+        iconText,
         showLabel: false,
       },
       suffix,
-      tip: `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前＋キック）`,
+      tip: isModern
+        ? `テンキー236+${isOD ? 'A+SP' : strength}（下・斜め前・前＋攻撃）`
+        : `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前＋キック）`,
     };
   }
 

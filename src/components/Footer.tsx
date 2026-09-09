@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="bg-white dark:bg-neutral-950 border-t border-neutral-200/80 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 text-xs mt-24 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 bg-neutral-100 dark:bg-neutral-800">
@@ -44,15 +44,6 @@ export default function Footer() {
                 <ExternalLink className="w-3 h-3 text-neutral-400" />
               </a>
             </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-neutral-900 dark:text-white mb-3">コンテンツ</h4>
-            <ul className="space-y-2 text-neutral-500 dark:text-neutral-400">
-              <li><Link href="/?game=sf6" className="hover:text-neutral-900 dark:hover:text-white transition-colors">スト6攻略記事</Link></li>
-              <li><Link href="/?game=general" className="hover:text-neutral-900 dark:hover:text-white transition-colors">格ゲー共通上達論</Link></li>
-              <li><Link href="/membership" className="hover:text-neutral-900 dark:hover:text-white transition-colors">月額マガジン案内</Link></li>
-            </ul>
           </div>
 
           <div>

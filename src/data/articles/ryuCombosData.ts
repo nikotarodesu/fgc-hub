@@ -29,9 +29,9 @@ export interface ArticleComboItem {
 
 export const POSITION_OPTIONS = [
   { id: 'all', label: 'すべて' },
-  { id: 'center', label: '🥊 画面中央' },
-  { id: 'corner', label: '🧱 画面端' },
-  { id: 'stun', label: '💫 スタン' },
+  { id: 'center', label: '画面中央' },
+  { id: 'corner', label: '画面端' },
+  { id: 'stun', label: 'スタン' },
 ] as const;
 
 export const STARTER_CATEGORY_OPTIONS = [
@@ -44,7 +44,7 @@ export const STARTER_CATEGORY_OPTIONS = [
   { id: 'impact', label: '❻ インパクト・壁ドン' },
   { id: 'switch', label: '❼ 入れ替え' },
   { id: 'drive_reversal', label: '❽ Dリバガード後' },
-  { id: 'stun', label: '💫 スタン' },
+  { id: 'stun', label: 'スタン' },
   { id: 'other', label: '❾ 投げ・ジャスパ' },
 ] as const;
 

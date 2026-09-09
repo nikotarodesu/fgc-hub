@@ -170,13 +170,13 @@ export default function ArticleComboReverseLookup({
         {/* プレビュー風のダミーチップ群 */}
         <div className="mt-4 pt-3 border-t border-amber-200/60 dark:border-amber-900/40 flex flex-wrap gap-1.5 opacity-70 pointer-events-none select-none">
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            🥊 画面中央コンボ
+            画面中央コンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            🧱 画面端限定コンボ
+            画面端限定コンボ
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
-            💫 スタン最大リーサル
+            スタン最大リーサル
           </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
             7,171 最大ダメージ逆引き

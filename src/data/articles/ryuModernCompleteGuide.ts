@@ -249,6 +249,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 固まる相手にはラッシュ投げをする
 
 ❸ 遠距離
+![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.gif)
 ⭐️ 電刃錬気をする
 ▶︎ 隙を見つけて電刃錬気
 
@@ -502,6 +503,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 
 ⭐️ リーサルコンボ
 ● A弱>キャンセル弱>中>キャンセル大>中>強昇竜>SA3〆（3994）
+![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.gif)
 ▶︎ 牽制技のA弱からキャンセルで伸ばすリーサルコンボ
 
 ⚡️ 電刃モード
@@ -606,6 +608,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ● 強波掌撃>ラッシュ下大>中竜巻〆（2582）
 ▶︎ 画面中央から少し押してる時に画面端まで運ぶことができる
 ● 前ステ>ラッシュ下大>強波掌撃>ラッシュ中足>中竜巻〆（2651）
+![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.gif)
 ▶︎ 画面中央の少し後ろから画面端まで運べる
 
 ⭐️ 補正切り
@@ -625,6 +628,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 弱昇竜からSA3にも繋げられる
 ▶︎ 前ステからのコマンドは【→→ →↓↘︎弱】
 ● 〜OD足刀
+![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.gif)
 ▶︎ 前ジャンプ>前ステ+1
 ▶︎ ラッシュ中足+26>前ステ+6
 

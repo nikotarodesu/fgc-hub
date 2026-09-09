@@ -176,6 +176,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 固まる相手にはラッシュ投げをする
 
 ❸ 遠距離
+![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.gif)
 ⭐️ 電刃錬気をする
 ▶︎ 隙を見つけて電刃錬気
 
@@ -469,6 +470,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ⭐️ リーサルコンボ
 ● 弱K>キャンセル弱P>引大P>キャンセル大K>大P>強昇竜>SA3〆（4247）
+![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.gif)
 ▶︎ 牽制技の弱Kからキャンセルで伸ばすリーサルコンボ
 
 ⚡️ 電刃モード
@@ -588,6 +590,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ● 強波掌撃>ラッシュ下大P>中竜巻〆（2582）
 ▶︎ 画面中央から少し押してる時に画面端まで運ぶことができる
 ● 前ステ>ラッシュ下大P>強波掌撃>ラッシュ下中K>中竜巻〆（2651）
+![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.gif)
 ▶︎ 画面中央の少し後ろから画面端まで運べる
 ▶︎ 中竜巻を強足刀にすると+42
 ⭐️ 補正切り
@@ -606,6 +609,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 弱昇竜からSA3にも繋げられる
 ▶︎ 前ステからのコマンドは【→→ →↓↘︎弱P 】
 ● OD足刀〜
+![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.gif)
 ▶︎ 前ジャンプ>前ステ+1
 ▶︎ ラッシュ下中K+26>前ステ+6
 ● 〜強竜巻〆
@@ -783,6 +787,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 相手が無敵技でBOした時にするコンボ
 ▶︎ SA3までで5320ダメージ+BO時の削りで200ダメージ+スタン後のコンボで3085ダメージ=8605ダメージ
 ● インパクト>大K>下中K>OD竜巻>中昇竜>SA3（カスヒット）>前ステ>下大P>OD波掌撃>引大P>インパクト>スタン>電刃錬気>J大P>大P>電刃波掌撃>ラッシュ下大P>キャンセル下大P>強足刀>強昇竜〆
+![無敵技ガード後BOセットプレイ（8081ダメージ）](/images/articles/ryu/ryu-bo-setplay.gif)
 ▶︎ 無敵技ガードからSA3まででDゲージを5本削る
 ▶︎ そこから固めでBOさせてインパクトでスタンさせる
 ▶︎ SA3までで5030ダメージ+スタン後のコンボで3051ダメージ=8081ダメージ

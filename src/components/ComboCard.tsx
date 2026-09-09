@@ -12,11 +12,12 @@ interface ComboProps {
   driveGauge: string;
   situation: string;
   note: string;
+  controlType?: 'classic' | 'modern';
 }
 
-export default function ComboCard({ name, recipe, damage, driveGauge, situation, note }: ComboProps) {
+export default function ComboCard({ name, recipe, damage, driveGauge, situation, note, controlType = 'classic' }: ComboProps) {
   const [showCommands, setShowCommands] = useState(false);
-  const steps = parseVisualCombo(recipe);
+  const steps = parseVisualCombo(recipe, controlType);
 
   return (
     <div className="my-2.5 sm:my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-2.5 sm:p-4 shadow-xs transition-colors w-full max-w-full min-w-0">
@@ -89,11 +90,39 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
                     </span>
                   )}
 
-                  {/* 方向キーの矢印 */}
+                  {/* 方向キーの矢印（溜め矢印対応） */}
                   {step.arrows && step.arrows.length > 0 && (
-                    <div className="flex items-center gap-0.5 bg-neutral-900 dark:bg-black text-white px-1.5 py-0.5 rounded text-xs font-mono font-bold tracking-tight shadow-inner">
-                      {step.arrowStr}
-                    </div>
+                    step.chargeArrows && step.chargeArrows.some(Boolean) ? (
+                      <div className="flex items-center gap-1 shrink-0">
+                        {step.arrows.map((arr, aIdx) => {
+                          const isCharge = step.chargeArrows ? step.chargeArrows[aIdx] : false;
+                          if (isCharge) {
+                            return (
+                              <div
+                                key={aIdx}
+                                className="flex items-center gap-0.5 bg-neutral-900 dark:bg-black text-amber-300 px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-xs font-mono font-bold tracking-tight border-2 border-amber-400 ring-1 ring-amber-400/50 shadow-[0_0_8px_rgba(251,191,36,0.4)] shrink-0"
+                                title="溜めコマンド（キーを約0.8秒長押し）"
+                              >
+                                <span className="text-[9px] font-sans font-black px-0.5 rounded bg-amber-400 text-neutral-950 leading-tight">溜</span>
+                                <span>{arr}</span>
+                              </div>
+                            );
+                          }
+                          return (
+                            <div
+                              key={aIdx}
+                              className="flex items-center bg-neutral-900 dark:bg-black text-white px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-xs font-mono font-bold tracking-tight shadow-inner shrink-0"
+                            >
+                              {arr}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-0.5 bg-neutral-900 dark:bg-black text-white px-1.5 py-0.5 rounded text-xs font-mono font-bold tracking-tight shadow-inner">
+                        {step.arrowStr}
+                      </div>
+                    )
                   )}
 
                   {/* プラス記号（矢印とボタンがある場合、移動アクションやインパクトは除く） */}
@@ -127,6 +156,7 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
                       iconText={step.button.iconText}
                       label={step.button.label}
                       size="sm"
+                      controlType={controlType}
                     />
                   )}
 

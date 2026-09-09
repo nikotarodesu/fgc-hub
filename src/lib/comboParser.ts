@@ -1440,14 +1440,6 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
  * モダン表記からPやKの概念を完全に除去するポストプロセッサ（※OD技のPP/KKは除く）
  */
 function cleanupModernStep(step: VisualStep): VisualStep {
-  // スピニングバードキックはモダンでも「↓↑K」表記指定があるためそのまま維持
-  const isSbk =
-    (step.button.label && (step.button.label.includes('スピバ') || step.button.label.includes('スピニング'))) ||
-    step.arrowStr === '↓↑';
-  if (isSbk) {
-    return step;
-  }
-
   // OD必殺技（PPやKKを含む、またはA+SP、または技名がODで始まるもの）は維持
   const isOD =
     step.button.iconText === 'PP' ||

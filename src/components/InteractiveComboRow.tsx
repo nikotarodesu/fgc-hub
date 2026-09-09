@@ -150,6 +150,7 @@ export default function InteractiveComboRow({
                       iconText={step.button.iconText}
                       label={step.button.label}
                       size="sm"
+                      controlType={controlType}
                     />
                   )}
 

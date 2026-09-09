@@ -36,7 +36,7 @@ export default function ArticleDetailPage() {
   const secretConfig = getSecretUnlockConfig(slug);
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
-    isModernAlias ? 'modern' : 'classic'
+    isModernAlias ? 'modern' : (article?.controlType === 'modern' ? 'modern' : 'classic')
   );
 
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -734,6 +734,7 @@ export default function ArticleDetailPage() {
                       driveGauge={c.driveGauge}
                       situation={c.situation}
                       note={c.note}
+                      controlType={activeControlType}
                     />
                   ))}
                 </div>
@@ -890,6 +891,7 @@ export default function ArticleDetailPage() {
                               driveGauge={c.driveGauge}
                               situation={c.situation}
                               note={c.note}
+                              controlType={activeControlType}
                             />
                           ))}
 

@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_CHUNLI_1600MR } from './articles/coachingChunli1600mr';
 
 export interface ArticleVariant {
   label: string;
@@ -116,6 +117,7 @@ export const AUTHOR_INFO = {
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_CHUNLI_1600MR,
   {
     id: 'art-ryu-neutral-strategy',
     slug: 'ryu-neutral-strategy',

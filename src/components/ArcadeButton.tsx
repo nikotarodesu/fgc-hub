@@ -61,8 +61,21 @@ export default function ArcadeButton({
   }
 
   const isModern = controlType === 'modern';
+  // SP、SA、パリィなどの特殊ボタン・必殺技ボタンは文字を表示する
+  const isSpecialOrSystem =
+    iconText === 'SP' ||
+    iconText === 'SA' ||
+    iconText === 'A+SP' ||
+    iconText === 'PP' ||
+    iconText === 'KK' ||
+    iconText === 'DI' ||
+    iconText === 'DP' ||
+    iconText === 'PARRY' ||
+    iconText.startsWith('SA');
+
   // モダン操作の通常攻撃（弱・中・強）：PやKなど文字は入らず色のみ！
-  const isModernNormalAttack = isModern && (color === 'blue' || color === 'yellow' || color === 'red');
+  const isModernNormalAttack =
+    isModern && !isSpecialOrSystem && (color === 'blue' || color === 'yellow' || color === 'red');
 
   // アシスト攻撃（A弱、A中、A強など）の判定
   const isAssist = isModernNormalAttack && (iconText.startsWith('A') || (label && label.startsWith('A')));

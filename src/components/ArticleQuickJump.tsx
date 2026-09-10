@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { BookOpen, Star, X, ChevronRight, ArrowUp, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { BookOpen, Star, X, ChevronRight, ArrowUp, Zap, Sparkles } from 'lucide-react';
+import { getShortSubheadingLabel } from './RichContent';
 
 export interface QuickJumpSection {
   id: string;
   title: string;
   isPaid?: boolean;
+}
+
+interface SubheadingItem {
+  id: string;
+  raw: string;
+  shortLabel: string;
 }
 
 interface ArticleQuickJumpProps {
@@ -36,13 +43,73 @@ export default function ArticleQuickJump({
   onJumpToSection,
 }: ArticleQuickJumpProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isQuickJumpOpen, setIsQuickJumpOpen] = useState(false);
+  const [currentSubheadings, setCurrentSubheadings] = useState<SubheadingItem[]>([]);
+  const quickJumpRef = useRef<HTMLDivElement>(null);
 
   const activeSection = sections.find((s) => s.id === activeSectionId) || sections[0];
   const isCurrentBookmarked = activeSection ? bookmarks.includes(activeSection.id) : false;
 
+  // 現在のセクション内にある小見出し（data-subheading）をDOMからリアルタイム検出
+  useEffect(() => {
+    const updateSubheadings = () => {
+      const activeEl = document.getElementById(activeSectionId);
+      if (!activeEl) {
+        setCurrentSubheadings([]);
+        return;
+      }
+
+      const subEls = activeEl.querySelectorAll<HTMLElement>('[data-subheading]');
+      const items: SubheadingItem[] = Array.from(subEls).map((el) => {
+        const raw = el.getAttribute('data-subheading') || el.innerText || '';
+        const match = raw.match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
+        const numChar = match ? match[1] : '';
+        const titleText = match ? match[2] : raw;
+        const shortLabel = getShortSubheadingLabel(numChar, titleText);
+        return {
+          id: el.id,
+          raw,
+          shortLabel,
+        };
+      });
+
+      setCurrentSubheadings(items);
+    };
+
+    updateSubheadings();
+    const timer = setTimeout(updateSubheadings, 100);
+    return () => clearTimeout(timer);
+  }, [activeSectionId]);
+
+  // クイックジャンプポップアップの外側クリック検知
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (quickJumpRef.current && !quickJumpRef.current.contains(e.target as Node)) {
+        setIsQuickJumpOpen(false);
+      }
+    };
+    if (isQuickJumpOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isQuickJumpOpen]);
+
   const handleJump = (id: string) => {
     setIsModalOpen(false);
+    setIsQuickJumpOpen(false);
     onJumpToSection(id);
+  };
+
+  const handleJumpToSubheading = (targetId: string) => {
+    setIsQuickJumpOpen(false);
+    const el = document.getElementById(targetId);
+    if (el) {
+      const yOffset = -75; // 上部追従バーの高さオフセット
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
   const scrollToTop = () => {
@@ -51,15 +118,20 @@ export default function ArticleQuickJump({
 
   return (
     <>
-      {/* 画面追従フローティングバー（スクロール時に上部に固定表示） */}
-      <aside aria-label="クイック目次ナビゲーション" className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-2xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200">
-        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1.5 px-3 shadow-lg flex items-center justify-between gap-2 sm:gap-3 text-xs">
+      {/* ========================================================
+          1. 画面上部 追従バー（現在地インジケーター ＆ お気に入り）
+         ======================================================== */}
+      <aside
+        aria-label="現在位置ナビゲーション"
+        className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200 pointer-events-auto"
+      >
+        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1 px-2.5 sm:px-3 shadow-md flex items-center justify-between gap-2 text-xs">
           {/* 現在のセクション表示（小見出しもリアルタイム連動） */}
-          <div className="flex items-center gap-1.5 overflow-hidden max-w-[190px] xs:max-w-[240px] sm:max-w-[340px]">
+          <div className="flex items-center gap-1.5 overflow-hidden max-w-[240px] xs:max-w-[280px] sm:max-w-[380px]">
             <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0 animate-pulse" />
             <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium shrink-0">現在:</span>
             <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden">
-              <span className="truncate shrink-0 max-w-[120px] sm:max-w-[170px]">
+              <span className="truncate shrink-0 max-w-[130px] sm:max-w-[180px]">
                 {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading))}
               </span>
               {activeSubheading && (
@@ -73,44 +145,146 @@ export default function ArticleQuickJump({
             </div>
           </div>
 
-          {/* 右側アクションボタングループ */}
-          <div className="flex items-center gap-1 shrink-0">
-            {/* 現在セクションのお気に入り登録ボタン */}
-            {activeSection && (
+          {/* 現在セクションのお気に入り登録ボタン */}
+          {activeSection && (
+            <button
+              type="button"
+              onClick={() => onToggleBookmark(activeSection.id)}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
+                isCurrentBookmarked
+                  ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40'
+                  : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              }`}
+              title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
+            >
+              <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
+            </button>
+          )}
+        </div>
+      </aside>
+
+      {/* ========================================================
+          2. 画面下部 追従バー（目次ジャンプ / クイックジャンプ / 上に戻る）
+         ======================================================== */}
+      <aside
+        aria-label="操作アクションナビゲーション"
+        ref={quickJumpRef}
+        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-md w-[94%] sm:w-auto animate-in fade-in slide-in-from-bottom-4 duration-200 pointer-events-auto"
+      >
+        {/* クイックジャンプ（小見出し選択）ポップオーバー */}
+        {isQuickJumpOpen && (
+          <div className="absolute bottom-full mb-2.5 left-1/2 -translate-x-1/2 w-[92vw] max-w-sm bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-2xl shadow-2xl p-3 animate-in zoom-in-95 duration-150 overflow-hidden">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-100 dark:border-neutral-800">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-800 dark:text-neutral-100">
+                <Zap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>章内のクイックジャンプ</span>
+              </div>
               <button
                 type="button"
-                onClick={() => onToggleBookmark(activeSection.id)}
-                className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-                  isCurrentBookmarked
-                    ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40'
-                    : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                }`}
-                title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
+                onClick={() => setIsQuickJumpOpen(false)}
+                className="p-1 rounded-md text-neutral-400 hover:text-neutral-800 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
               >
-                <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
+                <X className="w-3.5 h-3.5" />
               </button>
+            </div>
+
+            {currentSubheadings.length > 0 ? (
+              <div className="max-h-[50vh] overflow-y-auto space-y-1 py-0.5 [scrollbar-width:thin]">
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mb-1.5 px-1">
+                  現在の章（{formatSectionTitle(activeSection?.title || '', false)}）の始動・見出し一覧:
+                </p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {currentSubheadings.map((sub, sIdx) => {
+                    const isActive =
+                      activeSubheading === sub.raw ||
+                      activeSubheading?.startsWith(sub.raw.charAt(0));
+
+                    return (
+                      <button
+                        key={sIdx}
+                        type="button"
+                        onClick={() => handleJumpToSubheading(sub.id)}
+                        className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all truncate border flex items-center justify-between gap-1 cursor-pointer ${
+                          isActive
+                            ? 'bg-cyan-600 text-white border-cyan-600 shadow-xs'
+                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400'
+                        }`}
+                        title={sub.raw}
+                      >
+                        <span className="truncate">{sub.shortLabel}</span>
+                        <ChevronRight className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="py-4 px-2 text-center">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2.5">
+                  この章には個別の小見出しはありません
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsQuickJumpOpen(false);
+                    setIsModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>全体の目次を見る</span>
+                </button>
+              </div>
             )}
-
-            {/* クイック目次ジャンプボタン */}
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold text-[11px] hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>目次ジャンプ</span>
-            </button>
-
-            {/* トップへ戻る */}
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-              title="ページ先頭へ"
-            >
-              <ArrowUp className="w-3.5 h-3.5" />
-            </button>
           </div>
+        )}
+
+        {/* ボトムバー本体 */}
+        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1.5 px-2.5 sm:px-3 shadow-xl flex items-center justify-center gap-1.5 sm:gap-2 text-xs">
+          {/* 1. 目次ジャンプ */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsQuickJumpOpen(false);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold text-xs hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>目次ジャンプ</span>
+          </button>
+
+          {/* 2. クイックジャンプ */}
+          <button
+            type="button"
+            onClick={() => setIsQuickJumpOpen((prev) => !prev)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold text-xs active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap border ${
+              isQuickJumpOpen
+                ? 'bg-cyan-600 text-white border-cyan-600'
+                : 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900/60'
+            }`}
+          >
+            <Zap className={`w-3.5 h-3.5 ${isQuickJumpOpen ? 'fill-current' : 'text-cyan-600 dark:text-cyan-400'}`} />
+            <span>クイックジャンプ</span>
+            {currentSubheadings.length > 0 && (
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                isQuickJumpOpen ? 'bg-white/25 text-white' : 'bg-cyan-200/70 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200'
+              }`}>
+                {currentSubheadings.length}
+              </span>
+            )}
+          </button>
+
+          {/* 3. 上に戻る */}
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+            title="ページ先頭へ"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline text-xs font-medium">上へ</span>
+          </button>
         </div>
       </aside>
 

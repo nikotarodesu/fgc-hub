@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, AUTHOR_INFO } from '@/data/articles';
-import { Search, Lock, Sparkles } from 'lucide-react';
+import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching'>('all');
@@ -72,6 +72,123 @@ export default function HomePage() {
                 クリア
               </button>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* 有料記事・月額マガジン 特典プロモーションセクション */}
+      <section className="bg-gradient-to-b from-white via-neutral-50/60 to-white dark:from-neutral-900 dark:via-neutral-900/60 dark:to-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-8 sm:py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          {/* 見出しエリア */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] font-bold tracking-wide uppercase mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>有料記事＆月額マガジンの4大特典</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+                勝率を直結させる“実戦の武器”を手に入れる
+              </h2>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
+                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ・実戦動画を完全収録。
+              </p>
+            </div>
+            <Link
+              href="/membership"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-all shadow-xs shrink-0 self-start sm:self-auto hover:scale-[1.02] active:scale-95"
+            >
+              <span>月額マガジン詳細（読み放題）</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* 4大特典カードグリッド */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+            {/* 特典1: 起き攻め＆詐欺飛び */}
+            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center mb-3">
+                  <Swords className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
+                  特典 01
+                </div>
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                  全状況別 起き攻め＆詐欺飛び
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  その場・後ろ受け身の両対応重ね、無敵技を安全ガードする「詐欺飛び」を完全網羅。実戦のターン継続率が劇的に跳ね上がります。
+                </p>
+              </div>
+            </div>
+
+            {/* 特典2: クラシック & モダン両対応 */}
+            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-cyan-400 border border-sky-200 dark:border-sky-800/60 flex items-center justify-center mb-3">
+                  <Gamepad2 className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-[10px] font-bold text-sky-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
+                  特典 02
+                </div>
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                  クラシック＆モダン完全両対応
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  1記事の購入で両操作タイプを収録。ワンクリックで切り替えて閲覧できるため、サブ操作や転向時も追加費用なく学習できます。
+                </p>
+              </div>
+            </div>
+
+            {/* 特典3: フルHD実戦解説動画 */}
+            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center mb-3">
+                  <Video className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
+                  特典 03
+                </div>
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                  フルHD実戦解説動画付き
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  文字・図解だけでなくYouTube限定動画でヒット確認やコンボのディレイ感覚、立ち回りの間合い調整を視覚的に体得できます。
+                </p>
+              </div>
+            </div>
+
+            {/* 特典4: アプデ永久追従 ＆ 月額読み放題 */}
+            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/60 flex items-center justify-center mb-3">
+                  <RefreshCw className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1">
+                  特典 04
+                </div>
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                  アプデ永久追従 ＆ 読み放題
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  買い切り（¥500〜）でもパッチ追記が永久閲覧。月額¥980のマガジンなら全キャラ攻略が追加費用なしでいつでも読み放題です。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* フッター補足バナー */}
+          <div className="mt-4 sm:mt-5 p-3 sm:p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-neutral-600 dark:text-neutral-300">
+            <div className="flex items-center gap-2 text-center sm:text-left">
+              <span className="font-bold text-neutral-900 dark:text-white shrink-0">💡 選び方:</span>
+              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500〜）、「全キャラ対策・立ち回りを学びたい方」は月額マガジン（¥980/月）がおすすめです。</span>
+            </div>
+            <div className="flex items-center gap-3 shrink-0 font-medium">
+              <Link href="/membership" className="text-cyan-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-0.5">
+                <span>マガジンプランを見る</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

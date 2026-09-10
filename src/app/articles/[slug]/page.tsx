@@ -423,7 +423,7 @@ export default function ArticleDetailPage() {
 
       {/* パンくずリスト */}
       <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 w-full">
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-2.5">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 py-2 sm:py-2.5">
           <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-w-0">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white shrink-0">ホーム</Link>
             <ChevronRight className="w-3 h-3 shrink-0 text-neutral-300 dark:text-neutral-600" />
@@ -445,7 +445,7 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 w-full min-w-0">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-3 sm:px-8 md:p-10 py-4 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800 shadow-xs min-w-0 max-w-full">
+          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-5 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800 shadow-xs min-w-0 max-w-full">
             {/* 記事ヘッダー */}
             <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800 min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
@@ -502,7 +502,7 @@ export default function ArticleDetailPage() {
             <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6 min-w-0 max-w-full">
               {/* クラシック / モダン切り替えスイッチ */}
               {article.variants && (
-                <div className="p-1.5 sm:p-2.5 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                <div className="p-2.5 sm:p-3 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
                   <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1.5 sm:px-2 pt-1 pb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 font-sans text-neutral-700 dark:text-neutral-300 font-bold">
                       <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
@@ -516,7 +516,7 @@ export default function ArticleDetailPage() {
                     <button
                       type="button"
                       onClick={() => setActiveControlType('classic')}
-                      className={`py-2 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
+                      className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'classic'
                           ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
@@ -528,7 +528,7 @@ export default function ArticleDetailPage() {
                     <button
                       type="button"
                       onClick={() => setActiveControlType('modern')}
-                      className={`py-2 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
+                      className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'modern'
                           ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
@@ -554,13 +554,13 @@ export default function ArticleDetailPage() {
 
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
-                <div className="p-2.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
                   <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
 
               {/* 目次 */}
-              <div className="p-2.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-4 sm:my-6">
+              <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-4 sm:my-6">
                 <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
@@ -714,7 +714,7 @@ export default function ArticleDetailPage() {
 
                   {/* 箇条書きポイント */}
                   {section.bulletPoints && (
-                    <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-2.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                    <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
                       {section.bulletPoints.map((bp, bpIdx) => (
                         <li key={bpIdx} className="flex items-start gap-2">
                           <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
@@ -871,7 +871,7 @@ export default function ArticleDetailPage() {
 
                           {/* 箇条書き */}
                           {section.bulletPoints && (
-                            <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-2.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                            <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
                               {section.bulletPoints.map((bp, bpIdx) => (
                                 <li key={bpIdx} className="flex items-start gap-2">
                                   <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
@@ -985,7 +985,7 @@ export default function ArticleDetailPage() {
           </main>
 
           {/* 右サイドバー（4 / 12） */}
-          <aside className="lg:col-span-4 space-y-5">
+          <aside className="lg:col-span-4 space-y-5 px-4 sm:px-0">
             {/* 著者プロフィール */}
             <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs text-center">
               <div className="w-14 h-14 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 mx-auto mb-3 bg-neutral-100 dark:bg-neutral-800">

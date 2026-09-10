@@ -25,7 +25,7 @@ export default function InteractiveComboRow({
       {/* クリック可能なコンボ本体行 */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-start sm:items-center justify-between gap-1.5 sm:gap-2 py-1.5 sm:py-2 px-1.5 sm:px-3 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 cursor-pointer transition-colors"
+        className="flex items-start sm:items-center justify-between gap-1.5 sm:gap-2 py-2 sm:py-2 px-2.5 sm:px-3 hover:bg-neutral-100/90 dark:hover:bg-neutral-800 cursor-pointer transition-colors"
         title="タップして矢印コマンドとボタン入力順を表示"
       >
         <div className="flex items-start sm:items-center gap-1.5 sm:gap-2 flex-1 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 min-w-0">

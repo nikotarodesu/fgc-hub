@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+import FontSizeToggle from './FontSizeToggle';
 
 export default function Header() {
   const pathname = usePathname();
@@ -17,7 +18,7 @@ export default function Header() {
           : 'relative bg-white dark:bg-neutral-950'
       } w-full border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
     >
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full">
         <div className="flex items-center justify-between h-14 gap-2 w-full">
           {/* ブランドロゴ */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
@@ -44,7 +45,8 @@ export default function Header() {
           </Link>
 
           {/* 右側アクション */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <FontSizeToggle />
             <ThemeToggle />
             <Link
               href="/membership"

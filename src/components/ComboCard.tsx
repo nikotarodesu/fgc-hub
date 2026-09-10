@@ -20,7 +20,7 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
   const steps = parseVisualCombo(recipe, controlType);
 
   return (
-    <div className="my-2.5 sm:my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-2.5 sm:p-4 shadow-xs transition-colors w-full max-w-full min-w-0">
+    <div className="my-2.5 sm:my-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 shadow-xs transition-colors w-full max-w-full min-w-0">
       <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mb-2 pb-2 border-b border-neutral-100 dark:border-neutral-800">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Swords className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
@@ -40,7 +40,7 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
       {/* コンボレシピ（タップ可能でコマンド開閉） */}
       <div
         onClick={() => setShowCommands(!showCommands)}
-        className="group bg-neutral-900 dark:bg-black text-neutral-100 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-lg font-mono text-xs sm:text-sm border border-neutral-800 mb-2 sm:mb-2.5 tracking-wide flex items-start sm:items-center justify-between gap-2 sm:gap-3 cursor-pointer hover:border-neutral-600 transition-colors"
+        className="group bg-neutral-900 dark:bg-black text-neutral-100 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-lg font-mono text-xs sm:text-sm border border-neutral-800 mb-2 sm:mb-2.5 tracking-wide flex items-start sm:items-center justify-between gap-2 sm:gap-3 cursor-pointer hover:border-neutral-600 transition-colors"
         title="タップして矢印コマンドを表示"
       >
         <span className="font-semibold text-white whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed">{recipe}</span>

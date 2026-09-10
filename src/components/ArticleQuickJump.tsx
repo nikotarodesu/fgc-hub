@@ -121,91 +121,7 @@ export default function ArticleQuickJump({
   return (
     <>
       {/* ========================================================
-          1. 画面上部 追従バー（現在地インジケーター ＆ お気に入り）
-         ======================================================== */}
-      <aside
-        aria-label="現在位置ナビゲーション"
-        className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200 pointer-events-auto"
-      >
-        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1 px-2.5 sm:px-3 shadow-md flex items-center justify-between gap-2 text-xs">
-          {/* 現在のセクション表示（小見出し ＆ ⭐・⚡️もリアルタイム連動） */}
-          <div className="flex items-center gap-1.5 overflow-hidden max-w-[260px] xs:max-w-[320px] sm:max-w-[480px]">
-            <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0 animate-pulse" />
-            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium shrink-0">現在:</span>
-            <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden flex-nowrap">
-              {/* 章タイトル */}
-              <span
-                className={`truncate shrink-0 ${
-                  activeSubheading && activeItemHeading
-                    ? 'hidden md:inline max-w-[120px]'
-                    : 'max-w-[100px] xs:max-w-[130px] sm:max-w-[180px]'
-                }`}
-              >
-                {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading || activeItemHeading))}
-              </span>
-
-              {/* 丸数字小見出し（❶ 弱技始動など） */}
-              {activeSubheading && (
-                <>
-                  <span
-                    className={`text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none ${
-                      activeSubheading && activeItemHeading ? 'hidden md:inline' : ''
-                    }`}
-                  >
-                    &gt;
-                  </span>
-                  <span className="text-cyan-600 dark:text-cyan-400 font-bold truncate shrink-0 max-w-[90px] xs:max-w-[120px] sm:max-w-[160px]">
-                    {activeSubheading}
-                  </span>
-                </>
-              )}
-
-              {/* ⭐️ や ⚡️ の項目見出し */}
-              {activeItemHeading && (
-                <>
-                  <span className="text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none">&gt;</span>
-                  <span
-                    className={`font-bold truncate px-1.5 py-0.5 rounded text-[11px] flex items-center gap-1 shrink-0 max-w-[130px] xs:max-w-[160px] sm:max-w-[220px] shadow-2xs ${
-                      activeItemHeading.includes('⚡') || activeItemHeading.includes('⚡️')
-                        ? 'text-amber-800 dark:text-amber-200 bg-amber-100/90 dark:bg-amber-950/70 border border-amber-300/80 dark:border-amber-700/80'
-                        : 'text-sky-800 dark:text-sky-200 bg-sky-100/90 dark:bg-sky-950/70 border border-sky-300/80 dark:border-sky-700/80'
-                    }`}
-                    title={activeItemHeading}
-                  >
-                    {activeItemHeading.includes('⚡') || activeItemHeading.includes('⚡️') ? (
-                      <Zap className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0 fill-current" />
-                    ) : (
-                      <Star className="w-3 h-3 text-sky-600 dark:text-sky-400 shrink-0 fill-current" />
-                    )}
-                    <span className="truncate">
-                      {activeItemHeading.replace(/^[⭐️⭐⚡️⚡]\s*/, '')}
-                    </span>
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* 現在セクションのお気に入り登録ボタン */}
-          {activeSection && (
-            <button
-              type="button"
-              onClick={() => onToggleBookmark(activeSection.id)}
-              className={`p-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
-                isCurrentBookmarked
-                  ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40'
-                  : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-              }`}
-              title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
-            >
-              <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
-            </button>
-          )}
-        </div>
-      </aside>
-
-      {/* ========================================================
-          2. 画面下部 追従バー（目次ジャンプ / クイックジャンプ / 上に戻る）
+          操作アクションナビゲーション（目次ジャンプ / クイックジャンプ / お気に入り / 上へ）
          ======================================================== */}
       <aside
         aria-label="操作アクションナビゲーション"
@@ -316,7 +232,24 @@ export default function ArticleQuickJump({
             )}
           </button>
 
-          {/* 3. 上に戻る */}
+          {/* 3. 現在章のお気に入り登録 */}
+          {activeSection && (
+            <button
+              type="button"
+              onClick={() => onToggleBookmark(activeSection.id)}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
+                isCurrentBookmarked
+                  ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                  : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              }`}
+              title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
+            >
+              <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
+              <span className="hidden sm:inline text-[11px]">{isCurrentBookmarked ? '登録中' : '保存'}</span>
+            </button>
+          )}
+
+          {/* 4. 上に戻る */}
           <button
             type="button"
             onClick={scrollToTop}

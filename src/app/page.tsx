@@ -94,7 +94,7 @@ export default function HomePage() {
                 勝率を直結させる“実戦の武器”を完全網羅
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ・限定ツール・安心のアップデート追記を完全収録。
+                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ・限定ツールを完全収録。
               </p>
             </div>
             <Link

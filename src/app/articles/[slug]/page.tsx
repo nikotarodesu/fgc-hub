@@ -52,6 +52,7 @@ export default function ArticleDetailPage() {
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [activeSectionId, setActiveSectionId] = useState<string>('sec-free-0');
   const [activeSubheading, setActiveSubheading] = useState<string | null>(null);
+  const [activeItemHeading, setActiveItemHeading] = useState<string | null>(null);
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
@@ -302,26 +303,38 @@ export default function ArticleDetailPage() {
         }
       }
 
-      // 小見出し（❶〜➓）のリアルタイム検知
+      // 小見出し（❶〜➓）および項目見出し（⭐️、⚡️）のリアルタイム検知
       if (currentActiveSecId) {
         const activeSecEl = document.getElementById(currentActiveSecId);
         if (activeSecEl) {
-          const subEls = activeSecEl.querySelectorAll<HTMLElement>('[data-subheading]');
+          const headings = activeSecEl.querySelectorAll<HTMLElement>('[data-subheading], [data-item-heading]');
           let currentSub: string | null = null;
-          for (let j = 0; j < subEls.length; j++) {
-            const rect = subEls[j].getBoundingClientRect();
-            if (rect.top <= 200) {
-              currentSub = subEls[j].getAttribute('data-subheading');
+          let currentItem: string | null = null;
+
+          for (let j = 0; j < headings.length; j++) {
+            const hEl = headings[j];
+            const rect = hEl.getBoundingClientRect();
+            // 上部追従バー（高さ約40px）+ 余白を考慮し、rect.top <= 140 で判定
+            if (rect.top <= 140) {
+              if (hEl.hasAttribute('data-subheading')) {
+                currentSub = hEl.getAttribute('data-subheading');
+                currentItem = null; // 新しい小見出しに入ったので直前の⭐️/⚡️は一旦リセット
+              } else if (hEl.hasAttribute('data-item-heading')) {
+                currentItem = hEl.getAttribute('data-item-heading');
+              }
             } else {
               break;
             }
           }
           setActiveSubheading(currentSub);
+          setActiveItemHeading(currentItem);
         } else {
           setActiveSubheading(null);
+          setActiveItemHeading(null);
         }
       } else {
         setActiveSubheading(null);
+        setActiveItemHeading(null);
       }
     };
 
@@ -415,6 +428,7 @@ export default function ArticleDetailPage() {
           sections={allSectionsList}
           activeSectionId={activeSectionId}
           activeSubheading={activeSubheading}
+          activeItemHeading={activeItemHeading}
           bookmarks={bookmarks}
           onToggleBookmark={handleToggleBookmark}
           onJumpToSection={handleJumpToSection}

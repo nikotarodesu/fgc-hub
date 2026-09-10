@@ -329,10 +329,13 @@ export default function RichContent({
             <div key={bIdx} className="pt-2 pb-0.5 space-y-2">
               {block.lines.map((line, lIdx) => {
                 const cleanText = line.trim().replace(/^[⭐️⭐]\s*/, '');
+                const itemId = `${sectionId}-star-${bIdx}-${lIdx}`;
                 return (
                   <div
                     key={lIdx}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-r-lg border-l-3.5 border-l-sky-500 dark:border-l-sky-400 bg-sky-50/70 dark:bg-sky-950/30 border-y border-r border-sky-200/60 dark:border-sky-900/40 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs"
+                    id={itemId}
+                    data-item-heading={`⭐️ ${cleanText}`}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-r-lg border-l-3.5 border-l-sky-500 dark:border-l-sky-400 bg-sky-50/70 dark:bg-sky-950/30 border-y border-r border-sky-200/60 dark:border-sky-900/40 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs scroll-mt-24"
                   >
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-sky-500/15 dark:bg-sky-400/20 text-sky-600 dark:text-sky-300 text-xs font-bold shrink-0 select-none">
                       <Star className="w-3.5 h-3.5 fill-current" />
@@ -353,10 +356,13 @@ export default function RichContent({
             <div key={bIdx} className="pt-2 pb-0.5 space-y-2">
               {block.lines.map((line, lIdx) => {
                 const cleanText = line.trim().replace(/^[⚡️⚡]\s*/, '');
+                const itemId = `${sectionId}-zap-${bIdx}-${lIdx}`;
                 return (
                   <div
                     key={lIdx}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-r-lg border-l-3.5 border-l-amber-500 dark:border-l-amber-400 bg-amber-50/75 dark:bg-amber-950/30 border-y border-r border-amber-200/60 dark:border-amber-900/40 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs"
+                    id={itemId}
+                    data-item-heading={`⚡️ ${cleanText}`}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-r-lg border-l-3.5 border-l-amber-500 dark:border-l-amber-400 bg-amber-50/75 dark:bg-amber-950/30 border-y border-r border-amber-200/60 dark:border-amber-900/40 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs scroll-mt-24"
                   >
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-amber-500/20 dark:bg-amber-400/20 text-amber-600 dark:text-amber-400 text-xs font-bold shrink-0 select-none">
                       <Zap className="w-3.5 h-3.5 fill-current" />

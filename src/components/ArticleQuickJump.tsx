@@ -14,12 +14,14 @@ interface SubheadingItem {
   id: string;
   raw: string;
   shortLabel: string;
+  type: 'subheading' | 'star' | 'zap';
 }
 
 interface ArticleQuickJumpProps {
   sections: QuickJumpSection[];
   activeSectionId: string;
   activeSubheading?: string | null;
+  activeItemHeading?: string | null;
   bookmarks: string[];
   onToggleBookmark: (id: string) => void;
   onJumpToSection: (id: string) => void;
@@ -38,6 +40,7 @@ export default function ArticleQuickJump({
   sections,
   activeSectionId,
   activeSubheading,
+  activeItemHeading,
   bookmarks,
   onToggleBookmark,
   onJumpToSection,
@@ -50,7 +53,7 @@ export default function ArticleQuickJump({
   const activeSection = sections.find((s) => s.id === activeSectionId) || sections[0];
   const isCurrentBookmarked = activeSection ? bookmarks.includes(activeSection.id) : false;
 
-  // 現在のセクション内にある小見出し（data-subheading）をDOMからリアルタイム検出
+  // 現在のセクション内にある小見出し（data-subheading）および項目見出し（data-item-heading）をDOMからリアルタイム検出
   useEffect(() => {
     const updateSubheadings = () => {
       const activeEl = document.getElementById(activeSectionId);
@@ -59,18 +62,31 @@ export default function ArticleQuickJump({
         return;
       }
 
-      const subEls = activeEl.querySelectorAll<HTMLElement>('[data-subheading]');
-      const items: SubheadingItem[] = Array.from(subEls).map((el) => {
-        const raw = el.getAttribute('data-subheading') || el.innerText || '';
-        const match = raw.match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
-        const numChar = match ? match[1] : '';
-        const titleText = match ? match[2] : raw;
-        const shortLabel = getShortSubheadingLabel(numChar, titleText);
-        return {
-          id: el.id,
-          raw,
-          shortLabel,
-        };
+      const headingEls = activeEl.querySelectorAll<HTMLElement>('[data-subheading], [data-item-heading]');
+      const items: SubheadingItem[] = Array.from(headingEls).map((el) => {
+        if (el.hasAttribute('data-subheading')) {
+          const raw = el.getAttribute('data-subheading') || el.innerText || '';
+          const match = raw.match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
+          const numChar = match ? match[1] : '';
+          const titleText = match ? match[2] : raw;
+          const shortLabel = getShortSubheadingLabel(numChar, titleText);
+          return {
+            id: el.id,
+            raw,
+            shortLabel,
+            type: 'subheading' as const,
+          };
+        } else {
+          const raw = el.getAttribute('data-item-heading') || el.innerText || '';
+          const isZap = raw.includes('⚡') || raw.includes('⚡️');
+          const clean = raw.replace(/^[⭐️⭐⚡️⚡]\s*/, '');
+          return {
+            id: el.id,
+            raw,
+            shortLabel: (isZap ? '⚡ ' : '⭐ ') + clean,
+            type: isZap ? 'zap' : 'star',
+          };
+        }
       });
 
       setCurrentSubheadings(items);
@@ -126,19 +142,58 @@ export default function ArticleQuickJump({
         className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200 pointer-events-auto"
       >
         <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1 px-2.5 sm:px-3 shadow-md flex items-center justify-between gap-2 text-xs">
-          {/* 現在のセクション表示（小見出しもリアルタイム連動） */}
-          <div className="flex items-center gap-1.5 overflow-hidden max-w-[240px] xs:max-w-[280px] sm:max-w-[380px]">
+          {/* 現在のセクション表示（小見出し ＆ ⭐・⚡️もリアルタイム連動） */}
+          <div className="flex items-center gap-1.5 overflow-hidden max-w-[260px] xs:max-w-[320px] sm:max-w-[480px]">
             <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0 animate-pulse" />
             <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium shrink-0">現在:</span>
-            <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden">
-              <span className="truncate shrink-0 max-w-[130px] sm:max-w-[180px]">
-                {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading))}
+            <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden flex-nowrap">
+              {/* 章タイトル */}
+              <span
+                className={`truncate shrink-0 ${
+                  activeSubheading && activeItemHeading
+                    ? 'hidden md:inline max-w-[120px]'
+                    : 'max-w-[100px] xs:max-w-[130px] sm:max-w-[180px]'
+                }`}
+              >
+                {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading || activeItemHeading))}
               </span>
+
+              {/* 丸数字小見出し（❶ 弱技始動など） */}
               {activeSubheading && (
                 <>
-                  <span className="text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none">&gt;</span>
-                  <span className="text-cyan-600 dark:text-cyan-400 font-bold truncate">
+                  <span
+                    className={`text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none ${
+                      activeSubheading && activeItemHeading ? 'hidden md:inline' : ''
+                    }`}
+                  >
+                    &gt;
+                  </span>
+                  <span className="text-cyan-600 dark:text-cyan-400 font-bold truncate shrink-0 max-w-[90px] xs:max-w-[120px] sm:max-w-[160px]">
                     {activeSubheading}
+                  </span>
+                </>
+              )}
+
+              {/* ⭐️ や ⚡️ の項目見出し */}
+              {activeItemHeading && (
+                <>
+                  <span className="text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none">&gt;</span>
+                  <span
+                    className={`font-bold truncate px-1.5 py-0.5 rounded text-[11px] flex items-center gap-1 shrink-0 max-w-[130px] xs:max-w-[160px] sm:max-w-[220px] shadow-2xs ${
+                      activeItemHeading.includes('⚡') || activeItemHeading.includes('⚡️')
+                        ? 'text-amber-800 dark:text-amber-200 bg-amber-100/90 dark:bg-amber-950/70 border border-amber-300/80 dark:border-amber-700/80'
+                        : 'text-sky-800 dark:text-sky-200 bg-sky-100/90 dark:bg-sky-950/70 border border-sky-300/80 dark:border-sky-700/80'
+                    }`}
+                    title={activeItemHeading}
+                  >
+                    {activeItemHeading.includes('⚡') || activeItemHeading.includes('⚡️') ? (
+                      <Zap className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0 fill-current" />
+                    ) : (
+                      <Star className="w-3 h-3 text-sky-600 dark:text-sky-400 shrink-0 fill-current" />
+                    )}
+                    <span className="truncate">
+                      {activeItemHeading.replace(/^[⭐️⭐⚡️⚡]\s*/, '')}
+                    </span>
                   </span>
                 </>
               )}
@@ -196,22 +251,43 @@ export default function ArticleQuickJump({
                 <div className="grid grid-cols-2 gap-1.5">
                   {currentSubheadings.map((sub, sIdx) => {
                     const isActive =
-                      activeSubheading === sub.raw ||
-                      activeSubheading?.startsWith(sub.raw.charAt(0));
+                      sub.type === 'subheading'
+                        ? activeSubheading === sub.raw || activeSubheading?.startsWith(sub.raw.charAt(0))
+                        : activeItemHeading === sub.raw;
+
+                    let badgeColorClasses = 'bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400';
+                    if (isActive) {
+                      badgeColorClasses =
+                        sub.type === 'zap'
+                          ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
+                          : sub.type === 'star'
+                          ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
+                          : 'bg-cyan-600 text-white border-cyan-600 shadow-xs';
+                    } else if (sub.type === 'zap') {
+                      badgeColorClasses =
+                        'bg-amber-50/70 dark:bg-amber-950/30 text-amber-800 dark:text-amber-200 border-amber-200/80 dark:border-amber-800/60 hover:border-amber-400';
+                    } else if (sub.type === 'star') {
+                      badgeColorClasses =
+                        'bg-sky-50/70 dark:bg-sky-950/30 text-sky-800 dark:text-sky-200 border-sky-200/80 dark:border-sky-800/60 hover:border-sky-400';
+                    }
 
                     return (
                       <button
                         key={sIdx}
                         type="button"
                         onClick={() => handleJumpToSubheading(sub.id)}
-                        className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all truncate border flex items-center justify-between gap-1 cursor-pointer ${
-                          isActive
-                            ? 'bg-cyan-600 text-white border-cyan-600 shadow-xs'
-                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400'
-                        }`}
+                        className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all truncate border flex items-center justify-between gap-1 cursor-pointer ${badgeColorClasses}`}
                         title={sub.raw}
                       >
-                        <span className="truncate">{sub.shortLabel}</span>
+                        <span className="truncate flex items-center gap-1">
+                          {sub.type === 'zap' && (
+                            <Zap className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-amber-500'} fill-current`} />
+                          )}
+                          {sub.type === 'star' && (
+                            <Star className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-sky-500'} fill-current`} />
+                          )}
+                          <span className="truncate">{sub.shortLabel.replace(/^[⚡⭐]\s*/, '')}</span>
+                        </span>
                         <ChevronRight className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
                       </button>
                     );

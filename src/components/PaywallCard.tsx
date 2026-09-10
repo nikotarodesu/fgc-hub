@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2 } from 'lucide-react';
+import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2, Trophy, ExternalLink } from 'lucide-react';
 
 interface PaywallCardProps {
   price?: number;
@@ -140,9 +140,94 @@ export default function PaywallCard({
         <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white mb-1.5">
           この続きは有料エリアです
         </h3>
-        <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-6 leading-relaxed font-normal">
+        <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-5 leading-relaxed font-normal">
           勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。
         </p>
+
+        {/* 執筆者の実績・note大会2連覇の信頼性 */}
+        <div className="mb-4 p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-amber-50/80 via-white to-amber-50/60 dark:from-amber-950/30 dark:via-neutral-900 dark:to-amber-950/20 border border-amber-300/80 dark:border-amber-800/60 text-left shadow-2xs">
+          <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-amber-200/60 dark:border-amber-900/40">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300">
+              <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-current shrink-0" />
+              <span>多くの格ゲーマーに選ばれる信頼の攻略本</span>
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shrink-0">
+              著：にこ太郎
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-neutral-800 dark:text-neutral-200 mb-3">
+            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
+              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">大会実績</div>
+              <div className="font-extrabold text-amber-700 dark:text-amber-400 text-xs">note大会 2連覇🏆</div>
+            </div>
+            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
+              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">スト6実力</div>
+              <div className="font-extrabold text-neutral-900 dark:text-white text-xs">全キャラ 1800MR+</div>
+            </div>
+            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
+              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">note累計販売</div>
+              <div className="font-extrabold text-neutral-900 dark:text-white text-xs">2,000部以上突破</div>
+            </div>
+            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
+              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">noteフォロワー</div>
+              <div className="font-extrabold text-neutral-900 dark:text-white text-xs">2,500人</div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-neutral-600 dark:text-neutral-400 pt-1">
+            <span className="text-[10px] text-amber-800 dark:text-amber-300 font-medium">note公式大会 優勝記事：</span>
+            <div className="flex items-center gap-2">
+              <a
+                href="https://note.com/nikotarosun/n/n081a67f53aa8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] text-amber-900 dark:text-amber-200 hover:text-amber-600 dark:hover:text-white font-semibold underline"
+              >
+                <span>優勝記事① ↗</span>
+              </a>
+              <span className="text-neutral-300 dark:text-neutral-600">|</span>
+              <a
+                href="https://note.com/nikotarosun/n/nbaad82557ae9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] text-amber-900 dark:text-amber-200 hover:text-amber-600 dark:hover:text-white font-semibold underline"
+              >
+                <span>優勝記事② ↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* 有料部分で手に入るもの（5大リターン） */}
+        <div className="mb-5 p-3 sm:p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-850 border border-neutral-200/80 dark:border-neutral-800 text-left text-xs space-y-1.5">
+          <div className="text-[11px] font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1 mb-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>この記事・マガジンで手に入るもの:</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300">
+            <div className="flex items-start gap-1.5">
+              <span className="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span>
+              <span>全フレーム状況別（+3F〜+45F）起き攻め完全網羅</span>
+            </div>
+            <div className="flex items-start gap-1.5">
+              <span className="text-cyan-600 dark:text-cyan-400 font-bold shrink-0">✓</span>
+              <span>リーサル逆引きツールが即座に使える</span>
+            </div>
+            <div className="flex items-start gap-1.5">
+              <span className="text-amber-600 dark:text-amber-400 font-bold shrink-0">✓</span>
+              <span>中央・端・リーサルの最大火力コンボレシピ</span>
+            </div>
+            <div className="flex items-start gap-1.5">
+              <span className="text-purple-600 dark:text-purple-400 font-bold shrink-0">✓</span>
+              <span>実戦GIF動画＆動画解説付きで迷わない</span>
+            </div>
+            <div className="flex items-start gap-1.5 sm:col-span-2 text-neutral-600 dark:text-neutral-400">
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">✓</span>
+              <span>今後のバージョンアップ・キャラ調整時も<strong>永久に無料追記</strong></span>
+            </div>
+          </div>
+        </div>
 
         {/* 料金・購入ボタンカード */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-5">

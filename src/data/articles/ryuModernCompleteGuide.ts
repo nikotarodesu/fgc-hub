@@ -1,4 +1,5 @@
-import { Article } from '../articles';
+import type { Article } from '../articles';
+import { AUTHOR_INFO } from '../author';
 
 export const RYU_MODERN_COMPLETE_GUIDE: Article = {
   id: 'art-ryu-modern-complete-guide',
@@ -10,12 +11,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
   category: 'character',
   character: 'リュウ',
   characterColor: 'from-blue-600 to-indigo-800',
-  author: {
-    name: 'にこ太郎',
-    avatar: '/icon.png',
-    mrRating: '全キャラ1800MR以上',
-    bio: 'スト6全キャラ1800MR以上。note有料記事で総計1,000部突破。勝率直結の攻略メソッドや立ち回り理論を発信中。',
-  },
+  author: AUTHOR_INFO,
   publishedAt: '2025-06-19',
   updatedAt: '2026-09-08',
   readTime: '15分',

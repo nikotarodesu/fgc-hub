@@ -1,4 +1,5 @@
-import { Article, AUTHOR_INFO } from '../articles';
+import type { Article } from '../articles';
+import { AUTHOR_INFO } from '../author';
 
 export const COACHING_CHUNLI_1600MR: Article = {
   id: 'art-coaching-chunli-1600mr-vs-akuma',

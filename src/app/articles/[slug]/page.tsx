@@ -9,6 +9,7 @@ import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
 import RichContent from '@/components/RichContent';
+import AuthorCard from '@/components/AuthorCard';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
@@ -1001,24 +1002,7 @@ export default function ArticleDetailPage() {
           {/* 右サイドバー（4 / 12） */}
           <aside className="lg:col-span-4 space-y-5 px-4 sm:px-0">
             {/* 著者プロフィール */}
-            <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs text-center">
-              <div className="w-14 h-14 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 mx-auto mb-3 bg-neutral-100 dark:bg-neutral-800">
-                <Image
-                  src="/icon.png"
-                  alt="にこ太郎"
-                  width={56}
-                  height={56}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-white">{article.author.name}</h3>
-              <div className="inline-block text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 rounded-full my-1.5">
-                {article.author.mrRating}
-              </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mt-1 text-left">
-                {article.author.bio}
-              </p>
-            </div>
+            <AuthorCard author={article.author} />
 
             {/* 操作タイプ切り替えウィジェット */}
             {article.variants && (

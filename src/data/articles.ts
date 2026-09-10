@@ -9,6 +9,10 @@ export interface ArticleVariant {
   paidSections: Article['paidContent']['sections'];
 }
 
+import { AuthorInfo, AUTHOR_INFO } from './author';
+export type { AuthorInfo };
+export { AUTHOR_INFO };
+
 export interface Article {
   id: string;
   slug: string;
@@ -19,12 +23,7 @@ export interface Article {
   character?: string;
   characterColor?: string;
   youtubeVideoId?: string;
-  author: {
-    name: string;
-    avatar: string;
-    mrRating: string;
-    bio: string;
-  };
+  author: AuthorInfo;
   publishedAt: string;
   updatedAt: string;
   readTime: string;
@@ -106,15 +105,6 @@ export const CHARACTERS_SF6 = [
   { id: 'ed', name: 'エド (Ed)', type: 'アウトボクシング', color: 'from-purple-600 to-indigo-700' },
   { id: 'mai', name: '不知火舞 (Mai)', type: 'DLC第2弾', color: 'from-pink-600 to-rose-700' },
 ];
-
-export const AUTHOR_INFO = {
-  name: 'にこ太郎',
-  avatar: '/icon.png',
-  mrRating: '全キャラ1800MR以上',
-  bio: 'スト6全キャラ1800MR以上。note有料記事で総計1,000部突破。勝率直結の攻略メソッドや立ち回り理論を発信中。',
-  xUrl: 'https://x.com/nikotarosun',
-  xHandle: '@nikotarosun',
-};
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [

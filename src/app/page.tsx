@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, AUTHOR_INFO } from '@/data/articles';
+import AuthorCard from '@/components/AuthorCard';
 import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 export default function HomePage() {
@@ -413,34 +414,7 @@ export default function HomePage() {
           {/* 右サイドバー（4 / 12） */}
           <aside className="lg:col-span-4 space-y-5">
             {/* 著者プロフィールカード */}
-            <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs text-center">
-              <div className="w-14 h-14 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 mx-auto mb-3 bg-neutral-100 dark:bg-neutral-800">
-                <Image
-                  src="/icon.png"
-                  alt="にこ太郎"
-                  width={56}
-                  height={56}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-white">{AUTHOR_INFO.name}</h3>
-              <div className="inline-block text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 rounded-full my-1.5">
-                {AUTHOR_INFO.mrRating}
-              </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mt-1 text-left">
-                {AUTHOR_INFO.bio}
-              </p>
-              <div className="mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                <a
-                  href={AUTHOR_INFO.xUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-950 transition-colors"
-                >
-                  <span>公式X ({AUTHOR_INFO.xHandle})</span>
-                </a>
-              </div>
-            </div>
+            <AuthorCard author={AUTHOR_INFO} />
 
             {/* 月額マガジン案内カード */}
             <div className="p-5 bg-neutral-900 text-white rounded-xl border border-neutral-800 shadow-sm">

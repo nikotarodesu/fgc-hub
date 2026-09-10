@@ -121,7 +121,57 @@ export default function ArticleQuickJump({
   return (
     <>
       {/* ========================================================
-          操作アクションナビゲーション（目次ジャンプ / クイックジャンプ / お気に入り / 上へ）
+          1. 画面上部 浮遊ホバーバナー（現在地インジケーター ＆ お気に入り）
+         ======================================================== */}
+      <aside
+        aria-label="現在位置ナビゲーション"
+        className="fixed top-2 left-1/2 -translate-x-1/2 z-40 max-w-xl w-[94%] sm:w-auto animate-in fade-in slide-in-from-top-3 duration-200 pointer-events-auto"
+      >
+        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1 px-2.5 sm:px-3 shadow-md flex items-center justify-between gap-2 text-xs">
+          {/* 現在のセクション表示（章タイトル ＆ 小見出し） */}
+          <div className="flex items-center gap-1.5 overflow-hidden max-w-[280px] xs:max-w-[340px] sm:max-w-[500px]">
+            <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0 animate-pulse" />
+            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium shrink-0">現在:</span>
+            <div className="flex items-center gap-1 min-w-0 text-xs font-bold text-neutral-800 dark:text-neutral-100 overflow-hidden flex-nowrap">
+              {/* 章タイトル */}
+              <span className="truncate shrink-0 max-w-[140px] xs:max-w-[180px] sm:max-w-[240px]">
+                {formatSectionTitle(activeSection?.title || '記事本文', Boolean(activeSubheading))}
+              </span>
+
+              {/* 丸数字小見出し（❶ 弱技始動など） */}
+              {activeSubheading && (
+                <>
+                  <span className="text-neutral-400 dark:text-neutral-500 font-normal shrink-0 text-[11px] select-none">
+                    &gt;
+                  </span>
+                  <span className="text-cyan-600 dark:text-cyan-400 font-bold truncate shrink-0 max-w-[120px] xs:max-w-[160px] sm:max-w-[220px]">
+                    {activeSubheading}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* 現在セクションのお気に入り登録ボタン */}
+          {activeSection && (
+            <button
+              type="button"
+              onClick={() => onToggleBookmark(activeSection.id)}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
+                isCurrentBookmarked
+                  ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40'
+                  : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              }`}
+              title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
+            >
+              <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
+            </button>
+          )}
+        </div>
+      </aside>
+
+      {/* ========================================================
+          2. 画面下部 追従バー（目次ジャンプ / クイックジャンプ / お気に入り / 上へ）
          ======================================================== */}
       <aside
         aria-label="操作アクションナビゲーション"

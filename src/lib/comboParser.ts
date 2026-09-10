@@ -52,10 +52,174 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
     .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
     .trim();
 
+  // 4. レシピ末尾のフレーム差（例: +26, +37F, +9等）を除去
+  cleanRecipe = cleanRecipe.replace(/\+\d+(?:F|f)?\s*$/, '').trim();
+
   // ">" または "→" で分割
   const rawParts = cleanRecipe.split(/>|→(?!\+|↓|↘|↗|←|↙|↖)/).map((p) => p.trim()).filter(Boolean);
 
-  return rawParts.map((part) => parseSinglePart(part, controlType));
+  return rawParts.flatMap((part) => parsePartToSteps(part, controlType));
+}
+
+function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
+  let remaining = text.trim();
+
+  // 1. 各パーツ内のダメージ数値・フレーム差を除去
+  remaining = remaining
+    .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]/g, '')
+    .trim();
+  remaining = remaining.replace(/\+\d+(?:F|f)?\s*$/, '').trim();
+
+  // 2. 〆を除去
+  remaining = remaining.replace(/〆|締め?$/, '').trim();
+
+  // 3. サフィックス（補足情報: （カス当たり）、（最速）など）の抽出
+  let suffix: string | undefined;
+  const suffixMatch = remaining.match(/[（\(](.*?)[）\)]$/);
+  if (suffixMatch) {
+    const inner = suffixMatch[1].trim();
+    if (!/^\d+$/.test(inner) && !/^\d+\s*(?:ダメージ|dmg|DMG)$/i.test(inner)) {
+      suffix = `（${inner}）`;
+    }
+    remaining = remaining.replace(/[（\(](.*?)[）\)]$/, '').trim();
+  }
+
+  // 4. キャンセルの抽出
+  let isCancel = false;
+  if (remaining.includes('キャンセルラッシュ')) {
+    isCancel = true;
+    remaining = remaining.replace(/キャンセルラッシュ/g, '').trim();
+  } else if (remaining.includes('キャンセル')) {
+    isCancel = true;
+    remaining = remaining.replace(/キャンセル/g, '').trim();
+  }
+
+  // 5. ラッシュの抽出
+  let isRush = false;
+  let rushText: string | undefined;
+  if (!isCancel) {
+    if (remaining.includes('生ラッシュ')) {
+      isRush = true;
+      rushText = '生ラッシュ';
+      remaining = remaining.replace(/生ラッシュ/g, '').trim();
+    } else if (remaining.includes('パリィラッシュ')) {
+      isRush = true;
+      rushText = 'ラッシュ';
+      remaining = remaining.replace(/パリィラッシュ/g, '').trim();
+    } else if (remaining.includes('ラッシュ')) {
+      isRush = true;
+      rushText = 'ラッシュ';
+      remaining = remaining.replace(/ラッシュ/g, '').trim();
+    }
+  } else {
+    remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ラッシュ/g, '').trim();
+  }
+
+  // 6. プレフィックス
+  let prefix: string | undefined;
+  if (remaining.includes('壁ドン')) {
+    prefix = '壁ドン';
+    remaining = remaining.replace(/壁ドン/g, '').trim();
+  } else if (remaining.includes('壁バウンド')) {
+    prefix = '壁バウンド';
+    remaining = remaining.replace(/壁バウンド/g, '').trim();
+  } else if (remaining.includes('前歩き')) {
+    prefix = '前歩き';
+    remaining = remaining.replace(/前歩き/g, '').trim();
+  }
+
+  remaining = remaining.replace(/〆|締め?$/, '').trim();
+  const lower = remaining.toLowerCase();
+
+  // 大PTC / 二連撃 / 大TC / 大>大 判定（リュウの大PTCは大P>大Kなので2ステップに展開）
+  const isTargetCombo =
+    lower.includes('大ptc') ||
+    lower.includes('大tc') ||
+    lower.includes('二連撃') ||
+    lower.includes('上段二連撃') ||
+    lower === '大>大' ||
+    lower === '大＞大' ||
+    lower.includes('ターゲットコンボ');
+
+  if (isTargetCombo) {
+    const isModern = controlType === 'modern';
+    if (isModern) {
+      const step1: VisualStep = {
+        original: remaining || '大PTC',
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind: 'punch',
+          color: 'red',
+          label: '強',
+          description: '赤いボタン（大）',
+          iconText: '大',
+          showLabel: false,
+        },
+        tip: '強攻撃ヒット後にもう一度強攻撃を入力（大 ➔ 大）',
+      };
+      const step2: VisualStep = {
+        original: '大',
+        isCancel: false,
+        isRush: false,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind: 'punch',
+          color: 'red',
+          label: '強',
+          description: '赤いボタン（大）',
+          iconText: '大',
+          showLabel: false,
+        },
+        suffix,
+      };
+      return [cleanupModernStep(step1), cleanupModernStep(step2)];
+    } else {
+      const step1: VisualStep = {
+        original: remaining || '大PTC',
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind: 'punch',
+          color: 'red',
+          label: '大P',
+          description: '赤いボタン（強P）',
+          iconText: 'P',
+          showLabel: false,
+        },
+        tip: '強Pヒット後にすかさず強Kを入力（大PTC: 大P > 大K）',
+      };
+      const step2: VisualStep = {
+        original: '大K',
+        isCancel: false,
+        isRush: false,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind: 'kick',
+          color: 'red',
+          label: '大K',
+          description: '赤いボタン（強K）',
+          iconText: 'K',
+          showLabel: false,
+        },
+        suffix,
+      };
+      return [step1, step2];
+    }
+  }
+
+  // 通常パーツは1ステップ
+  return [parseSinglePart(text, controlType)];
 }
 
 function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
@@ -1187,7 +1351,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 8. 二連撃 / ターゲットコンボ（大TC / 大>大）
+  // 8. 二連撃 / ターゲットコンボ（大PTC / 大TC / 大>大）
   if (
     lower.includes('二連撃') ||
     lower.includes('ターゲット') ||
@@ -1208,13 +1372,13 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'punch',
         color: 'red',
-        label: isModern ? '大 ➔ 大' : 'P ➔ K',
-        description: isModern ? '赤いボタン（大 ➔ 大）' : '赤いボタン（ターゲットコンボ）',
+        label: isModern ? '大 ➔ 大' : '大P ➔ 大K',
+        description: isModern ? '赤いボタン（大 ➔ 大）' : '赤いボタン（大P ➔ 大K）',
         iconText: isModern ? '大' : 'P',
         showLabel: false,
       },
       suffix,
-      tip: isModern ? '強攻撃ヒット後にもう一度強攻撃を入力（大 ➔ 大）' : '強Pヒット後にすかさず強Kを入力',
+      tip: isModern ? '強攻撃ヒット後にもう一度強攻撃を入力（大 ➔ 大）' : '強Pヒット後にすかさず強Kを入力（大PTC: 大P > 大K）',
     };
   }
 

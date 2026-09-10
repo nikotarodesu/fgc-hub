@@ -14,7 +14,6 @@ interface SubheadingItem {
   id: string;
   raw: string;
   shortLabel: string;
-  type: 'subheading' | 'star' | 'zap';
 }
 
 interface ArticleQuickJumpProps {
@@ -53,7 +52,7 @@ export default function ArticleQuickJump({
   const activeSection = sections.find((s) => s.id === activeSectionId) || sections[0];
   const isCurrentBookmarked = activeSection ? bookmarks.includes(activeSection.id) : false;
 
-  // 現在のセクション内にある小見出し（data-subheading）および項目見出し（data-item-heading）をDOMからリアルタイム検出
+  // 現在のセクション内にある小見出し（data-subheading: ❶〜➓）をDOMからリアルタイム検出
   useEffect(() => {
     const updateSubheadings = () => {
       const activeEl = document.getElementById(activeSectionId);
@@ -62,31 +61,18 @@ export default function ArticleQuickJump({
         return;
       }
 
-      const headingEls = activeEl.querySelectorAll<HTMLElement>('[data-subheading], [data-item-heading]');
-      const items: SubheadingItem[] = Array.from(headingEls).map((el) => {
-        if (el.hasAttribute('data-subheading')) {
-          const raw = el.getAttribute('data-subheading') || el.innerText || '';
-          const match = raw.match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
-          const numChar = match ? match[1] : '';
-          const titleText = match ? match[2] : raw;
-          const shortLabel = getShortSubheadingLabel(numChar, titleText);
-          return {
-            id: el.id,
-            raw,
-            shortLabel,
-            type: 'subheading' as const,
-          };
-        } else {
-          const raw = el.getAttribute('data-item-heading') || el.innerText || '';
-          const isZap = raw.includes('⚡') || raw.includes('⚡️');
-          const clean = raw.replace(/^[⭐️⭐⚡️⚡]\s*/, '');
-          return {
-            id: el.id,
-            raw,
-            shortLabel: (isZap ? '⚡ ' : '⭐ ') + clean,
-            type: isZap ? 'zap' : 'star',
-          };
-        }
+      const subEls = activeEl.querySelectorAll<HTMLElement>('[data-subheading]');
+      const items: SubheadingItem[] = Array.from(subEls).map((el) => {
+        const raw = el.getAttribute('data-subheading') || el.innerText || '';
+        const match = raw.match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
+        const numChar = match ? match[1] : '';
+        const titleText = match ? match[2] : raw;
+        const shortLabel = getShortSubheadingLabel(numChar, titleText);
+        return {
+          id: el.id,
+          raw,
+          shortLabel,
+        };
       });
 
       setCurrentSubheadings(items);
@@ -251,43 +237,22 @@ export default function ArticleQuickJump({
                 <div className="grid grid-cols-2 gap-1.5">
                   {currentSubheadings.map((sub, sIdx) => {
                     const isActive =
-                      sub.type === 'subheading'
-                        ? activeSubheading === sub.raw || activeSubheading?.startsWith(sub.raw.charAt(0))
-                        : activeItemHeading === sub.raw;
-
-                    let badgeColorClasses = 'bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400';
-                    if (isActive) {
-                      badgeColorClasses =
-                        sub.type === 'zap'
-                          ? 'bg-amber-500 text-white border-amber-500 shadow-xs'
-                          : sub.type === 'star'
-                          ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
-                          : 'bg-cyan-600 text-white border-cyan-600 shadow-xs';
-                    } else if (sub.type === 'zap') {
-                      badgeColorClasses =
-                        'bg-amber-50/70 dark:bg-amber-950/30 text-amber-800 dark:text-amber-200 border-amber-200/80 dark:border-amber-800/60 hover:border-amber-400';
-                    } else if (sub.type === 'star') {
-                      badgeColorClasses =
-                        'bg-sky-50/70 dark:bg-sky-950/30 text-sky-800 dark:text-sky-200 border-sky-200/80 dark:border-sky-800/60 hover:border-sky-400';
-                    }
+                      activeSubheading === sub.raw ||
+                      activeSubheading?.startsWith(sub.raw.charAt(0));
 
                     return (
                       <button
                         key={sIdx}
                         type="button"
                         onClick={() => handleJumpToSubheading(sub.id)}
-                        className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all truncate border flex items-center justify-between gap-1 cursor-pointer ${badgeColorClasses}`}
+                        className={`text-left px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all truncate border flex items-center justify-between gap-1 cursor-pointer ${
+                          isActive
+                            ? 'bg-cyan-600 text-white border-cyan-600 shadow-xs'
+                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400'
+                        }`}
                         title={sub.raw}
                       >
-                        <span className="truncate flex items-center gap-1">
-                          {sub.type === 'zap' && (
-                            <Zap className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-amber-500'} fill-current`} />
-                          )}
-                          {sub.type === 'star' && (
-                            <Star className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-sky-500'} fill-current`} />
-                          )}
-                          <span className="truncate">{sub.shortLabel.replace(/^[⚡⭐]\s*/, '')}</span>
-                        </span>
+                        <span className="truncate">{sub.shortLabel}</span>
                         <ChevronRight className={`w-3 h-3 shrink-0 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
                       </button>
                     );

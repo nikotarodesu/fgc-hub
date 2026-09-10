@@ -94,7 +94,7 @@ export default function HomePage() {
                 勝率を直結させる“実戦の武器”を完全網羅
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ・限定ツール・実戦動画を完全収録。
+                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ・限定ツール・安心のアップデート追記を完全収録。
               </p>
             </div>
             <Link
@@ -106,8 +106,8 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* 5大リターン チェックリストグリッド */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+          {/* 4大リターン チェックリストグリッド */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
             {/* 1. 起き攻めセットプレイ完全網羅 */}
             <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
               <div>
@@ -168,35 +168,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 4. 実戦GIF動画＆動画解説付き */}
+            {/* 4. ずっと使える安心保障 */}
             <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-800/60 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wide">
-                    映像で体得
-                  </span>
-                </div>
-                <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
-                  トレモで迷わない実戦GIF動画＆動画解説付き
-                </h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  文字だけでなく、ワンタップで再生できる実戦GIF動画とフルHD解説動画を収録。入力タイミングやディレイ感覚が直感的に分かります。
-                </p>
-              </div>
-            </div>
-
-            {/* 5. 永久に無料追記 */}
-            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between md:col-span-2 lg:col-span-2">
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
                   <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/60 flex items-center justify-center shrink-0">
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
-                    ずっと使える安心保証
+                    ずっと使える安心保障
                   </span>
                 </div>
                 <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">

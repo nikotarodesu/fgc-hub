@@ -41,31 +41,26 @@ export default function AuthorCard({ author = AUTHOR_INFO, className = '' }: Aut
       </div>
 
       {/* 自己紹介文 */}
-      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed text-left mb-3">
+      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed text-left mb-2">
         {author.bio}
       </p>
 
-      {/* 🏆 note大会 優勝記事リンク */}
+      {/* 🏆 note大会 記事リンク（さりげなく表示） */}
       {author.championshipArticles && author.championshipArticles.length > 0 && (
-        <div className="mb-3 p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 text-left">
-          <div className="text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1.5 flex items-center gap-1">
-            <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>note主催大会 2連覇優勝記事:</span>
-          </div>
-          <div className="space-y-1">
-            {author.championshipArticles.map((art, aIdx) => (
-              <a
-                key={aIdx}
-                href={art.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between gap-1.5 text-[11px] font-medium text-neutral-800 dark:text-neutral-200 hover:text-amber-700 dark:hover:text-amber-300 bg-white/90 dark:bg-neutral-900/90 px-2 py-1 rounded border border-neutral-200/70 dark:border-neutral-800 transition-colors group"
-              >
-                <span className="truncate">{art.title}</span>
-                <ExternalLink className="w-3 h-3 shrink-0 text-neutral-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors" />
-              </a>
-            ))}
-          </div>
+        <div className="text-[11px] text-neutral-500 dark:text-neutral-400 text-left mb-3 flex items-center gap-1.5 flex-wrap">
+          <span className="text-neutral-400 dark:text-neutral-500">🏆 大会記事:</span>
+          {author.championshipArticles.map((art, aIdx) => (
+            <a
+              key={aIdx}
+              href={art.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white underline underline-offset-2 inline-flex items-center gap-0.5"
+            >
+              <span>{aIdx === 0 ? '優勝記事①' : '優勝記事②'}</span>
+              <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+            </a>
+          ))}
         </div>
       )}
 

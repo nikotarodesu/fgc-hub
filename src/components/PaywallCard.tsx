@@ -176,7 +176,7 @@ export default function PaywallCard({
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-neutral-600 dark:text-neutral-400 pt-1">
-            <span className="text-[10px] text-amber-800 dark:text-amber-300 font-medium">note公式大会 優勝記事：</span>
+            <span className="text-[10px] text-amber-800 dark:text-amber-300 font-medium">note大会 優勝記事：</span>
             <div className="flex items-center gap-2">
               <a
                 href="https://note.com/nikotarosun/n/n081a67f53aa8"

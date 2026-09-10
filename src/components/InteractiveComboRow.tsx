@@ -17,7 +17,24 @@ export default function InteractiveComboRow({
   controlType = 'classic',
 }: InteractiveComboRowProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const cleanText = comboLine.trim().replace(/^[●・\-]\s*/, '');
+  const cleanText = comboLine.trim().replace(/^[●・\-▶︎▶■]\s*/, '');
+
+  // 〜 または ～ で始まる、または 〜 または ～ で終わるコンボは派生・始動ルートのためアコーディオンタブを表示しない
+  const isPartialRoute = /^[〜～~]/.test(cleanText) || /[〜～~]\s*$/.test(cleanText);
+
+  if (isPartialRoute) {
+    return (
+      <div className="my-1 sm:my-1.5 rounded-lg border border-neutral-200/80 dark:border-neutral-700/70 bg-neutral-50/80 dark:bg-neutral-800/70 py-2 px-2.5 sm:px-3 flex items-start sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 shadow-2xs w-full max-w-full min-w-0">
+        <span className="shrink-0 text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide mt-0.5 sm:mt-0">
+          コンボ
+        </span>
+        <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
+          {renderInlineText(cleanText)}
+        </span>
+      </div>
+    );
+  }
+
   const steps: VisualStep[] = parseVisualCombo(cleanText, controlType);
 
   return (

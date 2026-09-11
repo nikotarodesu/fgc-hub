@@ -208,7 +208,7 @@ export default function CharacterComboToolClient({ character }: ClientProps) {
 
         {allCombos.length > 0 ? (
           <>
-            {/* 1. リーサル逆引き計算機 */}
+            {/* 一旦非表示: リーサル逆引き計算機
             <section>
               <LethalCalculator
                 targetHp={filter.targetLethalHp || 0}
@@ -221,8 +221,9 @@ export default function CharacterComboToolClient({ character }: ClientProps) {
                 onReset={handleResetFilters}
               />
             </section>
+            */}
 
-            {/* 2. 3タップ絞り込みフィルター */}
+            {/* 1. 3タップ絞り込みフィルター */}
             <section>
               <ComboFilter
                 filter={filter}
@@ -232,7 +233,7 @@ export default function CharacterComboToolClient({ character }: ClientProps) {
               />
             </section>
 
-            {/* 3. コンボ一覧 */}
+            {/* 2. コンボ一覧 */}
             <section className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm sm:text-base font-bold text-neutral-800 flex items-center gap-2">

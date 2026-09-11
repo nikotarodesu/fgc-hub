@@ -199,7 +199,7 @@ export default function PaywallCard({
           </div>
         </div>
 
-        {/* 有料部分で手に入るもの（5大リターン） */}
+        {/* 有料部分で手に入るもの */}
         <div className="mb-5 p-3 sm:p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-850 border border-neutral-200/80 dark:border-neutral-800 text-left text-xs space-y-1.5">
           <div className="text-[11px] font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1 mb-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -211,10 +211,6 @@ export default function PaywallCard({
               <span>全フレーム状況別（+3F〜+45F）起き攻め完全網羅</span>
             </div>
             <div className="flex items-start gap-1.5">
-              <span className="text-cyan-600 dark:text-cyan-400 font-bold shrink-0">✓</span>
-              <span>リーサル逆引きツールが即座に使える</span>
-            </div>
-            <div className="flex items-start gap-1.5">
               <span className="text-amber-600 dark:text-amber-400 font-bold shrink-0">✓</span>
               <span>中央・端・リーサルの最大火力コンボレシピ</span>
             </div>
@@ -222,7 +218,7 @@ export default function PaywallCard({
               <span className="text-purple-600 dark:text-purple-400 font-bold shrink-0">✓</span>
               <span>実戦GIF動画＆動画解説付きで迷わない</span>
             </div>
-            <div className="flex items-start gap-1.5 sm:col-span-2 text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-start gap-1.5 text-neutral-600 dark:text-neutral-400">
               <span className="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">✓</span>
               <span>今後のバージョンアップ・キャラ調整時も<strong>永久に無料追記</strong></span>
             </div>

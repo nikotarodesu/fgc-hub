@@ -759,6 +759,7 @@ export default function ArticleDetailPage() {
               {article.isPaid && (
                 <>
                   <div id="paywall-card-box">
+                    {/* 一旦非表示: 実戦コンボ逆引きデータベース
                     {isCompleteGuide && !isUnlocked && (
                       <ArticleComboReverseLookup
                         controlType={activeControlType}
@@ -769,6 +770,7 @@ export default function ArticleDetailPage() {
                         }}
                       />
                     )}
+                    */}
                     <PaywallCard
                       price={article.price}
                       isUnlocked={isUnlocked}
@@ -819,7 +821,7 @@ export default function ArticleDetailPage() {
                         const isCenterComboSec = section.title.includes('画面中央のコンボ');
                         return (
                           <React.Fragment key={idx}>
-                            {/* 完全攻略記事限定：実戦コンボ逆引きデータベース（⑥ 画面中央のコンボの直上に設置） */}
+                            {/* 一旦非表示: 実戦コンボ逆引きデータベース
                             {isCompleteGuide && isCenterComboSec && (
                               <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24">
                                 <ArticleComboReverseLookup
@@ -828,6 +830,7 @@ export default function ArticleDetailPage() {
                                 />
                               </div>
                             )}
+                            */}
 
                             <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
                               <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">

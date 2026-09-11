@@ -5,9 +5,9 @@ import { constructMetadata } from '@/lib/seo';
 import { ChevronRight, ArrowRight } from 'lucide-react';
 
 export const metadata = constructMetadata({
-  title: 'スト6攻略ハブ | キャラ別コンボ・起き攻め・リーサルデータベース',
+  title: 'スト6攻略ハブ | キャラ別コンボ・起き攻めデータベース',
   description:
-    'ストリートファイター6のキャラクター別攻略ハブ。全キャラ1800MR以上の筆者「にこ太郎」監修による実戦コンボ・起き攻め・詐欺飛びセットプレイ・リーサル逆引きツールを提供。',
+    'ストリートファイター6のキャラクター別攻略ハブ。全キャラ1800MR以上の筆者「にこ太郎」監修による実戦コンボ・起き攻め・詐欺飛びセットプレイを提供。',
   canonicalUrl: '/sf6',
 });
 

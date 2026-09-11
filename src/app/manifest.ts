@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'にこ太郎の格ゲーLAB',
     short_name: '格ゲーLAB',
-    description: '全キャラ1800MR以上のスト6攻略・コンボ＆起き攻めデータベース・リーサル計算機',
+    description: '全キャラ1800MR以上のスト6攻略・コンボ＆起き攻めデータベース',
     start_url: '/',
     display: 'standalone',
     background_color: '#f0f9fb',

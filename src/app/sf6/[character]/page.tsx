@@ -91,7 +91,7 @@ export default async function CharacterHubPage({ params }: PageProps) {
               </h3>
               <p className="text-xs text-neutral-400 mb-4 leading-relaxed">
                 {char.hasTool
-                  ? `全${char.comboCount}件の実戦コンボ・+42F詐欺飛び・リーサル計算機を搭載！`
+                  ? `全${char.comboCount}件の実戦コンボ・+42F詐欺飛びを搭載！`
                   : '実戦検証データを作成中。先行してキャミィツールが稼働中。'}
               </p>
               <Link
@@ -138,7 +138,7 @@ export default async function CharacterHubPage({ params }: PageProps) {
                 <h4 className="font-bold text-neutral-900 text-sm group-hover:text-[#00a3c4] transition-colors">
                   {char.name} コンボ・起き攻め検索
                 </h4>
-                <p className="text-xs text-neutral-500">ダメージ・ゲージ消費・有利F・リーサル逆引き</p>
+                <p className="text-xs text-neutral-500">ダメージ・ゲージ消費・有利F</p>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-[#00a3c4] transition-colors" />

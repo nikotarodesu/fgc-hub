@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: PageProps) {
   if (!char) return constructMetadata({ title: 'キャラクターが見つかりません' });
 
   return constructMetadata({
-    title: `${char.name} 実戦コンボ・起き攻め・リーサル逆引きツール`,
-    description: `${char.name}の状況別コンボ検索、+42F詐欺飛び・シミー起き攻めデータ、リーサル逆引き計算機。全キャラ1800MR以上の筆者監修。`,
+    title: `${char.name} 実戦コンボ・起き攻め検索ツール`,
+    description: `${char.name}の状況別コンボ検索、+42F詐欺飛び・シミー起き攻めデータ。全キャラ1800MR以上の筆者監修。`,
     canonicalUrl: `/sf6/${character}/combos`,
   });
 }

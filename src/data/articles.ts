@@ -31,6 +31,7 @@ export interface Article {
   readTime: string;
   isPaid: boolean;
   price?: number;
+  subscriptionOnly?: boolean;
   tags: string[];
   likesCount: number;
   eyecatchImage?: string;

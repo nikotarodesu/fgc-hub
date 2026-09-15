@@ -129,7 +129,7 @@ export default function HomePage() {
                 <span>有料記事＆プレミアム会員で手に入るもの</span>
               </div>
               <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-                勝率を直結させる“実戦の武器”を完全網羅
+                勝率を直結させる“実戦ノウハウ”を完全網羅
               </h2>
               {isBenefitsOpen && (
                 <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
@@ -476,10 +476,17 @@ export default function HomePage() {
                               )}
                             </div>
                             {article.isPaid ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
-                                <Lock className="w-3 h-3 text-neutral-600 dark:text-neutral-400" />
-                                <span>¥{article.price}</span>
-                              </span>
+                              article.subscriptionOnly ? (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 px-2 py-0.5 rounded shrink-0">
+                                  <Lock className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
+                                  <span>プレミアム限定</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
+                                  <Lock className="w-3 h-3 text-neutral-600 dark:text-neutral-400" />
+                                  <span>¥{article.price}</span>
+                                </span>
+                              )
                             ) : (
                               <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
                                 無料

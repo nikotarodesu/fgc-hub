@@ -11,9 +11,12 @@ interface PaywallCardProps {
   onToggleUnlock?: () => void;
   onAdminUnlock?: () => void;
   onAdminLock?: () => void;
-  onBuyArticle: () => void;
+  onBuyArticle?: () => void;
   onJoinMembership: () => void;
   onApplyToken?: (token: string) => Promise<boolean>;
+  subscriptionOnly?: boolean;
+  hideBenefits?: boolean;
+  description?: string;
 }
 
 export default function PaywallCard({
@@ -27,6 +30,9 @@ export default function PaywallCard({
   onBuyArticle,
   onJoinMembership,
   onApplyToken,
+  subscriptionOnly = false,
+  hideBenefits = false,
+  description,
 }: PaywallCardProps) {
   const [showTokenInput, setShowTokenInput] = useState(false);
   const [inputToken, setInputToken] = useState('');
@@ -141,7 +147,8 @@ export default function PaywallCard({
           この続きは有料エリアです
         </h3>
         <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-5 leading-relaxed font-normal">
-          勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。
+          {description ||
+            '勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。'}
         </p>
 
         {/* 執筆者の実績・note大会2連覇の信頼性 */}
@@ -149,7 +156,7 @@ export default function PaywallCard({
           <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-amber-200/60 dark:border-amber-900/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300">
               <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-current shrink-0" />
-              <span>多くの格ゲーマーに選ばれる信頼の攻略本</span>
+              <span>多くの格ゲーマーに選ばれる信頼の攻略記事</span>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 shrink-0 border border-amber-300/60 dark:border-amber-700/60">
               著：にこ太郎
@@ -200,83 +207,115 @@ export default function PaywallCard({
         </div>
 
         {/* 有料部分で手に入るもの（有料移行のメリット） */}
-        <div className="mb-5 p-3.5 sm:p-4 rounded-xl bg-neutral-100/80 dark:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700 text-left text-xs space-y-2">
-          <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-neutral-200/60 dark:border-neutral-700/60">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-            <span>有料限定エリアで手に入るメリット・武器:</span>
+        {!hideBenefits && (
+          <div className="mb-5 p-3.5 sm:p-4 rounded-xl bg-neutral-100/80 dark:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700 text-left text-xs space-y-2">
+            <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-neutral-200/60 dark:border-neutral-700/60">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span>有料限定エリアで手に入るメリット:</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-800 dark:text-neutral-100">
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+                <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0">✓</span>
+                <span className="leading-snug">全フレーム状況別の起き攻め完全網羅</span>
+              </div>
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+                <span className="text-amber-600 dark:text-amber-400 font-black shrink-0">✓</span>
+                <span className="leading-snug">中央・端・リーサルの最大火力コンボレシピ</span>
+              </div>
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+                <span className="text-cyan-600 dark:text-cyan-400 font-black shrink-0">✓</span>
+                <span className="leading-snug">逆引きリーサルツール使用可能＆実戦動画付き</span>
+              </div>
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+                <span className="text-indigo-600 dark:text-indigo-400 font-black shrink-0">✓</span>
+                <span className="leading-snug">今後のパッチ・キャラ調整時も<strong className="text-neutral-900 dark:text-white font-bold">永久に無料追記</strong></span>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-800 dark:text-neutral-100">
-            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
-              <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">全フレーム状況別の起き攻め完全網羅</span>
-            </div>
-            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
-              <span className="text-amber-600 dark:text-amber-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">中央・端・リーサルの最大火力コンボレシピ</span>
-            </div>
-            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
-              <span className="text-cyan-600 dark:text-cyan-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">逆引きリーサルツール使用可能＆実戦動画付き</span>
-            </div>
-            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
-              <span className="text-indigo-600 dark:text-indigo-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">今後のパッチ・キャラ調整時も<strong className="text-neutral-900 dark:text-white font-bold">永久に無料追記</strong></span>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* 料金・購入ボタンカード */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-5">
-          {/* 単体購入 */}
-          <div className="p-4.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700/80 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">
-                この記事を購入
-              </span>
-              <div className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
-                ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">（買い切り）</span>
+        {subscriptionOnly ? (
+          <div className="max-w-md mx-auto mb-5 text-left">
+            <div className="p-5 sm:p-6 rounded-2xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-sm border border-neutral-800 dark:border-neutral-700">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
+                    プレミアム会員限定
+                  </span>
+                  <span className="text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+                    読み放題
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-white mb-2">
+                  ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
+                </div>
+                <p className="text-xs text-neutral-300 dark:text-neutral-400 mb-5 leading-relaxed">
+                  本記事の実戦添削をはじめ、スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
+                </p>
               </div>
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
-                クラシック・モダン両対応（1回の購入で両方読み放題）。アプデ追記も含め永久閲覧できます。
-              </p>
+              <button
+                type="button"
+                onClick={onJoinMembership}
+                className="w-full py-3 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+              >
+                <span>プレミアム会員に入会して続きを読む</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={onBuyArticle}
-              className="w-full py-2.5 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              <span>記事を購入する</span>
-            </button>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-5">
+            {/* 単体購入 */}
+            <div className="p-4.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700/80 flex flex-col justify-between">
+              <div>
+                <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">
+                  この記事を購入
+                </span>
+                <div className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+                  ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">（買い切り）</span>
+                </div>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
+                  クラシック・モダン両対応（1回の購入で両方読み放題）。アプデ追記も含め永久閲覧できます。
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onBuyArticle}
+                className="w-full py-2.5 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>記事を購入する</span>
+              </button>
+            </div>
 
-          {/* 月額サブスク */}
-          <div className="p-4.5 rounded-xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-xs border border-neutral-800 dark:border-neutral-700">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
-                  プレミアム会員
-                </span>
-                <span className="text-[10px] font-semibold bg-white/20 text-white px-2 py-0.5 rounded">
-                  おすすめ
-                </span>
+            {/* 月額サブスク */}
+            <div className="p-4.5 rounded-xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-xs border border-neutral-800 dark:border-neutral-700">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
+                    プレミアム会員
+                  </span>
+                  <span className="text-[10px] font-semibold bg-white/20 text-white px-2 py-0.5 rounded">
+                    おすすめ
+                  </span>
+                </div>
+                <div className="text-xl font-bold text-white mb-2">
+                  ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
+                </div>
+                <p className="text-[11px] text-neutral-300 dark:text-neutral-400 mb-4 leading-relaxed">
+                  スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
+                </p>
               </div>
-              <div className="text-xl font-bold text-white mb-2">
-                ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
-              </div>
-              <p className="text-[11px] text-neutral-300 dark:text-neutral-400 mb-4 leading-relaxed">
-                スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
-              </p>
+              <button
+                type="button"
+                onClick={onJoinMembership}
+                className="w-full py-2.5 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span>プレミアム会員に入会</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={onJoinMembership}
-              className="w-full py-2.5 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <span>プレミアム会員に入会</span>
-            </button>
           </div>
-        </div>
+        )}
 
         {/* 閲覧用トークン入力アコーディオン */}
         <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs">

@@ -536,9 +536,15 @@ export default function ArticleDetailPage() {
                 )}
 
                 {article.isPaid ? (
-                  <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200 shrink-0">
-                    有料記事（¥{article.price}）
-                  </span>
+                  article.subscriptionOnly ? (
+                    <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-200 border border-cyan-800 shrink-0">
+                      プレミアム限定
+                    </span>
+                  ) : (
+                    <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200 shrink-0">
+                      有料記事（¥{article.price}）
+                    </span>
+                  )
                 ) : (
                   <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 shrink-0">
                     無料公開
@@ -732,7 +738,9 @@ export default function ArticleDetailPage() {
                       >
                         <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">0{freeSections.length + idx + 1}.</span>
                         <span className="group-hover:underline">{sec.title}</span>
-                        <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1 py-0.2 rounded font-normal shrink-0">有料</span>
+                        <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1 py-0.2 rounded font-normal shrink-0">
+                          {article.subscriptionOnly ? '会員限定' : '有料'}
+                        </span>
                       </button>
                       <button
                         type="button"
@@ -860,9 +868,16 @@ export default function ArticleDetailPage() {
                       userEmail={userEmail}
                       onAdminUnlock={!secretConfig ? handleAdminUnlock : undefined}
                       onAdminLock={handleAdminLock}
-                      onBuyArticle={handleBuyArticle}
+                      onBuyArticle={article.subscriptionOnly ? undefined : handleBuyArticle}
                       onJoinMembership={() => { window.location.href = '/membership'; }}
                       onApplyToken={handleApplyToken}
+                      subscriptionOnly={article.subscriptionOnly}
+                      hideBenefits={article.subscriptionOnly || !isCompleteGuide}
+                      description={
+                        article.subscriptionOnly
+                          ? '実戦リプレイの徹底解説動画（YouTubeフルHD）および各ラウンドごとの詳細な改善ポイント、立ち回り強化論、受講生のお悩み相談Q&Aを収録しています（プレミアム会員限定）。'
+                          : undefined
+                      }
                     />
                   </div>
 
@@ -872,7 +887,11 @@ export default function ArticleDetailPage() {
                       <div className="p-3.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs flex flex-wrap items-center justify-between gap-2 font-medium border border-emerald-200 dark:border-emerald-800">
                         <div className="flex items-center gap-2">
                           <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                          <span>ここから先は有料会員・購入者限定の攻略セクションです。</span>
+                          <span>
+                            {article.subscriptionOnly
+                              ? 'ここから先はプレミアム会員限定の添削・攻略セクションです。'
+                              : 'ここから先は有料会員・購入者限定の攻略セクションです。'}
+                          </span>
                         </div>
                         {userEmail && (
                           <span className="text-[11px] opacity-80 font-mono">

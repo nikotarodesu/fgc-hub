@@ -208,7 +208,7 @@ export default function PaywallCard({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-800 dark:text-neutral-100">
             <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
               <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">全フレーム状況別（+3F〜+45F）起き攻め完全網羅</span>
+              <span className="leading-snug">全フレーム状況別の起き攻め完全網羅</span>
             </div>
             <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
               <span className="text-amber-600 dark:text-amber-400 font-black shrink-0">✓</span>
@@ -216,7 +216,7 @@ export default function PaywallCard({
             </div>
             <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
               <span className="text-cyan-600 dark:text-cyan-400 font-black shrink-0">✓</span>
-              <span className="leading-snug">実戦GIF動画＆動画解説付きで迷わない</span>
+              <span className="leading-snug">逆引きリーサルツール使用可能＆実戦動画付き</span>
             </div>
             <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
               <span className="text-indigo-600 dark:text-indigo-400 font-black shrink-0">✓</span>

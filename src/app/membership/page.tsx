@@ -93,6 +93,10 @@ export default function MembershipPage() {
                   <span><strong>過去・現在のすべての有料記事が読み放題</strong></span>
                 </li>
                 <li className="flex items-center gap-2">
+                  <Check className="w-3.5 h-3.5 text-neutral-900 font-bold" />
+                  <span>逆引きリーサルツール・全フレーム状況別起き攻めデータ利用可能</span>
+                </li>
+                <li className="flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-neutral-900" />
                   <span>全キャラ1800MR以上の視点による実戦立ち回り・キャラ対策</span>
                 </li>

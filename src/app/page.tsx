@@ -124,7 +124,7 @@ export default function HomePage() {
               </h2>
               {isBenefitsOpen && (
                 <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-                  全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データを完全収録。
+                  全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データ＆逆引きツールを完全収録。
                 </p>
               )}
             </div>
@@ -162,8 +162,8 @@ export default function HomePage() {
           {/* 開閉コンテンツ */}
           {isBenefitsOpen && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              {/* 3大リターン チェックリストグリッド */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+              {/* 4大リターン チェックリストグリッド */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
                 {/* 1. 起き攻めセットプレイ完全網羅 */}
                 <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
                   <div>
@@ -176,7 +176,7 @@ export default function HomePage() {
                       </span>
                     </div>
                     <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
-                      全フレーム状況別（+3F〜+45F）の起き攻めセットプレイ完全網羅
+                      全フレーム状況別の起き攻めセットプレイ完全網羅
                     </h3>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
                       その場・後ろ受け身の両対応重ねから、相手の無敵暴れを安全ガードできる「詐欺飛び」まで完全収録。実戦のターン継続率が劇的に上がります。
@@ -204,7 +204,27 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* 3. ずっと使える安心保障 */}
+                {/* 3. 逆引きリーサルツール */}
+                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800/60 flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
+                        WEB限定ツール
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                      相手残りHPから倒し切る「逆引きリーサルツール」使用可能
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      相手の残り体力や手持ちのDゲージ・SA状況を入力するだけで、今出せる最適リーサルコンボを瞬時に逆引き検索。判断ミスやリーサル逃しをゼロにします。
+                    </p>
+                  </div>
+                </div>
+
+                {/* 4. ずっと使える安心保障 */}
                 <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2.5">

@@ -49,10 +49,16 @@ export const STARTER_CATEGORY_OPTIONS = [
 
 export const LETHAL_DAMAGE_PRESETS = [
   { label: 'すべて', value: 0 },
-  { label: '2,500+', value: 2500 },
-  { label: '3,500+', value: 3500 },
-  { label: '4,500+', value: 4500 },
-  { label: '5,000+ (SA3)', value: 5000 },
+  { label: '2,500~', value: 2500 },
+  { label: '3,000~', value: 3000 },
+  { label: '3,500~', value: 3500 },
+  { label: '4,000~', value: 4000 },
+  { label: '4,500~', value: 4500 },
+  { label: '5,000~', value: 5000 },
+  { label: '5,500~', value: 5500 },
+  { label: '6,000~', value: 6000 },
+  { label: '6,500~', value: 6500 },
+  { label: '7,000+ MAX', value: 7000 },
 ] as const;
 
 export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [

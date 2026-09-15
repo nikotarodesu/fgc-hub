@@ -58,9 +58,13 @@ export default function ArticleComboReverseLookup({
       if (selectedStarter !== 'all' && c.starterCategory !== selectedStarter) {
         return false;
       }
-      // 必要ダメージ（リーサル逆引き）
-      if (targetDamage > 0 && c.damage < targetDamage) {
-        return false;
+      // 必要ダメージ（リーサル逆引き: targetDamage 〜 targetDamage + 500）
+      if (targetDamage > 0) {
+        const minDmg = targetDamage;
+        const maxDmg = targetDamage >= 7000 ? 99999 : targetDamage + 500;
+        if (c.damage < minDmg || c.damage > maxDmg) {
+          return false;
+        }
       }
       // Dゲージ消費上限
       if (c.driveCost > maxDriveCost) {
@@ -229,6 +233,28 @@ export default function ArticleComboReverseLookup({
 
       {/* フィルターコントロール群 */}
       <div className="p-3 sm:p-4 space-y-3.5 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
+        {/* Dゲージ使用量仕様のガイドバナー */}
+        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-indigo-500/10 dark:from-emerald-950/40 dark:via-cyan-950/40 dark:to-indigo-950/40 border border-cyan-500/30 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-neutral-800 dark:text-neutral-200">
+            <Gauge className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span>Dゲージ使用量の目安 (最大6本):</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium shadow-2xs">
+              生ラッシュ: <strong className="font-bold">1本</strong>
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-sky-500/30 text-sky-700 dark:text-sky-300 font-medium shadow-2xs">
+              OD技: <strong className="font-bold">2本</strong>
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 font-medium shadow-2xs">
+              キャンセルラッシュ: <strong className="font-bold">3本</strong>
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 font-bold shadow-2xs">
+              MAX: <strong className="font-bold">6本</strong>
+            </span>
+          </div>
+        </div>
+
         {/* 0. ステージ状況・位置タブ（画面中央 / 画面端） */}
         <div className="pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
           <div className="flex items-center gap-1.5 mb-2 text-xs font-bold text-neutral-700 dark:text-neutral-300">
@@ -297,13 +323,33 @@ export default function ArticleComboReverseLookup({
           </div>
         </div>
 
-        {/* 2. リーサル必要ダメージ（クイックプリセット） */}
-        <div>
-          <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold text-neutral-700 dark:text-neutral-300">
-            <Flame className="w-3.5 h-3.5 text-rose-500" />
-            <span>リーサル逆引き（倒し切りに必要なダメージ）:</span>
+        {/* 2. リーサル必要ダメージ（2,500〜7,000 / 上限+500抽出） */}
+        <div className="space-y-2 pt-1 border-t border-neutral-200/60 dark:border-neutral-800">
+          <div className="flex flex-wrap items-center justify-between gap-1 text-xs">
+            <div className="flex items-center gap-1.5 font-bold text-neutral-800 dark:text-neutral-200">
+              <Flame className="w-3.5 h-3.5 text-rose-500" />
+              <span>リーサル逆引きダメージ（相手の残りHPに合わせて抽出）:</span>
+            </div>
+            {targetDamage > 0 ? (
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-md bg-rose-500/10 dark:bg-rose-950/50 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-mono font-bold text-xs">
+                  🎯 抽出: {targetDamage.toLocaleString()} 〜 {targetDamage >= 7000 ? '7,171+ (MAX)' : `${(targetDamage + 500).toLocaleString()} dmg`}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setTargetDamage(0)}
+                  className="text-[11px] text-neutral-400 hover:text-rose-500 underline cursor-pointer"
+                >
+                  解除
+                </button>
+              </div>
+            ) : (
+              <span className="text-[11px] text-neutral-400 font-medium">全ダメージ帯を表示中</span>
+            )}
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5">
+
+          {/* 簡易ボタンプリセット */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin">
             {LETHAL_DAMAGE_PRESETS.map((preset) => {
               const active = targetDamage === preset.value;
               return (
@@ -311,10 +357,10 @@ export default function ArticleComboReverseLookup({
                   key={preset.value}
                   type="button"
                   onClick={() => setTargetDamage(preset.value)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
                     active
                       ? 'bg-rose-600 text-white shadow-xs ring-2 ring-rose-400'
-                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-rose-400'
+                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400'
                   }`}
                 >
                   {preset.label}
@@ -322,13 +368,52 @@ export default function ArticleComboReverseLookup({
               );
             })}
           </div>
+
+          {/* スライダー（カーソル操作・微調整用） */}
+          <div className="bg-white/80 dark:bg-neutral-800/80 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 space-y-1.5">
+            <div className="flex items-center justify-between text-[11px] text-neutral-600 dark:text-neutral-400">
+              <span className="font-bold flex items-center gap-1">
+                <SlidersHorizontal className="w-3 h-3 text-rose-500" />
+                スライダー微調整 (2,500 〜 7,000 dmg):
+              </span>
+              <span className="font-mono font-bold text-rose-600 dark:text-rose-400">
+                {targetDamage > 0 ? `${targetDamage.toLocaleString()} dmg 選択中` : '未指定（全域）'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-neutral-400 shrink-0">2500</span>
+              <input
+                type="range"
+                min="2500"
+                max="7000"
+                step="100"
+                value={targetDamage === 0 ? 2500 : targetDamage}
+                onChange={(e) => setTargetDamage(Number(e.target.value))}
+                className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-rose-600"
+                aria-label="リーサルダメージスライダー"
+              />
+              <span className="text-[10px] font-mono text-neutral-400 shrink-0">7000</span>
+            </div>
+            <div className="flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400 pt-0.5">
+              <span>※指定値から<strong>+500 dmg</strong>の上限範囲（例: 2500選択で2500〜3000）のコンボを自動抽出</span>
+              {targetDamage > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setTargetDamage(0)}
+                  className="text-rose-600 dark:text-rose-400 hover:underline font-bold"
+                >
+                  フィルター解除
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* 3. ゲージ上限スライダー & キーワード検索 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-neutral-200/60 dark:border-neutral-800">
           {/* Dゲージ上限 */}
-          <div>
-            <div className="flex items-center justify-between text-[11px] font-bold text-neutral-600 dark:text-neutral-400 mb-1">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[11px] font-bold text-neutral-600 dark:text-neutral-400">
               <span>Dゲージ消費上限:</span>
               <span className="font-mono text-cyan-600 dark:text-cyan-400 font-black">{maxDriveCost}本まで</span>
             </div>
@@ -341,6 +426,33 @@ export default function ArticleComboReverseLookup({
               onChange={(e) => setMaxDriveCost(Number(e.target.value))}
               className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-cyan-600"
             />
+            {/* Dゲージクイックチップ */}
+            <div className="flex items-center gap-1 flex-wrap pt-0.5">
+              {[
+                { label: '0本', val: 0, tip: 'ノーゲージ' },
+                { label: '1本', val: 1, tip: '生ラッシュ' },
+                { label: '2本', val: 2, tip: 'OD' },
+                { label: '3本', val: 3, tip: 'キャンセル' },
+                { label: '6本 (MAX)', val: 6, tip: 'MAX' },
+              ].map((chip) => {
+                const active = maxDriveCost === chip.val;
+                return (
+                  <button
+                    key={chip.val}
+                    type="button"
+                    onClick={() => setMaxDriveCost(chip.val)}
+                    className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold transition-colors cursor-pointer ${
+                      active
+                        ? 'bg-cyan-600 text-white'
+                        : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
+                    }`}
+                    title={chip.tip}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* SAゲージ上限 */}
@@ -358,6 +470,31 @@ export default function ArticleComboReverseLookup({
               onChange={(e) => setMaxSaCost(Number(e.target.value))}
               className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
             />
+            {/* SAゲージクイックチップ */}
+            <div className="flex items-center gap-1 pt-1.5">
+              {[
+                { label: 'なし (0)', val: 0 },
+                { label: 'Lv.1', val: 1 },
+                { label: 'Lv.2', val: 2 },
+                { label: 'Lv.3 (MAX)', val: 3 },
+              ].map((chip) => {
+                const active = maxSaCost === chip.val;
+                return (
+                  <button
+                    key={chip.val}
+                    type="button"
+                    onClick={() => setMaxSaCost(chip.val)}
+                    className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold transition-colors cursor-pointer ${
+                      active
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
+                    }`}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* キーワード即時検索 */}
@@ -445,15 +582,55 @@ export default function ArticleComboReverseLookup({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 font-mono text-[11px] shrink-0">
-                    <span className="font-black text-xs text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
-                      {combo.damage} dmg
+                  <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[11px] shrink-0">
+                    <span className="font-black text-xs text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shadow-2xs border border-neutral-200/60 dark:border-neutral-700">
+                      {combo.damage.toLocaleString()} dmg
                     </span>
-                    <span className="text-neutral-500 dark:text-neutral-400">
-                      D:{combo.driveCost}本
-                    </span>
+
+                    {/* Dゲージ使用量表示（6ブロックゲージ + 内訳ラベル） */}
+                    <div
+                      className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/90 px-1.5 py-0.5 rounded border border-neutral-200/60 dark:border-neutral-700"
+                      title={`Dゲージ消費: ${combo.driveCost}本 / 6本 (${
+                        combo.driveCost === 0
+                          ? 'ノーゲージ'
+                          : combo.driveCost === 1
+                          ? '生ラッシュ'
+                          : combo.driveCost === 2
+                          ? 'OD技'
+                          : combo.driveCost === 3
+                          ? 'キャンセルラッシュ'
+                          : combo.driveCost === 6
+                          ? 'フルMAX'
+                          : `${combo.driveCost}本消費`
+                      })`}
+                    >
+                      <div className="flex items-center gap-[2px]">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <span
+                            key={i}
+                            className={`w-1.5 h-3 rounded-[1px] transition-colors ${
+                              i < combo.driveCost
+                                ? combo.driveCost === 6
+                                  ? 'bg-rose-500'
+                                  : combo.driveCost >= 4
+                                  ? 'bg-amber-500'
+                                  : 'bg-emerald-500'
+                                : 'bg-neutral-300 dark:bg-neutral-700 opacity-40'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-bold text-neutral-700 dark:text-neutral-300 whitespace-nowrap">
+                        {combo.driveCost}本
+                        {combo.driveCost === 1 && <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-normal ml-0.5">(生ラッシュ)</span>}
+                        {combo.driveCost === 2 && <span className="text-[9px] text-sky-600 dark:text-sky-400 font-normal ml-0.5">(OD)</span>}
+                        {combo.driveCost === 3 && <span className="text-[9px] text-indigo-600 dark:text-indigo-400 font-normal ml-0.5">(キャンセル)</span>}
+                        {combo.driveCost === 6 && <span className="text-[9px] text-rose-600 dark:text-rose-400 font-bold ml-0.5">(MAX)</span>}
+                      </span>
+                    </div>
+
                     {combo.saCost > 0 && (
-                      <span className="text-amber-600 dark:text-amber-400 font-bold">
+                      <span className="px-1.5 py-0.5 rounded bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-[10px]">
                         SA{combo.saCost}
                       </span>
                     )}

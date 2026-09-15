@@ -278,28 +278,35 @@ export default function ArticleDetailPage() {
   const paidSections = currentVariant ? currentVariant.paidSections : article?.paidContent.sections || [];
 
   // 全セクション一覧（クイックジャンプ用）
-  const allSectionsList: QuickJumpSection[] = [
-    ...freeSections.map((sec, idx) => ({
+  const allSectionsList: QuickJumpSection[] = [];
+  freeSections.forEach((sec, idx) => {
+    allSectionsList.push({
       id: `sec-free-${idx}`,
       title: sec.title,
       isPaid: false,
-    })),
-    ...paidSections.map((sec, idx) => ({
+    });
+  });
+  paidSections.forEach((sec, idx) => {
+    if (isCompleteGuide && sec.title.includes('画面中央のコンボ')) {
+      allSectionsList.push({
+        id: 'combo-reverse-lookup',
+        title: '⚡ 実戦コンボ逆引きデータベース',
+        isPaid: true,
+      });
+    }
+    allSectionsList.push({
       id: `sec-paid-${idx}`,
       title: sec.title,
       isPaid: true,
-    })),
-  ];
+    });
+  });
 
   // スクロール位置の検知（現在セクション追従 & フローティングバー表示 & 小見出しリアルタイム検知）
   useEffect(() => {
     const handleScroll = () => {
       setShowQuickJump(window.scrollY > 280);
 
-      const allIds = [
-        ...freeSections.map((_, i) => `sec-free-${i}`),
-        ...paidSections.map((_, i) => `sec-paid-${i}`),
-      ];
+      const allIds = allSectionsList.map((s) => s.id);
 
       let currentActiveSecId: string | null = null;
       for (let i = allIds.length - 1; i >= 0; i--) {
@@ -885,7 +892,7 @@ export default function ArticleDetailPage() {
                         const isCenterComboSec = section.title.includes('画面中央のコンボ');
                         return (
                           <React.Fragment key={idx}>
-                            {/* 一旦非表示: 実戦コンボ逆引きデータベース
+                            {/* 実戦コンボ逆引きデータベース */}
                             {isCompleteGuide && isCenterComboSec && (
                               <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24">
                                 <ArticleComboReverseLookup
@@ -894,7 +901,6 @@ export default function ArticleDetailPage() {
                                 />
                               </div>
                             )}
-                            */}
 
                             <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
                               <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">

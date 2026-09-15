@@ -51,14 +51,14 @@ export const RYU_NEUTRAL_MOVES_FRAME_DATA: Record<string, KeyFrameInfo> = {
       { label: 'ガード', value: '+0F', variant: 'positive' },
     ],
   },
-  // 中K: 発生9F、ガード-4F、キャンセルが効かない
+  // 中K: 発生9F、ガード-4F、キャンセル不可
   'mk': {
     moveKey: 'mk',
     name: '中K',
     items: [
       { label: '発生', value: '9F', variant: 'neutral' },
       { label: 'ガード', value: '-4F', variant: 'negative' },
-      { label: 'キャンセル', value: '効かない', variant: 'neutral' },
+      { label: 'キャンセル', value: '不可', variant: 'neutral' },
     ],
   },
   // 下中K: 発生8F、ガード-6F

@@ -6,6 +6,16 @@
 :root {
   --background: #fafafa;
   --foreground: #171717;
+
+  /* スマホ（モバイル）の文字サイズ基準: 標準を従来の特大（125%）に設定 */
+  --font-scale: 125%;
+}
+
+@media (min-width: 768px) {
+  :root {
+    /* PC・タブレット: 標準は100% */
+    --font-scale: 100%;
+  }
 }
 
 .dark {
@@ -20,6 +30,51 @@ body {
   overflow-x: hidden;
 }
 
+/* data-font-size 属性による文字サイズ切り替え */
+/* スマホ (< 768px) */
+html,
+html[data-font-size="normal"] {
+  --font-scale: 125%; /* 標準: 従来の特大(125%) */
+}
+html[data-font-size="large"] {
+  --font-scale: 140%; /* 大: さらに大きく(140%) */
+}
+html[data-font-size="xlarge"] {
+  --font-scale: 155%; /* 特大: さらに大きく(155%) */
+}
+
+/* PC・タブレット (>= 768px) */
+@media (min-width: 768px) {
+  html,
+  html[data-font-size="normal"] {
+    --font-scale: 100%;
+  }
+  html[data-font-size="large"] {
+    --font-scale: 115%;
+  }
+  html[data-font-size="xlarge"] {
+    --font-scale: 130%;
+  }
+}
+
+html {
+  font-size: var(--font-scale);
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 767px) {
+  /* スマホ表示時に極小フォントが潰れないようrem基準へ最適化 */
+  .text-\[9px\] {
+    font-size: 0.6875rem !important;
+  }
+  .text-\[10px\] {
+    font-size: 0.75rem !important;
+  }
+  .text-\[11px\] {
+    font-size: 0.8125rem !important;
+  }
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -29,9 +84,4 @@ body {
 
 .font-pixel {
   font-family: 'DotGothic16', monospace, sans-serif;
-}
-
-/* スムーズスクロール */
-html {
-  scroll-behavior: smooth;
 }

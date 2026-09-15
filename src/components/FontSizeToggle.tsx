@@ -1,34 +1,48 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Type, Check } from 'lucide-react';
 
 export type FontSizeOption = 'normal' | 'large' | 'xlarge';
 
-const FONT_SIZE_MAP: Record<FontSizeOption, { label: string; scaleText: string; htmlFontSize: string }> = {
-  normal: { label: '標準', scaleText: '100%', htmlFontSize: '100%' },
-  large: { label: '大', scaleText: '112%', htmlFontSize: '112.5%' },
-  xlarge: { label: '特大', scaleText: '125%', htmlFontSize: '125%' },
+interface FontSizeConfig {
+  label: string;
+  mobileScale: string;
+  pcScale: string;
+}
+
+const FONT_SIZE_MAP: Record<FontSizeOption, FontSizeConfig> = {
+  normal: { label: '標準', mobileScale: '125%', pcScale: '100%' },
+  large: { label: '大', mobileScale: '140%', pcScale: '115%' },
+  xlarge: { label: '特大', mobileScale: '155%', pcScale: '130%' },
 };
 
 export default function FontSizeToggle() {
   const [fontSize, setFontSize] = useState<FontSizeOption>('normal');
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    const mql = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+
     const saved = localStorage.getItem('fgc_font_size') as FontSizeOption | null;
     const initial: FontSizeOption = saved && FONT_SIZE_MAP[saved] ? saved : 'normal';
     setFontSize(initial);
     applyFontSize(initial);
+
+    return () => mql.removeEventListener('change', handler);
   }, []);
 
   const applyFontSize = (size: FontSizeOption) => {
-    const config = FONT_SIZE_MAP[size] || FONT_SIZE_MAP.normal;
-    document.documentElement.style.fontSize = config.htmlFontSize;
     document.documentElement.setAttribute('data-font-size', size);
+    // インラインstyleをクリアしてglobals.cssのメディアクエリ定義を優先
+    document.documentElement.style.fontSize = '';
   };
 
   const handleSelectSize = (size: FontSizeOption) => {
@@ -59,6 +73,10 @@ export default function FontSizeToggle() {
     return <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800" />;
   }
 
+  const currentScaleText = isMobile
+    ? FONT_SIZE_MAP[fontSize].mobileScale
+    : FONT_SIZE_MAP[fontSize].pcScale;
+
   return (
     <div className="relative" ref={containerRef}>
       <button
@@ -69,7 +87,7 @@ export default function FontSizeToggle() {
             ? 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/60'
             : 'bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200'
         }`}
-        title={`文字サイズを変更（現在: ${FONT_SIZE_MAP[fontSize].label}）`}
+        title={`文字サイズを変更（現在: ${FONT_SIZE_MAP[fontSize].label} - ${currentScaleText}）`}
         aria-label="文字サイズ調整"
       >
         <div className="flex items-baseline font-bold leading-none select-none">
@@ -80,7 +98,7 @@ export default function FontSizeToggle() {
 
       {/* 文字サイズ変更ポップオーバー */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-48 p-2 rounded-xl bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full mt-2 w-52 p-2 rounded-xl bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
           <div className="px-2 py-1 mb-1 text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider flex items-center gap-1">
             <Type className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>文字サイズ調整</span>
@@ -90,6 +108,7 @@ export default function FontSizeToggle() {
             {(Object.keys(FONT_SIZE_MAP) as FontSizeOption[]).map((key) => {
               const opt = FONT_SIZE_MAP[key];
               const isSelected = fontSize === key;
+              const scale = isMobile ? opt.mobileScale : opt.pcScale;
               return (
                 <button
                   key={key}
@@ -104,7 +123,7 @@ export default function FontSizeToggle() {
                   <div className="flex items-center gap-2">
                     <span className="truncate">{opt.label}</span>
                     <span className={`text-[10px] font-normal ${isSelected ? 'opacity-80' : 'text-neutral-400 dark:text-neutral-500'}`}>
-                      ({opt.scaleText})
+                      ({scale})
                     </span>
                   </div>
                   {isSelected && <Check className="w-3.5 h-3.5 shrink-0" />}
@@ -114,7 +133,7 @@ export default function FontSizeToggle() {
           </div>
 
           <div className="mt-2 pt-1.5 border-t border-neutral-100 dark:border-neutral-800 px-1 text-[10px] text-neutral-400 dark:text-neutral-500 text-center">
-            トレモ中でも見やすい大きさに変更できます
+            {isMobile ? 'スマホ向けに見やすく大きめに設計されています' : 'トレモ中でも見やすい大きさに変更できます'}
           </div>
         </div>
       )}

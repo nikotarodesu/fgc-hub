@@ -27,7 +27,7 @@ export function getShortSubheadingLabel(numChar: string, titleText: string): str
   return numChar ? `${numChar} ${label}` : label;
 }
 
-// インライン装飾のパース（大事なところをくっきりとした太線アンダーラインで強調）
+// インライン装飾のパース（大事なところを淡くさりげないアンダーラインで強調）
 function renderInline(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
@@ -36,7 +36,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <span
           key={i}
-          className="font-bold text-neutral-900 dark:text-neutral-100 underline decoration-2 sm:decoration-[3px] decoration-rose-500 dark:decoration-amber-400 underline-offset-[5px] inline"
+          className="font-bold text-neutral-900 dark:text-neutral-100 underline decoration-[1.5px] sm:decoration-2 decoration-rose-400/30 dark:decoration-amber-300/25 underline-offset-[4px] inline"
         >
           {inner}
         </span>

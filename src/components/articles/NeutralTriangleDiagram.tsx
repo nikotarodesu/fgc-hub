@@ -101,9 +101,6 @@ export default function NeutralTriangleDiagram() {
       {/* ヘッダー */}
       <div className="p-4 sm:p-5 bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-bold uppercase tracking-wider mb-1">
-            <span>インタラクティブ図解</span>
-          </div>
           <h3 className="text-base sm:text-lg font-bold">格ゲー立ち回りの三すくみ（じゃんけん構造）</h3>
         </div>
         <span className="text-xs text-neutral-400">タップして各戦術の強み・弱みを確認</span>

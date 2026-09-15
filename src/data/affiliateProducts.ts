@@ -1,4 +1,4 @@
-﻿export interface AffiliateProduct {
+export interface AffiliateProduct {
   id: string;
   name: string;
   category: 'controller' | 'care' | 'food' | 'accessory' | 'other';
@@ -30,7 +30,6 @@ export const AFFILIATE_PRODUCTS: Record<string, AffiliateProduct> = {
       'ラピッドトリガー搭載（最小0.1mmの超高速入力＆リセット）',
       'デスクを広く使える60%コンパクト日本語配列',
       '激しい打鍵にも耐える高耐久テクスチャードPBTキーキャップ',
-      '筆者自作のクラシックキー設定でMR2000到達を実証済み',
     ],
   },
   'gaming-finger-sleeve': {

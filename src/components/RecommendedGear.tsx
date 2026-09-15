@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { getRecommendedProducts, AffiliateProduct } from '@/data/affiliateProducts';
 import { ExternalLink, BookOpen, CheckCircle2, ShoppingCart, Sparkles } from 'lucide-react';
 
@@ -10,7 +10,7 @@ interface RecommendedGearProps {
 
 export default function RecommendedGear({
   productIds,
-  title = '筆者のにこ太郎愛用アイテム・おすすめ対戦環境',
+  title = '筆者の愛用アイテム',
   subtitle = '数々のレバーレスや周辺機器を試してきた筆者が、実戦で愛用しているメインギアや対戦環境をサポートする推奨アイテムです。',
 }: RecommendedGearProps) {
   const products = getRecommendedProducts(productIds);

@@ -1078,8 +1078,8 @@ export default function ArticleDetailPage() {
               )}
             </article>
 
-            {/* 筆者愛用・おすすめアイテム＆アソシエイト（無料記事およびアンロック記事末尾） */}
-            {(!article.isPaid || isUnlocked || Boolean(article.recommendedGearIds)) && (
+            {/* 筆者の愛用アイテム＆アソシエイト（無料記事のみ表示） */}
+            {!article.isPaid && (
               <RecommendedGear productIds={article.recommendedGearIds} />
             )}
 

@@ -467,7 +467,7 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-base sm:text-[16.5px] tracking-tight scroll-mt-24 border border-yellow-500/20 dark:border-yellow-400/20"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-base sm:text-[16.5px] tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
@@ -742,25 +742,7 @@ export default function RichContent({
 
   return (
     <div className="space-y-4 text-neutral-700 dark:text-neutral-300 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
-      {displayGroups.map((group, gIdx) => {
-        if (group.type === 'sticky_group') {
-          return (
-            <section key={`sticky-group-${gIdx}`} className="relative my-3 sm:my-4 first:mt-0">
-              {/* 画面上端にピタッとくっつく吸着ヘッダー */}
-              <div className="sticky top-0 z-20 py-2 -mx-2 sm:-mx-3 px-2 sm:px-3 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-b border-neutral-200/60 dark:border-neutral-800/80 shadow-2xs">
-                {renderBlock(group.headerBlock, `sticky-header-${gIdx}`)}
-              </div>
-
-              {/* グループ配下のコンテンツ（コンボ行、解説、GIF等） */}
-              <div className="space-y-3.5 pt-2">
-                {group.blocks.map((b, bIdx) => renderBlock(b, `sticky-body-${gIdx}-${bIdx}`))}
-              </div>
-            </section>
-          );
-        }
-
-        return renderBlock(group.block, `single-${gIdx}`);
-      })}
+      {blocks.map((block, bIdx) => renderBlock(block, `block-${bIdx}`))}
     </div>
   );
 }

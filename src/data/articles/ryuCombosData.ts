@@ -62,7 +62,6 @@ export const LETHAL_DAMAGE_PRESETS = [
 ] as const;
 
 export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
-  // ❶ 弱技始動
   {
     id: 'c-light-01',
     starterCategory: 'light',
@@ -127,6 +126,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     jumpTargetText: '弱K>キャンセル弱P>引大P>キャンセル大K>大P>強昇竜>SA3〆',
   },
   {
+    id: 'c-light-04-ca',
+    starterCategory: 'light',
+    starterLabel: '弱技始動',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: '牽制弱技からの大逆転リーサル（CA〆）',
+    classicRecipe: '弱K>キャンセル弱P>引大P>キャンセル大K>大P>強昇竜>CA〆',
+    modernRecipe: 'A弱>キャンセルA弱>引大>キャンセル大>大>強昇竜>CA〆',
+    damage: 4497,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '牽制技の弱技からキャンセルラッシュを2回絡めて4000超えを叩き出すリーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '弱K>キャンセル弱P>引大P>キャンセル大K>大P>強昇竜>SA3〆',
+  },
+  {
     id: 'c-light-05',
     starterCategory: 'light',
     starterLabel: '弱技始動',
@@ -158,8 +173,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '当てにいく弱技にOD電刃弾を仕込むルート。',
     jumpTargetText: '弱K>OD電刃弾>SA1〆',
   },
-
-  // ❷ 中技始動
   {
     id: 'c-med-01',
     starterCategory: 'medium',
@@ -239,6 +252,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     jumpTargetText: '下中P>キャンセル大P>引大P>キャンセル大K>大P>強昇龍>SA3〆',
   },
   {
+    id: 'c-med-05-ca',
+    starterCategory: 'medium',
+    starterLabel: '中技始動',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: '中技始動最大リーサルコンボ（CA〆）',
+    classicRecipe: '下中P>キャンセル大P>引大P>キャンセル大K>大P>強昇龍>CA〆',
+    modernRecipe: 'A中>キャンセル大>大>キャンセル大>大>強昇竜>CA〆',
+    damage: 5601,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '置きの下中Pから5300超えのダメージを叩き出すシンプルかつ強力なリーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '下中P>キャンセル大P>引大P>キャンセル大K>大P>強昇龍>SA3〆',
+  },
+  {
     id: 'c-med-06',
     starterCategory: 'medium',
     starterLabel: '中技始動',
@@ -253,6 +282,23 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     hasDenjin: true,
     isLethal: true,
     note: '下中Kから電刃波掌撃の隙のなさを活かした高火力リーサルコンボ。',
+    jumpTargetText: '下中K>電刃波掌撃>ラッシュ引大K>キャンセル引大K>キャンセル引大K>強昇龍>SA3〆',
+  },
+  {
+    id: 'c-med-06-ca',
+    starterCategory: 'medium',
+    starterLabel: '中技始動',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: '【電刃】下中K電刃波掌撃ラッシュCA',
+    classicRecipe: '下中K>電刃波掌撃>ラッシュ引大K>キャンセル引大K>キャンセル引大K>強昇龍>CA〆',
+    modernRecipe: '下中>電刃波掌撃>ラッシュ引大>キャンセル引大>キャンセル引大>強昇竜>CA〆',
+    damage: 5082,
+    driveCost: 4,
+    saCost: 3,
+    hasDenjin: true,
+    isLethal: true,
+    note: '下中Kから電刃波掌撃の隙のなさを活かした高火力リーサルコンボ。（※CAフィニッシュで+250ダメージ）',
     jumpTargetText: '下中K>電刃波掌撃>ラッシュ引大K>キャンセル引大K>キャンセル引大K>強昇龍>SA3〆',
   },
   {
@@ -272,8 +318,23 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'OD電刃波掌撃を組み込んだ中央最高峰のダメージルート。',
     jumpTargetText: '下中K>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大K>大P>強昇龍>SA3〆',
   },
-
-  // ❸ 大技始動
+  {
+    id: 'c-med-07-ca',
+    starterCategory: 'medium',
+    starterLabel: '中技始動',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: '【電刃】OD電刃波掌撃高火力リーサル（CA〆）',
+    classicRecipe: '下中K>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大K>大P>強昇龍>CA〆',
+    modernRecipe: '下中>OD電刃波掌撃>大>キャンセル大>大>キャンセル大>大>強昇竜>CA〆',
+    damage: 5489,
+    driveCost: 5,
+    saCost: 3,
+    hasDenjin: true,
+    isLethal: true,
+    note: 'OD電刃波掌撃を組み込んだ中央最高峰のダメージルート。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '下中K>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大K>大P>強昇龍>SA3〆',
+  },
   {
     id: 'c-heavy-01',
     starterCategory: 'heavy',
@@ -305,8 +366,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'Dゲージを1本も消費せずに5400ダメージ。ゲージ効率と回収率が最高峰。',
     jumpTargetText: '大P>強昇竜>SA3〆（5400）',
   },
-
-  // ❹ 無敵技ガード後
+  {
+    id: 'c-heavy-02-ca',
+    starterCategory: 'heavy',
+    starterLabel: '大技始動',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: '大Kパニカン・ノーゲージCA',
+    classicRecipe: '大K（Pc）>大P>強昇竜>CA〆',
+    modernRecipe: '大（Pc）>大>強昇竜>CA〆',
+    damage: 5650,
+    driveCost: 0,
+    saCost: 3,
+    isLethal: true,
+    note: 'Dゲージを1本も消費せずに5400ダメージ。ゲージ効率と回収率が最高峰。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '大P>強昇竜>SA3〆（5400）',
+  },
   {
     id: 'c-rev-01',
     starterCategory: 'reversal_punish',
@@ -353,8 +428,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'リュウの中央最高峰リーサルコンボ。相手の体力を一瞬で消し飛ばす。',
     jumpTargetText: 'OD波掌撃（Pc）>引大P>キャンセル大K>大P>キャンセル大K>大P>強昇竜>SA3〆',
   },
-
-  // ❺ シミー
+  {
+    id: 'c-rev-03-ca',
+    starterCategory: 'reversal_punish',
+    starterLabel: '無敵技ガード後',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: 'OD波掌撃パニカン最大リーサル（CA〆）',
+    classicRecipe: 'OD波掌撃（Pc）>引大P>キャンセル大K>大P>キャンセル大K>大P>強昇竜>CA〆',
+    modernRecipe: 'OD波掌撃（Pc）>引大>キャンセル大>大>キャンセル大>大>強昇竜>CA〆',
+    damage: 6725,
+    driveCost: 5,
+    saCost: 3,
+    isLethal: true,
+    note: 'リュウの中央最高峰リーサルコンボ。相手の体力を一瞬で消し飛ばす。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: 'OD波掌撃（Pc）>引大P>キャンセル大K>大P>キャンセル大K>大P>強昇竜>SA3〆',
+  },
   {
     id: 'c-shimmy-01',
     starterCategory: 'shimmy',
@@ -385,8 +474,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '下中Pは発生6Fで最も投げ抜けを狩りやすいが、火力はやや控えめになる。',
     jumpTargetText: '下中P（Pc）>下中K〜',
   },
-
-  // ❻ インパクトパニカン
   {
     id: 'c-imp-01',
     starterCategory: 'impact',
@@ -433,8 +520,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '最初のJ中Pを低めで当てることで次の昇りJ中Pが繋がる高難度・大運びルート。',
     jumpTargetText: '遅らせJ中P（2段ヒット）>J中P（2段ヒット）>空中竜巻〆（2550）',
   },
-
-  // ❼ 入れ替え
   {
     id: 'c-switch-01',
     starterCategory: 'switch',
@@ -482,8 +567,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'ラッシュ下中Kで相手の下を潜り抜けて入れ替え。インパクト重ねや前ステ+6起き攻めが可能。',
     jumpTargetText: 'ラッシュ下中K+26>前ステ+6',
   },
-
-  // ❽ Dリバガード後
   {
     id: 'c-drev-01',
     starterCategory: 'drive_reversal',
@@ -515,8 +598,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '相手の苦し紛れのDリバをガードした瞬間に試合を終わらせる確定リーサル。',
     jumpTargetText: '中P（Pc）>大P〜',
   },
-
-  // ❾ 投げ・ジャスパ
+  {
+    id: 'c-drev-02-ca',
+    starterCategory: 'drive_reversal',
+    starterLabel: 'Dリバ後',
+    position: 'center',
+    positionLabel: '画面中央',
+    name: 'Dリバ狩りノーゲージCAリーサル',
+    classicRecipe: '中P（Pc）>大P>強昇竜>CA〆',
+    modernRecipe: '中（Pc）>大>強昇竜>CA〆',
+    damage: 5350,
+    driveCost: 0,
+    saCost: 3,
+    isLethal: true,
+    note: '相手の苦し紛れのDリバをガードした瞬間に試合を終わらせる確定リーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '中P（Pc）>大P〜',
+  },
   {
     id: 'c-other-01',
     starterCategory: 'other',
@@ -547,12 +644,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'ジャンプ攻撃等をジャスパした際のおすすめルート。安全に電刃錬気を溜められる。',
     jumpTargetText: '➓ ジャスパ',
   },
-
-  // ==========================================
-  // 【画面端】コンボ一覧
-  // ==========================================
-
-  // 画面端 電刃波掌撃・強波掌撃ルート
   {
     id: 'corn-denjin-01',
     starterCategory: 'medium',
@@ -661,13 +752,28 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 5846,
     driveCost: 6,
     saCost: 3,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: '下大Pのキャンセルラッシュを少し伸ばし気味に当てることで5800超えの驚異的なリーサル。',
     jumpTargetText: 'ラッシュ下大P>キャンセル下大P（伸ばし気味に当てる）>キャンセル下大P>強足刀>強昇竜>SA3〆',
   },
-
-  // 画面端 OD電刃波掌撃・大K（Pc）ルート
+  {
+    id: 'corn-denjin-07-ca',
+    starterCategory: 'medium',
+    starterLabel: '電刃・強波掌撃',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '端電刃波掌撃最大CAリーサル',
+    classicRecipe: '電刃波掌撃 or 強波掌撃>ラッシュ下大P>キャンセル下大P（伸ばし）>キャンセル下大P>強足刀>強昇竜>CA〆',
+    modernRecipe: '電刃波掌撃 or 強波掌撃>ラッシュ下大>キャンセル下大（伸ばし）>キャンセル下大>強足刀>強昇竜>CA〆',
+    damage: 6096,
+    driveCost: 6,
+    saCost: 3,
+    hasDenjin: true,
+    isLethal: true,
+    note: '下大Pのキャンセルラッシュを少し伸ばし気味に当てることで5800超えの驚異的なリーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: 'ラッシュ下大P>キャンセル下大P（伸ばし気味に当てる）>キャンセル下大P>強足刀>強昇竜>SA3〆',
+  },
   {
     id: 'corn-oddenjin-01',
     starterCategory: 'heavy',
@@ -758,8 +864,8 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 5960,
     driveCost: 4,
     saCost: 3,
-    advantageFrames: '+24',
     isLethal: true,
+    advantageFrames: '+24',
     note: 'SA1に繋げる時はこのルートが一番減り、ほぼ6000ダメージに到達。',
     jumpTargetText: '前大K>OD竜巻>SA1〆（+24）',
   },
@@ -779,8 +885,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'シンプルかつ端最大峰の6600超えリーサルコンボ。',
     jumpTargetText: '大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>SA3〆',
   },
-
-  // 画面端 弱技始動
+  {
+    id: 'corn-oddenjin-07-ca',
+    starterCategory: 'heavy',
+    starterLabel: '大技・OD電刃',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: 'OD電刃・大KPc大PループCA',
+    classicRecipe: 'OD電刃波掌撃 or 大K（Pc）>大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>CA〆',
+    modernRecipe: 'OD電刃波掌撃 or 大（Pc）>大>キャンセル大>大>キャンセル大>引大>強足刀>中昇竜>CA〆',
+    damage: 6914,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: 'シンプルかつ端最大峰の6600超えリーサルコンボ。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>SA3〆',
+  },
   {
     id: 'corn-light-01',
     starterCategory: 'light',
@@ -811,6 +931,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     saCost: 3,
     isLethal: true,
     note: '端の小技から4400超えで倒し切る強力なリーサル。',
+    jumpTargetText: 'ラッシュ中P>キャンセル下大P>中足刀>強昇竜>SA3〆（4412）リーサルコンボ',
+  },
+  {
+    id: 'corn-light-02-ca',
+    starterCategory: 'light',
+    starterLabel: '弱技始動',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '端弱始動OD竜巻リーサルコンボ（CA〆）',
+    classicRecipe: '弱P×3>OD竜巻>ラッシュ中P>キャンセル下大P>中足刀>強昇竜>CA〆',
+    modernRecipe: '弱×3>OD竜巻>ラッシュ中>キャンセル下大>中足刀>強昇竜>CA〆',
+    damage: 4662,
+    driveCost: 5,
+    saCost: 3,
+    isLethal: true,
+    note: '端の小技から4400超えで倒し切る強力なリーサル。（※CAフィニッシュで+250ダメージ）',
     jumpTargetText: 'ラッシュ中P>キャンセル下大P>中足刀>強昇竜>SA3〆（4412）リーサルコンボ',
   },
   {
@@ -877,8 +1013,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '端の牽制弱Kから一気に試合を決める高火力リーサル。',
     jumpTargetText: 'ラッシュ弱P>キャンセル引大P>強足刀>中昇竜>SA3〆（4331）',
   },
-
-  // 画面端 中技始動
+  {
+    id: 'corn-light-06-ca',
+    starterCategory: 'light',
+    starterLabel: '弱技始動',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '端弱K仕込みOD弾CAリーサル',
+    classicRecipe: '弱K>OD弾>ラッシュ弱P>キャンセル引大P>強足刀>中昇竜>CA〆',
+    modernRecipe: 'A弱>OD弾>ラッシュ弱>キャンセル引大>強足刀>中昇竜>CA〆',
+    damage: 4581,
+    driveCost: 5,
+    saCost: 3,
+    isLethal: true,
+    note: '端の牽制弱Kから一気に試合を決める高火力リーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: 'ラッシュ弱P>キャンセル引大P>強足刀>中昇竜>SA3〆（4331）',
+  },
   {
     id: 'corn-med-01',
     starterCategory: 'medium',
@@ -944,6 +1094,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     jumpTargetText: 'ラッシュ下大P>キャンセル下大P>強足刀>強昇竜>SA3〆（5726）',
   },
   {
+    id: 'corn-med-04-ca',
+    starterCategory: 'medium',
+    starterLabel: '中技始動',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '端中技始動大P強波掌撃CAリーサル',
+    classicRecipe: '下中P>キャンセル大P>強波掌撃>ラッシュ下大P>キャンセル下大P>強足刀>強昇竜>CA〆',
+    modernRecipe: '下中>キャンセル大>強波掌撃>ラッシュ下大>キャンセル下大>強足刀>強昇竜>CA〆',
+    damage: 5976,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '中技から5700超えを削り取る強力無比な端リーサル。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: 'ラッシュ下大P>キャンセル下大P>強足刀>強昇竜>SA3〆（5726）',
+  },
+  {
     id: 'corn-med-05',
     starterCategory: 'medium',
     starterLabel: '中技始動',
@@ -958,8 +1124,6 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: 'SA1で約4000ダメージを削り取るフィニッシュルート。',
     jumpTargetText: 'ラッシュ下大P>キャンセル下大P>強足刀>SA1〆（3930）',
   },
-
-  // 画面端 大技始動
   {
     id: 'corn-heavy-01',
     starterCategory: 'heavy',
@@ -1025,6 +1189,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     jumpTargetText: '大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>SA3〆（5943）',
   },
   {
+    id: 'corn-heavy-04-ca',
+    starterCategory: 'heavy',
+    starterLabel: '大技始動',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '大Pキャンセル大KループCAリーサル',
+    classicRecipe: '大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>CA〆',
+    modernRecipe: '大>キャンセル大>大>キャンセル大>引大>強足刀>中昇竜>CA〆',
+    damage: 6193,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '大Pヒットで強制立ち状態になるためキャンセル大Kが繋がる。約6000ダメージ。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇竜>SA3〆（5943）',
+  },
+  {
     id: 'corn-heavy-05',
     starterCategory: 'heavy',
     starterLabel: '大技始動',
@@ -1040,8 +1220,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     note: '最初のラッシュを少し伸ばすと成功しやすい。6200超えの驚異的ダメージ。',
     jumpTargetText: '大P（Pc）>強波掌撃>ラッシュ下大P>キャンセル（ディレイ）下大P>キャンセル下大P>強足刀>強昇龍>SA3〆（6206）',
   },
-
-  // 画面端 無敵技ガード後・シミー・インパクト・壁ドン
+  {
+    id: 'corn-heavy-05-ca',
+    starterCategory: 'heavy',
+    starterLabel: '大技始動',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '大Pパニカン強波掌撃CA最大リーサル',
+    classicRecipe: '大P（Pc）>強波掌撃>ラッシュ下大P>キャンセル下大P>キャンセル下大P>強足刀>強昇龍>CA〆',
+    modernRecipe: '大（Pc）>強波掌撃>ラッシュ下大>キャンセル下大>キャンセル下大>強足刀>強昇竜>CA〆',
+    damage: 6456,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '最初のラッシュを少し伸ばすと成功しやすい。6200超えの驚異的ダメージ。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '大P（Pc）>強波掌撃>ラッシュ下大P>キャンセル（ディレイ）下大P>キャンセル下大P>強足刀>強昇龍>SA3〆（6206）',
+  },
   {
     id: 'corn-rev-01',
     starterCategory: 'reversal_punish',
@@ -1091,6 +1285,22 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     jumpTargetText: 'ラッシュ下大P>キャンセル下大P>キャンセル下大P>強足刀>強昇龍>SA3〆（6507）',
   },
   {
+    id: 'corn-rev-03-ca',
+    starterCategory: 'reversal_punish',
+    starterLabel: '無敵技ガード後',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '端強足刀パニカンCA最大リーサル',
+    classicRecipe: '強足刀（Pc）>ラッシュ下大P>キャンセル下大P>キャンセル下大P>強足刀>強昇龍>CA〆',
+    modernRecipe: '強足刀（Pc）>ラッシュ下大>キャンセル下大>キャンセル下大>強足刀>強昇竜>CA〆',
+    damage: 6757,
+    driveCost: 6,
+    saCost: 3,
+    isLethal: true,
+    note: '無敵技ガードから6500ダメージを削り切る。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: 'ラッシュ下大P>キャンセル下大P>キャンセル下大P>強足刀>強昇龍>SA3〆（6507）',
+  },
+  {
     id: 'corn-rev-04',
     starterCategory: 'reversal_punish',
     starterLabel: '無敵技ガード後',
@@ -1102,8 +1312,8 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 7171,
     driveCost: 5,
     saCost: 3,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: 'リュウの全コンボ中最高ダメージ（7171）。電刃ストック時の究極コンボ。',
     jumpTargetText: '強足刀（Pc）>電刃SA2（lv2）>ラッシュ引大P>キャンセル中P（目押し）>ラッシュ引大P>キャンセル下大P>強足刀>SA1〆（7171）',
   },
@@ -1214,15 +1424,28 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 5120,
     driveCost: 5,
     saCost: 3,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: '壁ドンから電刃波掌撃を絡めて5100超え。目押しで下大Pを2回当てると5203ダメージ。',
     jumpTargetText: '大P>電刃波掌撃>ラッシュ中P>ラッシュ引大P>キャンセル下大P>強足刀>強昇竜>SA3（5120）',
   },
-
-  // ==========================================
-  // 【スタン】コンボ一覧（画面端）
-  // ==========================================
+  {
+    id: 'corn-wall-03-ca',
+    starterCategory: 'impact',
+    starterLabel: '壁ドン',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: '【電刃】壁ドン大P電刃波掌撃CAリーサル',
+    classicRecipe: '大P>電刃波掌撃>ラッシュ中P>ラッシュ引大P>キャンセル下大P>強足刀>強昇竜>CA〆',
+    modernRecipe: '大>電刃波掌撃>ラッシュ中>ラッシュ引大>キャンセル下大>強足刀>強昇竜>CA〆',
+    damage: 5370,
+    driveCost: 5,
+    saCost: 3,
+    hasDenjin: true,
+    isLethal: true,
+    note: '壁ドンから電刃波掌撃を絡めて5100超え。目押しで下大Pを2回当てると5203ダメージ。（※CAフィニッシュで+250ダメージ）',
+    jumpTargetText: '大P>電刃波掌撃>ラッシュ中P>ラッシュ引大P>キャンセル下大P>強足刀>強昇竜>SA3（5120）',
+  },
   {
     id: 'stun-01',
     starterCategory: 'stun',
@@ -1235,9 +1458,26 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 5186,
     driveCost: 6,
     saCost: 3,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: '電刃溜めからの簡単確実なスタン後リーサルコンボ。',
+    jumpTargetText: '電刃錬気>前J大P>大P>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇龍>SA3〆（5186）',
+  },
+  {
+    id: 'stun-01-ca',
+    starterCategory: 'stun',
+    starterLabel: 'スタン',
+    position: 'corner',
+    positionLabel: '画面端',
+    name: 'スタン電刃錬気CAリーサル',
+    classicRecipe: '電刃錬気>前J大P>大P>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇龍>CA〆',
+    modernRecipe: '電刃錬気>前J大>大>OD電刃波掌撃>大>キャンセル大>大>キャンセル大>引大>強足刀>中昇竜>CA〆',
+    damage: 5436,
+    driveCost: 6,
+    saCost: 3,
+    hasDenjin: true,
+    isLethal: true,
+    note: '電刃溜めからの簡単確実なスタン後リーサルコンボ。（※CAフィニッシュで+250ダメージ）',
     jumpTargetText: '電刃錬気>前J大P>大P>OD電刃波掌撃>大P>キャンセル大K>大P>キャンセル大P>引大P>強足刀>中昇龍>SA3〆（5186）',
   },
   {
@@ -1252,8 +1492,8 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 5231,
     driveCost: 5,
     saCost: 3,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: 'SA3を使うよりもダメージが高いスタン時最大リーサルコンボ（5231）。',
     jumpTargetText: 'ラッシュ下大P>キャンセル中P（目押し）>ラッシュ引大P>キャンセル下大P>強足刀>SA1〆（5231）SA3を使うよりもダメージが高い',
   },
@@ -1269,8 +1509,8 @@ export const RYU_ARTICLE_COMBOS: ArticleComboItem[] = [
     damage: 4894,
     driveCost: 6,
     saCost: 2,
-    isLethal: true,
     hasDenjin: true,
+    isLethal: true,
     note: '相手の体力が半分（4800）以下ならSAゲージを1つ温存しつつ倒し切れる。',
     jumpTargetText: 'ラッシュ下大P>キャンセル下大P（伸ばし気味に）>キャンセル下大P>強足刀>強昇竜〆（4894）相手の体力が半分以下ならこれでリーサル',
   },

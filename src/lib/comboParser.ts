@@ -482,11 +482,12 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 1. SA (スーパーアーツ)
+  // 1. SA (スーパーアーツ) / CA (クリティカルアーツ)
   if (lower.includes('sa3') || lower.includes('真・昇龍') || lower.includes('ca')) {
     const isModern = controlType === 'modern';
+    const isCa = lower.includes('ca');
     return {
-      original: remaining || 'SA3',
+      original: remaining || (isCa ? 'CA' : 'SA3'),
       isCancel,
       isRush,
       rushText,
@@ -496,15 +497,15 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       button: {
         kind: 'punch',
         color: 'gold',
-        label: 'SA3',
-        description: '金のSAボタン',
-        iconText: 'SA3',
+        label: isCa ? 'CA' : 'SA3',
+        description: isCa ? '金のCAボタン（クリティカルアーツ）' : '金のSAボタン',
+        iconText: isCa ? 'CA' : 'SA3',
         showLabel: false,
       },
       suffix,
       tip: isModern
-        ? '↓＋弱＋中 または ↓＋SP＋強（手動テンキー236×2+攻撃でも入力可能）'
-        : 'テンキー236を2回素早く入力+パンチ',
+        ? (isCa ? '体力25%以下で発動：↓＋弱＋中 または ↓＋SP＋強（+250ダメージ）' : '↓＋弱＋中 または ↓＋SP＋強（手動テンキー236×2+攻撃でも入力可能）')
+        : (isCa ? '体力25%以下で発動：テンキー236を2回素早く入力+パンチ（+250ダメージ）' : 'テンキー236を2回素早く入力+パンチ'),
     };
   }
 

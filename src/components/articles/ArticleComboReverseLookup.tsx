@@ -559,8 +559,14 @@ export default function ArticleComboReverseLookup({
                     </div>
 
                     {combo.saCost > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-[10px]">
-                        SA{combo.saCost}
+                      <span
+                        className={`px-1.5 py-0.5 rounded border font-bold text-[10px] ${
+                          combo.classicRecipe.includes('CA〆')
+                            ? 'bg-rose-500/15 dark:bg-rose-950/50 border-rose-500/40 text-rose-600 dark:text-rose-400 font-black'
+                            : 'bg-amber-500/10 dark:bg-amber-950/40 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                        }`}
+                      >
+                        {combo.classicRecipe.includes('CA〆') ? 'CA' : `SA${combo.saCost}`}
                       </span>
                     )}
                   </div>

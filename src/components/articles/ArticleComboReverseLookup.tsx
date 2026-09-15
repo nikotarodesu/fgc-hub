@@ -10,20 +10,11 @@ import {
 } from '@/data/articles/ryuCombosData';
 import InteractiveComboRow from '@/components/InteractiveComboRow';
 import {
-  Search,
-  Filter,
   Flame,
   Zap,
   ArrowDown,
   RotateCcw,
-  Sparkles,
   Lock,
-  ChevronDown,
-  ChevronUp,
-  Layers,
-  Gauge,
-  SlidersHorizontal,
-  MapPin,
 } from 'lucide-react';
 
 interface ArticleComboReverseLookupProps {
@@ -232,108 +223,91 @@ export default function ArticleComboReverseLookup({
       </div>
 
       {/* フィルターコントロール群 */}
-      <div className="p-3 sm:p-4 space-y-3.5 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
-        {/* Dゲージ使用量仕様のガイドバナー */}
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-indigo-500/10 dark:from-emerald-950/40 dark:via-cyan-950/40 dark:to-indigo-950/40 border border-cyan-500/30 text-xs">
-          <div className="flex items-center gap-1.5 font-bold text-neutral-800 dark:text-neutral-200">
-            <Gauge className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>Dゲージ使用量の目安 (最大6本):</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium shadow-2xs">
-              生ラッシュ: <strong className="font-bold">1本</strong>
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-sky-500/30 text-sky-700 dark:text-sky-300 font-medium shadow-2xs">
-              OD技: <strong className="font-bold">2本</strong>
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-white dark:bg-neutral-800 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 font-medium shadow-2xs">
-              キャンセルラッシュ: <strong className="font-bold">3本</strong>
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 font-bold shadow-2xs">
-              MAX: <strong className="font-bold">6本</strong>
-            </span>
-          </div>
-        </div>
-
+      <div className="p-3 sm:p-4 space-y-3 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
         {/* 0. ステージ状況・位置タブ（画面中央 / 画面端） */}
-        <div className="pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
-          <div className="flex items-center gap-1.5 mb-2 text-xs font-bold text-neutral-700 dark:text-neutral-300">
-            <MapPin className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>ステージ状況・位置で表示切替:</span>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            {POSITION_OPTIONS.map((pos) => {
-              const active = selectedPosition === pos.id;
-              const count =
-                pos.id === 'all'
-                  ? RYU_ARTICLE_COMBOS.length
-                  : RYU_ARTICLE_COMBOS.filter((c) => c.position === pos.id || c.position === 'any').length;
+        <div className="grid grid-cols-3 gap-2">
+          {POSITION_OPTIONS.map((pos) => {
+            const active = selectedPosition === pos.id;
+            const count =
+              pos.id === 'all'
+                ? RYU_ARTICLE_COMBOS.length
+                : RYU_ARTICLE_COMBOS.filter((c) => c.position === pos.id || c.position === 'any').length;
 
-              return (
-                <button
-                  key={pos.id}
-                  type="button"
-                  onClick={() => setSelectedPosition(pos.id)}
-                  className={`flex items-center justify-between sm:justify-center gap-1.5 py-2 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            return (
+              <button
+                key={pos.id}
+                type="button"
+                onClick={() => setSelectedPosition(pos.id)}
+                className={`flex items-center justify-between sm:justify-center gap-1.5 py-2 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  active
+                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-md ring-2 ring-cyan-500'
+                    : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20'
+                }`}
+              >
+                <span>{pos.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
                     active
-                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-md ring-2 ring-cyan-500'
-                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20'
+                      ? 'bg-white/20 dark:bg-neutral-900/20 text-white dark:text-neutral-900'
+                      : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
                   }`}
                 >
-                  <span>{pos.label}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
-                      active
-                        ? 'bg-white/20 dark:bg-neutral-900/20 text-white dark:text-neutral-900'
-                        : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* 1. 始動状況チップ（横スクロール可能） */}
-        <div>
-          <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold text-neutral-700 dark:text-neutral-300">
-            <Layers className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>始動技・状況で絞り込み:</span>
-          </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin">
-            {STARTER_CATEGORY_OPTIONS.map((opt) => {
-              const active = selectedStarter === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setSelectedStarter(opt.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
-                    active
-                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs ring-2 ring-cyan-500/50'
-                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+          {STARTER_CATEGORY_OPTIONS.map((opt) => {
+            const active = selectedStarter === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setSelectedStarter(opt.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                  active
+                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs ring-2 ring-cyan-500/50'
+                    : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500'
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* 2. リーサル必要ダメージ（2,500〜7,000 / 上限+500抽出） */}
-        <div className="space-y-2 pt-1 border-t border-neutral-200/60 dark:border-neutral-800">
-          <div className="flex flex-wrap items-center justify-between gap-1 text-xs">
-            <div className="flex items-center gap-1.5 font-bold text-neutral-800 dark:text-neutral-200">
-              <Flame className="w-3.5 h-3.5 text-rose-500" />
-              <span>リーサル逆引きダメージ（相手の残りHPに合わせて抽出）:</span>
+        {/* 2. リーサルダメージ（簡易ボタン ＆ スライダー） */}
+        <div className="space-y-2 pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
+          <div className="flex items-center justify-between gap-2">
+            {/* 簡易ボタンプリセット */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin flex-1 min-w-0">
+              {LETHAL_DAMAGE_PRESETS.map((preset) => {
+                const active = targetDamage === preset.value;
+                return (
+                  <button
+                    key={preset.value}
+                    type="button"
+                    onClick={() => setTargetDamage(preset.value)}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                      active
+                        ? 'bg-rose-600 text-white shadow-xs ring-2 ring-rose-400'
+                        : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                );
+              })}
             </div>
-            {targetDamage > 0 ? (
-              <div className="flex items-center gap-2">
+
+            {targetDamage > 0 && (
+              <div className="flex items-center gap-1.5 shrink-0">
                 <span className="px-2 py-0.5 rounded-md bg-rose-500/10 dark:bg-rose-950/50 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-mono font-bold text-xs">
-                  🎯 抽出: {targetDamage.toLocaleString()} 〜 {targetDamage >= 7000 ? '7,171+ (MAX)' : `${(targetDamage + 500).toLocaleString()} dmg`}
+                  {targetDamage.toLocaleString()} 〜 {targetDamage >= 7000 ? 'MAX' : `${(targetDamage + 500).toLocaleString()} dmg`}
                 </span>
                 <button
                   type="button"
@@ -343,69 +317,23 @@ export default function ArticleComboReverseLookup({
                   解除
                 </button>
               </div>
-            ) : (
-              <span className="text-[11px] text-neutral-400 font-medium">全ダメージ帯を表示中</span>
             )}
           </div>
 
-          {/* 簡易ボタンプリセット */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin">
-            {LETHAL_DAMAGE_PRESETS.map((preset) => {
-              const active = targetDamage === preset.value;
-              return (
-                <button
-                  key={preset.value}
-                  type="button"
-                  onClick={() => setTargetDamage(preset.value)}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
-                    active
-                      ? 'bg-rose-600 text-white shadow-xs ring-2 ring-rose-400'
-                      : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400'
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* スライダー（カーソル操作・微調整用） */}
-          <div className="bg-white/80 dark:bg-neutral-800/80 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 space-y-1.5">
-            <div className="flex items-center justify-between text-[11px] text-neutral-600 dark:text-neutral-400">
-              <span className="font-bold flex items-center gap-1">
-                <SlidersHorizontal className="w-3 h-3 text-rose-500" />
-                スライダー微調整 (2,500 〜 7,000 dmg):
-              </span>
-              <span className="font-mono font-bold text-rose-600 dark:text-rose-400">
-                {targetDamage > 0 ? `${targetDamage.toLocaleString()} dmg 選択中` : '未指定（全域）'}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-neutral-400 shrink-0">2500</span>
-              <input
-                type="range"
-                min="2500"
-                max="7000"
-                step="100"
-                value={targetDamage === 0 ? 2500 : targetDamage}
-                onChange={(e) => setTargetDamage(Number(e.target.value))}
-                className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-rose-600"
-                aria-label="リーサルダメージスライダー"
-              />
-              <span className="text-[10px] font-mono text-neutral-400 shrink-0">7000</span>
-            </div>
-            <div className="flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400 pt-0.5">
-              <span>※指定値から<strong>+500 dmg</strong>の上限範囲（例: 2500選択で2500〜3000）のコンボを自動抽出</span>
-              {targetDamage > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setTargetDamage(0)}
-                  className="text-rose-600 dark:text-rose-400 hover:underline font-bold"
-                >
-                  フィルター解除
-                </button>
-              )}
-            </div>
+          {/* スライダー微調整（シンプルに1行で配置） */}
+          <div className="flex items-center gap-2 px-1">
+            <span className="text-[10px] font-mono text-neutral-400 shrink-0">2500</span>
+            <input
+              type="range"
+              min="2500"
+              max="7000"
+              step="100"
+              value={targetDamage === 0 ? 2500 : targetDamage}
+              onChange={(e) => setTargetDamage(Number(e.target.value))}
+              className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-rose-600"
+              aria-label="リーサルダメージスライダー"
+            />
+            <span className="text-[10px] font-mono text-neutral-400 shrink-0">7000</span>
           </div>
         </div>
 

@@ -56,6 +56,7 @@ type LineType =
   | 'frame'
   | 'combo'
   | 'subheading'
+  | 'action_heading'
   | 'bullet'
   | 'numbered'
   | 'arrow'
@@ -77,12 +78,11 @@ function getLineType(line: string): LineType {
     return 'combo';
   }
   if (trimmed.startsWith('●') || trimmed.startsWith('■')) return 'subheading';
+  if (trimmed.startsWith('▶︎') || trimmed.startsWith('▶')) return 'action_heading';
   if (
     trimmed.startsWith('・') ||
     trimmed.startsWith('- ') ||
-    trimmed.startsWith('* ') ||
-    trimmed.startsWith('▶︎') ||
-    trimmed.startsWith('▶')
+    trimmed.startsWith('* ')
   ) {
     return 'bullet';
   }
@@ -622,6 +622,30 @@ export default function RichContent({
       );
     }
 
+    // 1.9 ▶︎ アクション・トピック見出し（例: ▶︎ 中足 > 覇山で密着-3Fを背負っている場面の改善）
+    if (block.type === 'action_heading' && block.lines) {
+      return (
+        <div key={blockKey} className="pt-2.5 pb-0.5 first:pt-0 space-y-2">
+          {block.lines.map((line, lIdx) => {
+            const cleanText = line.trim().replace(/^[▶︎▶]\s*/, '');
+            return (
+              <div
+                key={lIdx}
+                className="flex items-start gap-2 sm:gap-2.5 text-base sm:text-[17px] font-bold text-neutral-900 dark:text-white leading-snug tracking-tight"
+              >
+                <span className="text-cyan-600 dark:text-cyan-400 font-black text-sm sm:text-base mt-0.5 shrink-0 select-none">
+                  ▶
+                </span>
+                <span className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
+                  {renderInline(cleanText)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
     // 2. 箇条書き・選択肢リスト（コンボに紐付かない独立した箇条書き）
     if (block.type === 'bullet' && block.lines) {
       return (
@@ -633,10 +657,14 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed"
+                className={`flex items-start gap-2 sm:gap-2.5 ${
+                  isAction
+                    ? 'text-base sm:text-[17px] font-bold text-neutral-900 dark:text-white leading-snug mt-2 first:mt-0'
+                    : 'text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed'
+                }`}
               >
                 {isAction ? (
-                  <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs mt-0.5 shrink-0 select-none">
+                  <span className="text-cyan-600 dark:text-cyan-400 font-black text-sm sm:text-base mt-0.5 shrink-0 select-none">
                     ▶
                   </span>
                 ) : (

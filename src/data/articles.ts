@@ -33,6 +33,7 @@ export interface Article {
   price?: number;
   tags: string[];
   likesCount: number;
+  eyecatchImage?: string;
   freeContent: {
     intro: string;
     sections: {
@@ -97,6 +98,33 @@ export interface Article {
   };
 }
 
+// キャラクター名またはスラッグからスト6公式アイキャッチ画像を取得するヘルパー関数
+export function getArticleEyecatch(article: Article): string {
+  if (article.eyecatchImage) {
+    return article.eyecatchImage;
+  }
+  const charLower = (article.character || '').toLowerCase();
+  if (charLower.includes('リュウ') || charLower.includes('ryu')) {
+    return '/images/characters/ryu/sns.jpg';
+  }
+  if (charLower.includes('春麗') || charLower.includes('chunli') || charLower.includes('chun-li')) {
+    return '/images/characters/chunli/sns.jpg';
+  }
+  if (charLower.includes('キャミィ') || charLower.includes('cammy')) {
+    return '/images/characters/cammy/sns.jpg';
+  }
+  if (charLower.includes('ケン') || charLower.includes('ken')) {
+    return '/images/characters/ken/sns.jpg';
+  }
+  if (charLower.includes('ルーク') || charLower.includes('luke')) {
+    return '/images/characters/luke/sns.jpg';
+  }
+  if (charLower.includes('豪鬼') || charLower.includes('akuma') || charLower.includes('gouki')) {
+    return '/images/characters/akuma/akuma.png';
+  }
+  return '/images/characters/ryu/sns.jpg';
+}
+
 export const CHARACTERS_SF6 = [
   { id: 'chunli', name: '春麗 (Chun-Li)', type: '変幻自在', color: 'from-cyan-500 to-blue-600' },
   { id: 'gouki', name: '豪鬼 (Akuma)', type: '攻撃特化', color: 'from-red-600 to-amber-700' },
@@ -121,6 +149,7 @@ export const ARTICLES_DATA: Article[] = [
     category: 'neutral',
     character: 'リュウ',
     characterColor: 'from-blue-600 to-indigo-800',
+    eyecatchImage: '/images/characters/ryu/sns.jpg',
     youtubeVideoId: '_n0stVxs_3s',
     author: AUTHOR_INFO,
     publishedAt: '2026-01-02',

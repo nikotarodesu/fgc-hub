@@ -12,6 +12,7 @@ export const RYU_COMPLETE_GUIDE: Article = {
   category: 'character',
   character: 'リュウ',
   characterColor: 'from-blue-600 to-indigo-800',
+  eyecatchImage: '/images/characters/ryu/sns.jpg',
   author: RYU_CLASSIC_COMPLETE_GUIDE.author,
   publishedAt: '2025-06-17',
   updatedAt: '2026-09-08',

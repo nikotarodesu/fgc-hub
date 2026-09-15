@@ -11,6 +11,7 @@ export const COACHING_CHUNLI_1600MR: Article = {
   category: 'coaching',
   character: '春麗',
   characterColor: 'from-cyan-500 to-blue-600',
+  eyecatchImage: '/images/characters/chunli/sns.jpg',
   controlType: 'modern',
   youtubeVideoId: '_46InYOb8Go',
   author: AUTHOR_INFO,

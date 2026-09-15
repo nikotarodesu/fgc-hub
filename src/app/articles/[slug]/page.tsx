@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ARTICLES_DATA } from '@/data/articles';
+import { ARTICLES_DATA, getArticleEyecatch } from '@/data/articles';
 import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
@@ -544,6 +544,35 @@ export default function ArticleDetailPage() {
                   </span>
                   <span>•</span>
                   <span className="text-emerald-700 dark:text-emerald-400 font-semibold">アップデート永久追従</span>
+                </div>
+              </div>
+
+              {/* スト6公式キャラ アイキャッチヒーローバナー */}
+              <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative group">
+                <div className="aspect-[16/9] sm:aspect-[21/9] w-full relative overflow-hidden">
+                  <img
+                    src={getArticleEyecatch(article)}
+                    alt={`${article.character || 'ストリートファイター6'} 公式アイキャッチ`}
+                    className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 right-3 sm:right-4 flex items-end justify-between gap-2 pointer-events-none">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/20 text-white font-bold text-xs sm:text-sm tracking-wider shadow-sm">
+                        STREET FIGHTER 6
+                      </span>
+                      {article.character && (
+                        <span className="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold text-xs sm:text-sm tracking-wide shadow-sm">
+                          {article.character}
+                        </span>
+                      )}
+                    </div>
+                    {article.controlType && (
+                      <span className="hidden sm:inline-block px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-neutral-300 text-xs font-medium">
+                        {article.controlType === 'both' ? 'C / M 両対応' : article.controlType === 'classic' ? 'クラシック' : 'モダン'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </header>

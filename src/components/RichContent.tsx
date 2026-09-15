@@ -103,7 +103,13 @@ function parseContentToBlocks(content: string): ParsedBlock[] {
 
   for (const rawLine of rawLines) {
     const trimmed = rawLine.trim();
-    if (!trimmed) continue;
+    if (!trimmed) {
+      if (currentBlock) {
+        blocks.push(currentBlock);
+        currentBlock = null;
+      }
+      continue;
+    }
 
     const lineType = getLineType(trimmed);
 

@@ -4,7 +4,7 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_AKUMA_1200MR: Article = {
   id: 'art-coaching-akuma-1200mr-vs-cammy',
   slug: 'coaching-akuma-1200mr-vs-cammy',
-  title: 'C豪鬼1200MR(vsキャミィ)',
+  title: 'C豪鬼1200MR(vsキャミィ) [2024ver]',
   summary:
     'クラシック豪鬼（1200MR）の実戦リプレイ（vsキャミィ）を徹底添削（2024年10月コーチング）。体力9000におけるDゲージ管理とキャンセルラッシュの抑制、強竜巻〆後の状況判断、特殊技（フーリガン等）への対空拾い、受講生からの4大お悩み（弾撃ち・防御からの攻め・画面端脱出・対戦中の思考）への具体的な回答を解説します。',
   game: 'sf6',

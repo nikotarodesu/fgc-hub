@@ -134,7 +134,7 @@ export function getArticleEyecatch(article: Article): string {
     return '/images/characters/luke/sns.jpg';
   }
   if (charLower.includes('豪鬼') || charLower.includes('akuma') || charLower.includes('gouki')) {
-    return '/images/characters/akuma/akuma.png';
+    return '/images/characters/akuma/sns.jpg';
   }
   return '/images/characters/ryu/sns.jpg';
 }

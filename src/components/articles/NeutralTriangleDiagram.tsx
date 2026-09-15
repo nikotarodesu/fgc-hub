@@ -170,13 +170,13 @@ export default function NeutralTriangleDiagram() {
               onClick={() => setSelectedNode('oki')}
               className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'oki'
-                  ? 'bg-amber-500 text-white border-amber-600 scale-105 ring-4 ring-amber-400/30'
+                  ? 'bg-amber-400 text-neutral-950 border-amber-500 scale-105 ring-4 ring-amber-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-amber-400'
               }`}
             >
-              <Shield className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'oki' ? 'text-white' : 'text-amber-500'}`} />
-              <div className="font-bold text-xs">① 置き技</div>
-              <div className={`text-[9px] ${selectedNode === 'oki' ? 'text-amber-100' : 'text-neutral-400'}`}>牽制・壁張り</div>
+              <Shield className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'oki' ? 'text-neutral-950' : 'text-amber-500'}`} />
+              <div className="font-black text-xs">① 置き技</div>
+              <div className={`text-[9px] font-semibold ${selectedNode === 'oki' ? 'text-neutral-900' : 'text-neutral-400'}`}>牽制・壁張り</div>
             </button>
 
             {/* ノードボタン 2: 差し込み (Bottom Right) */}
@@ -184,13 +184,13 @@ export default function NeutralTriangleDiagram() {
               onClick={() => setSelectedNode('sashikomi')}
               className={`absolute bottom-0 right-0 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'sashikomi'
-                  ? 'bg-cyan-600 text-white border-cyan-700 scale-105 ring-4 ring-cyan-400/30'
+                  ? 'bg-cyan-400 text-neutral-950 border-cyan-500 scale-105 ring-4 ring-cyan-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-cyan-400'
               }`}
             >
-              <Zap className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikomi' ? 'text-white' : 'text-cyan-500'}`} />
-              <div className="font-bold text-xs">② 差し込み</div>
-              <div className={`text-[9px] ${selectedNode === 'sashikomi' ? 'text-cyan-100' : 'text-neutral-400'}`}>前歩き・ラッシュ</div>
+              <Zap className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikomi' ? 'text-neutral-950' : 'text-cyan-500'}`} />
+              <div className="font-black text-xs">② 差し込み</div>
+              <div className={`text-[9px] font-semibold ${selectedNode === 'sashikomi' ? 'text-neutral-900' : 'text-neutral-400'}`}>前歩き・ラッシュ</div>
             </button>
 
             {/* ノードボタン 3: 差し返し (Bottom Left) */}
@@ -198,13 +198,13 @@ export default function NeutralTriangleDiagram() {
               onClick={() => setSelectedNode('sashikaeshi')}
               className={`absolute bottom-0 left-0 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'sashikaeshi'
-                  ? 'bg-emerald-600 text-white border-emerald-700 scale-105 ring-4 ring-emerald-400/30'
+                  ? 'bg-emerald-400 text-neutral-950 border-emerald-500 scale-105 ring-4 ring-emerald-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-emerald-400'
               }`}
             >
-              <Target className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikaeshi' ? 'text-white' : 'text-emerald-500'}`} />
-              <div className="font-bold text-xs">③ 差し返し</div>
-              <div className={`text-[9px] ${selectedNode === 'sashikaeshi' ? 'text-emerald-100' : 'text-neutral-400'}`}>空振りを見て殴る</div>
+              <Target className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikaeshi' ? 'text-neutral-950' : 'text-emerald-500'}`} />
+              <div className="font-black text-xs">③ 差し返し</div>
+              <div className={`text-[9px] font-semibold ${selectedNode === 'sashikaeshi' ? 'text-neutral-900' : 'text-neutral-400'}`}>空振りを見て殴る</div>
             </button>
           </div>
 

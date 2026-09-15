@@ -102,7 +102,7 @@ export default function MembershipPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-neutral-900" />
-                  <span>いつでもマイページから1クリックで解約可能</span>
+                  <span>契約期間の縛りなし・いつでも簡単に解約可能</span>
                 </li>
               </ul>
             </div>
@@ -121,10 +121,29 @@ export default function MembershipPage() {
           <h2 className="text-sm font-bold text-neutral-900 text-center mb-6">よくあるご質問</h2>
           <div className="space-y-3">
             <div className="p-4 rounded-lg bg-white border border-neutral-200/80 shadow-xs">
-              <h4 className="text-xs font-bold text-neutral-900 mb-1">Q. 解約はいつでもできますか？</h4>
-              <p className="text-xs text-neutral-600 leading-relaxed">
-                はい、いつでも1クリックで解約いただけます。解約料や違約金等は一切ございません。
-              </p>
+              <h4 className="text-xs font-bold text-neutral-900 mb-2">Q. 解約はいつでもできますか？解約の手順を教えてください</h4>
+              <div className="text-xs text-neutral-600 leading-relaxed space-y-2.5">
+                <p>
+                  はい、契約期間の縛りや違約金・解約手数料等は一切なく、いつでも自由に解約・自動更新停止いただけます。解約は以下のいずれかの方法でお手続きいただけます：
+                </p>
+                <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200/80 space-y-2 text-neutral-700">
+                  <div>
+                    <span className="font-bold text-neutral-900 block text-xs">① Stripeからの決済メールより解約</span>
+                    <span className="text-[11px] text-neutral-500 leading-normal block mt-0.5">
+                      決済時にStripeから自動送信される領収書メール（または定期請求メール）内の「登録の管理 / サブスクリプションの管理」リンクより、いつでもご自身で解約いただけます。
+                    </span>
+                  </div>
+                  <div className="pt-1.5 border-t border-neutral-200/60">
+                    <span className="font-bold text-neutral-900 block text-xs">② 公式X（@nikotarosun）のDMより解約申請</span>
+                    <span className="text-[11px] text-neutral-500 leading-normal block mt-0.5">
+                      ご登録時のメールアドレスを添えて、<a href="https://x.com/nikotarosun" target="_blank" rel="noopener noreferrer" className="text-[#00a3c4] underline font-medium">公式X（@nikotarosun）</a>のDMまで「解約希望」とご連絡いただければ、運営側にて速やかに解約処理を代行対応いたします。
+                    </span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-neutral-400">
+                  ※ 次回更新日の前日までにお手続きいただければ、次回以降の請求は発生いたしません。解約後も現在の課金期間終了まではすべての記事をそのまま閲覧いただけます。
+                </p>
+              </div>
             </div>
             <div className="p-4 rounded-lg bg-white border border-neutral-200/80 shadow-xs">
               <h4 className="text-xs font-bold text-neutral-900 mb-1">Q. 記事はどのように追加・更新されますか？</h4>

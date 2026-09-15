@@ -51,7 +51,7 @@ export default function TokushoPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
               <div className="font-bold text-neutral-500">返品・キャンセルについて</div>
               <div className="sm:col-span-2 leading-relaxed">
-                デジタルコンテンツの性質上、決済完了後の返金・返品は原則としてお受けできません。定期購読（プレミアム会員）はマイページよりいつでも次回以降の更新を停止・解約いただけます。
+                デジタルコンテンツの性質上、決済完了後の返金・返品は原則としてお受けできません。定期購読（プレミアム会員）は、Stripeから送付される決済・領収書メール内の管理リンク、または公式X（@nikotarosun）のDMへ登録メールアドレスを添えてご連絡いただくことで、次回更新日の前日までいつでも解約・自動更新の停止が可能です（解約金や違約金等は一切発生いたしません）。
               </div>
             </div>
           </div>

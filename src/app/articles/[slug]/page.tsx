@@ -11,7 +11,7 @@ import YouTubeEmbed from '@/components/YouTubeEmbed';
 import RichContent from '@/components/RichContent';
 import AuthorCard from '@/components/AuthorCard';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
-import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
+import DiagramDispatcher from '@/components/articles/DiagramDispatcher';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
 import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
@@ -784,9 +784,7 @@ export default function ArticleDetailPage() {
                   </div>
 
                   {/* 図解ダイアグラム */}
-                  {section.diagramType === 'hadoken-flow' && <HadokenFlowDiagram />}
-                  {section.diagramType === 'distance-meter' && <DistanceMeterDiagram />}
-                  {section.diagramType === 'mindset-comparison' && <MindsetComparisonTable />}
+                  {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
 
                   {/* スクショ画像 */}
                   {section.image && (
@@ -943,9 +941,7 @@ export default function ArticleDetailPage() {
                               </div>
 
                           {/* 図解ダイアグラム */}
-                          {section.diagramType === 'hadoken-flow' && <HadokenFlowDiagram />}
-                          {section.diagramType === 'distance-meter' && <DistanceMeterDiagram />}
-                          {section.diagramType === 'mindset-comparison' && <MindsetComparisonTable />}
+                          {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
 
                           {/* スクショ画像 */}
                           {section.image && (

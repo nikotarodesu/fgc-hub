@@ -44,7 +44,13 @@ export interface Article {
         alt: string;
         caption?: string;
       };
-      diagramType?: 'hadoken-flow' | 'distance-meter' | 'mindset-comparison';
+      diagramType?:
+        | 'hadoken-flow'
+        | 'distance-meter'
+        | 'mindset-comparison'
+        | 'neutral-triangle'
+        | 'fuzzy-timeline'
+        | string;
       combo?: {
         name: string;
         recipe: string;
@@ -66,7 +72,13 @@ export interface Article {
         alt: string;
         caption?: string;
       };
-      diagramType?: 'hadoken-flow' | 'distance-meter' | 'mindset-comparison';
+      diagramType?:
+        | 'hadoken-flow'
+        | 'distance-meter'
+        | 'mindset-comparison'
+        | 'neutral-triangle'
+        | 'fuzzy-timeline'
+        | string;
       combo?: {
         name: string;
         recipe: string;

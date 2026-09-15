@@ -8,7 +8,7 @@ import AuthorCard from '@/components/AuthorCard';
 import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -65,6 +65,15 @@ export default function HomePage() {
           article.tags.includes('過去のコーチング') ||
           article.tags.includes('コーチング');
         if (!isCoaching) return false;
+      }
+      if (selectedCategory === 'system') {
+        const isSystem =
+          article.category === 'system' ||
+          article.category === 'mindset' ||
+          article.tags.includes('共通技術') ||
+          article.tags.includes('共通理論') ||
+          article.tags.includes('システム');
+        if (!isSystem) return false;
       }
       if (selectedCharacter && article.character !== selectedCharacter) return false;
       if (selectedTag && !article.tags.includes(selectedTag)) return false;
@@ -286,7 +295,7 @@ export default function HomePage() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              キャラ別攻略
+              攻略記事
             </button>
             <button
               onClick={() => { setSelectedCategory('neutral'); setSelectedCharacter(null); setSelectedTag(null); }}
@@ -308,6 +317,16 @@ export default function HomePage() {
             >
               コーチング
             </button>
+            <button
+              onClick={() => { setSelectedCategory('system'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'system'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              共通技術
+            </button>
           </div>
 
           <div className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
@@ -325,7 +344,13 @@ export default function HomePage() {
                   <span className="text-neutral-500 dark:text-neutral-400">絞り込み:</span>
                   {selectedCategory !== 'all' && (
                     <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      {selectedCategory === 'character' ? 'カテゴリ: キャラ別攻略' : selectedCategory === 'neutral' ? 'カテゴリ: 立ち回り' : 'カテゴリ: コーチング'}
+                      {selectedCategory === 'character'
+                        ? 'カテゴリ: 攻略記事'
+                        : selectedCategory === 'neutral'
+                        ? 'カテゴリ: 立ち回り'
+                        : selectedCategory === 'coaching'
+                        ? 'カテゴリ: コーチング'
+                        : 'カテゴリ: 共通技術'}
                     </span>
                   )}
                   {selectedCharacter && (
@@ -354,24 +379,19 @@ export default function HomePage() {
             )}
 
             {/* 記事一覧 */}
-            {selectedCategory === 'coaching' && filteredArticles.length === 0 ? (
+            {filteredArticles.length === 0 ? (
               <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
                 <p className="font-bold text-neutral-800 dark:text-neutral-200">
-                  コーチング記事は現在準備中です
-                </p>
-                <p className="text-xs text-neutral-400">
-                  全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！
-                </p>
-              </div>
-            ) : filteredArticles.length === 0 ? (
-              <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
-                <p className="font-bold text-neutral-800 dark:text-neutral-200">
-                  {selectedCategory === 'coaching'
+                  {selectedCategory === 'system'
+                    ? '共通技術の記事は現在準備中です'
+                    : selectedCategory === 'coaching'
                     ? 'コーチング記事は現在準備中です'
                     : '該当する記事が見つかりませんでした'}
                 </p>
                 <p className="text-xs text-neutral-400">
-                  {selectedCategory === 'coaching'
+                  {selectedCategory === 'system'
+                    ? 'ファジーやヒット確認、ゲージ管理など全キャラに通じる共通技術・理論記事を順次公開予定です。お楽しみに！'
+                    : selectedCategory === 'coaching'
                     ? '全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！'
                     : '別の条件やキーワードでお試しください。'}
                 </p>
@@ -428,6 +448,11 @@ export default function HomePage() {
                               {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
                                 <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                                   コーチング
+                                </span>
+                              )}
+                              {(article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術') || article.tags.includes('共通理論')) && (
+                                <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
+                                  共通技術
                                 </span>
                               )}
                               {article.controlType === 'both' ? (

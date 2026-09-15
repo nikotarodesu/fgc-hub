@@ -493,7 +493,7 @@ export default function ArticleDetailPage() {
                     {article.character}
                   </span>
                 )}
-                {/* 立ち回り vs 完全攻略 vs コーチング の排他カテゴリバッジ（重複表示を解消） */}
+                {/* 立ち回り vs 完全攻略 vs コーチング vs 共通技術 の排他カテゴリバッジ */}
                 {(article.category === 'neutral' || article.slug.includes('neutral')) ? (
                   <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0">
                     立ち回り
@@ -505,6 +505,10 @@ export default function ArticleDetailPage() {
                 ) : (article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) ? (
                   <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0">
                     コーチング
+                  </span>
+                ) : (article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術') || article.tags.includes('共通理論')) ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 shrink-0">
+                    共通技術
                   </span>
                 ) : null}
 

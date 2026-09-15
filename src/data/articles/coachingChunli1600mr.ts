@@ -29,7 +29,6 @@ export const COACHING_CHUNLI_1600MR: Article = {
     '豪鬼',
     'コーチング',
     '1600MR',
-    '立ち回り',
     'Dゲージ管理',
     'リプレイ解説',
   ],

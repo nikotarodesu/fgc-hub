@@ -176,7 +176,7 @@ export default function ArticleQuickJump({
       <aside
         aria-label="操作アクションナビゲーション"
         ref={quickJumpRef}
-        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-md w-[94%] sm:w-auto animate-in fade-in slide-in-from-bottom-4 duration-200 pointer-events-auto"
+        className="fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-[96vw] w-max animate-in fade-in slide-in-from-bottom-4 duration-200 pointer-events-auto"
       >
         {/* クイックジャンプ（小見出し選択）ポップオーバー */}
         {isQuickJumpOpen && (
@@ -247,7 +247,7 @@ export default function ArticleQuickJump({
         )}
 
         {/* ボトムバー本体 */}
-        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1.5 px-2.5 sm:px-3 shadow-xl flex items-center justify-center gap-1.5 sm:gap-2 text-xs">
+        <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200/90 dark:border-neutral-700/80 rounded-full py-1.5 px-2 sm:px-3 shadow-xl flex items-center justify-center gap-1 sm:gap-2 text-xs shrink-0">
           {/* 1. 目次ジャンプ */}
           <button
             type="button"
@@ -255,26 +255,28 @@ export default function ArticleQuickJump({
               setIsQuickJumpOpen(false);
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold text-xs hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+            className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold text-xs hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap shrink-0"
           >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>目次ジャンプ</span>
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
+            <span className="inline sm:hidden">目次</span>
+            <span className="hidden sm:inline">目次ジャンプ</span>
           </button>
 
           {/* 2. クイックジャンプ */}
           <button
             type="button"
             onClick={() => setIsQuickJumpOpen((prev) => !prev)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold text-xs active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap border ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full font-semibold text-xs active:scale-95 transition-all cursor-pointer shadow-xs whitespace-nowrap border shrink-0 ${
               isQuickJumpOpen
                 ? 'bg-cyan-600 text-white border-cyan-600'
                 : 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900/60'
             }`}
           >
-            <Zap className={`w-3.5 h-3.5 ${isQuickJumpOpen ? 'fill-current' : 'text-cyan-600 dark:text-cyan-400'}`} />
-            <span>クイックジャンプ</span>
+            <Zap className={`w-3.5 h-3.5 shrink-0 ${isQuickJumpOpen ? 'fill-current' : 'text-cyan-600 dark:text-cyan-400'}`} />
+            <span className="inline sm:hidden">ジャンプ</span>
+            <span className="hidden sm:inline">クイックジャンプ</span>
             {currentSubheadings.length > 0 && (
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ${
                 isQuickJumpOpen ? 'bg-white/25 text-white' : 'bg-cyan-200/70 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200'
               }`}>
                 {currentSubheadings.length}
@@ -287,14 +289,15 @@ export default function ArticleQuickJump({
             <button
               type="button"
               onClick={() => onToggleBookmark(activeSection.id)}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
+              className={`flex items-center gap-1 p-1.5 sm:px-2 sm:py-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
                 isCurrentBookmarked
                   ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
                   : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
               }`}
               title={isCurrentBookmarked ? 'この章のお気に入りを解除' : 'この章をお気に入りに登録'}
+              aria-label={isCurrentBookmarked ? 'お気に入り解除' : 'お気に入り登録'}
             >
-              <Star className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
+              <Star className={`w-3.5 h-3.5 shrink-0 ${isCurrentBookmarked ? 'fill-current' : ''}`} />
               <span className="hidden sm:inline text-[11px]">{isCurrentBookmarked ? '登録中' : '保存'}</span>
             </button>
           )}
@@ -303,11 +306,12 @@ export default function ArticleQuickJump({
           <button
             type="button"
             onClick={scrollToTop}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center justify-center gap-1 p-1.5 sm:px-2.5 sm:py-1.5 rounded-full text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0"
             title="ページ先頭へ"
+            aria-label="ページ先頭へ戻る"
           >
-            <ArrowUp className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline text-xs font-medium">上へ</span>
+            <ArrowUp className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline text-xs font-medium">上へ</span>
           </button>
         </div>
       </aside>

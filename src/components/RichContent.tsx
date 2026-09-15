@@ -458,7 +458,7 @@ export default function RichContent({
     // 1.5 ⭐️ ルート見出し（⭐️ OD足刀ルート, ⭐️ リーサルコンボ, ⭐️ ノーゲージ 等）
     if (block.type === 'star_heading' && block.lines) {
       return (
-        <div key={blockKey} className="space-y-1.5">
+        <div key={blockKey} className="space-y-1.5 my-3 sm:my-3.5 first:mt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[⭐️⭐]\s*/, '');
             const itemId = `${sectionId}-star-${blockKey}-${lIdx}`;
@@ -467,12 +467,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-base sm:text-[16.5px] tracking-tight scroll-mt-24 border border-yellow-500/20 dark:border-yellow-400/20"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-[15px] text-yellow-950 dark:text-yellow-100 tracking-tight">
+                <h4 className="font-bold text-[15px] sm:text-base text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
                   {renderInline(cleanText)}
                 </h4>
               </div>

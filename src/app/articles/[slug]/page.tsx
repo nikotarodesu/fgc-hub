@@ -762,14 +762,17 @@ export default function ArticleDetailPage() {
               {/* 無料公開セクション */}
               {freeSections.map((section, idx) => (
                 <div key={idx} id={`sec-free-${idx}`} className="pt-6 scroll-mt-16">
-                  <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
-                    <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-neutral-100">
-                      {section.title}
-                    </h2>
+                  <div className="flex items-center justify-between gap-3 mb-5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                      <h2 className="text-base sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                        {section.title}
+                      </h2>
+                    </div>
                     <button
                       type="button"
                       onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
-                      className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer ${
+                      className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
                         bookmarks.includes(`sec-free-${idx}`)
                           ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
                           : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
@@ -875,7 +878,7 @@ export default function ArticleDetailPage() {
                       hideBenefits={article.subscriptionOnly || !isCompleteGuide}
                       description={
                         article.subscriptionOnly
-                          ? '実戦リプレイの徹底解説動画（YouTubeフルHD）および各ラウンドごとの詳細な改善ポイント、立ち回り強化論、受講生のお悩み相談Q&Aを収録しています（プレミアム会員限定）。'
+                          ? '実戦リプレイの解説動画（YouTube）および各ラウンドごとの詳細な改善ポイント、立ち回り強化論、受講生のお悩み相談を収録しています（プレミアム会員限定）。'
                           : undefined
                       }
                     />
@@ -910,9 +913,6 @@ export default function ArticleDetailPage() {
                       {/* 有料限定：YouTube動画プレイヤー */}
                       {article.youtubeVideoId && (
                         <div className="my-6">
-                          <h3 className="text-sm font-bold text-neutral-900 dark:text-white mb-2">
-                            ▶ 実戦解説動画（フルHD）
-                          </h3>
                           <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
                         </div>
                       )}
@@ -933,14 +933,17 @@ export default function ArticleDetailPage() {
                             )}
 
                             <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
-                              <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
-                                <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-neutral-100">
-                                  {section.title}
-                                </h2>
+                              <div className="flex items-center justify-between gap-3 mb-5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                  <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                                  <h2 className="text-base sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                                    {section.title}
+                                  </h2>
+                                </div>
                                 <button
                                   type="button"
                                   onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                                  className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer ${
+                                  className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
                                     bookmarks.includes(`sec-paid-${idx}`)
                                       ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
                                       : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'

@@ -389,12 +389,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-sky-200/90 dark:border-sky-800/80 bg-sky-50/90 dark:bg-sky-950/60 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs scroll-mt-24"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight scroll-mt-24"
               >
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-sky-500/20 dark:bg-sky-400/25 text-sky-600 dark:text-sky-300 text-xs font-bold shrink-0 select-none">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-[15px] text-sky-950 dark:text-sky-100 tracking-tight">
+                <h4 className="font-bold text-sm sm:text-[15px] text-yellow-950 dark:text-yellow-100 tracking-tight">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -416,12 +416,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⚡️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-amber-200/90 dark:border-amber-800/80 bg-amber-50/90 dark:bg-amber-950/60 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight shadow-2xs scroll-mt-24"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight scroll-mt-24"
               >
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-amber-500/20 dark:bg-amber-400/25 text-amber-600 dark:text-amber-300 text-xs font-bold shrink-0 select-none">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-500/20 dark:bg-orange-400/20 text-orange-600 dark:text-orange-400 text-xs font-bold shrink-0 select-none">
                   <Zap className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-[15px] text-amber-950 dark:text-amber-100 tracking-tight">
+                <h4 className="font-bold text-sm sm:text-[15px] text-orange-950 dark:text-orange-100 tracking-tight">
                   {renderInline(cleanText)}
                 </h4>
               </div>

@@ -1149,13 +1149,13 @@ export default function ArticleDetailPage() {
               </div>
             </div>
 
-            {/* 月額マガジン案内カード */}
+            {/* プレミアム会員案内カード */}
             <div className="p-5 bg-neutral-900 dark:bg-neutral-950 text-white rounded-xl border border-neutral-800 dark:border-neutral-800 shadow-sm">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                 MEMBERSHIP
               </span>
               <h3 className="text-sm font-bold text-white mb-1">
-                月額マガジンで読み放題
+                プレミアム会員で読み放題
               </h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
                 月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
@@ -1164,7 +1164,7 @@ export default function ArticleDetailPage() {
                 href="/membership"
                 className="block w-full py-2 rounded-lg bg-white hover:bg-neutral-100 text-neutral-950 text-xs font-semibold text-center transition-colors"
               >
-                マガジン詳細を見る
+                プレミアム会員詳細を見る
               </Link>
             </div>
           </aside>

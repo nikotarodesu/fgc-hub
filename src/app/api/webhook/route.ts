@@ -125,7 +125,7 @@ async function sendAccessLinkEmail({
       
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">
         <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 15px;">■ ご購入内容</p>
-        <p style="margin: 0; color: #334155;">${title}（${planType === 'membership' ? '月額マガジン' : '単体買い切り'}）</p>
+        <p style="margin: 0; color: #334155;">${title}（${planType === 'membership' ? 'プレミアム会員' : '単体買い切り'}）</p>
       </div>
 
       <p>以下の専用リンクより、すべての有料限定セクションや解説動画をすぐにご覧いただけます：</p>

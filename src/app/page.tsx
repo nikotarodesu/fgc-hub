@@ -77,9 +77,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 有料記事・月額マガジン 特典プロモーションセクション */}
+      {/* 有料記事・プレミアム会員 特典プロモーションセクション */}
       {/* ========================================================
-          有料記事・月額マガジンで手に入るもの（5大リターン・チェックリスト）
+          有料記事・プレミアム会員で手に入るもの（5大リターン・チェックリスト）
          ======================================================== */}
       <section className="bg-gradient-to-b from-white via-neutral-50/60 to-white dark:from-neutral-900 dark:via-neutral-900/60 dark:to-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-8 sm:py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -88,7 +88,7 @@ export default function HomePage() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] font-bold tracking-wide uppercase mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-                <span>有料記事＆月額マガジンで手に入るもの</span>
+                <span>有料記事＆プレミアム会員で手に入るもの</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
                 勝率を直結させる“実戦の武器”を完全網羅
@@ -101,7 +101,7 @@ export default function HomePage() {
               href="/membership"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-all shadow-xs shrink-0 self-start sm:self-auto hover:scale-[1.02] active:scale-95"
             >
-              <span>月額マガジン詳細（読み放題）</span>
+              <span>プレミアム会員詳細（読み放題）</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -173,11 +173,11 @@ export default function HomePage() {
           <div className="mt-4 sm:mt-5 p-3 sm:p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-neutral-600 dark:text-neutral-300">
             <div className="flex items-center gap-2 text-center sm:text-left">
               <span className="font-bold text-neutral-900 dark:text-white shrink-0">💡 選び方:</span>
-              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」は月額マガジン（¥980/月）がおすすめです。</span>
+              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」はプレミアム会員（¥980/月）がおすすめです。</span>
             </div>
             <div className="flex items-center gap-3 shrink-0 font-medium">
               <Link href="/membership" className="text-cyan-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-0.5">
-                <span>マガジンプランを見る</span>
+                <span>プレミアム会員プランを見る</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -414,13 +414,13 @@ export default function HomePage() {
             {/* 著者プロフィールカード */}
             <AuthorCard author={AUTHOR_INFO} />
 
-            {/* 月額マガジン案内カード */}
+            {/* プレミアム会員案内カード */}
             <div className="p-5 bg-neutral-900 text-white rounded-xl border border-neutral-800 shadow-sm">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                 MEMBERSHIP
               </span>
               <h3 className="text-sm font-bold text-white mb-1">
-                月額マガジンで読み放題
+                プレミアム会員で読み放題
               </h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
                 月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
@@ -429,7 +429,7 @@ export default function HomePage() {
                 href="/membership"
                 className="block w-full py-2 rounded-lg bg-white hover:bg-neutral-100 text-neutral-950 text-xs font-semibold text-center transition-colors"
               >
-                マガジン詳細を見る
+                プレミアム会員詳細を見る
               </Link>
             </div>
           </aside>

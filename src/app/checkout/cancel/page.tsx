@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 
 export default function CheckoutCancelPage() {
   return (
@@ -22,7 +22,7 @@ export default function CheckoutCancelPage() {
             href="/membership"
             className="w-full inline-flex items-center justify-center py-2.5 px-4 rounded-lg text-xs font-medium bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
           >
-            月額マガジン案内を見る
+            プレミアム会員案内を見る
           </Link>
         </div>
       </div>

@@ -255,7 +255,7 @@ export default function PaywallCard({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
-                  月額マガジン
+                  プレミアム会員
                 </span>
                 <span className="text-[10px] font-semibold bg-white/20 text-white px-2 py-0.5 rounded">
                   おすすめ
@@ -273,7 +273,7 @@ export default function PaywallCard({
               onClick={onJoinMembership}
               className="w-full py-2.5 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              <span>マガジンに入会</span>
+              <span>プレミアム会員に入会</span>
             </button>
           </div>
         </div>

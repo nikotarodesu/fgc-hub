@@ -45,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.95,
     },
-    // 月額マガジン案内
+    // プレミアム会員案内
     {
       url: `${baseUrl}/membership`,
       lastModified: now,

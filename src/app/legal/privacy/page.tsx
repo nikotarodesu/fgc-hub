@@ -12,7 +12,7 @@ export default function PrivacyPage() {
             </p>
             <h2 className="text-base font-bold text-neutral-900 mt-6 mb-2">1. 収集する情報</h2>
             <p>
-              有料記事の購入時やマガジン登録時に、メールアドレスおよび決済情報（クレジットカード番号等はStripeが安全に暗号化処理し、当サイトサーバーには保存されません）を取得します。
+              有料記事の購入時やプレミアム会員登録時に、メールアドレスおよび決済情報（クレジットカード番号等はStripeが安全に暗号化処理し、当サイトサーバーには保存されません）を取得します。
             </p>
             <h2 className="text-base font-bold text-neutral-900 mt-6 mb-2">2. 利用目的</h2>
             <p>

@@ -52,8 +52,8 @@ export default function Header() {
               href="/membership"
               className="inline-flex items-center justify-center px-2 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-colors shadow-xs shrink-0 whitespace-nowrap"
             >
-              <span className="sm:hidden">マガジン</span>
-              <span className="hidden sm:inline">月額マガジン</span>
+              <span className="sm:hidden">プレミアム</span>
+              <span className="hidden sm:inline">プレミアム会員</span>
             </Link>
           </div>
         </div>

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const origin = req.headers.get('origin') || 'https://nikotaro.com';
 
     if (planType === 'membership') {
-      // 月額マガジン定期購読（サブスクリプション）
+      // プレミアム会員定期購読（サブスクリプション）
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             price_data: {
               currency: 'jpy',
               product_data: {
-                name: 'にこ太郎の格ゲーLAB 月額プレミアムマガジン',
+                name: 'にこ太郎の格ゲーLAB プレミアム会員',
                 description: 'スト6全キャラ攻略＆実戦添削がすべて読み放題',
               },
               unit_amount: 980,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         metadata: {
           planType: 'membership',
           slug: slug || 'ryu-complete-guide',
-          title: '月額プレミアムマガジン',
+          title: 'プレミアム会員',
         },
         mode: 'subscription',
         success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&planType=membership`,

@@ -33,10 +33,10 @@ export default function MembershipPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium mb-3">
-            <span>にこ太郎の格ゲーLAB プレミアムマガジン</span>
+            <span>にこ太郎の格ゲーLAB プレミアム会員</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-3 tracking-tight">
-            スト6完全攻略マガジン（読み放題）
+            スト6完全攻略 プレミアム会員（読み放題）
           </h1>
           <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
             全キャラ1800MR以上の筆者による徹底攻略、最新アップデート時の新コンボ・立ち回り解説がすべて読み放題。<br className="hidden sm:inline" />
@@ -76,13 +76,13 @@ export default function MembershipPage() {
             </Link>
           </div>
 
-          {/* 月額マガジン */}
+          {/* プレミアム会員 */}
           <div className="p-6 rounded-xl bg-white border-2 border-neutral-900 relative flex flex-col justify-between shadow-md">
             <div className="absolute -top-3 right-6 bg-neutral-900 text-white font-semibold text-[10px] px-2.5 py-0.5 rounded shadow-xs">
               おすすめ
             </div>
             <div>
-              <h3 className="text-sm font-bold text-neutral-900 mb-1">月額プレミアムマガジン</h3>
+              <h3 className="text-sm font-bold text-neutral-900 mb-1">プレミアム会員</h3>
               <p className="text-xs text-neutral-500 mb-4">スト6全キャラ攻略・立ち回り徹底解説・共通理論まで全記事アクセス</p>
               <div className="text-3xl font-bold text-neutral-900 mb-4">
                 ¥980 <span className="text-xs font-normal text-neutral-500">/ 月（税込）</span>
@@ -111,7 +111,7 @@ export default function MembershipPage() {
               disabled={loading}
               className="mt-6 w-full py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 disabled:bg-neutral-400 text-white font-semibold text-xs text-center transition-colors cursor-pointer shadow-xs"
             >
-              {loading ? '処理中...' : '今すぐマガジンに参加する（Stripe安全決済）'}
+              {loading ? '処理中...' : '今すぐプレミアム会員に登録する（Stripe安全決済）'}
             </button>
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function MembershipPage() {
             <div className="p-4 rounded-lg bg-white border border-neutral-200/80 shadow-xs">
               <h4 className="text-xs font-bold text-neutral-900 mb-1">Q. 記事はどのように追加・更新されますか？</h4>
               <p className="text-xs text-neutral-600 leading-relaxed">
-                実戦対戦リプレイの添削、最新バージョンに対応したコンボレシピ、高MR帯でのキャラ別対策が随時追加されます。マガジン会員は追加料金なしですべて閲覧いただけます。
+                実戦対戦リプレイの添削、最新バージョンに対応したコンボレシピ、高MR帯でのキャラ別対策が随時追加されます。プレミアム会員は追加料金なしですべて閲覧いただけます。
               </p>
             </div>
           </div>

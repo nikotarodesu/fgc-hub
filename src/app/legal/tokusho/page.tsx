@@ -34,7 +34,7 @@ export default function TokushoPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
               <div className="font-bold text-neutral-500">販売価格</div>
-              <div className="sm:col-span-2">各記事詳細ページおよびマガジン案内ページに表示（税込価格）</div>
+              <div className="sm:col-span-2">各記事詳細ページおよびプレミアム会員案内ページに表示（税込価格）</div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
               <div className="font-bold text-neutral-500">商品代金以外の必要料金</div>
@@ -51,7 +51,7 @@ export default function TokushoPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
               <div className="font-bold text-neutral-500">返品・キャンセルについて</div>
               <div className="sm:col-span-2 leading-relaxed">
-                デジタルコンテンツの性質上、決済完了後の返金・返品は原則としてお受けできません。定期購読（月額マガジン）はマイページよりいつでも次回以降の更新を停止・解約いただけます。
+                デジタルコンテンツの性質上、決済完了後の返金・返品は原則としてお受けできません。定期購読（プレミアム会員）はマイページよりいつでも次回以降の更新を停止・解約いただけます。
               </div>
             </div>
           </div>

@@ -36,6 +36,7 @@ export interface Article {
   tags: string[];
   likesCount: number;
   eyecatchImage?: string;
+  recommendedGearIds?: string[];
   freeContent: {
     intro: string;
     sections: {
@@ -173,6 +174,7 @@ export const ARTICLES_DATA: Article[] = [
     isPaid: false,
     tags: ['スト6', 'リュウ', '立ち回り', '立ち回り考察', '波動拳', '対空', '上達論'],
     likesCount: 562,
+    recommendedGearIds: ['razer-huntsman-v3-pro-mini', 'gaming-finger-sleeve'],
     freeContent: {
       intro:
         '多くのプレイヤーが、リュウを「ベーシックな標準キャラ」「待って差し返すキャラ」「読み合いの教科書」と誤解しています。しかし、実戦における本質は全く違います。\n\nリュウは、**「自分の判断を減らすための設計完成度が極めて高いキャラ」**なのです。\n\n「何でもできる」から迷うのではなく、「やるべきことを極限まで絞り込む」。この一点を軸に据えるだけで、立ち回りのすべてのピースが驚くほどクリアに噛み合い始めます。',

@@ -14,6 +14,7 @@ import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJum
 import DiagramDispatcher from '@/components/articles/DiagramDispatcher';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
 import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
+import RecommendedGear from '@/components/RecommendedGear';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import {
   Heart,
@@ -1076,6 +1077,11 @@ export default function ArticleDetailPage() {
                 </>
               )}
             </article>
+
+            {/* 筆者愛用・おすすめアイテム＆アソシエイト（無料記事およびアンロック記事末尾） */}
+            {(!article.isPaid || isUnlocked || Boolean(article.recommendedGearIds)) && (
+              <RecommendedGear productIds={article.recommendedGearIds} />
+            )}
 
             {/* いいね・シェア */}
             <div className="mt-12 pt-6 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">

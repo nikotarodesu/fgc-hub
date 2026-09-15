@@ -446,7 +446,7 @@ export default function ArticleDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f141c] text-neutral-900 dark:text-neutral-200 transition-colors">
       {/* ⑤起き攻めフレーム連動クイックモーダル */}
       <OkizemeQuickModal />
 
@@ -464,7 +464,7 @@ export default function ArticleDetailPage() {
       )}
 
       {/* パンくずリスト */}
-      <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 w-full">
+      <div className="bg-white dark:bg-[#141a24] border-b border-neutral-200/80 dark:border-neutral-800/80 w-full">
         <div className="max-w-6xl mx-auto px-5 sm:px-6 py-2 sm:py-2.5">
           <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-w-0">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white shrink-0">ホーム</Link>
@@ -487,9 +487,9 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 w-full min-w-0">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white dark:bg-neutral-900 px-5 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800 shadow-xs min-w-0 max-w-full">
+          <main className="lg:col-span-8 bg-white dark:bg-[#151c28] px-5 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-xs min-w-0 max-w-full">
             {/* 記事ヘッダー */}
-            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800 min-w-0">
+            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800/80 min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
                 <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 shrink-0">
                   {article.game === 'sf6' ? 'スト6' : '共通理論'}
@@ -546,7 +546,7 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
                 {article.title}
               </h1>
 
@@ -653,14 +653,14 @@ export default function ArticleDetailPage() {
 
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
-                <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] text-neutral-800 dark:text-neutral-200 shadow-2xs">
                   <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
 
               {/* 目次 */}
-              <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-800 my-4 sm:my-6">
-                <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5 flex items-center justify-between">
+              <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] my-4 sm:my-6">
+                <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                     <span>目次</span>
@@ -755,7 +755,7 @@ export default function ArticleDetailPage() {
               {freeSections.map((section, idx) => (
                 <div key={idx} id={`sec-free-${idx}`} className="pt-6 scroll-mt-16">
                   <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
-                    <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
+                    <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-neutral-100">
                       {section.title}
                     </h2>
                     <button
@@ -915,7 +915,7 @@ export default function ArticleDetailPage() {
 
                             <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
                               <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800">
-                                <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
+                                <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-neutral-100">
                                   {section.title}
                                 </h2>
                                 <button

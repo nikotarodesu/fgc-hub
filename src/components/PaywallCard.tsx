@@ -93,7 +93,7 @@ export default function PaywallCard({
   if (isUnlocked) {
     if (isAdminMode) {
       return (
-        <div className="my-6 p-4 rounded-xl bg-neutral-900 text-white dark:bg-neutral-850 border border-cyan-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md animate-in fade-in duration-200">
+        <div className="my-6 p-4 rounded-xl bg-neutral-900 text-white dark:bg-neutral-800 border border-cyan-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md animate-in fade-in duration-200">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
             <span className="text-neutral-200">
@@ -145,31 +145,31 @@ export default function PaywallCard({
         </p>
 
         {/* 執筆者の実績・note大会2連覇の信頼性 */}
-        <div className="mb-4 p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-amber-50/80 via-white to-amber-50/60 dark:from-amber-950/30 dark:via-neutral-900 dark:to-amber-950/20 border border-amber-300/80 dark:border-amber-800/60 text-left shadow-2xs">
+        <div className="mb-4 p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-amber-50/80 via-white to-amber-50/60 dark:from-amber-950/40 dark:via-neutral-900 dark:to-neutral-900 border border-amber-300/80 dark:border-amber-800/60 text-left shadow-2xs">
           <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-amber-200/60 dark:border-amber-900/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300">
               <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-current shrink-0" />
               <span>多くの格ゲーマーに選ばれる信頼の攻略本</span>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shrink-0">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 shrink-0 border border-amber-300/60 dark:border-amber-700/60">
               著：にこ太郎
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-neutral-800 dark:text-neutral-200 mb-3">
-            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
-              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">大会実績</div>
+            <div className="bg-white/90 dark:bg-neutral-800/90 p-2 rounded-lg border border-amber-200/60 dark:border-neutral-700">
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">大会実績</div>
               <div className="font-extrabold text-amber-700 dark:text-amber-400 text-xs">note大会 2連覇🏆</div>
             </div>
-            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
-              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">スト6実力</div>
+            <div className="bg-white/90 dark:bg-neutral-800/90 p-2 rounded-lg border border-amber-200/60 dark:border-neutral-700">
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">スト6実力</div>
               <div className="font-extrabold text-neutral-900 dark:text-white text-xs">全キャラ 1800MR+</div>
             </div>
-            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
-              <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">note累計販売</div>
+            <div className="bg-white/90 dark:bg-neutral-800/90 p-2 rounded-lg border border-amber-200/60 dark:border-neutral-700">
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">note累計販売</div>
               <div className="font-extrabold text-neutral-900 dark:text-white text-xs">2,000部以上突破</div>
             </div>
-            <div className="bg-white/80 dark:bg-neutral-850 p-2 rounded-lg border border-amber-200/50 dark:border-amber-900/30">
+            <div className="bg-white/90 dark:bg-neutral-800/90 p-2 rounded-lg border border-amber-200/60 dark:border-neutral-700">
               <div className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">noteフォロワー</div>
               <div className="font-extrabold text-neutral-900 dark:text-white text-xs">2,500人</div>
             </div>
@@ -199,28 +199,28 @@ export default function PaywallCard({
           </div>
         </div>
 
-        {/* 有料部分で手に入るもの */}
-        <div className="mb-5 p-3 sm:p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-850 border border-neutral-200/80 dark:border-neutral-800 text-left text-xs space-y-1.5">
-          <div className="text-[11px] font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1 mb-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>この記事・マガジンで手に入るもの:</span>
+        {/* 有料部分で手に入るもの（有料移行のメリット） */}
+        <div className="mb-5 p-3.5 sm:p-4 rounded-xl bg-neutral-100/80 dark:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700 text-left text-xs space-y-2">
+          <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-neutral-200/60 dark:border-neutral-700/60">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>有料限定エリアで手に入るメリット・武器:</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300">
-            <div className="flex items-start gap-1.5">
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span>
-              <span>全フレーム状況別（+3F〜+45F）起き攻め完全網羅</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-800 dark:text-neutral-100">
+            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0">✓</span>
+              <span className="leading-snug">全フレーム状況別（+3F〜+45F）起き攻め完全網羅</span>
             </div>
-            <div className="flex items-start gap-1.5">
-              <span className="text-amber-600 dark:text-amber-400 font-bold shrink-0">✓</span>
-              <span>中央・端・リーサルの最大火力コンボレシピ</span>
+            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <span className="text-amber-600 dark:text-amber-400 font-black shrink-0">✓</span>
+              <span className="leading-snug">中央・端・リーサルの最大火力コンボレシピ</span>
             </div>
-            <div className="flex items-start gap-1.5">
-              <span className="text-purple-600 dark:text-purple-400 font-bold shrink-0">✓</span>
-              <span>実戦GIF動画＆動画解説付きで迷わない</span>
+            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <span className="text-cyan-600 dark:text-cyan-400 font-black shrink-0">✓</span>
+              <span className="leading-snug">実戦GIF動画＆動画解説付きで迷わない</span>
             </div>
-            <div className="flex items-start gap-1.5 text-neutral-600 dark:text-neutral-400">
-              <span className="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">✓</span>
-              <span>今後のバージョンアップ・キャラ調整時も<strong>永久に無料追記</strong></span>
+            <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <span className="text-indigo-600 dark:text-indigo-400 font-black shrink-0">✓</span>
+              <span className="leading-snug">今後のパッチ・キャラ調整時も<strong className="text-neutral-900 dark:text-white font-bold">永久に無料追記</strong></span>
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function PaywallCard({
                 この記事を購入
               </span>
               <div className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
-                ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500">（買い切り）</span>
+                ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">（買い切り）</span>
               </div>
               <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
                 クラシック・モダン両対応（1回の購入で両方読み放題）。アプデ追記も含め永久閲覧できます。

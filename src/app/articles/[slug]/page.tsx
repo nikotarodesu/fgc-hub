@@ -1136,7 +1136,7 @@ export default function ArticleDetailPage() {
       {toastMessage && (
         <aside
           aria-label="管理者通知"
-          className="fixed bottom-5 right-5 z-50 max-w-sm w-[92%] sm:w-auto bg-neutral-900/95 dark:bg-neutral-850/95 text-white py-3 px-4 rounded-xl shadow-2xl border border-cyan-500/40 backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200"
+          className="fixed bottom-5 right-5 z-50 max-w-sm w-[92%] sm:w-auto bg-neutral-900/95 dark:bg-neutral-900/95 text-white py-3 px-4 rounded-xl shadow-2xl border border-cyan-500/40 backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200"
         >
           <div className="flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">

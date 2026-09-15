@@ -185,7 +185,7 @@ export default function ArticleComboReverseLookup({
   return (
     <section aria-label="実戦コンボ逆引きデータベース" className="my-6 rounded-2xl border-2 border-cyan-500/30 dark:border-cyan-500/40 bg-white dark:bg-neutral-900 shadow-md overflow-hidden">
       {/* ツールヘッダー */}
-      <div className="bg-gradient-to-r from-neutral-900 via-neutral-850 to-neutral-900 text-white p-3.5 sm:p-4 border-b border-neutral-800">
+      <div className="bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white p-3.5 sm:p-4 border-b border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
@@ -409,7 +409,7 @@ export default function ArticleComboReverseLookup({
             return (
               <div
                 key={combo.id}
-                className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-850 p-3 sm:p-3.5 shadow-2xs hover:border-cyan-500/50 transition-colors"
+                className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-800 p-3 sm:p-3.5 shadow-2xs hover:border-cyan-500/50 transition-colors"
               >
                 {/* カード上部：始動・ダメージ・ゲージ情報バッジ */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 mb-2 border-b border-neutral-100 dark:border-neutral-800 text-xs">

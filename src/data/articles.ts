@@ -1,5 +1,6 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
 import { COACHING_CHUNLI_1600MR } from './articles/coachingChunli1600mr';
+import { COACHING_AKUMA_1200MR } from './articles/coachingAkuma1200mr';
 
 export interface ArticleVariant {
   label: string;
@@ -151,6 +152,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_AKUMA_1200MR,
   COACHING_CHUNLI_1600MR,
   {
     id: 'art-ryu-neutral-strategy',

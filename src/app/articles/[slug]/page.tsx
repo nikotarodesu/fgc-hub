@@ -13,6 +13,7 @@ import AuthorCard from '@/components/AuthorCard';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from '@/components/articles/RyuStrategyDiagrams';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
+import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import {
   Heart,
@@ -440,6 +441,9 @@ export default function ArticleDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+      {/* ⑤起き攻めフレーム連動クイックモーダル */}
+      <OkizemeQuickModal />
+
       {/* 画面追従セクションバー ＆ クイック目次ジャンプ */}
       {showQuickJump && (
         <ArticleQuickJump

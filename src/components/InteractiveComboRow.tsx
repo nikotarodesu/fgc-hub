@@ -11,6 +11,50 @@ interface InteractiveComboRowProps {
   controlType?: 'classic' | 'modern';
 }
 
+// コンボ行内の有利フレーム表記（例: （+37））を検出してタップ可能にするヘルパー
+function renderComboLineWithOkizeme(
+  text: string,
+  renderInlineText: (t: string) => React.ReactNode[]
+): React.ReactNode {
+  const frameRegex = /([（\(]\s*(?:約)?\s*(\+?\d+[^）\)]*?)\s*[）\)])/;
+  const match = frameRegex.exec(text);
+
+  if (!match) {
+    return renderInlineText(text);
+  }
+
+  const fullMatch = match[1];
+  const frameValue = match[2];
+  const parts = text.split(fullMatch);
+
+  return (
+    <>
+      {renderInlineText(parts[0])}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(
+              new CustomEvent('open_okizeme_modal', {
+                detail: { frame: frameValue },
+              })
+            );
+          }
+        }}
+        className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 rounded font-mono font-bold text-[10px] sm:text-[11px] bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-300/80 dark:border-emerald-700 shadow-2xs transition-all hover:scale-105 active:scale-95 cursor-pointer group/fchip align-middle select-none"
+        title={`タップして「${frameValue}」の⑤起き攻め連携を一瞬で確認`}
+      >
+        <span>{fullMatch}</span>
+        <span className="text-[9px] font-sans font-bold text-emerald-600 dark:text-emerald-400 underline decoration-emerald-500/50 group-hover/fchip:decoration-emerald-500">
+          起き攻め
+        </span>
+      </button>
+      {parts[1] && renderInlineText(parts[1])}
+    </>
+  );
+}
+
 export default function InteractiveComboRow({
   comboLine,
   renderInlineText = (text) => [text],
@@ -29,7 +73,7 @@ export default function InteractiveComboRow({
           コンボ
         </span>
         <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
-          {renderInlineText(cleanText)}
+          {renderComboLineWithOkizeme(cleanText, renderInlineText)}
         </span>
       </div>
     );
@@ -50,7 +94,7 @@ export default function InteractiveComboRow({
             コンボ
           </span>
           <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
-            {renderInlineText(cleanText)}
+            {renderComboLineWithOkizeme(cleanText, renderInlineText)}
           </span>
         </div>
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
-import { Star, Zap, Film, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { Star, Zap, Film, Eye, ChevronDown, ChevronUp, Play, Pause } from 'lucide-react';
 import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 
 interface RichContentProps {
@@ -226,72 +226,144 @@ function SecretSubheadingButton({
   );
 }
 
-interface CollapsibleMediaProps {
+interface InteractiveMediaProps {
   src: string;
   caption?: string;
 }
 
-function CollapsibleMedia({ src, caption }: CollapsibleMediaProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
   const isGif = src.toLowerCase().endsWith('.gif');
-  const label = caption || (isGif ? '実戦GIF動画' : '参考画像');
+  const isMp4 = src.toLowerCase().endsWith('.mp4');
+  const isVideo = isGif || isMp4;
 
+  // .gif の場合は同名の最適化済み .mp4 を優先ロード（通信量約85%カット）
+  const videoSrc = isGif ? src.replace(/\.gif$/i, '.mp4') : src;
+  const posterSrc = isGif ? src.replace(/\.gif$/i, '.jpg') : (isMp4 ? src.replace(/\.mp4$/i, '.jpg') : undefined);
+
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+
+    if (videoRef.current.paused) {
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // 自動再生ポリシーなどの例外を吸収
+        });
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const label = caption || (isVideo ? '実戦コンボ動画' : '参考画像');
+
+  // 通常静止画像（.png, .jpg等）の場合
+  if (!isVideo) {
+    return (
+      <figure className="my-4 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 overflow-hidden shadow-2xs max-w-2xl">
+        <img
+          src={src}
+          alt={label}
+          loading="lazy"
+          className="w-full h-auto object-cover max-h-[520px] mx-auto block"
+        />
+        {caption && (
+          <figcaption className="p-2 sm:px-3 text-xs text-neutral-500 dark:text-neutral-400 bg-neutral-100/80 dark:bg-neutral-900/80 border-t border-neutral-200/60 dark:border-neutral-800 text-center font-medium">
+            {caption}
+          </figcaption>
+        )}
+      </figure>
+    );
+  }
+
+  // 動画 / GIF の場合（折りたたみ表示を廃止し、常時インライン表示 ＆ タップで再生/停止）
   return (
-    <div className="my-3 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/80 overflow-hidden shadow-2xs max-w-2xl transition-all">
-      {/* 開閉トグルヘッダー */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2.5 p-2.5 sm:py-2.5 sm:px-3.5 text-left hover:bg-neutral-100/90 dark:hover:bg-neutral-800/90 transition-colors cursor-pointer select-none"
-        title={isOpen ? 'アニメーションを収納する' : 'タップしてアニメーションを表示'}
+    <figure className="my-3 sm:my-4 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-950 overflow-hidden shadow-sm max-w-2xl transition-all">
+      {/* 動画プレイヤー本体（タップで再生・再度タップで一時停止） */}
+      <div
+        onClick={togglePlay}
+        className="relative w-full aspect-[16/9] bg-neutral-950 cursor-pointer select-none group overflow-hidden"
+        role="button"
+        tabIndex={0}
+        aria-label={isPlaying ? '動画を一時停止' : '動画を再生'}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            togglePlay();
+          }
+        }}
       >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className="w-7 h-7 rounded-lg bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
-            {isGif ? <Film className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </span>
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white truncate">
-                {label}
-              </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300">
-                {isGif ? 'GIF動画' : '画像'}
-              </span>
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          poster={posterSrc}
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          className="w-full h-full object-contain mx-auto block"
+        />
+
+        {/* 停止中のオーバーレイ（タップで再生案内） */}
+        {!isPlaying && (
+          <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px] flex flex-col items-center justify-center gap-2 transition-all">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-cyan-600/95 text-white flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-cyan-500 transition-all border border-white/30">
+              <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-0.5" />
             </div>
-            <span className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
-              {isOpen ? '▲ タップして収納（テキストを読みやすくする）' : '▼ タップして実戦映像を再生'}
+            <span className="text-xs sm:text-sm font-bold text-white tracking-wide bg-black/70 px-3 py-1 rounded-full border border-white/20 shadow-xs">
+              タップで再生
             </span>
           </div>
-        </div>
+        )}
 
-        <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-semibold text-cyan-700 dark:text-cyan-300 shrink-0 shadow-2xs">
-          <span>{isOpen ? '収納する' : '映像を見る'}</span>
-          {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-        </div>
-      </button>
-
-      {/* 展開されたGIF / 画像 */}
-      {isOpen && (
-        <div className="border-t border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 animate-in fade-in duration-200">
-          <img
-            src={src}
-            alt={caption || '攻略アニメーション'}
-            className="w-full h-auto object-cover max-h-[520px] mx-auto block"
-            loading="lazy"
-          />
-          <div className="p-2 sm:p-2.5 bg-neutral-900 text-neutral-300 text-xs flex items-center justify-between gap-2 border-t border-neutral-800">
-            <span className="text-[11px] opacity-80 truncate">{label}</span>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="text-[11px] text-neutral-400 hover:text-white transition-colors cursor-pointer shrink-0 font-medium"
-            >
-              ▲ 収納する
-            </button>
+        {/* 再生中のステータスバッジ（タップで停止できることを右下に明示） */}
+        {isPlaying && (
+          <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-white border border-white/20 text-[11px] font-bold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>再生中（タップで停止）</span>
+            <Pause className="w-3 h-3 ml-0.5 fill-current" />
           </div>
+        )}
+
+        {/* 左上バッジ */}
+        <div className="absolute top-2.5 left-2.5 pointer-events-none">
+          <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-xs flex items-center gap-1">
+            <Film className="w-3 h-3 text-cyan-400" />
+            <span>実戦映像</span>
+          </span>
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* キャプションフッター */}
+      <figcaption className="px-3 py-2 sm:px-4 sm:py-2.5 bg-neutral-900 text-white text-xs flex items-center justify-between gap-2 border-t border-neutral-800/80">
+        <span className="font-bold text-neutral-200 truncate text-[11px] sm:text-xs">{label}</span>
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="text-[11px] font-bold text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 shrink-0 cursor-pointer px-2 py-0.5 rounded hover:bg-white/10"
+        >
+          {isPlaying ? (
+            <>
+              <Pause className="w-3 h-3 fill-current" />
+              <span>停止</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3 h-3 fill-current" />
+              <span>再生</span>
+            </>
+          )}
+        </button>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -320,7 +392,7 @@ export default function RichContent({
             if (!match) return null;
             const caption = match[1];
             const src = match[2];
-            return <CollapsibleMedia key={lIdx} src={src} caption={caption} />;
+            return <InteractiveMedia key={lIdx} src={src} caption={caption} />;
           })}
         </div>
       );

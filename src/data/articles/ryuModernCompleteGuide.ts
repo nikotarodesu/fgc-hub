@@ -188,7 +188,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
         body: `❶ 近距離
 
 ⭐️ 弱を撃つ
-![近距離での立ち回り](/images/articles/ryu/ryu-close-range.gif)
+![近距離での立ち回り](/images/articles/ryu/ryu-close-range.mp4)
 ▶︎ 発生の早い4Fで相手の暴れを潰すことができる
 ▶︎ ヒット時は弱を刻んで強昇竜へと繋げる
 ▶︎ カウンターヒット時は距離によってA中やA弱からコンボを伸ばす
@@ -238,7 +238,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 固まる相手にはラッシュ投げをする
 
 ❸ 遠距離
-![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.gif)
+![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.mp4)
 
 ⭐️ 電刃錬気をする
 ▶︎ 相手が後退するなどして、隙があったら電刃錬気
@@ -534,7 +534,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ⭐️ ️ リーサルコンボ
 
 ● A弱>キャンセルラッシュ弱>中>キャンセル大>中>強昇竜>SA3〆（3994）
-![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.gif)
+![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.mp4)
 ▶︎ 牽制技のA弱からキャンセルラッシュで伸ばすリーサルコンボ
 ▶CAは+250ダメージ
 
@@ -675,7 +675,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 画面中央から少し押してる時に画面端まで運ぶことができる
 
 ● 前ステ>ラッシュ下大>強波掌撃>ラッシュ中足>中竜巻〆（2571）+28
-![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.gif)
+![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.mp4)
 ▶︎ 画面中央の少し後ろから画面端まで運べる
 
 ⭐️ ️ 補正切り
@@ -700,7 +700,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ 前ステからのコマンドは【→→ →↓↘︎弱】
 
 ● 〜OD足刀
-![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.gif)
+![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.mp4)
 ▶︎ 前ジャンプ>前ステ+1
 ▶︎ ラッシュ中足+24>前ステ+5 or インパクト
 

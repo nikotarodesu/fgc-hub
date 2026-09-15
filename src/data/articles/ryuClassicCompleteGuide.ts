@@ -132,7 +132,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
         title: '③ 距離別の立ち回り',
         body: `❶ 近距離
 ⭐️ 弱Pを撃つ
-![近距離での立ち回り](/images/articles/ryu/ryu-close-range.gif)
+![近距離での立ち回り](/images/articles/ryu/ryu-close-range.mp4)
 ▶︎ 発生の早い4Fで相手の暴れを潰すことができる
 ▶︎ ヒット時は弱Pを刻んで強昇竜や弱竜巻へと繋げる
 ▶︎ カウンターヒット時は下中Pや弱Kからコンボを伸ばす
@@ -175,7 +175,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 固まる相手にはラッシュ投げをする
 
 ❸ 遠距離
-![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.gif)
+![遠距離での立ち回り](/images/articles/ryu/ryu-long-range.mp4)
 ⭐️ 電刃錬気をする
 ▶︎ 相手が後退するなどして、隙があったら電刃錬気
 
@@ -464,7 +464,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ⭐️ リーサルコンボ
 ● 弱K>キャンセルラッシュ弱P>引大P>キャンセル大K>大P>強昇竜>SA3〆（4247）
-![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.gif)
+![小技始動リーサルコンボ](/images/articles/ryu/ryu-light-lethal.mp4)
 ▶︎ 牽制技の弱Kからキャンセルラッシュで伸ばすリーサルコンボ
 ▶︎ 弱P3回刻み始動の場合3983ダメージ
 ▶︎ CAは+250ダメージ
@@ -622,7 +622,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ⭐️ 運びコンボ
 ● 強波掌撃>ラッシュ下大P>中竜巻〆（2582）
-![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.gif)
+![画面端へのインパクト運びコンボ](/images/articles/ryu/ryu-impact-carry.mp4)
 ▶︎ 画面中央から少し押してる時に画面端まで運ぶことができる
 
 ● 前ステ>ラッシュ下大P>強波掌撃>ラッシュ下中K>中竜巻〆（2651）
@@ -649,7 +649,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ● OD足刀〜
 ▶︎ 前ジャンプ>前ステ+1
-![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.gif)
+![＋26なのでインパクトが埋まる](/images/articles/ryu/ryu-switch-combo.mp4)
 ▶︎ ラッシュ下中K+24>前ステ+5 or インパクト
 
 ● 〜強竜巻〆
@@ -830,7 +830,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 起き攻めが可能
 
 ⭐️ セットプレイ
-![無敵技ガード後BOセットプレイ（8081ダメージ）](/images/articles/ryu/ryu-bo-setplay.gif)
+![無敵技ガード後BOセットプレイ（8081ダメージ）](/images/articles/ryu/ryu-bo-setplay.mp4)
 ● 大K（Pc）>大P>OD竜巻>中昇竜>SA3（カスヒット）>前ステ>下大P>インパクト>スタン>電刃錬気>J大P>大P>OD電刃波掌撃>強波掌撃>ラッシュ下大P>キャンセル下大P>強足刀>強昇竜〆
 ▶︎ 相手が無敵技でBOした時にするコンボ
 ▶︎ SA3までで5320ダメージ+BO時の削りで200ダメージ+スタン後のコンボで3085ダメージ=8605ダメージ

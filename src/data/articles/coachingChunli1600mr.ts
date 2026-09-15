@@ -16,6 +16,8 @@ export const COACHING_CHUNLI_1600MR: Article = {
   author: AUTHOR_INFO,
   publishedAt: '2026-09-09',
   updatedAt: '2026-09-09',
+  patchDate: '2026-08-03',
+  patchVersion: '2026.08.03 Update',
   readTime: '6分',
   isPaid: true,
   price: 500,

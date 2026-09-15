@@ -4,7 +4,7 @@ import { AUTHOR_INFO } from '../author';
 export const RYU_MODERN_COMPLETE_GUIDE: Article = {
   id: 'art-ryu-modern-complete-guide',
   slug: 'ryu-modern-complete-guide',
-  title: 'Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど【2026ver】',
+  title: 'Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど【2026-08-03】',
   summary:
     'モダンリュウの全知識を網羅。モダンにない技と独自の強み、ワンボタン必殺技を活かした立ち回り、距離別戦術、起き攻めフレーム表、画面中央・画面端の厳選コンボから確定反撃集まで完全収録。',
   game: 'sf6',
@@ -14,6 +14,8 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
   author: AUTHOR_INFO,
   publishedAt: '2025-06-19',
   updatedAt: '2026-09-08',
+  patchDate: '2026-08-03',
+  patchVersion: '2026.08.03 Update',
   readTime: '15分',
   isPaid: true,
   price: 500,

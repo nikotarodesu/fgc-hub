@@ -5,7 +5,7 @@ import type { Article } from '../articles';
 export const RYU_COMPLETE_GUIDE: Article = {
   id: 'art-ryu-complete-guide',
   slug: 'ryu-complete-guide',
-  title: 'C・Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど【2026ver】',
+  title: 'C・Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど【2026-08-03】',
   summary:
     'リュウの全てをまとめました。通勤、通学の隙間時間に「読んで強くなる」をコンセプトに、クラシック（C）・モダン（M）双方の立ち回り、距離別戦術、全フレーム状況別起き攻め、厳選コンボから確定反撃、BO時削り連携まで完全網羅。ワンクリックで操作タイプを切り替えて閲覧できます。',
   game: 'sf6',
@@ -15,6 +15,8 @@ export const RYU_COMPLETE_GUIDE: Article = {
   author: RYU_CLASSIC_COMPLETE_GUIDE.author,
   publishedAt: '2025-06-17',
   updatedAt: '2026-09-08',
+  patchDate: '2026-08-03',
+  patchVersion: '2026.08.03 Update',
   readTime: '20分',
   isPaid: true,
   price: 500,

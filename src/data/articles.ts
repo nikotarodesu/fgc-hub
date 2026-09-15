@@ -26,6 +26,8 @@ export interface Article {
   author: AuthorInfo;
   publishedAt: string;
   updatedAt: string;
+  patchDate?: string;
+  patchVersion?: string;
   readTime: string;
   isPaid: boolean;
   price?: number;
@@ -123,6 +125,8 @@ export const ARTICLES_DATA: Article[] = [
     author: AUTHOR_INFO,
     publishedAt: '2026-01-02',
     updatedAt: '2026-09-08',
+    patchDate: '2026-08-03',
+    patchVersion: '2026.08.03 Update',
     readTime: '5分',
     isPaid: false,
     tags: ['スト6', 'リュウ', '立ち回り', '立ち回り考察', '波動拳', '対空', '上達論'],

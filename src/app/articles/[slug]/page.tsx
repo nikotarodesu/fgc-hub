@@ -22,6 +22,9 @@ import {
   ChevronRight,
   Star,
   X,
+  CheckCircle2,
+  Calendar,
+  RefreshCw,
 } from 'lucide-react';
 
 export default function ArticleDetailPage() {
@@ -56,6 +59,13 @@ export default function ArticleDetailPage() {
   const [activeItemHeading, setActiveItemHeading] = useState<string | null>(null);
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  // 記事タイトルをブラウザタブおよびメタ情報に同期
+  useEffect(() => {
+    if (article) {
+      document.title = `${article.title} | にこ太郎の格ゲーLAB`;
+    }
+  }, [article]);
 
   // 管理者モード・キャラ別シークレット解放の自動復元（localStorage & カスタムイベント）
   useEffect(() => {
@@ -497,6 +507,11 @@ export default function ArticleDetailPage() {
                   </span>
                 ) : null}
 
+                <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <span>{article.patchDate ? `${article.patchDate} パッチ対応` : '最新パッチ対応'}</span>
+                </span>
+
                 {article.isPaid ? (
                   <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-200 shrink-0">
                     有料記事（¥{article.price}）
@@ -511,6 +526,26 @@ export default function ArticleDetailPage() {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
                 {article.title}
               </h1>
+
+              {/* パッチ対応・最終更新日インフォメーションバナー */}
+              <div className="mt-3 sm:mt-4 p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-emerald-50/70 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-bold">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </span>
+                  <span>
+                    【{article.patchDate || '2026-08-03'}】最新パッチ検証済み（{article.patchVersion || '2026.08.03 Update'} 環境）
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px] text-neutral-500 dark:text-neutral-400 pl-7 sm:pl-0">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-neutral-400" />
+                    <span>最終更新日: {article.updatedAt}</span>
+                  </span>
+                  <span>•</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-semibold">アップデート永久追従</span>
+                </div>
+              </div>
             </header>
 
             {/* 本文 */}

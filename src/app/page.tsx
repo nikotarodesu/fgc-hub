@@ -362,9 +362,23 @@ export default function HomePage() {
                       {article.title}
                     </h2>
 
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed mb-3">
                       {article.summary}
                     </p>
+
+                    <div className="pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200/80 dark:border-emerald-800/60">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                          <span>{article.patchDate ? `${article.patchDate} パッチ対応` : '最新パッチ対応'}</span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 font-medium">
+                        <span>更新: {article.updatedAt}</span>
+                        <span>•</span>
+                        <span>{article.readTime}</span>
+                      </div>
+                    </div>
                   </Link>
                 ))}
               </div>

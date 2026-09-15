@@ -52,7 +52,7 @@ export default function MembershipPage() {
               <h3 className="text-sm font-bold text-neutral-900 mb-1">単体記事の買い切り</h3>
               <p className="text-xs text-neutral-500 mb-4">特定のキャラクターの攻略記事だけ読みたい方に</p>
               <div className="text-2xl font-bold text-neutral-900 mb-4">
-                ¥500〜980 <span className="text-xs font-normal text-neutral-500">/ 1記事</span>
+                ¥500 <span className="text-xs font-normal text-neutral-500">/ 1記事</span>
               </div>
               <ul className="space-y-2.5 text-xs text-neutral-600">
                 <li className="flex items-center gap-2">

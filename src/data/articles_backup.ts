@@ -177,7 +177,7 @@ export const ARTICLES_DATA: Article[] = [
     updatedAt: '2026-09-01',
     readTime: '12分',
     isPaid: true,
-    price: 680,
+    price: 500,
     tags: ['スト6', '豪鬼', '確定反撃', 'セットプレイ', '立ち回り'],
     likesCount: 342,
     freeContent: {

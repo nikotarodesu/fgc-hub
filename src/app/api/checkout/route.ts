@@ -50,8 +50,8 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ url: session.url });
     } else if (planType === 'article') {
-      // 記事単体購入（買い切り）
-      const itemPrice = typeof price === 'number' && price > 0 ? price : 500;
+      // 記事単体購入（買い切り: 500円固定）
+      const itemPrice = 500;
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [

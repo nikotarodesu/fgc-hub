@@ -173,7 +173,7 @@ export default function HomePage() {
           <div className="mt-4 sm:mt-5 p-3 sm:p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-neutral-600 dark:text-neutral-300">
             <div className="flex items-center gap-2 text-center sm:text-left">
               <span className="font-bold text-neutral-900 dark:text-white shrink-0">💡 選び方:</span>
-              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500〜 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」は月額マガジン（¥980/月）がおすすめです。</span>
+              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」は月額マガジン（¥980/月）がおすすめです。</span>
             </div>
             <div className="flex items-center gap-3 shrink-0 font-medium">
               <Link href="/membership" className="text-cyan-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-0.5">

@@ -4,13 +4,11 @@ import React, { useState, useEffect } from 'react';
 import {
   findOkizemeData,
   FrameOkizemeData,
-  FRAME_FEATURES_INFO,
 } from '@/data/articles/ryuOkizemeData';
 import {
   X,
   Zap,
   ArrowDown,
-  Sparkles,
   ChevronRight,
   ShieldAlert,
   Swords,
@@ -213,20 +211,6 @@ export default function OkizemeQuickModal({
             </div>
           ) : (
             <>
-              {/* フレーム特徴バナー（もしあれば） */}
-              {data.features && data.features.length > 0 && (
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/40 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300">
-                  <div className="font-bold text-xs flex items-center gap-1.5 mb-1">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>このフレームの最大メリット:</span>
-                  </div>
-                  <ul className="list-disc list-inside space-y-0.5 text-xs text-neutral-700 dark:text-neutral-300">
-                    {data.features.map((feat, fIdx) => (
-                      <li key={fIdx}>{feat}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
 
               {/* 画面中央の起き攻め */}
               {data.center && (activePosition === 'all' || activePosition === 'center') && (

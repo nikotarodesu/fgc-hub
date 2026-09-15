@@ -27,19 +27,19 @@ export function getShortSubheadingLabel(numChar: string, titleText: string): str
   return numChar ? `${numChar} ${label}` : label;
 }
 
-// インライン装飾のパース（大事なところを淡くさりげないアンダーラインで強調）
+// インライン装飾のパース（大事なところをクッキリとしたシンプルな太字で強調）
 function renderInline(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       const inner = part.slice(2, -2);
       return (
-        <span
+        <strong
           key={i}
-          className="font-bold text-neutral-900 dark:text-neutral-100 underline decoration-[1.5px] sm:decoration-2 decoration-rose-400/30 dark:decoration-amber-300/25 underline-offset-[4px] inline"
+          className="font-bold text-neutral-900 dark:text-white inline"
         >
           {inner}
-        </span>
+        </strong>
       );
     }
     return <span key={i}>{part}</span>;

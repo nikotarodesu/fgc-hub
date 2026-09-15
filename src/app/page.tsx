@@ -1,17 +1,46 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, AUTHOR_INFO, getArticleEyecatch } from '@/data/articles';
 import AuthorCard from '@/components/AuthorCard';
-import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [isBenefitsOpen, setIsBenefitsOpen] = useState(true);
+
+  // リピーター向けに開閉状態を記憶（一度閉じた方は次回以降も折りたたんだ状態を維持）
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('fgc_benefits_collapsed');
+      if (saved === 'true') {
+        setIsBenefitsOpen(false);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const toggleBenefits = () => {
+    setIsBenefitsOpen((prev) => {
+      const next = !prev;
+      try {
+        if (!next) {
+          localStorage.setItem('fgc_benefits_collapsed', 'true');
+        } else {
+          localStorage.removeItem('fgc_benefits_collapsed');
+        }
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
 
   // フィルタリング処理
   const filteredArticles = useMemo(() => {
@@ -81,107 +110,136 @@ export default function HomePage() {
       {/* ========================================================
           有料記事・プレミアム会員で手に入るもの（5大リターン・チェックリスト）
          ======================================================== */}
-      <section className="bg-gradient-to-b from-white via-neutral-50/60 to-white dark:from-neutral-900 dark:via-neutral-900/60 dark:to-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-8 sm:py-10">
+      <section className={`bg-gradient-to-b from-white via-neutral-50/60 to-white dark:from-neutral-900 dark:via-neutral-900/60 dark:to-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 transition-all ${isBenefitsOpen ? 'py-6 sm:py-8' : 'py-3.5 sm:py-4'}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          {/* 見出しエリア */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] font-bold tracking-wide uppercase mb-2">
+          {/* 見出しエリア（折りたたみトグル付き） */}
+          <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isBenefitsOpen ? 'mb-6 sm:mb-7' : ''}`}>
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] font-bold tracking-wide uppercase mb-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 <span>有料記事＆プレミアム会員で手に入るもの</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+              <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
                 勝率を直結させる“実戦の武器”を完全網羅
               </h2>
-              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-                全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データを完全収録。
-              </p>
-            </div>
-            <Link
-              href="/membership"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-all shadow-xs shrink-0 self-start sm:self-auto hover:scale-[1.02] active:scale-95"
-            >
-              <span>プレミアム会員詳細（読み放題）</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          {/* 3大リターン チェックリストグリッド */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
-            {/* 1. 起き攻めセットプレイ完全網羅 */}
-            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
-                    セットプレイ完全版
-                  </span>
-                </div>
-                <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
-                  全フレーム状況別（+3F〜+45F）の起き攻めセットプレイ完全網羅
-                </h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  その場・後ろ受け身の両対応重ねから、相手の無敵暴れを安全ガードできる「詐欺飛び」まで完全収録。実戦のターン継続率が劇的に上がります。
+              {isBenefitsOpen && (
+                <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
+                  全キャラ1800MR以上の視点から、トレモですぐ使えてランクマの勝率が劇的に変わる攻略データを完全収録。
                 </p>
-              </div>
+              )}
             </div>
 
-            {/* 2. 最大火力コンボレシピ */}
-            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
-                    実戦厳選ルート
-                  </span>
-                </div>
-                <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
-                  画面中央・画面端・リーサルの最大火力コンボレシピ
-                </h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  ノーゲージでのライン運び、バーンアウト時の削り連携、SA3フィニッシュまで、クラシック・モダン両対応で無駄のない最適解を網羅。
-                </p>
-              </div>
-            </div>
-
-            {/* 3. ずっと使える安心保障 */}
-            <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/60 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
-                    ずっと使える安心保障
-                  </span>
-                </div>
-                <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
-                  今後のバージョンアップ・キャラ調整時も永久に無料追記
-                </h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  Capcomによるバランス調整や新シーズン突入時も記事を随時アップデート。一度購入すれば、追加費用なしで常に最新バージョンの攻略データを閲覧し続けられます。
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* フッター補足バナー */}
-          <div className="mt-4 sm:mt-5 p-3 sm:p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-neutral-600 dark:text-neutral-300">
-            <div className="flex items-center gap-2 text-center sm:text-left">
-              <span className="font-bold text-neutral-900 dark:text-white shrink-0">💡 選び方:</span>
-              <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」はプレミアム会員（¥980/月）がおすすめです。</span>
-            </div>
-            <div className="flex items-center gap-3 shrink-0 font-medium">
-              <Link href="/membership" className="text-cyan-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-0.5">
-                <span>プレミアム会員プランを見る</span>
+            <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+              <Link
+                href="/membership"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 transition-all shadow-xs shrink-0 whitespace-nowrap hover:scale-[1.02] active:scale-95"
+              >
+                <span>プレミアム会員詳細</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
+              <button
+                type="button"
+                onClick={toggleBenefits}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-neutral-100 hover:bg-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 border border-neutral-200/80 dark:border-neutral-700 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+                aria-expanded={isBenefitsOpen}
+                aria-label={isBenefitsOpen ? '特典セクションを折りたたむ' : '特典セクションを展開する'}
+              >
+                {isBenefitsOpen ? (
+                  <>
+                    <span>閉じる</span>
+                    <ChevronUp className="w-3.5 h-3.5 text-neutral-500" />
+                  </>
+                ) : (
+                  <>
+                    <span>特典を見る</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-neutral-500" />
+                  </>
+                )}
+              </button>
             </div>
           </div>
+
+          {/* 開閉コンテンツ */}
+          {isBenefitsOpen && (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              {/* 3大リターン チェックリストグリッド */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+                {/* 1. 起き攻めセットプレイ完全網羅 */}
+                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                        セットプレイ完全版
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                      全フレーム状況別（+3F〜+45F）の起き攻めセットプレイ完全網羅
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      その場・後ろ受け身の両対応重ねから、相手の無敵暴れを安全ガードできる「詐欺飛び」まで完全収録。実戦のターン継続率が劇的に上がります。
+                    </p>
+                  </div>
+                </div>
+
+                {/* 2. 最大火力コンボレシピ */}
+                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
+                        実戦厳選ルート
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                      画面中央・画面端・リーサルの最大火力コンボレシピ
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      ノーゲージでのライン運び、バーンアウト時の削り連携、SA3フィニッシュまで、クラシック・モダン両対応で無駄のない最適解を網羅。
+                    </p>
+                  </div>
+                </div>
+
+                {/* 3. ずっと使える安心保障 */}
+                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/60 flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
+                        ずっと使える安心保障
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                      今後のバージョンアップ・キャラ調整時も永久に無料追記
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      Capcomによるバランス調整や新シーズン突入時も記事を随時アップデート。一度購入すれば、追加費用なしで常に最新バージョンの攻略データを閲覧し続けられます。
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* フッター補足バナー */}
+              <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-neutral-600 dark:text-neutral-300">
+                <div className="flex items-center gap-2 text-center sm:text-left">
+                  <span className="font-bold text-neutral-900 dark:text-white shrink-0">💡 選び方:</span>
+                  <span>「特定キャラだけ極めたい方」は記事単体買い切り（¥500 / 永久閲覧）、「全キャラ攻略・立ち回りを学びたい方」はプレミアム会員（¥980/月）がおすすめです。</span>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 font-medium">
+                  <Link href="/membership" className="text-cyan-700 dark:text-cyan-300 font-bold hover:underline flex items-center gap-0.5">
+                    <span>プレミアム会員プランを見る</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

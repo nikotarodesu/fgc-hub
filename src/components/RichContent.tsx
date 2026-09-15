@@ -36,7 +36,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <strong
           key={i}
-          className="font-bold text-neutral-900 dark:text-white border-b border-neutral-900/40 dark:border-neutral-100/40 pb-0.5"
+          className="font-bold text-neutral-900 dark:text-white bg-gradient-to-t from-rose-500/25 dark:from-rose-400/30 from-35% to-transparent to-35% px-0.5 rounded-xs"
         >
           {inner}
         </strong>

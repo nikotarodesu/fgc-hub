@@ -5,54 +5,84 @@ import { parseVisualCombo, VisualStep } from '@/lib/comboParser';
 import ArcadeButton from './ArcadeButton';
 import { ChevronDown, ChevronUp, Gamepad2 } from 'lucide-react';
 
+import { findOkizemeData } from '@/data/articles/ryuOkizemeData';
+
 interface InteractiveComboRowProps {
   comboLine: string;
   renderInlineText?: (text: string) => React.ReactNode[];
   controlType?: 'classic' | 'modern';
 }
 
-// コンボ行内の有利フレーム表記（例: （+37））を検出してタップ可能にするヘルパー
+// コンボ行内の有利フレーム表記（例: 「+37」や「（+37）」）を検出し、
+// ⑤の起き攻めフレームデータに存在する場合のみタップ可能にするヘルパー
+// （カッコ内の単なる数字「（2150）」等はダメージ値なので無視し、その後に続く「+37」等を対象とする）
 function renderComboLineWithOkizeme(
   text: string,
   renderInlineText: (t: string) => React.ReactNode[]
 ): React.ReactNode {
-  const frameRegex = /([（\(]\s*(?:約)?\s*(\+?\d+[^）\)]*?)\s*[）\)])/;
-  const match = frameRegex.exec(text);
+  // プラス記号で始まるフレーム表記のみを検出（カッコ付き（+37）または単独の+37）
+  // 注意: （2610）のようなプラスのない数値（ダメージ）は絶対にマッチさせない
+  const frameRegex = /([（\(]\s*(?:約)?\s*\+\d+(?:-\d+)?\s*[）\)]|\+\d+(?:-\d+)?(?:F|フレーム)?)/g;
 
-  if (!match) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = frameRegex.exec(text)) !== null) {
+    const matchStart = match.index;
+    const matchEnd = frameRegex.lastIndex;
+    const matchedStr = match[0];
+
+    // ⑤の起き攻めフレームデータに存在するか確認
+    const okiData = findOkizemeData(matchedStr);
+
+    if (matchStart > lastIndex) {
+      parts.push(renderInlineText(text.slice(lastIndex, matchStart)));
+    }
+
+    if (okiData) {
+      // ⑤の起き攻めフレームにある場合のみクリック可能なボタンとして表示
+      parts.push(
+        <button
+          key={matchStart}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(
+                new CustomEvent('open_okizeme_modal', {
+                  detail: { frame: okiData.frameKey },
+                })
+              );
+            }
+          }}
+          className="inline-flex items-center gap-0.5 mx-1 px-1.5 py-0.5 rounded font-mono font-bold text-[10px] sm:text-xs bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-300/80 dark:border-emerald-700 shadow-2xs transition-all hover:scale-105 active:scale-95 cursor-pointer align-baseline select-none group/oki"
+          title={`タップして「${okiData.displayFrame}」の⑤起き攻め連携を確認`}
+        >
+          <span>{matchedStr}</span>
+          <span className="text-[9px] font-sans font-bold text-emerald-600 dark:text-emerald-400 underline decoration-emerald-500/40 group-hover/oki:decoration-emerald-500">
+            起き攻め
+          </span>
+        </button>
+      );
+    } else {
+      // ⑤に存在しない場合や該当データがない場合は、そのままプレーンテキストとして表示
+      parts.push(renderInlineText(matchedStr));
+    }
+
+    lastIndex = matchEnd;
+  }
+
+  // マッチが全くない場合
+  if (parts.length === 0) {
     return renderInlineText(text);
   }
 
-  const fullMatch = match[1];
-  const frameValue = match[2];
-  const parts = text.split(fullMatch);
+  if (lastIndex < text.length) {
+    parts.push(renderInlineText(text.slice(lastIndex)));
+  }
 
-  return (
-    <>
-      {renderInlineText(parts[0])}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(
-              new CustomEvent('open_okizeme_modal', {
-                detail: { frame: frameValue },
-              })
-            );
-          }
-        }}
-        className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 rounded font-mono font-bold text-[10px] sm:text-[11px] bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-300/80 dark:border-emerald-700 shadow-2xs transition-all hover:scale-105 active:scale-95 cursor-pointer group/fchip align-middle select-none"
-        title={`タップして「${frameValue}」の⑤起き攻め連携を一瞬で確認`}
-      >
-        <span>{fullMatch}</span>
-        <span className="text-[9px] font-sans font-bold text-emerald-600 dark:text-emerald-400 underline decoration-emerald-500/50 group-hover/fchip:decoration-emerald-500">
-          起き攻め
-        </span>
-      </button>
-      {parts[1] && renderInlineText(parts[1])}
-    </>
-  );
+  return <>{parts}</>;
 }
 
 export default function InteractiveComboRow({

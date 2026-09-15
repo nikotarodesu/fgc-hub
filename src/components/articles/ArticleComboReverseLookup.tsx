@@ -9,6 +9,7 @@ import {
   RYU_ARTICLE_COMBOS,
 } from '@/data/articles/ryuCombosData';
 import InteractiveComboRow from '@/components/InteractiveComboRow';
+import { findOkizemeData } from '@/data/articles/ryuOkizemeData';
 import {
   Flame,
   Zap,
@@ -576,30 +577,40 @@ export default function ArticleComboReverseLookup({
                 {/* 解説メモ ＆ アクションフッター */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/80 text-[11px]">
                   <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed min-w-0">
-                    {combo.advantageFrames && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (typeof window !== 'undefined') {
-                            window.dispatchEvent(
-                              new CustomEvent('open_okizeme_modal', {
-                                detail: {
-                                  frame: combo.advantageFrames,
-                                  position: combo.position === 'corner' ? 'corner' : 'center',
-                                },
-                              })
-                            );
-                          }
-                        }}
-                        className="inline-flex items-center gap-1 font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 border border-emerald-300/80 dark:border-emerald-700 px-1.5 py-0.5 rounded text-[10px] mr-1.5 transition-all shadow-2xs cursor-pointer hover:scale-105 active:scale-95 group/fbtn align-baseline"
-                        title="タップして⑤の起き攻め連携を一瞬で確認"
-                      >
-                        <span>[{combo.advantageFrames}]</span>
-                        <span className="text-[9px] font-sans font-bold text-emerald-600 dark:text-emerald-400 underline decoration-emerald-500/40 group-hover/fbtn:decoration-emerald-500">
-                          起き攻め
+                    {combo.advantageFrames && (() => {
+                      const okiData = findOkizemeData(combo.advantageFrames);
+                      if (okiData) {
+                        return (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (typeof window !== 'undefined') {
+                                window.dispatchEvent(
+                                  new CustomEvent('open_okizeme_modal', {
+                                    detail: {
+                                      frame: okiData.frameKey,
+                                      position: combo.position === 'corner' ? 'corner' : 'center',
+                                    },
+                                  })
+                                );
+                              }
+                            }}
+                            className="inline-flex items-center gap-1 font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 border border-emerald-300/80 dark:border-emerald-700 px-1.5 py-0.5 rounded text-[10px] mr-1.5 transition-all shadow-2xs cursor-pointer hover:scale-105 active:scale-95 group/fbtn align-baseline"
+                            title={`タップして「${okiData.displayFrame}」の⑤起き攻め連携を確認`}
+                          >
+                            <span>[{combo.advantageFrames}]</span>
+                            <span className="text-[9px] font-sans font-bold text-emerald-600 dark:text-emerald-400 underline decoration-emerald-500/40 group-hover/fbtn:decoration-emerald-500">
+                              起き攻め
+                            </span>
+                          </button>
+                        );
+                      }
+                      return (
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400 mr-1.5 font-mono text-[10px]">
+                          [{combo.advantageFrames}]
                         </span>
-                      </button>
-                    )}
+                      );
+                    })()}
                     {combo.note}
                   </p>
 

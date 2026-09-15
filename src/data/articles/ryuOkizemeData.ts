@@ -388,16 +388,23 @@ export const FRAME_FEATURES_INFO: Record<string, string[]> = {
   ],
 };
 
-// 入力文字列（例: "+37", "+37F", "（+37）", "+26", "+41-45"）から合致する起き攻めデータを検索
+// 入力文字列（例: "+37", "+37F", "（+37）", "+26" 等）から合致する起き攻めデータを検索
+// 注意: プラス記号のない単なる数字（ダメージ値等）は除外
 export function findOkizemeData(rawText: string): FrameOkizemeData | null {
   if (!rawText) return null;
 
   const clean = rawText.trim().replace(/^[（(【\[]/, '').replace(/[）)\]】]$/, '');
+
+  // 起き攻めフレームは必ず '+' を含む（+37, +35 等）。'+' がない単なる数字（ダメージ等）は除外
+  if (!clean.includes('+')) {
+    return null;
+  }
+
   if (RYU_OKIZEME_DATA[clean]) {
     return RYU_OKIZEME_DATA[clean];
   }
 
-  const numMatch = clean.match(/\+?(\d+)/);
+  const numMatch = clean.match(/\+(\d+)/);
   if (!numMatch) return null;
 
   const num = numMatch[1];

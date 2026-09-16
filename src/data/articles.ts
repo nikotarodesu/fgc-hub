@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_JURI_1400MR } from './articles/coachingJuri1400mr';
 import { COACHING_BLANKA_1500MR } from './articles/coachingBlanka1500mr';
 import { COACHING_ED_1300MR_KEN } from './articles/coachingEd1300mrKen';
 import { COACHING_ED_1500MR_AKUMA } from './articles/coachingEd1500mrAkuma';
@@ -179,6 +180,9 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('ブランカ') || charLower.includes('blanka')) {
     return '/images/characters/blanka/sns.jpg';
   }
+  if (charLower.includes('ジュリ') || charLower.includes('juri')) {
+    return '/images/characters/juri/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 
@@ -189,6 +193,7 @@ export const CHARACTERS_SF6 = [
   { id: 'zangief', name: 'ザンギエフ (Zangief)', type: '投げキャラの頂点', color: 'from-red-700 to-rose-900' },
   { id: 'jp', name: 'JP (JP)', type: '空間掌握・設置', color: 'from-purple-800 to-slate-900' },
   { id: 'blanka', name: 'ブランカ (Blanka)', type: '野生トリッキー', color: 'from-emerald-500 to-amber-600' },
+  { id: 'juri', name: 'ジュリ (Juri)', type: '急襲・スピード', color: 'from-fuchsia-600 to-pink-700' },
   { id: 'guile', name: 'ガイル (Guile)', type: '鉄壁要塞', color: 'from-emerald-600 to-green-700' },
   { id: 'gouki', name: '豪鬼 (Akuma)', type: '攻撃特化', color: 'from-red-600 to-amber-700' },
   { id: 'ken', name: 'ケン (Ken)', type: '万能攻勢', color: 'from-orange-500 to-red-600' },
@@ -201,6 +206,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_JURI_1400MR,
   COACHING_BLANKA_1500MR,
   COACHING_ED_1300MR_KEN,
   COACHING_ED_1500MR_AKUMA,

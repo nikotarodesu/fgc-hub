@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, AUTHOR_INFO, getArticleEyecatch } from '@/data/articles';
 import AuthorCard from '@/components/AuthorCard';
+import LethalToolPreviewModal from '@/components/LethalToolPreviewModal';
 import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function HomePage() {
@@ -14,6 +15,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isBenefitsOpen, setIsBenefitsOpen] = useState(true);
+  const [isLethalPreviewOpen, setIsLethalPreviewOpen] = useState(false);
 
   // リピーター向けに開閉状態を記憶（一度閉じた方は次回以降も折りたたんだ状態を維持）
   useEffect(() => {
@@ -221,24 +223,38 @@ export default function HomePage() {
                 </div>
 
                 {/* 3. 逆引きリーサルツール */}
-                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                <button
+                  type="button"
+                  onClick={() => setIsLethalPreviewOpen(true)}
+                  className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-cyan-300/80 dark:border-cyan-800/80 shadow-2xs hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-md hover:shadow-cyan-500/10 transition-all flex flex-col justify-between text-left cursor-pointer group relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl pointer-events-none -mr-6 -mt-6" />
                   <div>
-                    <div className="flex items-center gap-2 mb-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800/60 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-4 h-4" />
+                    <div className="flex items-center justify-between gap-2 mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800/60 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                        <span className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
+                          WEB限定ツール
+                        </span>
                       </div>
-                      <span className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
-                        WEB限定ツール
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 shrink-0 group-hover:bg-cyan-500 group-hover:text-white transition-all">
+                        タップで体験 🔍
                       </span>
                     </div>
-                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug">
+                    <h3 className="text-sm sm:text-[15px] font-bold text-neutral-900 dark:text-white mb-1.5 leading-snug group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                       相手残りHPから倒し切る「逆引きリーサルツール」使用可能
                     </h3>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
                       相手の残り体力や手持ちのDゲージ・SA状況を入力するだけで、今出せる最適リーサルコンボを瞬時に逆引き検索。判断ミスやリーサル逃しをゼロにします。
                     </p>
                   </div>
-                </div>
+                  <div className="mt-3 pt-2.5 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between text-[11px] font-bold text-cyan-600 dark:text-cyan-400">
+                    <span>どんなツールか実際に試してみる</span>
+                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </button>
 
                 {/* 4. ずっと使える安心保障 */}
                 <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
@@ -625,6 +641,12 @@ export default function HomePage() {
           </aside>
         </div>
       </main>
+
+      {/* 逆引きリーサルツール 体験プレビューモーダル */}
+      <LethalToolPreviewModal
+        isOpen={isLethalPreviewOpen}
+        onClose={() => setIsLethalPreviewOpen(false)}
+      />
     </div>
   );
 }

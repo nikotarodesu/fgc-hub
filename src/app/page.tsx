@@ -129,7 +129,7 @@ export default function HomePage() {
                 <span>有料記事＆プレミアム会員で手に入るもの</span>
               </div>
               <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-                勝率を直結させる“実戦ノウハウ”を完全網羅
+                勝率を直結させる実戦ノウハウを完全網羅
               </h2>
               {isBenefitsOpen && (
                 <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">

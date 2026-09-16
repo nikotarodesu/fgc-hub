@@ -299,10 +299,10 @@ export default function HomePage() {
             <div className="min-w-0">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] font-bold tracking-wide uppercase mb-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-                <span>有料記事＆プレミアム会員で手に入るもの</span>
+                <span>会員限定・有料コンテンツ特典</span>
               </div>
               <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-                勝率を直結させる実戦ノウハウを完全網羅
+                有料記事＆プレミアム会員で手に入るもの
               </h2>
               {isBenefitsOpen && (
                 <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl leading-relaxed">
@@ -670,9 +670,9 @@ export default function HomePage() {
                     href="/articles/ryu-complete-guide"
                     className="group relative block rounded-2xl overflow-hidden border-2 border-cyan-500/80 dark:border-cyan-500/60 bg-gradient-to-br from-white via-cyan-50/20 to-white dark:from-neutral-900 dark:via-neutral-900 dark:to-cyan-950/30 shadow-md hover:shadow-xl hover:border-cyan-500 transition-all"
                   >
-                    <div className="flex flex-col md:flex-row">
-                      {/* サムネイル */}
-                      <div className="relative w-full md:w-72 lg:w-80 aspect-[16/9] md:aspect-auto shrink-0 bg-neutral-950 overflow-hidden">
+                    <div className="flex flex-col md:flex-row items-stretch">
+                      {/* サムネイル（PCでも16:9比率を崩さない） */}
+                      <div className="relative w-full md:w-72 lg:w-80 aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden">
                         <img
                           src="/images/characters/ryu/sns.jpg"
                           alt="C・Mリュウの完全攻略"
@@ -791,8 +791,8 @@ export default function HomePage() {
                       href={`/articles/${article.slug}`}
                       className="group flex flex-row items-center sm:items-stretch bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-0 gap-3 sm:gap-0"
                     >
-                      {/* サムネイル画像（スマホではコンパクトな正方形、PCでは横長比率） */}
-                      <div className="relative w-20 h-20 sm:w-52 md:w-60 aspect-square sm:aspect-auto shrink-0 bg-neutral-950 overflow-hidden rounded-lg sm:rounded-none">
+                      {/* サムネイル画像（スマホでは正方形、PCでは16:9比率を厳密に保持） */}
+                      <div className="relative w-20 h-20 sm:w-52 md:w-60 aspect-square sm:aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden rounded-lg sm:rounded-none">
                         <img
                           src={eyecatch}
                           alt={article.title}

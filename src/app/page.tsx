@@ -376,16 +376,6 @@ export default function HomePage() {
               立ち回り
             </button>
             <button
-              onClick={() => { setSelectedCategory('coaching'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                selectedCategory === 'coaching'
-                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              コーチング
-            </button>
-            <button
               onClick={() => { setSelectedCategory('system'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 selectedCategory === 'system'
@@ -394,6 +384,16 @@ export default function HomePage() {
               }`}
             >
               共通技術
+            </button>
+            <button
+              onClick={() => { setSelectedCategory('coaching'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                selectedCategory === 'coaching'
+                  ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              コーチング
             </button>
           </div>
 

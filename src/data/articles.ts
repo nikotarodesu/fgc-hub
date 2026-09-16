@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_ED_1500MR_AKUMA } from './articles/coachingEd1500mrAkuma';
 import { COACHING_JP_PLAT1 } from './articles/coachingJpPlat1';
 import { COACHING_MAI_DIA3 } from './articles/coachingMaiDia3';
 import { COACHING_ZANGIEF_1400MR } from './articles/coachingZangief1400mr';
@@ -194,6 +195,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_ED_1500MR_AKUMA,
   COACHING_JP_PLAT1,
   COACHING_MAI_DIA3,
   COACHING_ZANGIEF_1400MR,

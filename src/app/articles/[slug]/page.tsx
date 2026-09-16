@@ -774,7 +774,7 @@ export default function ArticleDetailPage() {
 
               {/* 無料公開セクション */}
               {freeSections.map((section, idx) => (
-                <div key={idx} id={`sec-free-${idx}`} className="pt-6 scroll-mt-16">
+                <div key={idx} id={`sec-free-${idx}`} className="pt-8 sm:pt-10 scroll-mt-16">
                   <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
                     <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                       <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
@@ -801,7 +801,7 @@ export default function ArticleDetailPage() {
                     )}
                   </div>
 
-                  <div className="mb-4">
+                  <div className="mb-6 sm:mb-8">
                     <RichContent
                       content={section.body}
                       sectionId={`sec-free-${idx}`}
@@ -947,7 +947,7 @@ export default function ArticleDetailPage() {
                               </div>
                             )}
 
-                            <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
+                            <div id={`sec-paid-${idx}`} className="pt-8 sm:pt-10 scroll-mt-16">
                               <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
                                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                                   <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
@@ -974,7 +974,7 @@ export default function ArticleDetailPage() {
                                 )}
                               </div>
 
-                              <div className="mb-4">
+                              <div className="mb-6 sm:mb-8">
                                 <RichContent
                                   content={section.body}
                                   sectionId={`sec-paid-${idx}`}

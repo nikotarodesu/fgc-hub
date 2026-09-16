@@ -456,7 +456,7 @@ export default function RichContent({
       return (
         <div
           key={blockKey}
-          className="pt-5 pb-1 mt-4 first:mt-0 first:pt-0 border-b border-neutral-200 dark:border-neutral-800"
+          className="pt-6 pb-2 mt-6 sm:mt-8 first:mt-0 first:pt-0 mb-3 sm:mb-4 border-b border-neutral-200 dark:border-neutral-800"
         >
           {block.lines.map((line, lIdx) => {
             const match = line.trim().match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
@@ -490,7 +490,7 @@ export default function RichContent({
     // 1.5 ⭐️ ルート見出し（⭐️ OD足刀ルート, ⭐️ リーサルコンボ, ⭐️ ノーゲージ 等）
     if (block.type === 'star_heading' && block.lines) {
       return (
-        <div key={blockKey} className="space-y-1.5 my-3 sm:my-3.5 first:mt-0">
+        <div key={blockKey} className="space-y-2 mt-5 sm:mt-6 mb-3 first:mt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[⭐️⭐]\s*/, '');
             const itemId = `${sectionId}-star-${blockKey}-${lIdx}`;
@@ -499,12 +499,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-[16.5px] tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-[15.5px] tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-base text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
+                <h4 className="font-bold text-sm sm:text-[15px] text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -571,7 +571,7 @@ export default function RichContent({
     // 1.7 コンボ行（〆が付いている行）
     if (block.type === 'combo') {
       return (
-        <div key={blockKey} className="my-2 sm:my-2.5 space-y-1 sm:space-y-1.5 pl-0">
+        <div key={blockKey} className="my-3 sm:my-3.5 space-y-2 sm:space-y-2.5 pl-0">
           {block.lines.map((line, lIdx) => (
             <InteractiveComboRow
               key={lIdx}
@@ -587,7 +587,7 @@ export default function RichContent({
     // 1.8 中見出し・技名（●, ■ 等で〆が付いていないもの）
     if (block.type === 'subheading' && block.lines) {
       return (
-        <div key={blockKey} className="pt-2 pb-1">
+        <div key={blockKey} className="pt-3 sm:pt-4 pb-1 first:pt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[●■・\-\*]\s*/, '');
             // ②の立ち回りで振る技セクションかつ通常技・特殊技のみフレームデータを取得（必殺技や他セクションは除外）
@@ -602,7 +602,7 @@ export default function RichContent({
             );
 
             return (
-              <div key={lIdx} className="my-1.5 sm:my-2">
+              <div key={lIdx} className="my-2 sm:my-2.5">
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   {isSecretTarget ? (
                     <SecretSubheadingButton
@@ -612,7 +612,7 @@ export default function RichContent({
                       renderInline={renderInline}
                     />
                   ) : (
-                    <h4 className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words">
+                    <h4 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words shadow-2xs">
                       {renderInline(cleanText)}
                     </h4>
                   )}
@@ -654,18 +654,18 @@ export default function RichContent({
       );
     }
 
-    // 1.9 ▶︎ アクション・トピック見出し（例: ▶︎ 中足 > 覇山で密着-3Fを背負っている場面の改善）
+    // 1.9 ▶︎ 解説・説明文行（例: ▶︎ 発生の早い4Fで相手の暴れを潰すことができる）
     if (block.type === 'action_heading' && block.lines) {
       return (
-        <div key={blockKey} className="pt-2.5 pb-0.5 first:pt-0 space-y-2">
+        <div key={blockKey} className="my-3 sm:my-3.5 space-y-2.5 sm:space-y-3 first:mt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[▶︎▶]\s*/, '');
             return (
               <div
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-base sm:text-[17px] font-bold text-neutral-900 dark:text-white leading-snug tracking-tight"
+                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base font-normal text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
               >
-                <span className="text-cyan-600 dark:text-cyan-400 font-black text-sm sm:text-base mt-0.5 shrink-0 select-none">
+                <span className="text-cyan-600/80 dark:text-cyan-400/80 text-xs sm:text-[13px] mt-[5px] sm:mt-[6px] shrink-0 select-none">
                   ▶
                 </span>
                 <span className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
@@ -681,7 +681,7 @@ export default function RichContent({
     // 2. 箇条書き・選択肢リスト（コンボに紐付かない独立した箇条書き）
     if (block.type === 'bullet' && block.lines) {
       return (
-        <ul key={blockKey} className="my-1.5 sm:my-2 space-y-1 sm:space-y-1.5 pl-0 sm:pl-1">
+        <ul key={blockKey} className="my-2.5 sm:my-3 space-y-2 sm:space-y-2.5 pl-0 sm:pl-1">
           {block.lines.map((line, lIdx) => {
             const trimmed = line.trim();
             const isAction = trimmed.startsWith('▶︎') || trimmed.startsWith('▶');
@@ -689,18 +689,14 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className={`flex items-start gap-2 sm:gap-2.5 ${
-                  isAction
-                    ? 'text-base sm:text-[17px] font-bold text-neutral-900 dark:text-white leading-snug mt-2 first:mt-0'
-                    : 'text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm leading-relaxed'
-                }`}
+                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base font-normal text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
               >
                 {isAction ? (
-                  <span className="text-cyan-600 dark:text-cyan-400 font-black text-sm sm:text-base mt-0.5 shrink-0 select-none">
+                  <span className="text-cyan-600/80 dark:text-cyan-400/80 text-xs sm:text-[13px] mt-[5px] sm:mt-[6px] shrink-0 select-none">
                     ▶
                   </span>
                 ) : (
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 mt-2 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 mt-2.5 shrink-0" />
                 )}
                 <div className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
                   {renderInline(itemText)}
@@ -715,7 +711,7 @@ export default function RichContent({
     // 3. 番号付きリスト
     if (block.type === 'numbered' && block.lines) {
       return (
-        <ol key={blockKey} className="my-2 sm:my-3 space-y-1.5 sm:space-y-2 pl-0 sm:pl-1">
+        <ol key={blockKey} className="my-2.5 sm:my-3.5 space-y-2 sm:space-y-2.5 pl-0 sm:pl-1">
           {block.lines.map((line, lIdx) => {
             const trimmed = line.trim();
             const match = trimmed.match(/^(\d+)[\.|\)|）]\s*(.*)$/);
@@ -724,7 +720,7 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-neutral-800 dark:text-neutral-200 text-sm sm:text-[15px] leading-relaxed"
+                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
               >
                 <span className="font-bold text-neutral-900 dark:text-white font-mono text-sm shrink-0 mt-0.5">
                   {num}.
@@ -742,13 +738,13 @@ export default function RichContent({
     // 4. 矢印行（結論・効果）
     if (block.type === 'arrow' && block.lines) {
       return (
-        <div key={blockKey} className="my-2 space-y-1.5 pl-2">
+        <div key={blockKey} className="my-2.5 sm:my-3 space-y-2 pl-1 sm:pl-2">
           {block.lines.map((line, lIdx) => {
             const itemText = line.trim().replace(/^(=>|→)\s*/, '');
             return (
               <div
                 key={lIdx}
-                className="flex items-center gap-2 text-sm sm:text-[15px] text-neutral-900 dark:text-white font-medium"
+                className="flex items-center gap-2 text-[15px] sm:text-base text-neutral-800 dark:text-neutral-200 font-medium leading-relaxed"
               >
                 <span className="text-cyan-600 dark:text-cyan-400 shrink-0 font-bold">➔</span>
                 <span>{renderInline(itemText)}</span>
@@ -761,7 +757,7 @@ export default function RichContent({
 
     // 5. 通常テキスト段落
     return (
-      <p key={blockKey} className="leading-relaxed sm:leading-loose">
+      <p key={blockKey} className="text-[15px] sm:text-base text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.8] my-3">
         {block.lines?.map((line, lIdx) => (
           <React.Fragment key={lIdx}>
             {lIdx > 0 && <br />}

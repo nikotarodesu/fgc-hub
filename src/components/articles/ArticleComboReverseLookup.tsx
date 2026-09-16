@@ -196,7 +196,7 @@ export default function ArticleComboReverseLookup({
                   PREMIUM
                 </span>
                 <span className="text-[10px] text-cyan-300 font-mono hidden sm:inline">
-                  {controlType === 'classic' ? '🥋 クラシック対応' : '⚡️ モダン対応'}
+                  {controlType === 'classic' ? 'クラシック対応' : 'モダン対応'}
                 </span>
               </div>
               <p className="text-[11px] text-neutral-300 mt-0.5">

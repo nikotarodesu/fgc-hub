@@ -9,6 +9,7 @@ import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRigh
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
+  const [selectedControlType, setSelectedControlType] = useState<'all' | 'classic' | 'modern'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -51,6 +52,12 @@ export default function HomePage() {
           article.tags.includes('完全攻略') ||
           article.tags.includes('キャラ別攻略');
         if (!isCharGuide) return false;
+
+        if (selectedControlType === 'classic') {
+          if (article.controlType !== 'classic' && article.controlType !== 'both') return false;
+        } else if (selectedControlType === 'modern') {
+          if (article.controlType !== 'modern' && article.controlType !== 'both') return false;
+        }
       }
       if (selectedCategory === 'neutral') {
         const isNeutral =
@@ -86,7 +93,7 @@ export default function HomePage() {
       }
       return true;
     });
-  }, [selectedCategory, selectedCharacter, selectedTag, searchQuery]);
+  }, [selectedCategory, selectedControlType, selectedCharacter, selectedTag, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
@@ -278,7 +285,7 @@ export default function HomePage() {
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
           <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/80 p-1 rounded-lg border border-neutral-200/60 dark:border-neutral-700/60 overflow-x-auto">
             <button
-              onClick={() => { setSelectedCategory('all'); setSelectedCharacter(null); setSelectedTag(null); }}
+              onClick={() => { setSelectedCategory('all'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 selectedCategory === 'all'
                   ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -298,7 +305,7 @@ export default function HomePage() {
               攻略記事
             </button>
             <button
-              onClick={() => { setSelectedCategory('neutral'); setSelectedCharacter(null); setSelectedTag(null); }}
+              onClick={() => { setSelectedCategory('neutral'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 selectedCategory === 'neutral'
                   ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -308,7 +315,7 @@ export default function HomePage() {
               立ち回り
             </button>
             <button
-              onClick={() => { setSelectedCategory('coaching'); setSelectedCharacter(null); setSelectedTag(null); }}
+              onClick={() => { setSelectedCategory('coaching'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 selectedCategory === 'coaching'
                   ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -318,7 +325,7 @@ export default function HomePage() {
               コーチング
             </button>
             <button
-              onClick={() => { setSelectedCategory('system'); setSelectedCharacter(null); setSelectedTag(null); }}
+              onClick={() => { setSelectedCategory('system'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 selectedCategory === 'system'
                   ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -334,11 +341,69 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* 攻略記事選択時の操作タイプ切り替え（クラシック / モダン） */}
+        {selectedCategory === 'character' && (
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 p-3 sm:p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-neutral-700 dark:text-neutral-200 shrink-0">
+                操作タイプ:
+              </span>
+              <div className="inline-flex items-center gap-1.5 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200/60 dark:border-neutral-700/60">
+                <button
+                  type="button"
+                  onClick={() => setSelectedControlType('all')}
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedControlType === 'all'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  すべて
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedControlType('classic')}
+                  className={`px-3.5 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedControlType === 'classic'
+                      ? 'bg-[#8B5BB7] text-white shadow-xs'
+                      : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300 hover:text-[#8B5BB7] dark:hover:text-[#b38ee0] hover:bg-[#8B5BB7]/10 border border-neutral-200/60 dark:border-neutral-700'
+                  }`}
+                >
+                  クラシック
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedControlType('modern')}
+                  className={`px-3.5 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedControlType === 'modern'
+                      ? 'bg-[#D8843F] text-white shadow-xs'
+                      : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300 hover:text-[#D8843F] dark:hover:text-[#f0a668] hover:bg-[#D8843F]/10 border border-neutral-200/60 dark:border-neutral-700'
+                  }`}
+                >
+                  モダン
+                </button>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-neutral-500 dark:text-neutral-400">
+              {selectedControlType === 'classic' && (
+                <span>クラシック対応記事（両対応含む）を表示中</span>
+              )}
+              {selectedControlType === 'modern' && (
+                <span>モダン対応記事（両対応含む）を表示中</span>
+              )}
+              {selectedControlType === 'all' && (
+                <span>全操作タイプの攻略記事を表示中</span>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* メイン記事カラム（8 / 12） */}
           <div className="lg:col-span-8 space-y-4">
             {/* 絞り込み条件表示 */}
-            {(selectedCategory !== 'all' || selectedCharacter || selectedTag || searchQuery) && (
+            {(selectedCategory !== 'all' || selectedControlType !== 'all' || selectedCharacter || selectedTag || searchQuery) && (
               <div className="p-3 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between text-xs shadow-xs">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-neutral-500 dark:text-neutral-400">絞り込み:</span>
@@ -351,6 +416,14 @@ export default function HomePage() {
                         : selectedCategory === 'coaching'
                         ? 'カテゴリ: コーチング'
                         : 'カテゴリ: 共通技術'}
+                    </span>
+                  )}
+                  {selectedCategory === 'character' && selectedControlType !== 'all' && (
+                    <span
+                      className="text-white font-bold px-2 py-0.5 rounded"
+                      style={{ backgroundColor: selectedControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                    >
+                      {selectedControlType === 'classic' ? '操作: クラシック' : '操作: モダン'}
                     </span>
                   )}
                   {selectedCharacter && (
@@ -370,7 +443,7 @@ export default function HomePage() {
                   )}
                 </div>
                 <button
-                  onClick={() => { setSelectedCategory('all'); setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
+                  onClick={() => { setSelectedCategory('all'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
                   className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 underline text-xs ml-2 cursor-pointer shrink-0"
                 >
                   条件クリア
@@ -461,11 +534,16 @@ export default function HomePage() {
                                 </span>
                               )}
                               {article.controlType === 'both' ? (
-                                <span className="text-[10px] font-bold text-[#008ba8] dark:text-cyan-300 bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded border border-sky-200 dark:border-sky-800">
-                                  C / M 両対応
+                                <span className="inline-flex items-center gap-1 text-[10px] font-bold">
+                                  <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold" style={{ backgroundColor: '#8B5BB7' }}>C</span>
+                                  <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold" style={{ backgroundColor: '#D8843F' }}>M</span>
+                                  <span className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-300">両対応</span>
                                 </span>
                               ) : article.controlType ? (
-                                <span className="text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                                <span
+                                  className="text-[10px] font-bold text-white px-2 py-0.5 rounded shrink-0"
+                                  style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                                >
                                   {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
                                 </span>
                               ) : null}

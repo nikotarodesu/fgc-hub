@@ -520,11 +520,17 @@ export default function ArticleDetailPage() {
                 ) : null}
 
                 {article.controlType === 'both' ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#008ba8] dark:text-cyan-300 border border-sky-200 dark:border-sky-800 shrink-0">
-                    <span>{activeControlType === 'classic' ? '🥋 クラシック' : '⚡️ モダン'}</span>
+                  <span
+                    className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full text-white shrink-0"
+                    style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                  >
+                    <span>{activeControlType === 'classic' ? 'クラシック' : 'モダン'}</span>
                   </span>
                 ) : article.controlType ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-900 text-cyan-100 border border-cyan-800 shrink-0">
+                  <span
+                    className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded text-white shrink-0"
+                    style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                  >
                     {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
                   </span>
                 ) : null}
@@ -624,11 +630,10 @@ export default function ArticleDetailPage() {
                       onClick={() => setActiveControlType('classic')}
                       className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'classic'
-                          ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
-                          : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
+                          ? 'bg-[#8B5BB7] text-white shadow-sm ring-1 ring-[#8B5BB7]'
+                          : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#8B5BB7] dark:hover:text-[#b38ee0] hover:bg-[#8B5BB7]/10 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="text-base shrink-0">🥋</span>
                       <span className="truncate sm:inline">クラシック<span className="hidden sm:inline"> (Classic)</span></span>
                     </button>
                     <button
@@ -636,11 +641,10 @@ export default function ArticleDetailPage() {
                       onClick={() => setActiveControlType('modern')}
                       className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'modern'
-                          ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm ring-1 ring-neutral-900 dark:ring-white'
-                          : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700'
+                          ? 'bg-[#D8843F] text-white shadow-sm ring-1 ring-[#D8843F]'
+                          : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#D8843F] dark:hover:text-[#f0a668] hover:bg-[#D8843F]/10 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="text-base shrink-0">⚡️</span>
                       <span className="truncate sm:inline">モダン<span className="hidden sm:inline"> (Modern)</span></span>
                     </button>
                   </div>
@@ -673,8 +677,11 @@ export default function ArticleDetailPage() {
                     <span>目次</span>
                   </div>
                   {currentVariant && (
-                    <span className="text-[11px] font-bold text-[#008ba8] dark:text-cyan-300 bg-sky-50 dark:bg-sky-950/40 px-2 py-0.5 rounded border border-sky-200 dark:border-sky-800">
-                      {activeControlType === 'classic' ? '🥋 クラシック編' : '⚡️ モダン編'}
+                    <span
+                      className="text-[11px] font-bold text-white px-2 py-0.5 rounded shrink-0"
+                      style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                    >
+                      {activeControlType === 'classic' ? 'クラシック編' : 'モダン編'}
                     </span>
                   )}
                 </div>
@@ -1119,7 +1126,10 @@ export default function ArticleDetailPage() {
               <div className="p-4 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
                 <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <span>操作タイプ切り替え</span>
-                  <span className="text-[10px] font-bold text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-200/60 dark:border-cyan-800">
+                  <span
+                    className="text-[10px] font-bold text-white px-2 py-0.5 rounded"
+                    style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                  >
                     {activeControlType === 'classic' ? 'クラシック表示中' : 'モダン表示中'}
                   </span>
                 </div>
@@ -1132,11 +1142,11 @@ export default function ArticleDetailPage() {
                     }}
                     className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       activeControlType === 'classic'
-                        ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs'
-                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                        ? 'bg-[#8B5BB7] text-white shadow-xs'
+                        : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#8B5BB7] dark:hover:text-[#b38ee0] hover:bg-[#8B5BB7]/10 border border-neutral-200/60 dark:border-neutral-700'
                     }`}
                   >
-                    🥋 クラシック
+                    クラシック
                   </button>
                   <button
                     type="button"
@@ -1146,11 +1156,11 @@ export default function ArticleDetailPage() {
                     }}
                     className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       activeControlType === 'modern'
-                        ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs'
-                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                        ? 'bg-[#D8843F] text-white shadow-xs'
+                        : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#D8843F] dark:hover:text-[#f0a668] hover:bg-[#D8843F]/10 border border-neutral-200/60 dark:border-neutral-700'
                     }`}
                   >
-                    ⚡️ モダン
+                    モダン
                   </button>
                 </div>
               </div>

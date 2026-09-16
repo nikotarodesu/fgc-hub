@@ -2,6 +2,7 @@ import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
 import { COACHING_CHUNLI_1600MR } from './articles/coachingChunli1600mr';
 import { COACHING_CHUNLI_PLAT3 } from './articles/coachingChunliPlat3';
 import { COACHING_GUILE_DIA5 } from './articles/coachingGuileDia5';
+import { COACHING_ED_1500MR } from './articles/coachingEd1500mr';
 import { COACHING_AKUMA_1200MR } from './articles/coachingAkuma1200mr';
 
 export interface ArticleVariant {
@@ -142,6 +143,9 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('ガイル') || charLower.includes('guile')) {
     return '/images/characters/guile/sns.jpg';
   }
+  if (charLower.includes('エド') || charLower.includes('ed')) {
+    return '/images/characters/ed/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 
@@ -159,6 +163,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_ED_1500MR,
   COACHING_GUILE_DIA5,
   COACHING_CHUNLI_PLAT3,
   COACHING_AKUMA_1200MR,

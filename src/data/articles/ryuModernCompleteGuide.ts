@@ -193,7 +193,7 @@ export const RYU_MODERN_COMPLETE_GUIDE: Article = {
 ▶︎ カウンターヒット時は距離によってA中やA弱からコンボを伸ばす
 ▶︎ 弱をガードした後に反撃をしてくる相手には弱波掌撃で暴れ潰しをすることができる
 ▶︎ 画面中央で弱波掌撃がカウンターヒットした時のコンボは以下の通り
-![弱波掌撃カウンター時の暴れ潰しコンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-abaretubusi.mp4)
+![相手との距離が近い時のノーキャン竜巻コンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-abaretubusi.mp4)
 
 ● ラッシュA中>中竜巻〆
 ▶︎ 相手との距離が遠い時はこちら

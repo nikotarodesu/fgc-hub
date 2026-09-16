@@ -137,7 +137,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ カウンターヒット時は下中Pや弱Kからコンボを伸ばす
 ▶︎ 弱Pをガードした後に反撃をしてくる相手には弱波掌撃で暴れ潰しをすることができる
 ▶︎ 画面中央で弱波掌撃がカウンターヒットした時のコンボは以下の通り：
-![弱波掌撃カウンター時の暴れ潰しコンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-abaretubusi.mp4)
+![相手との距離が近い時のノーキャン竜巻コンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-abaretubusi.mp4)
 ● ラッシュ下中P>中竜巻〆
 ▶︎ 相手との距離が遠い時はこちら
 ● ラッシュ中P>ノーキャン中竜巻〆

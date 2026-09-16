@@ -183,6 +183,39 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('ジュリ') || charLower.includes('juri')) {
     return '/images/characters/juri/sns.jpg';
   }
+  if (charLower.includes('テリー') || charLower.includes('terry')) {
+    return '/images/characters/terry/sns.jpg';
+  }
+  if (charLower.includes('ラシード') || charLower.includes('rashid')) {
+    return '/images/characters/rashid/sns.jpg';
+  }
+  if (charLower.includes('aki') || charLower.includes('アキ')) {
+    return '/images/characters/aki/sns.jpg';
+  }
+  if (charLower.includes('ジェイミー') || charLower.includes('jamie')) {
+    return '/images/characters/jamie/sns.jpg';
+  }
+  if (charLower.includes('ディージェイ') || charLower.includes('deejay') || charLower.includes('dee jay')) {
+    return '/images/characters/deejay/sns.jpg';
+  }
+  if (charLower.includes('マノン') || charLower.includes('manon')) {
+    return '/images/characters/manon/sns.jpg';
+  }
+  if (charLower.includes('本田') || charLower.includes('honda')) {
+    return '/images/characters/ehonda/sns.jpg';
+  }
+  if (charLower.includes('ダルシム') || charLower.includes('dhalsim')) {
+    return '/images/characters/dhalsim/sns.jpg';
+  }
+  if (charLower.includes('リリー') || charLower.includes('lily')) {
+    return '/images/characters/lily/sns.jpg';
+  }
+  if (charLower.includes('キンバリー') || charLower.includes('kimberly')) {
+    return '/images/characters/kimberly/sns.jpg';
+  }
+  if (charLower.includes('エレナ') || charLower.includes('elena')) {
+    return '/images/characters/elena/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 

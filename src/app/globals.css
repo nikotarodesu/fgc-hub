@@ -7,15 +7,8 @@
   --background: #fafafa;
   --foreground: #171717;
 
-  /* スマホ（モバイル）の文字サイズ基準: 標準を従来の特大（125%）に設定 */
-  --font-scale: 125%;
-}
-
-@media (min-width: 768px) {
-  :root {
-    /* PC・タブレット: 標準は100% */
-    --font-scale: 100%;
-  }
+  /* 文字サイズ基準: 初期値100% */
+  --font-scale: 100%;
 }
 
 .dark {
@@ -31,29 +24,29 @@ body {
 }
 
 /* data-font-size 属性による文字サイズ切り替え */
-/* スマホ (< 768px) */
+/* スマホ (< 768px): 標準 100%, 大 120%, 特大 135% */
 html,
 html[data-font-size="normal"] {
-  --font-scale: 125%; /* 標準: 従来の特大(125%) */
+  --font-scale: 100%;
 }
 html[data-font-size="large"] {
-  --font-scale: 140%; /* 大: さらに大きく(140%) */
+  --font-scale: 120%;
 }
 html[data-font-size="xlarge"] {
-  --font-scale: 155%; /* 特大: さらに大きく(155%) */
+  --font-scale: 135%;
 }
 
-/* PC・タブレット (>= 768px) */
+/* PC・タブレット (>= 768px): 以前の状態 (標準 100%, 大 112.5%, 特大 125%) */
 @media (min-width: 768px) {
   html,
   html[data-font-size="normal"] {
     --font-scale: 100%;
   }
   html[data-font-size="large"] {
-    --font-scale: 115%;
+    --font-scale: 112.5%;
   }
   html[data-font-size="xlarge"] {
-    --font-scale: 130%;
+    --font-scale: 125%;
   }
 }
 
@@ -78,7 +71,8 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", Meiryo, sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
 

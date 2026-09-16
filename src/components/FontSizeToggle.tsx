@@ -12,9 +12,9 @@ interface FontSizeConfig {
 }
 
 const FONT_SIZE_MAP: Record<FontSizeOption, FontSizeConfig> = {
-  normal: { label: '標準', mobileScale: '125%', pcScale: '100%' },
-  large: { label: '大', mobileScale: '140%', pcScale: '115%' },
-  xlarge: { label: '特大', mobileScale: '155%', pcScale: '130%' },
+  normal: { label: '標準', mobileScale: '100%', pcScale: '100%' },
+  large: { label: '大', mobileScale: '120%', pcScale: '112%' },
+  xlarge: { label: '特大', mobileScale: '135%', pcScale: '125%' },
 };
 
 export default function FontSizeToggle() {
@@ -96,9 +96,12 @@ export default function FontSizeToggle() {
         </div>
       </button>
 
-      {/* 文字サイズ変更ポップオーバー */}
+      {/* 文字サイズ変更ポップオーバー（スマホで画面外に見切れないよう左右位置を自動最適化） */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-52 p-2 rounded-xl bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div
+          className="absolute -right-16 sm:right-0 top-full mt-2 w-52 max-w-[calc(100vw-24px)] p-2 rounded-xl bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150"
+          style={{ fontSize: '13px' }}
+        >
           <div className="px-2 py-1 mb-1 text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider flex items-center gap-1">
             <Type className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>文字サイズ調整</span>
@@ -133,7 +136,7 @@ export default function FontSizeToggle() {
           </div>
 
           <div className="mt-2 pt-1.5 border-t border-neutral-100 dark:border-neutral-800 px-1 text-[10px] text-neutral-400 dark:text-neutral-500 text-center">
-            {isMobile ? 'スマホ向けに見やすく大きめに設計されています' : 'トレモ中でも見やすい大きさに変更できます'}
+            {isMobile ? 'スマホ向けに見やすい大きさに調整できます' : 'トレモ中でも見やすい大きさに変更できます'}
           </div>
         </div>
       )}

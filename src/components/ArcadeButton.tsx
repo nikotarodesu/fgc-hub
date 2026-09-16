@@ -132,7 +132,19 @@ export default function ArcadeButton({
       className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${textDimension} ${colorClasses} ${ringClasses}`}
       title={label || iconText}
     >
-      {iconText}
+      {iconText === 'P' ? (
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+          {/* パンチ（握り拳）アイコン */}
+          <path d="M19.5 8.5h-1.6V7c0-1.1-.9-2-2-2-.3 0-.6.1-.9.2C14.6 4.3 13.8 4 13 4c-.7 0-1.4.3-1.9.8-.3-.5-.9-.8-1.6-.8-1.1 0-2 .9-2 2v2.5H7c-1.4 0-2.5 1.1-2.5 2.5v5c0 2.8 2.2 5 5 5h5.5c2.8 0 5-2.2 5-5v-5c0-1.1-.9-2-2-2z" />
+        </svg>
+      ) : iconText === 'K' ? (
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+          {/* キック（足・ブーツ）アイコン */}
+          <path d="M7 3h4.5v7.5l3.5 2.5 3.8 1.2c1.3.4 2.2 1.6 2.2 3v1.8c0 .5-.5 1-1 1H11.5c-.8 0-1.6-.3-2.2-1L6.5 16.2c-.3-.3-.5-.8-.5-1.2V3z" />
+        </svg>
+      ) : (
+        iconText
+      )}
     </span>
   );
 }

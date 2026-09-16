@@ -5,7 +5,6 @@ import {
   ArticleComboItem,
   POSITION_OPTIONS,
   STARTER_CATEGORY_OPTIONS,
-  LETHAL_DAMAGE_PRESETS,
   RYU_ARTICLE_COMBOS,
 } from '@/data/articles/ryuCombosData';
 import InteractiveComboRow from '@/components/InteractiveComboRow';
@@ -50,11 +49,9 @@ export default function ArticleComboReverseLookup({
       if (selectedStarter !== 'all' && c.starterCategory !== selectedStarter) {
         return false;
       }
-      // 必要ダメージ（リーサル逆引き: targetDamage 〜 targetDamage + 500）
+      // 必要ダメージ（指定ダメージ以上をすべて抽出）
       if (targetDamage > 0) {
-        const minDmg = targetDamage;
-        const maxDmg = targetDamage >= 7000 ? 99999 : targetDamage + 500;
-        if (c.damage < minDmg || c.damage > maxDmg) {
+        if (c.damage < targetDamage) {
           return false;
         }
       }
@@ -79,9 +76,15 @@ export default function ArticleComboReverseLookup({
       }
       return true;
     }).sort((a, b) => {
-      // リーサル指定時はダメージ降順
+      // リーサル指定時は targetDamage を上回り、かつ targetDamage に近い順（昇順）
       if (targetDamage > 0) {
-        return b.damage - a.damage;
+        if (a.damage !== b.damage) {
+          return a.damage - b.damage;
+        }
+        if (a.driveCost !== b.driveCost) {
+          return a.driveCost - b.driveCost;
+        }
+        return a.saCost - b.saCost;
       }
       return 0;
     });
@@ -199,9 +202,6 @@ export default function ArticleComboReverseLookup({
                   {controlType === 'classic' ? 'クラシック対応' : 'モダン対応'}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-300 mt-0.5">
-                始動状況・相手残りHP（リーサル）・使用ゲージから今必要なコンボを即時抽出
-              </p>
             </div>
           </div>
 
@@ -281,60 +281,56 @@ export default function ArticleComboReverseLookup({
           })}
         </div>
 
-        {/* 2. リーサルダメージ（簡易ボタン ＆ スライダー） */}
+        {/* 2. リーサルダメージ（スライダー操作のみに簡素化） */}
         <div className="space-y-2 pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
           <div className="flex items-center justify-between gap-2">
-            {/* 簡易ボタンプリセット */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin flex-1 min-w-0">
-              {LETHAL_DAMAGE_PRESETS.map((preset) => {
-                const active = targetDamage === preset.value;
-                return (
-                  <button
-                    key={preset.value}
-                    type="button"
-                    onClick={() => setTargetDamage(preset.value)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
-                      active
-                        ? 'bg-rose-600 text-white shadow-xs ring-2 ring-rose-400'
-                        : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400'
-                    }`}
-                  >
-                    {preset.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-rose-500" />
+                <span>相手の残りHP（リーサル指定）:</span>
+              </span>
+              {targetDamage > 0 ? (
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-500/15 dark:bg-rose-950/60 border border-rose-500/40 text-rose-600 dark:text-rose-400 font-mono font-bold text-xs sm:text-sm">
+                  {targetDamage.toLocaleString()} dmg 以上
+                </span>
+              ) : (
+                <span className="text-xs text-neutral-400 font-medium">
+                  指定なし（全ダメージ表示）
+                </span>
+              )}
             </div>
 
             {targetDamage > 0 && (
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="px-2 py-0.5 rounded-md bg-rose-500/10 dark:bg-rose-950/50 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-mono font-bold text-xs">
-                  {targetDamage.toLocaleString()} 〜 {targetDamage >= 7000 ? 'MAX' : `${(targetDamage + 500).toLocaleString()} dmg`}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setTargetDamage(0)}
-                  className="text-[11px] text-neutral-400 hover:text-rose-500 underline cursor-pointer"
-                >
-                  解除
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setTargetDamage(0)}
+                className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer flex items-center gap-1 shrink-0"
+              >
+                <span>解除（全件表示）</span>
+              </button>
             )}
           </div>
 
-          {/* スライダー微調整（シンプルに1行で配置） */}
-          <div className="flex items-center gap-2 px-1">
-            <span className="text-[10px] font-mono text-neutral-400 shrink-0">2500</span>
+          {/* スライダー本体 */}
+          <div className="space-y-1 px-1">
             <input
               type="range"
-              min="2500"
+              min="2000"
               max="7000"
               step="100"
-              value={targetDamage === 0 ? 2500 : targetDamage}
+              value={targetDamage === 0 ? 2000 : targetDamage}
               onChange={(e) => setTargetDamage(Number(e.target.value))}
-              className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-rose-600"
-              aria-label="リーサルダメージスライダー"
+              className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-rose-600"
+              aria-label="リーサル必要ダメージスライダー"
             />
-            <span className="text-[10px] font-mono text-neutral-400 shrink-0">7000</span>
+            <div className="flex justify-between text-[10px] font-mono text-neutral-400 px-0.5">
+              <span>2,000</span>
+              <span>3,000</span>
+              <span>4,000</span>
+              <span>5,000</span>
+              <span>6,000</span>
+              <span>7,000+</span>
+            </div>
           </div>
         </div>
 
@@ -512,8 +508,19 @@ export default function ArticleComboReverseLookup({
                   </div>
 
                   <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[11px] shrink-0">
-                    <span className="font-black text-xs text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shadow-2xs border border-neutral-200/60 dark:border-neutral-700">
+                    <span
+                      className={`font-black text-xs px-2 py-0.5 rounded shadow-2xs border ${
+                        targetDamage > 0
+                          ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/80 dark:border-rose-800'
+                          : 'text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 border-neutral-200/60 dark:border-neutral-700'
+                      }`}
+                    >
                       {combo.damage.toLocaleString()} dmg
+                      {targetDamage > 0 && (
+                        <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 ml-1 opacity-90">
+                          (+{(combo.damage - targetDamage).toLocaleString()})
+                        </span>
+                      )}
                     </span>
 
                     {/* Dゲージ使用量表示（6ブロックゲージ + 内訳ラベル） */}

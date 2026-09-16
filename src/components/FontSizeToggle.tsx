@@ -70,7 +70,19 @@ export default function FontSizeToggle() {
   }, [isOpen]);
 
   if (!mounted) {
-    return <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800" />;
+    return (
+      <button
+        type="button"
+        disabled
+        className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 transition-colors"
+        aria-label="文字サイズ調整"
+      >
+        <div className="flex items-baseline font-bold leading-none select-none opacity-50">
+          <span className="text-[13px]">A</span>
+          <span className="text-[9px] opacity-75">a</span>
+        </div>
+      </button>
+    );
   }
 
   const currentScaleText = isMobile

@@ -33,7 +33,14 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+      <button
+        type="button"
+        disabled
+        className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 transition-colors"
+        aria-label="Toggle theme"
+      >
+        <Moon className="w-4 h-4 opacity-50" />
+      </button>
     );
   }
 

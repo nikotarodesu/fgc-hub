@@ -211,14 +211,14 @@ export default function LethalToolPreviewModal({ isOpen, onClose }: LethalToolPr
             </div>
           </div>
 
-          {/* 抽出されたリーサルコンボ（各体力帯につき厳選1件のみ） */}
+          {/* 抽出されたリーサルコンボ（代表1件のみ表示） */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-bold text-neutral-800 dark:text-neutral-200 text-xs flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                {currentCombo.label}のリーサルコンボ
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>検索結果：{selectedHp.toLocaleString()} HP帯の最適コンボ（1件）</span>
               </span>
-              <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+              <span className="font-mono text-cyan-700 dark:text-cyan-300 font-bold text-xs bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-200/60 dark:border-cyan-800/60">
                 {currentCombo.damage.toLocaleString()} DMG
               </span>
             </div>
@@ -227,46 +227,48 @@ export default function LethalToolPreviewModal({ isOpen, onClose }: LethalToolPr
             <div className="flex items-center gap-2 flex-wrap">
               <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold">
                 <Gauge className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Dゲージ使用量: {currentCombo.driveCost}本</span>
+                <span>Dゲージ消費: {currentCombo.driveCost}本</span>
               </div>
 
               <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-[11px] font-bold">
                 <Zap className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                <span>SA使用量: {currentCombo.saCost === 0 ? '0本（未使用）' : `SA${currentCombo.saCost}（${currentCombo.saCost}本）`}</span>
+                <span>SAゲージ消費: {currentCombo.saCost === 0 ? '未使用' : `SA${currentCombo.saCost}`}</span>
               </div>
             </div>
 
             {/* 完全攻略記事と100%同一のコンボコンポーネント（InteractiveComboRow） */}
-            <InteractiveComboRow
-              comboLine={currentCombo.recipe}
-              controlType="classic"
-            />
+            <div className="rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/90 shadow-2xs">
+              <InteractiveComboRow
+                comboLine={currentCombo.recipe}
+                controlType="classic"
+              />
+            </div>
 
-            {/* 記事購入後はDゲージ・SAゲージ使用量からも逆引き検索できる案内バナー */}
-            <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-cyan-50/40 dark:from-neutral-900/90 dark:to-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/80 text-xs space-y-2.5 mt-2">
+            {/* 記事購入後は全コンボが検索可能になる案内バナー */}
+            <div className="p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-cyan-50/50 dark:from-neutral-900/90 dark:to-cyan-950/30 border border-cyan-300/70 dark:border-cyan-800 text-xs space-y-3 mt-3 shadow-2xs">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 font-bold text-neutral-900 dark:text-white text-xs sm:text-[13px]">
                   <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                  <span>体験プレビュー（各体力帯1件のみ公開中）</span>
+                  <span>記事購入で「すべてのリーサルコンボ」が検索可能に</span>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-800">
-                  D/SAゲージ逆引きは記事限定
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-800 shrink-0">
+                  全条件アンロック
                 </span>
               </div>
 
               <p className="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                ※本プレビューでは無料体験として代表的な1件ずつのみを表示しています。<strong>記事のご購入後（またはプレミアム会員にご登録後）は、相手の残りHPだけでなく「使えるDゲージ本数」や「SAゲージ本数」の条件を指定した逆引き検索が可能になり、</strong>小技始動・中足始動・強Pパニカン・画面端壁ドン・電刃錬気など、あらゆる状況に応じた全リーサルコンボを自由に検索・閲覧いただけます。
+                体験版では各体力帯の代表コンボ1件のみを表示しています。<strong>「リュウ完全攻略記事」をご購入いただくか「プレミアム会員」にご登録いただくと、相手の残りHPだけでなく「手持ちのDゲージ本数」「SAゲージ本数」を指定した逆引き検索が可能になり、</strong>小技始動・中足始動・大Pパニカン・画面端壁ドン・電刃錬気など、あらゆる実戦シチュエーションに応じたすべてのコンボを自由に検索できるようになります。
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-neutral-200/60 dark:border-neutral-800/80 pt-2.5">
-                <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                  永久アップデート保証付き（¥500）
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-neutral-200/60 dark:border-neutral-800/80 pt-3">
+                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                  買い切り ¥500（永久アップデート保証付き）
                 </span>
                 <Link
                   href="/articles/ryu-complete-guide"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-colors shadow-xs"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-all shadow-xs hover:scale-[1.02] active:scale-95"
                 >
-                  <span>完全攻略記事ですべてのコンボを見る</span>
+                  <span>完全攻略記事ですべてのコンボを検索する</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

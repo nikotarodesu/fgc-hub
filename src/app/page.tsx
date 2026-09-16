@@ -5,7 +5,24 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, getArticleEyecatch } from '@/data/articles';
 import LethalToolPreviewModal from '@/components/LethalToolPreviewModal';
-import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp, Flame } from 'lucide-react';
+
+const QUICK_CHARACTERS = [
+  { name: 'リュウ', image: '/images/characters/ryu/sns.jpg' },
+  { name: 'ケン', image: '/images/characters/ken/sns.jpg' },
+  { name: '豪鬼', image: '/images/characters/akuma/sns.jpg' },
+  { name: 'ジュリ', image: '/images/characters/juri/sns.jpg' },
+  { name: 'エド', image: '/images/characters/ed/sns.jpg' },
+  { name: 'ベガ', image: '/images/characters/bison/sns.jpg' },
+  { name: '春麗', image: '/images/characters/chunli/sns.jpg' },
+  { name: 'キャミィ', image: '/images/characters/cammy/sns.jpg' },
+  { name: 'ブランカ', image: '/images/characters/blanka/sns.jpg' },
+  { name: 'JP', image: '/images/characters/jp/sns.jpg' },
+  { name: 'ザンギエフ', image: '/images/characters/zangief/sns.jpg' },
+  { name: 'マリーザ', image: '/images/characters/marisa/sns.jpg' },
+  { name: '不知火舞', image: '/images/characters/mai/sns.jpg' },
+  { name: 'ガイル', image: '/images/characters/guile/sns.jpg' },
+];
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
@@ -142,11 +159,22 @@ export default function HomePage() {
     });
   }, [selectedCategory, selectedControlType, selectedCharacter, selectedTag, searchQuery]);
 
+  // 全キャラの記事数を集計
+  const allCharCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    ARTICLES_DATA.forEach((art) => {
+      if (art.character) {
+        counts[art.character] = (counts[art.character] || 0) + 1;
+      }
+    });
+    return counts;
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
-      {/* 検索・クイックアクセスセクション */}
-      <section className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-6 sm:py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      {/* 検索・キャラクタークイックアクセスセクション */}
+      <section className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 py-5 sm:py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4">
           {/* 検索バー */}
           <div className="max-w-xl relative">
             <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -165,6 +193,97 @@ export default function HomePage() {
                 クリア
               </button>
             )}
+          </div>
+
+          {/* キャラクター別丸アイコン・クイックナビ */}
+          <div className="pt-1">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-orange-500" />
+                <span>キャラクターから探す</span>
+              </span>
+              {selectedCharacter && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCharacter(null)}
+                  className="text-[11px] text-cyan-600 dark:text-cyan-400 hover:underline font-bold cursor-pointer"
+                >
+                  絞り込み解除 ({selectedCharacter})
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+              {/* ALLボタン */}
+              <button
+                type="button"
+                onClick={() => setSelectedCharacter(null)}
+                className={`flex flex-col items-center gap-1.5 shrink-0 transition-transform cursor-pointer ${
+                  selectedCharacter === null ? 'scale-105' : 'opacity-70 hover:opacity-100'
+                }`}
+              >
+                <div
+                  className={`w-12 h-12 sm:w-13 sm:h-13 rounded-full flex items-center justify-center font-black text-xs transition-all shadow-xs ${
+                    selectedCharacter === null
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 ring-2 ring-neutral-900 dark:ring-white ring-offset-2 dark:ring-offset-neutral-900'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700'
+                  }`}
+                >
+                  ALL
+                </div>
+                <span className={`text-[10px] sm:text-[11px] font-bold ${
+                  selectedCharacter === null ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'
+                }`}>
+                  全キャラ
+                </span>
+              </button>
+
+              {/* 各キャラクター丸アイコン */}
+              {QUICK_CHARACTERS.map((char) => {
+                const count = allCharCounts[char.name] || 0;
+                const isSelected = selectedCharacter === char.name;
+                return (
+                  <button
+                    key={char.name}
+                    type="button"
+                    onClick={() => setSelectedCharacter(isSelected ? null : char.name)}
+                    className={`flex flex-col items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                      isSelected ? 'scale-105' : 'opacity-75 hover:opacity-100'
+                    }`}
+                  >
+                    <div
+                      className={`relative w-12 h-12 sm:w-13 sm:h-13 rounded-full overflow-hidden transition-all shadow-xs bg-neutral-900 ${
+                        isSelected
+                          ? 'ring-2 ring-cyan-500 dark:ring-cyan-400 ring-offset-2 dark:ring-offset-neutral-900 shadow-md shadow-cyan-500/20'
+                          : 'border border-neutral-200/80 dark:border-neutral-700 hover:border-neutral-400'
+                      }`}
+                    >
+                      <img
+                        src={char.image}
+                        alt={char.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <span
+                        className={`text-[10px] sm:text-[11px] font-bold ${
+                          isSelected
+                            ? 'text-cyan-600 dark:text-cyan-400 font-black'
+                            : 'text-neutral-700 dark:text-neutral-300'
+                        }`}
+                      >
+                        {char.name}
+                      </span>
+                      {count > 0 && (
+                        <span className="text-[9px] font-mono text-neutral-400">
+                          ({count})
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -225,10 +344,10 @@ export default function HomePage() {
           {/* 開閉コンテンツ */}
           {isBenefitsOpen && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              {/* 4大リターン チェックリストグリッド */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+              {/* 4大リターン（スマホでは横スワイプカルーセル、PCでは4カラムグリッド） */}
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 scrollbar-none">
                 {/* 1. 起き攻めセットプレイ完全網羅 */}
-                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                <div className="w-[84vw] max-w-[320px] shrink-0 snap-center sm:w-auto p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2.5">
                       <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center shrink-0">
@@ -248,7 +367,7 @@ export default function HomePage() {
                 </div>
 
                 {/* 2. 最大火力コンボレシピ */}
-                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                <div className="w-[84vw] max-w-[320px] shrink-0 snap-center sm:w-auto p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2.5">
                       <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center shrink-0">
@@ -271,7 +390,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setIsLethalPreviewOpen(true)}
-                  className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-cyan-300/80 dark:border-cyan-800/80 shadow-2xs hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-md hover:shadow-cyan-500/10 transition-all flex flex-col justify-between text-left cursor-pointer group relative overflow-hidden"
+                  className="w-[84vw] max-w-[320px] shrink-0 snap-center sm:w-auto p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-cyan-300/80 dark:border-cyan-800/80 shadow-2xs hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-md hover:shadow-cyan-500/10 transition-all flex flex-col justify-between text-left cursor-pointer group relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl pointer-events-none -mr-6 -mt-6" />
                   <div>
@@ -302,7 +421,7 @@ export default function HomePage() {
                 </button>
 
                 {/* 4. ずっと使える安心保障 */}
-                <div className="p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
+                <div className="w-[84vw] max-w-[320px] shrink-0 snap-center sm:w-auto p-4.5 rounded-xl bg-white dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs hover:border-neutral-400 dark:hover:border-neutral-700 transition-all flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2.5">
                       <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/60 flex items-center justify-center shrink-0">
@@ -320,6 +439,11 @@ export default function HomePage() {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* スマホ用 スワイプ案内インジケーター */}
+              <div className="flex items-center justify-center gap-1.5 text-[10px] text-neutral-400 dark:text-neutral-500 font-medium sm:hidden">
+                <span>← 左右スワイプで4大特典を確認 →</span>
               </div>
 
               {/* フッター補足バナー */}
@@ -527,6 +651,106 @@ export default function HomePage() {
         )}
 
         <div className="max-w-4xl mx-auto space-y-4">
+            {/* 🔥 ピックアップ・完全攻略記事枠（リュウ完全攻略を最上部に固定表示） */}
+            {(!selectedCharacter || selectedCharacter === 'リュウ') &&
+              (selectedCategory === 'all' || selectedCategory === 'character') &&
+              !searchQuery && (
+                <div className="mb-2 sm:mb-4">
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-[11px] tracking-wide uppercase shadow-xs">
+                      <Flame className="w-3.5 h-3.5" />
+                      <span>看板・おすすめ攻略</span>
+                    </span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+                      勝率を直結させる実戦バイブル
+                    </span>
+                  </div>
+
+                  <Link
+                    href="/articles/ryu-complete-guide"
+                    className="group relative block rounded-2xl overflow-hidden border-2 border-cyan-500/80 dark:border-cyan-500/60 bg-gradient-to-br from-white via-cyan-50/20 to-white dark:from-neutral-900 dark:via-neutral-900 dark:to-cyan-950/30 shadow-md hover:shadow-xl hover:border-cyan-500 transition-all"
+                  >
+                    <div className="flex flex-col md:flex-row">
+                      {/* サムネイル */}
+                      <div className="relative w-full md:w-72 lg:w-80 aspect-[16/9] md:aspect-auto shrink-0 bg-neutral-950 overflow-hidden">
+                        <img
+                          src="/images/characters/ryu/sns.jpg"
+                          alt="C・Mリュウの完全攻略"
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:hidden" />
+                        <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 md:hidden">
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded bg-cyan-600 text-white">
+                            完全攻略
+                          </span>
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-900/80 backdrop-blur-xs text-white">
+                            C/M両対応
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 本文エリア */}
+                      <div className="p-4 sm:p-5 lg:p-6 flex flex-col justify-between flex-1 min-w-0">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span className="hidden md:inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-cyan-600 text-white">
+                              ★ 完全攻略
+                            </span>
+                            <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                              リュウ
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold">
+                              <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold bg-[#8B5BB7]">C</span>
+                              <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold bg-[#D8843F]">M</span>
+                              <span className="text-neutral-600 dark:text-neutral-300">両対応</span>
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
+                              <Sparkles className="w-3 h-3" />
+                              <span>逆引きリーサルツール＆実戦動画付き</span>
+                            </span>
+                          </div>
+
+                          <h3 className="text-base sm:text-lg lg:text-xl font-black text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors leading-snug mb-1.5">
+                            C・Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど
+                          </h3>
+
+                          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3 line-clamp-2 sm:line-clamp-3">
+                            全シチュエーション別の実戦コンボレシピ、フレーム状況に応じた起き攻めセットプレイ、距離別の立ち回り方針、そして相手残り体力から最適解を逆引きする専用リーサルツールまで完全収録。
+                          </p>
+                        </div>
+
+                        <div className="pt-2.5 border-t border-neutral-200/60 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-2.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>永久無料アップデート保証</span>
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-neutral-900 dark:text-white">
+                              ¥500
+                            </span>
+                            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-bold text-xs group-hover:bg-cyan-600 dark:group-hover:bg-cyan-500 dark:group-hover:text-white transition-colors shadow-xs">
+                              <span>攻略記事を読む</span>
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+
+            {/* 記事一覧ヘッダー（ピックアップ時） */}
+            {(!selectedCharacter || selectedCharacter === 'リュウ') &&
+              (selectedCategory === 'all' || selectedCategory === 'character') &&
+              !searchQuery && (
+                <div className="pt-2 pb-1 text-xs font-bold text-neutral-500 dark:text-neutral-400">
+                  <span>最新の記事一覧</span>
+                </div>
+              )}
+
             {/* 記事一覧 */}
             {filteredArticles.length === 0 ? (
               <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
@@ -546,8 +770,15 @@ export default function HomePage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {filteredArticles.map((article) => {
+              <div className="space-y-3 sm:space-y-4">
+                {(
+                  // ピックアップ枠が表示されている時は、通常リスト側のリュウ完全攻略を除外して重複を防ぐ
+                  (!selectedCharacter || selectedCharacter === 'リュウ') &&
+                  (selectedCategory === 'all' || selectedCategory === 'character') &&
+                  !searchQuery
+                    ? filteredArticles.filter((a) => a.slug !== 'ryu-complete-guide')
+                    : filteredArticles
+                ).map((article) => {
                   const eyecatch = getArticleEyecatch(article);
                   const isCompleteGuide =
                     article.category === 'character' ||
@@ -558,109 +789,99 @@ export default function HomePage() {
                     <Link
                       key={article.id}
                       href={`/articles/${article.slug}`}
-                      className="group flex flex-col sm:flex-row bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden"
+                      className="group flex flex-row items-center sm:items-stretch bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-0 gap-3 sm:gap-0"
                     >
-                      {/* サムネイル画像 */}
-                      <div className="relative w-full sm:w-52 md:w-60 aspect-[16/9] sm:aspect-auto shrink-0 bg-neutral-950 overflow-hidden">
+                      {/* サムネイル画像（スマホではコンパクトな正方形、PCでは横長比率） */}
+                      <div className="relative w-20 h-20 sm:w-52 md:w-60 aspect-square sm:aspect-auto shrink-0 bg-neutral-950 overflow-hidden rounded-lg sm:rounded-none">
                         <img
                           src={eyecatch}
                           alt={article.title}
                           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent sm:hidden" />
-                        {/* モバイル用オーバーレイバッジ */}
-                        <div className="absolute bottom-2 left-2 flex items-center gap-1.5 sm:hidden">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/70 backdrop-blur-xs text-white border border-white/20">
-                            {article.character || (article.game === 'sf6' ? 'スト6' : '共通理論')}
-                          </span>
-                        </div>
                       </div>
 
                       {/* コンテンツ */}
-                      <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 min-w-0">
+                      <div className="p-0 sm:p-4 md:p-5 flex flex-col justify-between flex-1 min-w-0">
                         <div>
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                                {article.game === 'sf6' ? 'スト6' : '共通理論'}
-                              </span>
+                          <div className="flex items-center justify-between gap-1.5 mb-1 sm:mb-2">
+                            <div className="flex items-center gap-1.5 flex-wrap">
                               {article.character && (
-                                <span className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                                <span className="text-[10px] sm:text-[11px] font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-1.5 sm:px-2 py-0.5 rounded">
                                   {article.character}
                                 </span>
                               )}
                               {(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
-                                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800">
                                   立ち回り
                                 </span>
                               )}
                               {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略')) && (
-                                <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
                                   完全攻略
                                 </span>
                               )}
                               {(article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) && (
-                                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                                   コーチング
                                 </span>
                               )}
                               {(article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術') || article.tags.includes('共通理論')) && (
-                                <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
                                   共通技術
                                 </span>
                               )}
                               {article.controlType === 'both' ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold">
-                                  <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold" style={{ backgroundColor: '#8B5BB7' }}>C</span>
-                                  <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold" style={{ backgroundColor: '#D8843F' }}>M</span>
-                                  <span className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-300">両対応</span>
+                                <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] font-bold">
+                                  <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#8B5BB7]">C</span>
+                                  <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#D8843F]">M</span>
                                 </span>
                               ) : article.controlType ? (
                                 <span
-                                  className="text-[10px] font-bold text-white px-2 py-0.5 rounded shrink-0"
+                                  className="text-[9px] sm:text-[10px] font-bold text-white px-1.5 py-0.2 rounded shrink-0"
                                   style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
                                 >
-                                  {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
+                                  {article.controlType === 'classic' ? 'C' : 'M'}
                                 </span>
                               ) : null}
                               {article.youtubeVideoId && (
-                                <span className="text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded flex items-center gap-1">
+                                <span className="hidden sm:inline-flex text-[10px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded items-center gap-1">
                                   <span>▶ 動画付き</span>
                                 </span>
                               )}
                             </div>
+
                             {article.isPaid ? (
                               article.subscriptionOnly ? (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 px-2 py-0.5 rounded shrink-0">
-                                  <Lock className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                                  <span>プレミアム限定</span>
+                                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 px-1.5 sm:px-2 py-0.5 rounded shrink-0">
+                                  <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-600 dark:text-cyan-400" />
+                                  <span>限定</span>
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
-                                  <Lock className="w-3 h-3 text-neutral-600 dark:text-neutral-400" />
+                                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-neutral-900 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-1.5 sm:px-2 py-0.5 rounded shrink-0">
+                                  <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-neutral-600 dark:text-neutral-400" />
                                   <span>¥{article.price}</span>
                                 </span>
                               )
                             ) : (
-                              <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded shrink-0">
+                              <span className="text-[10px] sm:text-[11px] font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-1.5 sm:px-2 py-0.5 rounded shrink-0">
                                 無料
                               </span>
                             )}
                           </div>
 
-                          <h2 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors mb-1.5 leading-snug">
+                          <h2 className="text-xs sm:text-base font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mb-1 sm:mb-1.5 leading-snug line-clamp-2">
                             {article.title}
                           </h2>
 
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed mb-3">
+                          <p className="hidden sm:block text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed mb-3">
                             {article.summary}
                           </p>
                         </div>
 
                         {isCompleteGuide && (
-                          <div className="pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400 dark:text-neutral-500">
+                          <div className="pt-1.5 sm:pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500">
                             <div className="flex items-center gap-1.5">
-                              <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200/80 dark:border-emerald-800/60">
+                              <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-200/80 dark:border-emerald-800/60">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                 <span>{article.patchDate ? `${article.patchDate} パッチ対応` : '最新パッチ対応'}</span>
                               </span>

@@ -6,7 +6,7 @@ import { constructMetadata } from '@/lib/seo';
 export const metadata = constructMetadata({
   title: 'お問い合わせ',
   description:
-    'にこ太郎の格ゲーLABへのお問い合わせフォームです。掲載内容・攻略データに関するご質問、コーチング・実戦添削のご相談、取材・お仕事のご依頼などはこちらよりお気軽にお寄せください。',
+    'にこ太郎の格ゲーLABへのお問い合わせフォームです。記事・攻略内容について、ご意見・ご要望・誤字等のご指摘、プレミアム会員・解約について、取材・執筆・ビジネスのご相談などはこちらよりお気軽にお寄せください。',
   canonicalUrl: '/contact',
 });
 
@@ -35,7 +35,7 @@ export default function ContactPage() {
             お問い合わせ
           </h1>
           <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-xl mx-auto">
-            当サイトへのご質問、掲載内容・攻略データに関するご意見、コーチング・添削のご相談、執筆・取材・お仕事のご依頼など、以下のフォームよりお気軽にお寄せください。
+            当サイトへのご質問、記事内容や誤字等のご指摘、プレミアム会員に関するお問い合わせ、執筆・取材・お仕事のご依頼など、以下のフォームよりお気軽にお寄せください。
           </p>
         </div>
 

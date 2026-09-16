@@ -180,8 +180,8 @@ export default function ContactForm() {
               className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-900 dark:text-white text-xs focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400 focus:bg-white dark:focus:bg-neutral-800 transition-all cursor-pointer"
             >
               <option value="記事・攻略内容について">記事・攻略内容について</option>
-              <option value="プレミアム会員・決済について">プレミアム会員・決済について</option>
-              <option value="コーチング・添削のご相談">コーチング・添削のご相談</option>
+              <option value="ご意見・ご要望・誤字等のご指摘">ご意見・ご要望・誤字等のご指摘</option>
+              <option value="プレミアム会員・解約について">プレミアム会員・解約について</option>
               <option value="取材・執筆・ビジネスのご相談">取材・執筆・ビジネスのご相談</option>
               <option value="その他">その他</option>
             </select>

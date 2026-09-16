@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_JP_PLAT1 } from './articles/coachingJpPlat1';
 import { COACHING_MAI_DIA3 } from './articles/coachingMaiDia3';
 import { COACHING_ZANGIEF_1400MR } from './articles/coachingZangief1400mr';
 import { COACHING_BISON_1500MR_RYU } from './articles/coachingBison1500mrRyu';
@@ -169,6 +170,9 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('舞') || charLower.includes('mai')) {
     return '/images/characters/mai/sns.jpg';
   }
+  if (charLower.includes('jp') || charLower.includes('ジェイピー')) {
+    return '/images/characters/jp/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 
@@ -177,6 +181,7 @@ export const CHARACTERS_SF6 = [
   { id: 'bison', name: 'ベガ (Bison)', type: '圧殺突進', color: 'from-purple-700 to-rose-900' },
   { id: 'marisa', name: 'マリーザ (Marisa)', type: '超重量級パワー', color: 'from-amber-600 to-red-700' },
   { id: 'zangief', name: 'ザンギエフ (Zangief)', type: '投げキャラの頂点', color: 'from-red-700 to-rose-900' },
+  { id: 'jp', name: 'JP (JP)', type: '空間掌握・設置', color: 'from-purple-800 to-slate-900' },
   { id: 'guile', name: 'ガイル (Guile)', type: '鉄壁要塞', color: 'from-emerald-600 to-green-700' },
   { id: 'gouki', name: '豪鬼 (Akuma)', type: '攻撃特化', color: 'from-red-600 to-amber-700' },
   { id: 'ken', name: 'ケン (Ken)', type: '万能攻勢', color: 'from-orange-500 to-red-600' },
@@ -189,6 +194,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_JP_PLAT1,
   COACHING_MAI_DIA3,
   COACHING_ZANGIEF_1400MR,
   COACHING_BISON_1500MR_RYU,

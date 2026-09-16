@@ -2,62 +2,56 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { X, Flame, ChevronRight, Sparkles, CheckCircle2, Gauge, Zap } from 'lucide-react';
 import InteractiveComboRow from './InteractiveComboRow';
 
 interface LethalComboItem {
   id: string;
   label: string;
-  targetHpThreshold: number; // この体力帯の基準値
+  targetHpThreshold: number;
   damage: number;
   driveCost: number;
   saCost: number;
   recipe: string;
-  note: string;
 }
 
 // https://nikotaro.com/articles/ryu-complete-guide (ryuClassicCompleteGuide.ts) に実在するクラシックコンボ
 const RYU_CLASSIC_LETHAL_COMBOS: LethalComboItem[] = [
   {
     id: 'hp-2500',
-    label: '2,500 HP帯（ドット・瀕死）',
+    label: '2,500 HP帯',
     targetHpThreshold: 2500,
     damage: 2610,
     driveCost: 2,
     saCost: 0,
     recipe: '● 下中P>OD足刀>引大K>強昇竜〆（2610）+37',
-    note: 'Dゲージ2本のみ消費。SAを温存しつつ2,600超えを奪い、+37F起き攻めに移行できる高効率ルート。',
   },
   {
     id: 'hp-3500',
-    label: '3,500 HP帯（1コンボ圏内）',
+    label: '3,500 HP帯',
     targetHpThreshold: 3500,
     damage: 3650,
     driveCost: 2,
     saCost: 2,
     recipe: '● 下中P>OD足刀>SA2（lv3）〆（3650）+82-90',
-    note: '中足刀からSA2（レベル3）を組み込み、Dゲージ2本・SA2本で確実に3,500超えを奪い切るルート。',
   },
   {
     id: 'hp-4200',
-    label: '4,200 HP帯（牽制弱技リーサル）',
+    label: '4,200 HP帯',
     targetHpThreshold: 4200,
     damage: 4247,
     driveCost: 3,
     saCost: 3,
     recipe: '● 弱K>キャンセルラッシュ弱P>引大P>キャンセル大K>大P>強昇竜>SA3〆（4247）',
-    note: '牽制の弱Kからキャンセルラッシュで伸ばす実戦看板リーサル。動画解説付きで記事冒頭に掲載。',
   },
   {
     id: 'hp-5000',
-    label: '5,000 HP帯（大逆転・最大リーサル）',
+    label: '5,000 HP帯',
     targetHpThreshold: 5000,
     damage: 5772,
     driveCost: 3,
     saCost: 3,
     recipe: '● 大P（Pc）>強波掌撃>ラッシュ引大K>キャンセル引大K>キャンセル引大K>強昇龍>SA3〆（5772）',
-    note: '相手の無敵技ガード後やパニカン大Pから、相手の体力半分（5,000以上）を一撃で消滅させる最大確定反撃。',
   },
 ];
 
@@ -178,10 +172,10 @@ export default function LethalToolPreviewModal({ isOpen, onClose }: LethalToolPr
                 className="w-full accent-rose-500 cursor-pointer h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg"
               />
               <div className="flex justify-between text-[10px] text-neutral-400 font-mono">
-                <span>2,500 HP (瀕死)</span>
+                <span>2,500 HP</span>
                 <span>3,500 HP</span>
                 <span>4,200 HP</span>
-                <span>5,000 HP (半分)</span>
+                <span>5,000 HP</span>
               </div>
             </div>
 
@@ -222,7 +216,7 @@ export default function LethalToolPreviewModal({ isOpen, onClose }: LethalToolPr
             <div className="flex items-center justify-between">
               <span className="font-bold text-neutral-800 dark:text-neutral-200 text-xs flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                {currentCombo.label} の最適コンボ（1件）
+                {currentCombo.label}のリーサルコンボ
               </span>
               <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold text-xs">
                 {currentCombo.damage.toLocaleString()} DMG
@@ -248,25 +242,20 @@ export default function LethalToolPreviewModal({ isOpen, onClose }: LethalToolPr
               controlType="classic"
             />
 
-            {/* コンボの解説メモ */}
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 pl-1 leading-relaxed">
-              💡 <span className="font-semibold text-neutral-700 dark:text-neutral-300">実戦ポイント:</span> {currentCombo.note}
-            </p>
-
-            {/* 記事購入後はすべてのコンボを検索できる案内バナー */}
+            {/* 記事購入後はDゲージ・SAゲージ使用量からも逆引き検索できる案内バナー */}
             <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-neutral-50 to-cyan-50/40 dark:from-neutral-900/90 dark:to-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/80 text-xs space-y-2.5 mt-2">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 font-bold text-neutral-900 dark:text-white text-xs sm:text-[13px]">
                   <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                  <span>体験プレビュー（各体力帯1件ずつのみ公開中）</span>
+                  <span>体験プレビュー（各体力帯1件のみ公開中）</span>
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-800">
-                  全コンボは記事限定
+                  D/SAゲージ逆引きは記事限定
                 </span>
               </div>
 
               <p className="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                ※本プレビューでは無料体験として代表的な1件ずつのみを表示しています。<strong>「リュウ完全攻略記事」をご購入後（またはプレミアム会員にご登録後）は、小技・中足・強Pパニカン・画面端壁ドン・電刃錬気など、すべての状況に応じた全50種類以上のリーサルコンボを無制限に逆引き検索・閲覧いただけます。</strong>
+                ※本プレビューでは無料体験として代表的な1件ずつのみを表示しています。<strong>記事のご購入後（またはプレミアム会員にご登録後）は、相手の残りHPだけでなく「使えるDゲージ本数」や「SAゲージ本数」の条件を指定した逆引き検索が可能になり、</strong>小技始動・中足始動・強Pパニカン・画面端壁ドン・電刃錬気など、あらゆる状況に応じた全リーサルコンボを自由に検索・閲覧いただけます。
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-neutral-200/60 dark:border-neutral-800/80 pt-2.5">

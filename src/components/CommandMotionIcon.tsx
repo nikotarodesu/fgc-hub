@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 
@@ -272,47 +272,11 @@ export default function CommandMotionIcon({
     );
   }
 
-  // 6. 単独方向キー（↓、↘、→、←、↑、↗、↖、↙）
-  const singleDirMap: Record<string, { label: string; transform: string }> = {
-    '↓': { label: '下（しゃがみ）', transform: 'rotate(90 12 12)' },
-    '→': { label: '前（前進）', transform: 'rotate(0 12 12)' },
-    '←': { label: '後ろ（ガード）', transform: 'rotate(180 12 12)' },
-    '↑': { label: '上（ジャンプ）', transform: 'rotate(-90 12 12)' },
-    '↘': { label: '前斜め下', transform: 'rotate(45 12 12)' },
-    '↙': { label: '後ろ斜め下（しゃがみガード）', transform: 'rotate(135 12 12)' },
-    '↗': { label: '前斜めジャンプ', transform: 'rotate(-45 12 12)' },
-    '↖': { label: '後ろ斜めジャンプ', transform: 'rotate(-135 12 12)' },
-  };
-
-  if (singleDirMap[cleanCmd]) {
-    const dir = singleDirMap[cleanCmd];
-    return (
-      <span
-        className={`inline-flex items-center justify-center shrink-0 select-none ${className}`}
-        title={dir.label}
-      >
-        <div className="flex items-center gap-1 bg-neutral-900 dark:bg-black text-white px-1.5 py-1 rounded-md border border-neutral-700/80 shadow-inner">
-          {/* レバー赤ボールミニ */}
-          <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-rose-400 via-red-500 to-rose-700 shadow-2xs shrink-0" />
-          <svg
-            viewBox="0 0 24 24"
-            className="w-3.5 h-3.5"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g transform={dir.transform}>
-              <path d="M 4 10 L 13 10 L 13 6 L 20 12 L 13 18 L 13 14 L 4 14 Z" />
-            </g>
-          </svg>
-        </div>
-      </span>
-    );
-  }
-
-  // 7. その他の複雑な表記（フォールバック：太字バッジ表示）
+  // 6. 単独方向キー（↓、→、←、↑、↘、↙、↗、↖）およびその他表記
+  // 通常技（前大Kなど）はシンプルに「→ + K」の通り、直感的な文字矢印バッジで表示
   return (
     <span
-      className={`inline-flex items-center gap-0.5 bg-neutral-900 dark:bg-black text-white px-1.5 py-0.5 rounded text-xs font-mono font-bold tracking-tight shadow-inner shrink-0 ${className}`}
+      className={`inline-flex items-center justify-center bg-neutral-900 dark:bg-black text-white px-1.5 py-0.5 rounded text-[11px] sm:text-xs font-mono font-bold tracking-tight shadow-inner shrink-0 ${className}`}
     >
       {cleanCmd}
     </span>

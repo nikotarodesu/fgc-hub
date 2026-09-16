@@ -438,11 +438,13 @@ export default function ArticleQuickJump({
             </div>
 
             {/* モーダルフッターヒント */}
-            <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-[11px] text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>★を押してトレモでよく見る章を登録できます</span>
-              </div>
+            <div className={`p-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-[11px] text-neutral-500 dark:text-neutral-400 flex items-center ${enableBookmarks ? 'justify-between' : 'justify-end'}`}>
+              {enableBookmarks && (
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>★を押してトレモでよく見る章を登録できます</span>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}

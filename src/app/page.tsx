@@ -44,6 +44,52 @@ export default function HomePage() {
     });
   };
 
+  // 「立ち回り」「コーチング」選択時に現在記事が存在するキャラクター一覧を集計
+  const { availableCharacters, charArticleCounts, categoryTotalCount } = useMemo(() => {
+    if (selectedCategory !== 'neutral' && selectedCategory !== 'coaching') {
+      return {
+        availableCharacters: [] as string[],
+        charArticleCounts: {} as Record<string, number>,
+        categoryTotalCount: 0,
+      };
+    }
+
+    const counts: Record<string, number> = {};
+    let total = 0;
+
+    ARTICLES_DATA.forEach((article) => {
+      let match = false;
+      if (selectedCategory === 'neutral') {
+        match =
+          article.category === 'neutral' ||
+          article.tags.includes('立ち回り') ||
+          article.tags.includes('立ち回り考察');
+      } else if (selectedCategory === 'coaching') {
+        match =
+          article.category === 'coaching' ||
+          article.tags.includes('過去のコーチング') ||
+          article.tags.includes('コーチング');
+      }
+
+      if (match) {
+        total++;
+        if (article.character) {
+          counts[article.character] = (counts[article.character] || 0) + 1;
+        }
+      }
+    });
+
+    // 記事数の多い順、同数の場合は五十音順
+    const chars = Object.keys(counts).sort((a, b) => {
+      if (counts[b] !== counts[a]) {
+        return counts[b] - counts[a];
+      }
+      return a.localeCompare(b, 'ja');
+    });
+
+    return { availableCharacters: chars, charArticleCounts: counts, categoryTotalCount: total };
+  }, [selectedCategory]);
+
   // フィルタリング処理
   const filteredArticles = useMemo(() => {
     return ARTICLES_DATA.filter((article) => {
@@ -414,56 +460,73 @@ export default function HomePage() {
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto space-y-4">
-            {/* 絞り込み条件表示 */}
-            {(selectedCategory !== 'all' || selectedControlType !== 'all' || selectedCharacter || selectedTag || searchQuery) && (
-              <div className="p-3 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between text-xs shadow-xs">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-neutral-500 dark:text-neutral-400">絞り込み:</span>
-                  {selectedCategory !== 'all' && (
-                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      {selectedCategory === 'character'
-                        ? 'カテゴリ: 攻略記事'
-                        : selectedCategory === 'neutral'
-                        ? 'カテゴリ: 立ち回り'
-                        : selectedCategory === 'coaching'
-                        ? 'カテゴリ: コーチング'
-                        : 'カテゴリ: 共通技術'}
-                    </span>
-                  )}
-                  {selectedCategory === 'character' && selectedControlType !== 'all' && (
-                    <span
-                      className="text-white font-bold px-2 py-0.5 rounded"
-                      style={{ backgroundColor: selectedControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
-                    >
-                      {selectedControlType === 'classic' ? '操作: クラシック' : '操作: モダン'}
-                    </span>
-                  )}
-                  {selectedCharacter && (
-                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      キャラクター: {selectedCharacter}
-                    </span>
-                  )}
-                  {selectedTag && (
-                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      タグ: {selectedTag}
-                    </span>
-                  )}
-                  {searchQuery && (
-                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium px-2 py-0.5 rounded">
-                      検索: {searchQuery}
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={() => { setSelectedCategory('all'); setSelectedControlType('all'); setSelectedCharacter(null); setSelectedTag(null); setSearchQuery(''); }}
-                  className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 underline text-xs ml-2 cursor-pointer shrink-0"
-                >
-                  条件クリア
-                </button>
+        {/* 立ち回り または コーチング 選択時のキャラクター切り替えボタン */}
+        {(selectedCategory === 'neutral' || selectedCategory === 'coaching') && availableCharacters.length > 0 && (
+          <div className="flex flex-col gap-2.5 mb-6 p-3 sm:p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  キャラクター:
+                </span>
+                <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  {availableCharacters.length}キャラの記事を公開中
+                </span>
               </div>
-            )}
+              {selectedCharacter && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCharacter(null)}
+                  className="text-[11px] text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline cursor-pointer shrink-0"
+                >
+                  絞り込み解除（全{categoryTotalCount}件）
+                </button>
+              )}
+            </div>
 
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setSelectedCharacter(null)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  selectedCharacter === null
+                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-xs'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200/60 dark:border-neutral-700/60'
+                }`}
+              >
+                すべて ({categoryTotalCount})
+              </button>
+              {availableCharacters.map((charName) => {
+                const isSelected = selectedCharacter === charName;
+                const count = charArticleCounts[charName] || 0;
+                return (
+                  <button
+                    key={charName}
+                    type="button"
+                    onClick={() => setSelectedCharacter(isSelected ? null : charName)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                      isSelected
+                        ? 'bg-cyan-600 dark:bg-cyan-500 text-white shadow-xs'
+                        : 'bg-white dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 border border-neutral-200/80 dark:border-neutral-700'
+                    }`}
+                  >
+                    <span>{charName}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        isSelected
+                          ? 'bg-cyan-700 dark:bg-cyan-600 text-white'
+                          : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="max-w-4xl mx-auto space-y-4">
             {/* 記事一覧 */}
             {filteredArticles.length === 0 ? (
               <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">

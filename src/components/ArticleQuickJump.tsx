@@ -24,6 +24,7 @@ interface ArticleQuickJumpProps {
   bookmarks: string[];
   onToggleBookmark: (id: string) => void;
   onJumpToSection: (id: string) => void;
+  enableBookmarks?: boolean;
 }
 
 // セクションタイトルのフォーマット（小見出し表示時は「⑥ 画面中央」のように適度にスリム化）
@@ -43,6 +44,7 @@ export default function ArticleQuickJump({
   bookmarks,
   onToggleBookmark,
   onJumpToSection,
+  enableBookmarks = false,
 }: ArticleQuickJumpProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isQuickJumpOpen, setIsQuickJumpOpen] = useState(false);
@@ -153,7 +155,7 @@ export default function ArticleQuickJump({
           </div>
 
           {/* 現在セクションのお気に入り登録ボタン */}
-          {activeSection && (
+          {enableBookmarks && activeSection && (
             <button
               type="button"
               onClick={() => onToggleBookmark(activeSection.id)}
@@ -285,7 +287,7 @@ export default function ArticleQuickJump({
           </button>
 
           {/* 3. 現在章のお気に入り登録 */}
-          {activeSection && (
+          {enableBookmarks && activeSection && (
             <button
               type="button"
               onClick={() => onToggleBookmark(activeSection.id)}
@@ -343,7 +345,7 @@ export default function ArticleQuickJump({
             {/* モーダル本文 */}
             <div className="p-4 overflow-y-auto space-y-4">
               {/* お気に入り登録セクション一覧 */}
-              {bookmarks.length > 0 && (
+              {enableBookmarks && bookmarks.length > 0 && (
                 <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40">
                   <div className="text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-2 flex items-center gap-1.5">
                     <Star className="w-3.5 h-3.5 fill-current text-amber-500" />
@@ -413,20 +415,22 @@ export default function ArticleQuickJump({
                       </button>
 
                       {/* お気に入りトグルボタン */}
-                      <button
-                        type="button"
-                        onClick={() => onToggleBookmark(sec.id)}
-                        className={`p-1.5 rounded-lg shrink-0 transition-colors cursor-pointer ${
-                          isBookmarked
-                            ? 'text-amber-500'
-                            : isActive
-                            ? 'text-white/40 hover:text-amber-300'
-                            : 'text-neutral-400 hover:text-amber-500'
-                        }`}
-                        title={isBookmarked ? 'お気に入り解除' : 'お気に入りに追加'}
-                      >
-                        <Star className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
-                      </button>
+                      {enableBookmarks && (
+                        <button
+                          type="button"
+                          onClick={() => onToggleBookmark(sec.id)}
+                          className={`p-1.5 rounded-lg shrink-0 transition-colors cursor-pointer ${
+                            isBookmarked
+                              ? 'text-amber-500'
+                              : isActive
+                              ? 'text-white/40 hover:text-amber-300'
+                              : 'text-neutral-400 hover:text-amber-500'
+                          }`}
+                          title={isBookmarked ? 'お気に入り解除' : 'お気に入りに追加'}
+                        >
+                          <Star className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
+                        </button>
+                      )}
                     </div>
                   );
                 })}

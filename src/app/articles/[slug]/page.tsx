@@ -461,6 +461,7 @@ export default function ArticleDetailPage() {
           bookmarks={bookmarks}
           onToggleBookmark={handleToggleBookmark}
           onJumpToSection={handleJumpToSection}
+          enableBookmarks={isCompleteGuide}
         />
       )}
 
@@ -687,7 +688,7 @@ export default function ArticleDetailPage() {
                 </div>
 
                 {/* ★ お気に入り登録済みセクションのクイックトレイ */}
-                {bookmarks.length > 0 && (
+                {isCompleteGuide && bookmarks.length > 0 && (
                   <div className="mb-3 p-3 rounded-lg bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40">
                     <div className="text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1.5 flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-current text-amber-500" />
@@ -723,18 +724,20 @@ export default function ArticleDetailPage() {
                         <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">0{idx + 1}.</span>
                         <span className="group-hover:underline">{sec.title}</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
-                        className={`p-1 rounded transition-colors cursor-pointer ${
-                          bookmarks.includes(`sec-free-${idx}`)
-                            ? 'text-amber-500'
-                            : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
-                        }`}
-                        title="お気に入り登録"
-                      >
-                        <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
-                      </button>
+                      {isCompleteGuide && (
+                        <button
+                          type="button"
+                          onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
+                          className={`p-1 rounded transition-colors cursor-pointer ${
+                            bookmarks.includes(`sec-free-${idx}`)
+                              ? 'text-amber-500'
+                              : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
+                          }`}
+                          title="お気に入り登録"
+                        >
+                          <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
+                        </button>
+                      )}
                     </li>
                   ))}
                   {paidSections.map((sec, idx) => (
@@ -750,18 +753,20 @@ export default function ArticleDetailPage() {
                           {article.subscriptionOnly ? '会員限定' : '有料'}
                         </span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                        className={`p-1 rounded transition-colors cursor-pointer ${
-                          bookmarks.includes(`sec-paid-${idx}`)
-                            ? 'text-amber-500'
-                            : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
-                        }`}
-                        title="お気に入り登録"
-                      >
-                        <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
-                      </button>
+                      {isCompleteGuide && (
+                        <button
+                          type="button"
+                          onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
+                          className={`p-1 rounded transition-colors cursor-pointer ${
+                            bookmarks.includes(`sec-paid-${idx}`)
+                              ? 'text-amber-500'
+                              : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
+                          }`}
+                          title="お気に入り登録"
+                        >
+                          <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
+                        </button>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -777,21 +782,23 @@ export default function ArticleDetailPage() {
                         {section.title}
                       </h2>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
-                      className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
-                        bookmarks.includes(`sec-free-${idx}`)
-                          ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
-                          : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                      }`}
-                      title={bookmarks.includes(`sec-free-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
-                    >
-                      <Star className={`w-4 h-4 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
-                      <span className="hidden sm:inline text-[11px]">
-                        {bookmarks.includes(`sec-free-${idx}`) ? '登録済み' : 'お気に入り'}
-                      </span>
-                    </button>
+                    {isCompleteGuide && (
+                      <button
+                        type="button"
+                        onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
+                        className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
+                          bookmarks.includes(`sec-free-${idx}`)
+                            ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                            : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                        }`}
+                        title={bookmarks.includes(`sec-free-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                      >
+                        <Star className={`w-4 h-4 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
+                        <span className="hidden sm:inline text-[11px]">
+                          {bookmarks.includes(`sec-free-${idx}`) ? '登録済み' : 'お気に入り'}
+                        </span>
+                      </button>
+                    )}
                   </div>
 
                   <div className="mb-4">
@@ -948,21 +955,23 @@ export default function ArticleDetailPage() {
                                     {section.title}
                                   </h2>
                                 </div>
-                                <button
-                                  type="button"
-                                  onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                                  className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
-                                    bookmarks.includes(`sec-paid-${idx}`)
-                                      ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
-                                      : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                                  }`}
-                                  title={bookmarks.includes(`sec-paid-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
-                                >
-                                  <Star className={`w-4 h-4 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
-                                  <span className="hidden sm:inline text-[11px]">
-                                    {bookmarks.includes(`sec-paid-${idx}`) ? '登録済み' : 'お気に入り'}
-                                  </span>
-                                </button>
+                                {isCompleteGuide && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
+                                    className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
+                                      bookmarks.includes(`sec-paid-${idx}`)
+                                        ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                                        : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                    }`}
+                                    title={bookmarks.includes(`sec-paid-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                                  >
+                                    <Star className={`w-4 h-4 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
+                                    <span className="hidden sm:inline text-[11px]">
+                                      {bookmarks.includes(`sec-paid-${idx}`) ? '登録済み' : 'お気に入り'}
+                                    </span>
+                                  </button>
+                                )}
                               </div>
 
                               <div className="mb-4">

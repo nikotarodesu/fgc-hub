@@ -8,7 +8,7 @@ export default function CheckoutCancelPage() {
           決済がキャンセルされました
         </h1>
         <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed mb-6">
-          お支払いは中断されました。請求は一切発生しておりません。ご不明な点がございましたら公式XのDMまでお気軽にお問い合わせください。
+          お支払いは中断されました。請求は一切発生しておりません。ご不明な点がございましたら<Link href="/contact" className="text-[#00a3c4] underline font-medium">お問い合わせフォーム</Link>よりお気軽にお問い合わせください。
         </p>
 
         <div className="space-y-2.5">

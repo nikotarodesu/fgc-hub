@@ -69,20 +69,45 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 bg-neutral-100 dark:bg-neutral-800">
+              <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 bg-neutral-100 dark:bg-neutral-800 shrink-0">
                 <Image
                   src="/icon.png"
                   alt="にこ太郎"
-                  width={28}
-                  height={28}
+                  width={32}
+                  height={32}
                   className="w-full h-full object-cover"
                 />
               </div>
               <span className="font-bold text-neutral-900 dark:text-white text-sm tracking-tight">にこ太郎の格ゲーLAB</span>
             </div>
-            <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-md text-xs">
-              ストリートファイター6全キャラ1800MR以上の筆者「にこ太郎」による攻略メディア。フレームデータ、実戦セットプレイ、普遍的な共通上達論を発信しています。
+            <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-lg text-xs">
+              スト6全キャラ1800MR以上。note大会で2連覇を達成🏆。note有料記事は累計2,000部突破・フォロワー2,500人。勝率に直結する立ち回り理論やコンボ・起き攻めを発信中。
             </p>
+
+            {/* 🏆 note大会 優勝記事 */}
+            <div className="flex items-center gap-2 text-xs flex-wrap pt-0.5">
+              <span className="text-neutral-400 dark:text-neutral-500 font-semibold text-[11px]">🏆 大会記事:</span>
+              <a
+                href="https://note.com/nikotarosun/n/n081a67f53aa8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white underline underline-offset-2 font-medium"
+              >
+                <span>優勝記事①</span>
+                <ExternalLink className="w-2.5 h-2.5 text-neutral-400" />
+              </a>
+              <span className="text-neutral-300 dark:text-neutral-700">•</span>
+              <a
+                href="https://note.com/nikotarosun/n/nbaad82557ae9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white underline underline-offset-2 font-medium"
+              >
+                <span>優勝記事②</span>
+                <ExternalLink className="w-2.5 h-2.5 text-neutral-400" />
+              </a>
+            </div>
+
             <div className="flex items-center gap-3 pt-1">
               <a
                 href="https://x.com/nikotarosun"
@@ -95,7 +120,7 @@ export default function Footer() {
               </a>
               <span className="text-neutral-200 dark:text-neutral-700">|</span>
               <a
-                href="https://note.com"
+                href="https://note.com/nikotarosun"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white font-medium"

@@ -3,8 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ARTICLES_DATA, AUTHOR_INFO, getArticleEyecatch } from '@/data/articles';
-import AuthorCard from '@/components/AuthorCard';
+import { ARTICLES_DATA, getArticleEyecatch } from '@/data/articles';
 import LethalToolPreviewModal from '@/components/LethalToolPreviewModal';
 import { Search, Lock, Sparkles, Swords, Gamepad2, Video, RefreshCw, ChevronRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -415,9 +414,7 @@ export default function HomePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* メイン記事カラム（8 / 12） */}
-          <div className="lg:col-span-8 space-y-4">
+        <div className="max-w-4xl mx-auto space-y-4">
             {/* 絞り込み条件表示 */}
             {(selectedCategory !== 'all' || selectedControlType !== 'all' || selectedCharacter || selectedTag || searchQuery) && (
               <div className="p-3 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between text-xs shadow-xs">
@@ -613,32 +610,6 @@ export default function HomePage() {
                 })}
               </div>
             )}
-          </div>
-
-          {/* 右サイドバー（4 / 12） */}
-          <aside className="lg:col-span-4 space-y-5">
-            {/* 著者プロフィールカード */}
-            <AuthorCard author={AUTHOR_INFO} />
-
-            {/* プレミアム会員案内カード */}
-            <div className="p-5 bg-neutral-900 text-white rounded-xl border border-neutral-800 shadow-sm">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
-                MEMBERSHIP
-              </span>
-              <h3 className="text-sm font-bold text-white mb-1">
-                プレミアム会員で読み放題
-              </h3>
-              <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
-              </p>
-              <Link
-                href="/membership"
-                className="block w-full py-2 rounded-lg bg-white hover:bg-neutral-100 text-neutral-950 text-xs font-semibold text-center transition-colors"
-              >
-                プレミアム会員詳細を見る
-              </Link>
-            </div>
-          </aside>
         </div>
       </main>
 

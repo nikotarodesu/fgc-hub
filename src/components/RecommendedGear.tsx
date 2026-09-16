@@ -120,11 +120,6 @@ export default function RecommendedGear({
           </div>
         ))}
       </div>
-
-      {/* Amazonアソシエイト免責明記 */}
-      <p className="text-[11px] text-neutral-400 dark:text-neutral-500 text-center mt-4">
-        ※当サイトはAmazonアソシエイト・プログラムの参加者です。適格販売により収入を得る場合があります。
-      </p>
     </section>
   );
 }

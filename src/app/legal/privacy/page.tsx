@@ -22,6 +22,10 @@ export default function PrivacyPage() {
             <p>
               法令に基づく場合を除き、事前の同意なく個人情報を第三者に提供することはありません。
             </p>
+            <h2 className="text-base font-bold text-neutral-900 mt-6 mb-2">4. 広告およびアフィリエイトプログラムについて</h2>
+            <p>
+              当サイトでは、Amazonアソシエイト・プログラム等のアフィリエイトプログラムを利用しています。Amazonのアソシエイトとして、当サイト運営者は適格販売により収入を得る場合があります。詳細につきましては<a href="/privacy" className="text-sky-600 underline hover:text-sky-800">プライバシーポリシー・免責事項</a>をご覧ください。
+            </p>
           </div>
         </div>
       </main>

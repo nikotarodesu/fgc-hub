@@ -58,6 +58,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...characterComboUrls,
     // 記事詳細
     ...articleUrls,
+    // お問い合わせ
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
     // 規約・特商法・プライバシーポリシー
     {
       url: `${baseUrl}/privacy`,

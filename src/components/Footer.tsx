@@ -111,6 +111,7 @@ export default function Footer() {
             <ul className="space-y-2 text-neutral-500 dark:text-neutral-400">
               <li><Link href="/privacy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">プライバシーポリシー &amp; 免責事項</Link></li>
               <li><Link href="/legal/tokusho" className="hover:text-neutral-900 dark:hover:text-white transition-colors">特定商取引法に基づく表記</Link></li>
+              <li><Link href="/contact" className="hover:text-neutral-900 dark:hover:text-white transition-colors">お問い合わせ</Link></li>
               <li>
                 <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 mt-2 text-[11px]">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />

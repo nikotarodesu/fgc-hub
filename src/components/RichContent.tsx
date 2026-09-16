@@ -5,6 +5,7 @@ import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
 import { Star, Zap, Film, Eye, ChevronDown, ChevronUp, Play, Pause } from 'lucide-react';
 import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
+import { getMediaUrl } from '@/lib/media';
 
 interface RichContentProps {
   content: string;
@@ -243,8 +244,10 @@ function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
   const isVideo = isGif || isMp4;
 
   // .gif の場合は同名の最適化済み .mp4 を優先ロード（通信量約85%カット）
-  const videoSrc = isGif ? src.replace(/\.gif$/i, '.mp4') : src;
-  const posterSrc = isGif ? src.replace(/\.gif$/i, '.jpg') : (isMp4 ? src.replace(/\.mp4$/i, '.jpg') : undefined);
+  const baseVideoSrc = isGif ? src.replace(/\.gif$/i, '.mp4') : src;
+  const basePosterSrc = isGif ? src.replace(/\.gif$/i, '.jpg') : (isMp4 ? src.replace(/\.mp4$/i, '.jpg') : undefined);
+  const videoSrc = getMediaUrl(baseVideoSrc);
+  const posterSrc = basePosterSrc ? getMediaUrl(basePosterSrc) : undefined;
 
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
@@ -274,7 +277,7 @@ function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
     return (
       <figure className="my-4 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 overflow-hidden shadow-2xs max-w-2xl">
         <img
-          src={src}
+          src={getMediaUrl(src)}
           alt={label}
           loading="lazy"
           className="w-full h-auto object-cover max-h-[520px] mx-auto block"

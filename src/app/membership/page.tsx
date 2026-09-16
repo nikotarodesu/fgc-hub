@@ -138,9 +138,9 @@ export default function MembershipPage() {
                     </span>
                   </div>
                   <div className="pt-1.5 border-t border-neutral-200/60">
-                    <span className="font-bold text-neutral-900 block text-xs">② 公式X（@nikotarosun）のDMより解約申請</span>
+                    <span className="font-bold text-neutral-900 block text-xs">② お問い合わせフォームより解約申請</span>
                     <span className="text-[11px] text-neutral-500 leading-normal block mt-0.5">
-                      ご登録時のメールアドレスを添えて、<a href="https://x.com/nikotarosun" target="_blank" rel="noopener noreferrer" className="text-[#00a3c4] underline font-medium">公式X（@nikotarosun）</a>のDMまで「解約希望」とご連絡いただければ、運営側にて速やかに解約処理を代行対応いたします。
+                      ご登録時のメールアドレスを添えて、<Link href="/contact" className="text-[#00a3c4] underline font-medium">お問い合わせフォーム</Link>（お問い合わせ種別：プレミアム会員・解約について）よりご連絡いただければ、運営側にて速やかに解約処理を代行対応いたします。
                     </span>
                   </div>
                 </div>
@@ -148,12 +148,6 @@ export default function MembershipPage() {
                   ※ 次回更新日の前日までにお手続きいただければ、次回以降の請求は発生いたしません。解約後も現在の課金期間終了まではすべての記事をそのまま閲覧いただけます。
                 </p>
               </div>
-            </div>
-            <div className="p-4 rounded-lg bg-white border border-neutral-200/80 shadow-xs">
-              <h4 className="text-xs font-bold text-neutral-900 mb-1">Q. 記事はどのように追加・更新されますか？</h4>
-              <p className="text-xs text-neutral-600 leading-relaxed">
-                実戦対戦リプレイの添削、最新バージョンに対応したコンボレシピ、高MR帯でのキャラ別対策が随時追加されます。プレミアム会員は追加料金なしですべて閲覧いただけます。
-              </p>
             </div>
           </div>
         </div>

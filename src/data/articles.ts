@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_ZANGIEF_1400MR } from './articles/coachingZangief1400mr';
 import { COACHING_BISON_1500MR_RYU } from './articles/coachingBison1500mrRyu';
 import { COACHING_BISON_1500MR_CAMMY } from './articles/coachingBison1500mrCammy';
 import { COACHING_BISON_DIA5 } from './articles/coachingBisonDia5';
@@ -161,6 +162,9 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('マリーザ') || charLower.includes('marisa')) {
     return '/images/characters/marisa/sns.jpg';
   }
+  if (charLower.includes('ザンギ') || charLower.includes('zangief')) {
+    return '/images/characters/zangief/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 
@@ -168,6 +172,7 @@ export const CHARACTERS_SF6 = [
   { id: 'chunli', name: '春麗 (Chun-Li)', type: '変幻自在', color: 'from-cyan-500 to-blue-600' },
   { id: 'bison', name: 'ベガ (Bison)', type: '圧殺突進', color: 'from-purple-700 to-rose-900' },
   { id: 'marisa', name: 'マリーザ (Marisa)', type: '超重量級パワー', color: 'from-amber-600 to-red-700' },
+  { id: 'zangief', name: 'ザンギエフ (Zangief)', type: '投げキャラの頂点', color: 'from-red-700 to-rose-900' },
   { id: 'guile', name: 'ガイル (Guile)', type: '鉄壁要塞', color: 'from-emerald-600 to-green-700' },
   { id: 'gouki', name: '豪鬼 (Akuma)', type: '攻撃特化', color: 'from-red-600 to-amber-700' },
   { id: 'ken', name: 'ケン (Ken)', type: '万能攻勢', color: 'from-orange-500 to-red-600' },
@@ -180,6 +185,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_ZANGIEF_1400MR,
   COACHING_BISON_1500MR_RYU,
   COACHING_BISON_1500MR_CAMMY,
   COACHING_BISON_DIA5,

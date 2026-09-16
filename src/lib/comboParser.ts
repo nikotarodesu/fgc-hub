@@ -131,6 +131,17 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   remaining = remaining.replace(/〆|締め?$/, '').trim();
   const lower = remaining.toLowerCase();
 
+  // 状態表記（スタン、壁スタン等）はプレイヤーの入力コマンドではないためアコーディオン展開からスキップ
+  if (
+    lower === 'スタン' ||
+    lower === '壁スタン' ||
+    lower === '相手スタン' ||
+    lower === 'スタン時' ||
+    lower === 'ガードクラッシュ'
+  ) {
+    return [];
+  }
+
   // 大PTC / 二連撃 / 大TC / 大>大 判定（リュウの大PTCは大P>大Kなので2ステップに展開）
   const isTargetCombo =
     lower.includes('大ptc') ||

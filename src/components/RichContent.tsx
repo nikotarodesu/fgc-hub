@@ -28,9 +28,9 @@ export function getShortSubheadingLabel(numChar: string, titleText: string): str
   return numChar ? `${numChar} ${label}` : label;
 }
 
-// インライン装飾のパース（大事なところをクッキリとしたシンプルな太字で強調）
+// インライン装飾のパース（大事なところをクッキリとしたシンプルな太字で強調 & リンク対応）
 function renderInline(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
+  const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(https?:\/\/[^\s\)]+\)|https?:\/\/[^\s\)]+)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       const inner = part.slice(2, -2);
@@ -41,6 +41,35 @@ function renderInline(text: string): React.ReactNode[] {
         >
           {inner}
         </strong>
+      );
+    }
+    if (part.startsWith('[') && part.includes('](') && part.endsWith(')')) {
+      const closeBracket = part.indexOf('](');
+      const label = part.slice(1, closeBracket);
+      const url = part.slice(closeBracket + 2, -1);
+      return (
+        <a
+          key={i}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-cyan-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-0.5 font-medium"
+        >
+          {label}
+        </a>
+      );
+    }
+    if (part.startsWith('http://') || part.startsWith('https://')) {
+      return (
+        <a
+          key={i}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-cyan-600 dark:text-cyan-400 hover:underline break-all inline-flex items-center gap-0.5 font-medium"
+        >
+          {part}
+        </a>
       );
     }
     return <span key={i}>{part}</span>;

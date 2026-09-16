@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_BISON_DIA5 } from './articles/coachingBisonDia5';
 import { COACHING_RYU_DIA4 } from './articles/coachingRyuDia4';
 import { COACHING_CHUNLI_1600MR } from './articles/coachingChunli1600mr';
 import { COACHING_CHUNLI_PLAT3 } from './articles/coachingChunliPlat3';
@@ -177,6 +178,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_BISON_DIA5,
   COACHING_RYU_DIA4,
   COACHING_MARISA_1500MR,
   COACHING_KEN_1300MR,

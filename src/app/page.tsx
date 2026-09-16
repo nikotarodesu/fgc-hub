@@ -656,13 +656,10 @@ export default function HomePage() {
               (selectedCategory === 'all' || selectedCategory === 'character') &&
               !searchQuery && (
                 <div className="mb-2 sm:mb-4">
-                  <div className="flex items-center gap-2 mb-2.5">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-[11px] tracking-wide uppercase shadow-xs">
-                      <Flame className="w-3.5 h-3.5" />
-                      <span>看板・おすすめ攻略</span>
-                    </span>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
-                      勝率を直結させる実戦バイブル
+                  <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-xs tracking-wide shadow-xs">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>ピックアップ記事</span>
                     </span>
                   </div>
 

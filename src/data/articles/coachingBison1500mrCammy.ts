@@ -33,7 +33,6 @@ export const COACHING_BISON_1500MR_CAMMY: Article = {
     'サイコクラッシャー対空',
     '柔道対策',
     'ダブルニープレス',
-    '立ち回り',
     'リプレイ解説',
   ],
   likesCount: 136,

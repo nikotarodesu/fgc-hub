@@ -33,7 +33,6 @@ export const COACHING_MAI_DIA3: Article = {
     '花蝶扇',
     '防御力',
     'フレーム計算',
-    '立ち回り',
     'リプレイ解説',
   ],
   likesCount: 175,

@@ -28,7 +28,6 @@ export const COACHING_BISON_DIA5: Article = {
     'クラシック',
     'ダイヤ',
     'コーチング',
-    '立ち回り',
     '画面端脱出',
     'キャラ対策',
     'ジェイミー対策',

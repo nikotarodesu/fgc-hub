@@ -32,7 +32,6 @@ export const COACHING_BLANKA_1500MR: Article = {
     'セットプレイ',
     'エレクトリックサンダー',
     'ブランカちゃん人形',
-    '立ち回り',
     'リプレイ解説',
   ],
   likesCount: 165,

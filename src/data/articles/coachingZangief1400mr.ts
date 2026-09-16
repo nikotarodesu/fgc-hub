@@ -33,7 +33,6 @@ export const COACHING_ZANGIEF_1400MR: Article = {
     '確定反撃',
     '起き攻め',
     '地上戦',
-    '立ち回り',
     'リプレイ解説',
   ],
   likesCount: 168,

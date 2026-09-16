@@ -284,7 +284,10 @@ function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
   const togglePlay = () => {
     if (!videoRef.current) return;
 
-    if (videoRef.current.paused) {
+    if (videoRef.current.paused || videoRef.current.ended) {
+      if (videoRef.current.ended) {
+        videoRef.current.currentTime = 0;
+      }
       videoRef.current
         .play()
         .then(() => {
@@ -296,6 +299,13 @@ function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
     } else {
       videoRef.current.pause();
       setIsPlaying(false);
+    }
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
     }
   };
 
@@ -341,12 +351,12 @@ function InteractiveMedia({ src, caption }: InteractiveMediaProps) {
           ref={videoRef}
           src={videoSrc}
           poster={posterSrc}
-          loop
           muted
           playsInline
           preload="metadata"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
+          onEnded={handleEnded}
           className="w-full h-full object-contain mx-auto block"
         />
 

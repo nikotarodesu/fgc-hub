@@ -762,7 +762,7 @@ export const RYU_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ ラッシュ下大P>キャンセル下大P>強足刀>強昇竜〆（3667）+37
 ▶︎ ラッシュ下大P>キャンセル中P（目押し）>ラッシュ引大P>キャンセル下大P>強足刀>SA1〆（4084）リーサルコンボ
 ▶︎ ラッシュ下大P>キャンセル下大P（伸ばし気味に当てる）>キャンセル下大P>強足刀>強昇竜>SA3〆（5846）リーサルコンボ
-![電刃下中Pからの5846ダメージリーサルコンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-denjinkonbo.mp4)
+![電刃下中Pからの5846ダメージリーサルコンボ](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/ryu-delirei.mp4)
 
 ● 下中P>OD電刃波掌撃〜
 ▶︎ 前歩き>下大P>中波掌撃>強昇竜〆（3440）+37

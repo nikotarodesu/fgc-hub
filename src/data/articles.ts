@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { COACHING_MAI_DIA3 } from './articles/coachingMaiDia3';
 import { COACHING_ZANGIEF_1400MR } from './articles/coachingZangief1400mr';
 import { COACHING_BISON_1500MR_RYU } from './articles/coachingBison1500mrRyu';
 import { COACHING_BISON_1500MR_CAMMY } from './articles/coachingBison1500mrCammy';
@@ -165,6 +166,9 @@ export function getArticleEyecatch(article: Article): string {
   if (charLower.includes('ザンギ') || charLower.includes('zangief')) {
     return '/images/characters/zangief/sns.jpg';
   }
+  if (charLower.includes('舞') || charLower.includes('mai')) {
+    return '/images/characters/mai/sns.jpg';
+  }
   return '/images/characters/ryu/sns.jpg';
 }
 
@@ -185,6 +189,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  COACHING_MAI_DIA3,
   COACHING_ZANGIEF_1400MR,
   COACHING_BISON_1500MR_RYU,
   COACHING_BISON_1500MR_CAMMY,

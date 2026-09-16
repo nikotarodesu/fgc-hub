@@ -4,8 +4,8 @@ import { HelpCircle, Crosshair, ArrowDown, CheckCircle2, XCircle } from 'lucide-
 // 図解1: 波動拳の質問と回答のフロー図
 export function HadokenFlowDiagram() {
   return (
-    <div className="my-6 p-5 sm:p-6 bg-neutral-900 text-white rounded-2xl shadow-sm border border-neutral-800">
-      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-neutral-800">
+    <div className="my-5 px-3 py-4 sm:p-6 bg-neutral-900 text-white rounded-2xl shadow-sm border border-neutral-800">
+      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-neutral-800">
         <HelpCircle className="w-4 h-4 text-cyan-400" />
         <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
           立ち回り図解：波動拳という「質問」の構造
@@ -13,7 +13,7 @@ export function HadokenFlowDiagram() {
       </div>
 
       {/* トップノード：質問 */}
-      <div className="max-w-xs mx-auto p-3 rounded-xl bg-neutral-800 border border-neutral-700 text-center mb-3">
+      <div className="max-w-xs mx-auto p-2.5 sm:p-3 rounded-xl bg-neutral-800 border border-neutral-700 text-center mb-2.5 sm:mb-3">
         <div className="text-[11px] text-neutral-400 font-mono">リュウの行動</div>
         <div className="text-sm font-bold text-white">波動拳を撃つ（質問）</div>
         <div className="text-[11px] text-cyan-300 mt-0.5">「この距離でどう動きますか？」</div>
@@ -24,9 +24,9 @@ export function HadokenFlowDiagram() {
       </div>
 
       {/* 3つの分岐 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
         {/* 分岐1: ジャンプ */}
-        <div className="p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
+        <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
           <div className="text-[11px] font-bold text-amber-400 mb-1">相手の回答 ①</div>
           <div className="text-sm font-black text-white mb-2">ジャンプで飛ぶ</div>
           <div className="pt-2 border-t border-neutral-700/60 text-xs text-neutral-300">
@@ -39,7 +39,7 @@ export function HadokenFlowDiagram() {
         </div>
 
         {/* 分岐2: ガード */}
-        <div className="p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
+        <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
           <div className="text-[11px] font-bold text-blue-400 mb-1">相手の回答 ②</div>
           <div className="text-sm font-black text-white mb-2">立ち/しゃがみガード</div>
           <div className="pt-2 border-t border-neutral-700/60 text-xs text-neutral-300">
@@ -52,7 +52,7 @@ export function HadokenFlowDiagram() {
         </div>
 
         {/* 分岐3: パリィ */}
-        <div className="p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
+        <div className="p-3 sm:p-3.5 rounded-xl bg-neutral-800/80 border border-neutral-700/80">
           <div className="text-[11px] font-bold text-emerald-400 mb-1">相手の回答 ③</div>
           <div className="text-sm font-black text-white mb-2">ドライブパリィ</div>
           <div className="pt-2 border-t border-neutral-700/60 text-xs text-neutral-300">
@@ -71,8 +71,8 @@ export function HadokenFlowDiagram() {
 // 図解2: 中距離の支配間合いメーター
 export function DistanceMeterDiagram() {
   return (
-    <div className="my-6 p-5 sm:p-6 bg-white dark:bg-[#151c28] rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
-      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-neutral-100 dark:border-neutral-800">
+    <div className="my-5 px-3 py-4 sm:p-6 bg-white dark:bg-[#151c28] rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
         <Crosshair className="w-4 h-4 text-neutral-800 dark:text-cyan-400" />
         <span className="text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider">
           間合い概念図：中距離におけるリュウの支配域
@@ -82,21 +82,21 @@ export function DistanceMeterDiagram() {
       {/* スケールバー */}
       <div className="space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs font-bold">
-          <div className="p-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border border-neutral-200/60 dark:border-neutral-700/60">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border border-neutral-200/60 dark:border-neutral-700/60">
             近距離
             <div className="text-[10px] font-normal text-neutral-500 dark:text-neutral-500 mt-0.5">小技・投げの読み合い</div>
           </div>
-          <div className="p-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 text-cyan-950 dark:text-cyan-200 border-2 border-cyan-500 shadow-xs">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 text-cyan-950 dark:text-cyan-200 border-2 border-cyan-500 shadow-xs">
             ★ 中距離（リュウの絶対領域）
             <div className="text-[10px] font-semibold text-cyan-700 dark:text-cyan-300 mt-0.5">前大P / 波動拳 / 中足刀</div>
           </div>
-          <div className="p-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border border-neutral-200/60 dark:border-neutral-700/60">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border border-neutral-200/60 dark:border-neutral-700/60">
             遠距離
             <div className="text-[10px] font-normal text-neutral-500 dark:text-neutral-500 mt-0.5">電刃溜め / 安全波動</div>
           </div>
         </div>
 
-        <div className="p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200/80 dark:border-neutral-700/70 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+        <div className="p-2.5 sm:p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200/80 dark:border-neutral-700/70 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
           <span className="font-bold text-neutral-900 dark:text-neutral-100">💡 立ち回りの鉄則：</span>
           中距離では相手は「前に出るのも怖い・技を振るのも空振りが怖い」という心理状態になります。相手が焦って技を空振った瞬間を、中足刀や前大Pで狩るのが基本原則です。
         </div>
@@ -108,15 +108,15 @@ export function DistanceMeterDiagram() {
 // 図解3: 3大NG行動 vs 強いリュウの勝ち思考
 export function MindsetComparisonTable() {
   return (
-    <div className="my-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-xs bg-white dark:bg-[#151c28]">
-      <div className="p-4 bg-neutral-900 dark:bg-[#10141d] text-white text-xs font-bold flex items-center justify-between border-b border-neutral-800">
+    <div className="my-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-xs bg-white dark:bg-[#151c28]">
+      <div className="px-3.5 py-2.5 sm:p-4 bg-neutral-900 dark:bg-[#10141d] text-white text-xs font-bold flex items-center justify-between border-b border-neutral-800">
         <span className="text-neutral-100">思考比較：伸び悩むリュウ vs 強いリュウ</span>
         <span className="text-[11px] text-neutral-400">判断数を減らす思考法</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-neutral-200 dark:divide-neutral-800 text-xs">
         {/* NG側 */}
-        <div className="p-4 bg-rose-50/40 dark:bg-rose-950/20">
-          <div className="flex items-center gap-1.5 font-bold text-rose-700 dark:text-rose-400 mb-3 text-sm">
+        <div className="p-3.5 sm:p-4 bg-rose-50/40 dark:bg-rose-950/20">
+          <div className="flex items-center gap-1.5 font-bold text-rose-700 dark:text-rose-400 mb-2 sm:mb-3 text-sm">
             <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
             <span>迷いを生む3大NG行動</span>
           </div>
@@ -137,8 +137,8 @@ export function MindsetComparisonTable() {
         </div>
 
         {/* 勝ち側 */}
-        <div className="p-4 bg-emerald-50/40 dark:bg-emerald-950/20">
-          <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-400 mb-3 text-sm">
+        <div className="p-3.5 sm:p-4 bg-emerald-50/40 dark:bg-emerald-950/20">
+          <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-400 mb-2 sm:mb-3 text-sm">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>勝率が安定する思考法</span>
           </div>

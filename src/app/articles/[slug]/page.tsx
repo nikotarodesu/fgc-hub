@@ -665,13 +665,13 @@ export default function ArticleDetailPage() {
 
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
-                <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] text-neutral-800 dark:text-neutral-200 shadow-2xs">
                   <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
 
               {/* 目次 */}
-              <div className="p-4 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] my-4 sm:my-6">
+              <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] my-4 sm:my-6">
                 <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
@@ -775,10 +775,10 @@ export default function ArticleDetailPage() {
               {/* 無料公開セクション */}
               {freeSections.map((section, idx) => (
                 <div key={idx} id={`sec-free-${idx}`} className="pt-6 scroll-mt-16">
-                  <div className="flex items-center justify-between gap-3 mb-5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                      <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                      <h2 className="text-base sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                  <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                      <h2 className="text-[15px] sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
                         {section.title}
                       </h2>
                     </div>
@@ -948,10 +948,10 @@ export default function ArticleDetailPage() {
                             )}
 
                             <div id={`sec-paid-${idx}`} className="pt-6 scroll-mt-16">
-                              <div className="flex items-center justify-between gap-3 mb-5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                                  <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                                  <h2 className="text-base sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                              <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                  <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                                  <h2 className="text-[15px] sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
                                     {section.title}
                                   </h2>
                                 </div>

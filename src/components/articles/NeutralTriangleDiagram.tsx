@@ -97,19 +97,19 @@ export default function NeutralTriangleDiagram() {
   const active = NODES[selectedNode];
 
   return (
-    <div className="my-8 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
+    <div className="my-6 sm:my-8 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden">
       {/* ヘッダー */}
-      <div className="p-4 sm:p-5 bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="px-3.5 py-3 sm:px-5 sm:py-4 bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
         <div>
-          <h3 className="text-base sm:text-lg font-bold">格ゲー立ち回りの三すくみ（じゃんけん構造）</h3>
+          <h3 className="text-sm sm:text-lg font-bold">格ゲー立ち回りの三すくみ（じゃんけん構造）</h3>
         </div>
-        <span className="text-xs text-neutral-400">タップして各戦術の強み・弱みを確認</span>
+        <span className="text-[11px] sm:text-xs text-neutral-400">タップして各戦術の強み・弱みを確認</span>
       </div>
 
-      <div className="p-5 sm:p-6 space-y-6">
+      <div className="px-3 py-4 sm:p-6 space-y-5 sm:space-y-6">
         {/* SVG三すくみサークル */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-          <div className="relative w-72 h-72 sm:w-80 sm:h-80 shrink-0">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8">
+          <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square mx-auto shrink-0 my-1 sm:my-2">
             <svg viewBox="0 0 300 300" className="w-full h-full">
               {/* 循環矢印の円・パス */}
               <defs>
@@ -168,48 +168,48 @@ export default function NeutralTriangleDiagram() {
             {/* ノードボタン 1: 置き技 (Top) */}
             <button
               onClick={() => setSelectedNode('oki')}
-              className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
+              className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-0.5 w-[96px] xs:w-[104px] sm:w-32 p-2 sm:p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'oki'
                   ? 'bg-amber-400 text-neutral-950 border-amber-500 scale-105 ring-4 ring-amber-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-amber-400'
               }`}
             >
-              <Shield className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'oki' ? 'text-neutral-950' : 'text-amber-500'}`} />
-              <div className="font-black text-xs">① 置き技</div>
-              <div className={`text-[9px] font-semibold ${selectedNode === 'oki' ? 'text-neutral-900' : 'text-neutral-400'}`}>牽制・壁張り</div>
+              <Shield className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1 ${selectedNode === 'oki' ? 'text-neutral-950' : 'text-amber-500'}`} />
+              <div className="font-black text-[11px] sm:text-xs">① 置き技</div>
+              <div className={`text-[8.5px] sm:text-[9px] font-semibold ${selectedNode === 'oki' ? 'text-neutral-900' : 'text-neutral-400'}`}>牽制・壁張り</div>
             </button>
 
             {/* ノードボタン 2: 差し込み (Bottom Right) */}
             <button
               onClick={() => setSelectedNode('sashikomi')}
-              className={`absolute bottom-0 right-0 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
+              className={`absolute bottom-0 right-0 w-[96px] xs:w-[104px] sm:w-32 p-2 sm:p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'sashikomi'
                   ? 'bg-cyan-400 text-neutral-950 border-cyan-500 scale-105 ring-4 ring-cyan-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-cyan-400'
               }`}
             >
-              <Zap className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikomi' ? 'text-neutral-950' : 'text-cyan-500'}`} />
-              <div className="font-black text-xs">② 差し込み</div>
-              <div className={`text-[9px] font-semibold ${selectedNode === 'sashikomi' ? 'text-neutral-900' : 'text-neutral-400'}`}>前歩き・ラッシュ</div>
+              <Zap className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1 ${selectedNode === 'sashikomi' ? 'text-neutral-950' : 'text-cyan-500'}`} />
+              <div className="font-black text-[11px] sm:text-xs">② 差し込み</div>
+              <div className={`text-[8.5px] sm:text-[9px] font-semibold ${selectedNode === 'sashikomi' ? 'text-neutral-900' : 'text-neutral-400'}`}>前歩き・ラッシュ</div>
             </button>
 
             {/* ノードボタン 3: 差し返し (Bottom Left) */}
             <button
               onClick={() => setSelectedNode('sashikaeshi')}
-              className={`absolute bottom-0 left-0 w-28 sm:w-32 p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
+              className={`absolute bottom-0 left-0 w-[96px] xs:w-[104px] sm:w-32 p-2 sm:p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer shadow-md ${
                 selectedNode === 'sashikaeshi'
                   ? 'bg-emerald-400 text-neutral-950 border-emerald-500 scale-105 ring-4 ring-emerald-400/30'
                   : 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-emerald-400'
               }`}
             >
-              <Target className={`w-4 h-4 mx-auto mb-1 ${selectedNode === 'sashikaeshi' ? 'text-neutral-950' : 'text-emerald-500'}`} />
-              <div className="font-black text-xs">③ 差し返し</div>
-              <div className={`text-[9px] font-semibold ${selectedNode === 'sashikaeshi' ? 'text-neutral-900' : 'text-neutral-400'}`}>空振りを見て殴る</div>
+              <Target className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1 ${selectedNode === 'sashikaeshi' ? 'text-neutral-950' : 'text-emerald-500'}`} />
+              <div className="font-black text-[11px] sm:text-xs">③ 差し返し</div>
+              <div className={`text-[8.5px] sm:text-[9px] font-semibold ${selectedNode === 'sashikaeshi' ? 'text-neutral-900' : 'text-neutral-400'}`}>空振りを見て殴る</div>
             </button>
           </div>
 
           {/* 選択ノードの詳細解説カード */}
-          <div className="flex-1 w-full min-w-0 bg-neutral-50 dark:bg-neutral-800/60 p-4 sm:p-5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 space-y-4">
+          <div className="flex-1 w-full min-w-0 bg-neutral-50 dark:bg-neutral-800/60 p-3.5 sm:p-5 rounded-xl border border-neutral-200 dark:border-neutral-700/80 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-700">
               <div className="flex items-center gap-2">
                 <div className={`p-2 rounded-lg ${active.bgColor} ${active.color} border ${active.borderColor}`}>
@@ -224,14 +224,14 @@ export default function NeutralTriangleDiagram() {
 
             {/* 相性サマリー */}
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+              <div className="p-2 sm:p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
                 <div className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />
                   <span>有利（勝てる相手）</span>
                 </div>
                 <div className="font-bold text-neutral-900 dark:text-white mt-0.5">{active.beats}</div>
               </div>
-              <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800">
+              <div className="p-2 sm:p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800">
                 <div className="text-[10px] font-bold text-rose-700 dark:text-rose-300 flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   <span>不利（負けやすい相手）</span>
@@ -264,7 +264,7 @@ export default function NeutralTriangleDiagram() {
             {/* スト6実戦例 */}
             <div className="pt-3 border-t border-neutral-200 dark:border-neutral-700">
               <span className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 block mb-1.5">
-                🥋 スト6における代表的な具体例
+                スト6における代表的な具体例
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {active.sf6Examples.map((ex, i) => (
@@ -281,7 +281,7 @@ export default function NeutralTriangleDiagram() {
         </div>
 
         {/* 結論サマリー */}
-        <div className="p-3 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed flex items-center gap-2">
+        <div className="p-2.5 sm:p-3 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed flex items-center gap-2">
           <span className="font-bold text-neutral-900 dark:text-white shrink-0">🧠 勝つための思考法:</span>
           <span>
             相手が「技を振って牽制（置き）してくる」なら外から差し返す。相手が「差し返しを狙ってじっと待っている」なら前に歩いて差し込む。立ち回りは反射神経ではなく、「相手が今どれを選んでいるか」のジャンケンです。

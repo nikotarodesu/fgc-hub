@@ -470,12 +470,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-base sm:text-[16.5px] tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-[16.5px] tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-[15px] sm:text-base text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
+                <h4 className="font-bold text-sm sm:text-base text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -497,12 +497,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⚡️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-base tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-xs sm:text-base tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-500/20 dark:bg-orange-400/20 text-orange-600 dark:text-orange-400 text-xs font-bold shrink-0 select-none">
                   <Zap className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-[15px] text-orange-950 dark:text-orange-100 tracking-tight">
+                <h4 className="font-bold text-xs sm:text-[15px] text-orange-950 dark:text-orange-100 tracking-tight">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -524,7 +524,7 @@ export default function RichContent({
 
             return (
               <div key={lIdx} className="flex items-center gap-2 flex-wrap my-1">
-                <span className="inline-flex items-center bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-sm sm:text-[15px] px-3 py-1 rounded-md shadow-sm border border-neutral-800 dark:border-neutral-200">
+                <span className="inline-flex items-center bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-xs sm:text-[15px] px-2 py-0.5 sm:px-3 sm:py-1 rounded-md shadow-sm border border-neutral-800 dark:border-neutral-200">
                   【{badgeContent}】
                 </span>
                 {extraText && (

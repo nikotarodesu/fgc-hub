@@ -44,7 +44,7 @@ const NODES: Record<NodeId, TriangleNode> = {
       '相手が技の間合いの外にいた場合、空振りの大きな隙を晒してしまう',
       '差し返しの的になりやすい',
     ],
-    sf6Examples: ['リュウの下中P', 'リュウの立ち強P（大P）', '中足刀'],
+    sf6Examples: ['リュウの下中P', 'リュウの大P', '中足刀'],
   },
   sashikomi: {
     id: 'sashikomi',
@@ -88,7 +88,7 @@ const NODES: Record<NodeId, TriangleNode> = {
     weaknesses: [
       '画面を凝視して待つ必要があるため、相手の突然の前歩きやラッシュに対応が遅れやすい',
     ],
-    sf6Examples: ['立ち強P（大P）パニカン狙い', '中足刀での空振り狩り', '下大K（大足）'],
+    sf6Examples: ['大Pパニカン狙い', '下大K（大足）での空振り狩り', 'しゃがみ中P'],
   },
 };
 

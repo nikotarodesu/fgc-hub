@@ -145,7 +145,7 @@ export function DistanceMeterDiagram() {
           <div className="p-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-neutral-700 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60">
             <div>遠距離</div>
             <div className="text-[11px] font-normal text-neutral-500 dark:text-neutral-400 mt-1">
-              電刃錬気 / 弾撃ち
+              強波動 / 弾撃ち
             </div>
             <div className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5">
               飛びや奇襲が届きにくく安全を確認する距離

@@ -67,7 +67,9 @@ export default function ArcadeButton({
     iconText === 'SA' ||
     iconText === 'A+SP' ||
     iconText === 'PP' ||
+    iconText === 'PPP' ||
     iconText === 'KK' ||
+    iconText === 'KKK' ||
     iconText === 'DI' ||
     iconText === 'DP' ||
     iconText === 'PARRY' ||

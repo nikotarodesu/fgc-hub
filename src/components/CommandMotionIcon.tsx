@@ -272,6 +272,56 @@ export default function CommandMotionIcon({
     );
   }
 
+  // 5.5 レバー一回転 / 360°コマンド（スクリュー、ボルシチなど）
+  if (
+    cleanCmd === '一回転' ||
+    cleanCmd === '360' ||
+    cleanCmd === 'レバー一回転' ||
+    cleanCmd === '360°' ||
+    cleanCmd === '回転'
+  ) {
+    return (
+      <span
+        className={`inline-flex items-center justify-center shrink-0 select-none ${className}`}
+        title="レバー一回転コマンド（レバーを360度一周素早く入力）"
+      >
+        <svg
+          viewBox="0 0 32 30"
+          className="w-7 h-[26px] drop-shadow-xs"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* 中央のレバーボール（赤） */}
+          <circle cx="16" cy="15" r="5.5" fill="url(#leverRedGrad360)" stroke="#991b1b" strokeWidth="1" />
+          <circle cx="14" cy="13" r="2" fill="white" fillOpacity="0.55" />
+
+          {/* 360° 円形回転カーブ矢印（時計回りにほぼ一周） */}
+          <path
+            d="M 12 6 A 10.5 10.5 0 1 1 15 4.5"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            className="text-neutral-900 dark:text-neutral-100"
+          />
+          {/* 矢印の先端（右向き） */}
+          <polygon
+            points="14,1 20,4.5 15,8"
+            fill="currentColor"
+            className="text-neutral-900 dark:text-neutral-100"
+          />
+
+          <defs>
+            <radialGradient id="leverRedGrad360" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stopColor="#f87171" />
+              <stop offset="45%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#b91c1c" />
+            </radialGradient>
+          </defs>
+        </svg>
+      </span>
+    );
+  }
+
   // 6. 単独方向キー（↓、→、←、↑、↘、↙、↗、↖）およびその他表記
   // 通常技（前大Kなど）はシンプルに「→ + K」の通り、直感的な文字矢印バッジで表示
   return (

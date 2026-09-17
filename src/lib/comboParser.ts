@@ -42,9 +42,9 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // 文脈修飾語（の安定度、の安定化、の成功率、など、等）の除去
   cleanRecipe = cleanRecipe.replace(/(?:の安定度|の安定化|の成功率|など|等)$/, '').trim();
 
-  // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), (4247ダメージ), [4247]）を除去
+  // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), （ダメージ3480）, (4247ダメージ), [4247]）を除去
   cleanRecipe = cleanRecipe
-    .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
+    .replace(/[（\(\[]\s*(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
     .trim();
 
   // 2. 末尾の〆や締めを除去
@@ -52,7 +52,7 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
 
   // 3. 〆の前にダメージがあった場合、または再度末尾にダメージがある場合の除去
   cleanRecipe = cleanRecipe
-    .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
+    .replace(/[（\(\[]\s*(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
     .trim();
 
   // 4. レシピ末尾のフレーム差（例: +26, +37F, +9等）を除去
@@ -103,7 +103,7 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
 
   // 1. 各パーツ内のダメージ数値・フレーム差を除去
   remaining = remaining
-    .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]/g, '')
+    .replace(/[（\(\[]\s*(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]/g, '')
     .trim();
   remaining = remaining.replace(/\+\d+(?:F|f)?\s*$/, '').trim();
 
@@ -115,7 +115,10 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   const suffixMatch = remaining.match(/[（\(](.*?)[）\)]$/);
   if (suffixMatch) {
     const inner = suffixMatch[1].trim();
-    if (!/^\d+$/.test(inner) && !/^\d+\s*(?:ダメージ|dmg|DMG)$/i.test(inner)) {
+    if (
+      !/^\d+$/.test(inner) &&
+      !/^(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?$/i.test(inner)
+    ) {
       suffix = `（${inner}）`;
     }
     remaining = remaining.replace(/[（\(](.*?)[）\)]$/, '').trim();
@@ -246,6 +249,66 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     return [kamaeStep];
   }
 
+  // ザンギエフ空中必殺技：ボルシチダイナマイト（ODボルシチダイナマイト等）
+  // ユーザー指示：「ODボルシチダイナマイトはジャンプしてレバー一回転KKなのでこれはうまい具合に作成して」
+  // ➔ 前ジャンプ（↗）と空中で一回転＋KKの2ステップに展開
+  if (lower.includes('ボルシチ') || lower.includes('borscht')) {
+    const isOD = lower.includes('od');
+    const isModern = controlType === 'modern';
+
+    const jumpStep: VisualStep = {
+      original: '前ジャンプ',
+      isCancel: false,
+      isRush: false,
+      prefix,
+      arrows: ['↗'],
+      arrowStr: '↗',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: '前ジャンプ',
+        description: '前ジャンプ（相手の浮きに合わせて空中に跳ぶ）',
+        iconText: '前ジャンプ',
+        showLabel: false,
+      },
+      tip: '相手の浮きに合わせて前ジャンプ（または垂直ジャンプ）',
+    };
+
+    const borschStep: VisualStep = {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix: '空中で',
+      arrows: ['一回転'],
+      arrowStr: '一回転',
+      button: {
+        kind: 'kick',
+        color: isOD ? 'purple' : 'red',
+        label: isOD ? 'ODボルシチ' : 'ボルシチ',
+        description: isOD
+          ? isModern
+            ? '空中で一回転＋A+SP（または手動一回転KK）'
+            : '空中でレバー一回転＋KK（キック2ボタン同時押し）'
+          : isModern
+          ? '空中で一回転＋SP'
+          : '空中でレバー一回転＋K（キックボタン）',
+        iconText: isOD ? (isModern ? 'A+SP' : 'KK') : (isModern ? 'SP' : 'K'),
+        showLabel: false,
+      },
+      suffix,
+      tip: isOD
+        ? isModern
+          ? '空中でレバーを一回転回してアシスト+SP（または手動一回転KK）'
+          : '空中でレバーを一回転（360°）素早く回してKK同時押し（OD空中コマ投げ）'
+        : isModern
+        ? '空中でレバーを一回転回してSP（空中コマ投げ）'
+        : '空中でレバーを一回転（360°）素早く回してキック（空中コマ投げ）',
+    };
+
+    return [jumpStep, borschStep];
+  }
+
   // 大PTC / 二連撃 / 大TC / 大>大 判定（リュウの大PTCは大P>大Kなので2ステップに展開）
   const isTargetCombo =
     lower.includes('大ptc') ||
@@ -350,7 +413,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
 
   // 1. 各パーツ内のダメージ数値を除去（例: SA3〆（4247）など各パーツ内に残っている場合）
   remaining = remaining
-    .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]/g, '')
+    .replace(/[（\(\[]\s*(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]/g, '')
     .trim();
 
   // 2. 〆を除去
@@ -361,7 +424,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   const suffixMatch = remaining.match(/[（\(](.*?)[）\)]$/);
   if (suffixMatch) {
     const inner = suffixMatch[1].trim();
-    if (!/^\d+$/.test(inner) && !/^\d+\s*(?:ダメージ|dmg|DMG)$/i.test(inner)) {
+    if (
+      !/^\d+$/.test(inner) &&
+      !/^(?:ダメージ|dmg|DMG|d)?\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?$/i.test(inner)
+    ) {
       suffix = `（${inner}）`;
     }
     remaining = remaining.replace(/[（\(](.*?)[）\)]$/, '').trim();
@@ -968,6 +1034,157 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       },
       suffix,
       tip: 'アシストボタンを押しながら強攻撃（大ゴス）',
+    };
+  }
+
+  // 2.85 ザンギエフ必殺技：ダブルラリアット / ODラリアット
+  // ユーザー指示：
+  // ・ダブルラリアット ➔ PP（色は黄色のままでいい）
+  // ・ODラリアット ➔ PPP（色は紫）
+  if (
+    lower.includes('ラリアット') ||
+    lower.includes('ダブラリ') ||
+    lower.includes('ダブルラリアット') ||
+    lower === 'odラリ' ||
+    lower.includes('odラリ')
+  ) {
+    const isOD = lower.includes('od');
+    const isModern = controlType === 'modern';
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind: 'punch',
+          color: 'purple',
+          label: 'ODラリアット',
+          description: isModern ? 'ODラリアット（A+SP または PPP）' : 'ODダブルラリアット（PPPボタン / パンチ3つ同時）',
+          iconText: isModern ? 'A+SP' : 'PPP',
+          showLabel: false,
+        },
+        suffix,
+        tip: isModern
+          ? 'アシスト＋SPボタン（またはPPPボタン）でODダブルラリアット'
+          : 'パンチ3ボタン同時押し（またはPPPボタン）でODダブルラリアット',
+      };
+    }
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: 'ダブルラリアット',
+        description: isModern ? 'SPボタン（ダブルラリアット）' : 'パンチ2つ同時押し（PP / ダブルラリアット）',
+        iconText: isModern ? 'SP' : 'PP',
+        showLabel: false,
+      },
+      suffix,
+      tip: isModern
+        ? 'SPボタン単体でダブルラリアット'
+        : 'パンチ2ボタン同時押し（PP）でダブルラリアット',
+    };
+  }
+
+  // 2.86 ザンギエフ必殺技：スクリューパイルドライバー (一回転 + P)
+  if (lower.includes('スクリュー') || lower.includes('パイルドライバー')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const isModern = controlType === 'modern';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['一回転'],
+      arrowStr: '一回転',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODスクリュー' : `${strength}スクリュー`,
+        description: isOD ? 'ODスクリューパイルドライバー' : `${strength}スクリューパイルドライバー`,
+        iconText: isOD ? (isModern ? 'A+SP' : 'PP') : (isModern ? 'SP' : 'P'),
+        showLabel: false,
+      },
+      suffix,
+      tip: isOD
+        ? 'レバーを一回転（360°）回してパンチ2つ同時押し（ODコマ投げ）'
+        : `レバーを一回転（360°）回して${strength}パンチ（コマ投げ）`,
+    };
+  }
+
+  // 2.87 ザンギエフ特殊技：ヘルスタブ (3中P / ↘ + 中P)
+  // ユーザー指示：「アコーディオン内の表記は 前大K→3中P（レバー表記にして）→PP（色は黄色のままでいい）」
+  if (lower.includes('ヘルスタブ') || lower.includes('ヘルスタ') || lower === '3中p' || lower === '3中') {
+    const isModern = controlType === 'modern';
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↘'],
+      arrowStr: '↘',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: isModern ? '3中' : '3中P',
+        description: isModern ? '斜め前下＋中攻撃（ヘルスタブ）' : '斜め前下＋中P（ヘルスタブ: 3中P）',
+        iconText: isModern ? '中' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: isModern ? 'テンキー3+中（斜め前下＋中攻撃: ヘルスタブ）' : 'テンキー3+中P（斜め前下＋中パンチ: 3中P / ヘルスタブ）',
+    };
+  }
+
+  // 2.88 テンキー3 / ↘ 方向の特殊技（3中P、3大Kなど）
+  if (lower.startsWith('3') || lower.startsWith('↘')) {
+    const isModern = controlType === 'modern';
+    const isKick = lower.includes('k') || lower.includes('キック');
+    const isHeavy = lower.includes('大') || lower.includes('強');
+    const isLight = lower.includes('弱');
+    const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const kind: ButtonKind = isKick ? 'kick' : 'punch';
+    const strengthChar = isHeavy ? '大' : isLight ? '弱' : '中';
+    const btnChar = isKick ? 'K' : 'P';
+    const label = isModern ? strengthChar : btnChar;
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↘'],
+      arrowStr: '↘',
+      button: {
+        kind,
+        color,
+        label: isModern ? `3${strengthChar}` : `3${strengthChar}${btnChar}`,
+        description: isModern ? `斜め前下＋${strengthChar}攻撃` : `斜め前下＋${strengthChar}${btnChar}`,
+        iconText: label,
+        showLabel: false,
+      },
+      suffix,
+      tip: `斜め前下（↘）＋${isModern ? strengthChar + '攻撃' : strengthChar + btnChar}`,
     };
   }
 

@@ -148,7 +148,9 @@ export default function PaywallCard({
       <div className="my-6 p-4 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-neutral-900 dark:text-neutral-100 flex items-center gap-2 text-xs font-semibold shadow-xs">
         <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
         <span>
-          【購入認証完了】有料限定の全コンテンツ（クラシック・モダン両対応）を表示中
+          {subscriptionOnly
+            ? '【会員認証完了】プレミアム会員限定コンテンツを表示中'
+            : '【購入認証完了】有料限定の全コンテンツを表示中'}
           {userEmail ? `（購入者: ${userEmail}）` : ''}
         </span>
       </div>

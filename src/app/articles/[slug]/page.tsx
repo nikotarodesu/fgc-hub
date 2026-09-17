@@ -662,8 +662,89 @@ export default function ArticleDetailPage() {
                 </div>
               )}
 
-              {/* 4. 「攻略を読む」「逆引きを使う」の導線ボタン（完全攻略記事限定） */}
-              {isCompleteGuide && (
+              {/* 4. 完全攻略記事限定：購入済みクイックナビゲーション（冒頭表示） */}
+              {isCompleteGuide && isUnlocked && (
+                <div className="my-3 sm:my-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-50 dark:from-neutral-900 dark:via-emerald-950/20 dark:to-neutral-900 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-3 border-b border-emerald-200/60 dark:border-emerald-800/40">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span className="text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200">
+                        購入認証完了：有料限定の全コンテンツを閲覧中
+                      </span>
+                    </div>
+                    {userEmail && (
+                      <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+                        購入者: {userEmail}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
+                    {/* 1. 逆引きを使う */}
+                    <button
+                      type="button"
+                      onClick={() => handleJumpToSection('combo-reverse-lookup')}
+                      className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 dark:hover:border-cyan-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
+                        <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                        <span>逆引きを使う</span>
+                      </div>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                        実戦コンボ逆引きDBへ即移動
+                      </p>
+                    </button>
+
+                    {/* 2. 保存した攻略を見る */}
+                    <button
+                      type="button"
+                      onClick={() => handleJumpToSection(bookmarks.length > 0 ? bookmarks[0] : 'sec-free-0')}
+                      className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-amber-500 dark:hover:border-amber-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 mb-1">
+                        <Star className="w-4 h-4 text-amber-500 fill-current" />
+                        <span>保存した攻略を見る</span>
+                        {bookmarks.length > 0 && (
+                          <span className="text-[10px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-1.5 py-0.2 rounded-full font-bold">
+                            {bookmarks.length}件
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                        {bookmarks.length > 0
+                          ? 'お気に入り章へジャンプ'
+                          : '各章の★でお気に入り登録可能'}
+                      </p>
+                    </button>
+
+                    {/* 3. 前回の続きから読む */}
+                    {lastReadSectionId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleJumpToSection(lastReadSectionId);
+                          showToast('前回の続きの位置へ移動しました');
+                        }}
+                        className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 mb-1">
+                          <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span>前回の続きから読む</span>
+                        </div>
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                          直前の閲覧位置へ復帰
+                        </p>
+                      </button>
+                    )}
+                  </div>
+                  <div className="mt-2.5 text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500 text-right">
+                    ※お気に入り・閲覧履歴はお使いのブラウザ（端末）内に保存されます
+                  </div>
+                </div>
+              )}
+
+              {/* 5. 完全攻略記事限定：未購入時の「攻略を読む」「逆引きを使う」導線ボタン */}
+              {isCompleteGuide && !isUnlocked && (
                 <div className="my-3 sm:my-4 grid grid-cols-2 gap-2 sm:gap-3">
                   <button
                     type="button"
@@ -676,22 +757,16 @@ export default function ArticleDetailPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      if (isUnlocked) {
-                        handleJumpToSection('combo-reverse-lookup');
-                      } else {
-                        handleJumpToSection('paywall-card-box');
-                        showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
-                      }
+                      handleJumpToSection('paywall-card-box');
+                      showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
                     }}
                     className="py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
                   >
                     <Sparkles className="w-4 h-4 shrink-0" />
                     <span>逆引きを使う</span>
-                    {!isUnlocked && (
-                      <span className="text-[10px] bg-cyan-900/80 px-1.5 py-0.5 rounded text-cyan-200 font-normal">
-                        要購入
-                      </span>
-                    )}
+                    <span className="text-[10px] bg-cyan-900/80 px-1.5 py-0.5 rounded text-cyan-200 font-normal">
+                      要購入
+                    </span>
                   </button>
                 </div>
               )}
@@ -943,88 +1018,9 @@ export default function ArticleDetailPage() {
                     />
                   </div>
 
-                  {/* アンロック時の有料限定コンテンツ ＆ 購入済みユーザー向けクイック導線 */}
+                  {/* アンロック時の有料限定コンテンツ */}
                   {isUnlocked && (
                     <div className="pt-2 sm:pt-4 space-y-6">
-                      {/* 購入済みユーザー向け 3大クイックナビゲーション */}
-                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-50 dark:from-neutral-900 dark:via-emerald-950/20 dark:to-neutral-900 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-3 border-b border-emerald-200/60 dark:border-emerald-800/40">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                            <span className="text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200">
-                              購入認証完了：有料限定の全コンテンツを閲覧中
-                            </span>
-                          </div>
-                          {userEmail && (
-                            <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 font-mono">
-                              購入者: {userEmail}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
-                          {/* 1. 逆引きを使う */}
-                          <button
-                            type="button"
-                            onClick={() => handleJumpToSection('combo-reverse-lookup')}
-                            className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 dark:hover:border-cyan-400 hover:shadow-xs text-left transition-all cursor-pointer group"
-                          >
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
-                              <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                              <span>逆引きを使う</span>
-                            </div>
-                            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
-                              実戦コンボ逆引きDBへ即移動
-                            </p>
-                          </button>
-
-                          {/* 2. 保存した攻略を見る */}
-                          <button
-                            type="button"
-                            onClick={() => handleJumpToSection(bookmarks.length > 0 ? bookmarks[0] : 'sec-free-0')}
-                            className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-amber-500 dark:hover:border-amber-400 hover:shadow-xs text-left transition-all cursor-pointer group"
-                          >
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 mb-1">
-                              <Star className="w-4 h-4 text-amber-500 fill-current" />
-                              <span>保存した攻略を見る</span>
-                              {bookmarks.length > 0 && (
-                                <span className="text-[10px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-1.5 py-0.2 rounded-full font-bold">
-                                  {bookmarks.length}件
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
-                              {bookmarks.length > 0
-                                ? 'お気に入り章へジャンプ'
-                                : '各章の★でお気に入り登録可能'}
-                            </p>
-                          </button>
-
-                          {/* 3. 前回の続きから読む */}
-                          {lastReadSectionId && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleJumpToSection(lastReadSectionId);
-                                showToast('前回の続きの位置へ移動しました');
-                              }}
-                              className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xs text-left transition-all cursor-pointer group"
-                            >
-                              <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 mb-1">
-                                <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                                <span>前回の続きから読む</span>
-                              </div>
-                              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
-                                直前の閲覧位置へ復帰
-                              </p>
-                            </button>
-                          )}
-                        </div>
-                        <div className="mt-2.5 text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500 text-right">
-                          ※お気に入り・閲覧履歴はお使いのブラウザ（端末）内に保存されます
-                        </div>
-                      </div>
-
                       {/* 有料限定イントロ（動画前メッセージ） */}
                       {article.paidContent.intro && (
                         <div className="p-4 sm:p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-800 dark:text-neutral-200 shadow-2xs">

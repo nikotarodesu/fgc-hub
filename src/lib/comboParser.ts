@@ -1198,6 +1198,55 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
+  // 2.98 ベガ必殺技：ダブルニープレス / ニー (↓↘→ + K)
+  if (
+    lower.includes('ダブルニー') ||
+    lower.includes('ダブニー') ||
+    lower.includes('ニープレス') ||
+    lower.endsWith('ニー') ||
+    lower === 'ニー'
+  ) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    const isModern = controlType === 'modern';
+    const label = isOD
+      ? 'ODニー'
+      : isModern
+      ? (isLight ? '弱' : isHeavy ? '大' : '中')
+      : `${strength}K`;
+    const iconText = isOD
+      ? (isModern ? 'A+SP' : 'KK')
+      : isModern
+      ? (isLight ? '弱' : isHeavy ? '大' : '中')
+      : 'K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'kick',
+        color,
+        label,
+        description: isOD ? 'ODダブルニープレス' : `${strength}ダブルニープレス`,
+        iconText,
+        showLabel: false,
+      },
+      suffix,
+      tip: isModern
+        ? `テンキー236+${isOD ? 'A+SP' : strength}（下・斜め前・前＋攻撃）`
+        : `テンキー236+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め前・前＋キック）`,
+    };
+  }
+
   // 3. 必殺技：上段足刀破り
   if (lower.includes('足刀')) {
     const isOD = lower.includes('od');

@@ -650,11 +650,18 @@ export default function HomePage() {
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto space-y-4">
-            {/* 🔥 ピックアップ・完全攻略記事枠（リュウ完全攻略を最上部に固定表示） */}
-            {(!selectedCharacter || selectedCharacter === 'リュウ') &&
-              (selectedCategory === 'all' || selectedCategory === 'character') &&
-              !searchQuery && (
+        {/* ピックアップ記事の表示判定: 全記事一覧表示時のみ表示し、攻略記事等のボタン選択時は非表示 */}
+        {(() => {
+          const isPickupVisible =
+            selectedCategory === 'all' &&
+            (!selectedCharacter || selectedCharacter === 'リュウ') &&
+            !searchQuery &&
+            !selectedTag;
+
+          return (
+            <div className="max-w-4xl mx-auto space-y-4">
+              {/* 🔥 ピックアップ・完全攻略記事枠（全記事一覧表示時のみ最上部に固定表示） */}
+              {isPickupVisible && (
                 <div className="mb-2 sm:mb-4">
                   <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-xs tracking-wide shadow-xs">
@@ -667,9 +674,9 @@ export default function HomePage() {
                     href="/articles/ryu-complete-guide"
                     className="group relative block rounded-2xl overflow-hidden border-2 border-cyan-500/80 dark:border-cyan-500/60 bg-gradient-to-br from-white via-cyan-50/20 to-white dark:from-neutral-900 dark:via-neutral-900 dark:to-cyan-950/30 shadow-md hover:shadow-xl hover:border-cyan-500 transition-all"
                   >
-                    <div className="flex flex-col md:flex-row items-stretch">
-                      {/* サムネイル（PCでも16:9比率を崩さない） */}
-                      <div className="relative w-full md:w-72 lg:w-80 aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden">
+                    <div className="flex flex-col md:flex-row md:items-center">
+                      {/* サムネイル（PCでも16:9比率を崩さず見切れないよう配置） */}
+                      <div className="relative w-full md:w-80 lg:w-96 aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden self-center">
                         <img
                           src="/images/characters/ryu/sns.jpg"
                           alt="C・Mリュウの完全攻略"
@@ -739,66 +746,62 @@ export default function HomePage() {
                 </div>
               )}
 
-            {/* 記事一覧ヘッダー（ピックアップ時） */}
-            {(!selectedCharacter || selectedCharacter === 'リュウ') &&
-              (selectedCategory === 'all' || selectedCategory === 'character') &&
-              !searchQuery && (
+              {/* 記事一覧ヘッダー（ピックアップ時） */}
+              {isPickupVisible && (
                 <div className="pt-2 pb-1 text-xs font-bold text-neutral-500 dark:text-neutral-400">
                   <span>最新の記事一覧</span>
                 </div>
               )}
 
-            {/* 記事一覧 */}
-            {filteredArticles.length === 0 ? (
-              <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
-                <p className="font-bold text-neutral-800 dark:text-neutral-200">
-                  {selectedCategory === 'system'
-                    ? '共通技術の記事は現在準備中です'
-                    : selectedCategory === 'coaching'
-                    ? 'コーチング記事は現在準備中です'
-                    : '該当する記事が見つかりませんでした'}
-                </p>
-                <p className="text-xs text-neutral-400">
-                  {selectedCategory === 'system'
-                    ? 'ファジーやヒット確認、ゲージ管理など全キャラに通じる共通技術・理論記事を順次公開予定です。お楽しみに！'
-                    : selectedCategory === 'coaching'
-                    ? '全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！'
-                    : '別の条件やキーワードでお試しください。'}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3 sm:space-y-4">
-                {(
-                  // ピックアップ枠が表示されている時は、通常リスト側のリュウ完全攻略を除外して重複を防ぐ
-                  (!selectedCharacter || selectedCharacter === 'リュウ') &&
-                  (selectedCategory === 'all' || selectedCategory === 'character') &&
-                  !searchQuery
-                    ? filteredArticles.filter((a) => a.slug !== 'ryu-complete-guide')
-                    : filteredArticles
-                ).map((article) => {
-                  const eyecatch = getArticleEyecatch(article);
-                  const isCompleteGuide =
-                    article.category === 'character' ||
-                    article.tags.includes('完全攻略') ||
-                    article.tags.includes('キャラ別攻略') ||
-                    article.slug.includes('complete');
-                  return (
-                    <Link
-                      key={article.id}
-                      href={`/articles/${article.slug}`}
-                      className="group flex flex-row items-center sm:items-stretch bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-0 gap-3 sm:gap-0"
-                    >
-                      {/* サムネイル画像（スマホでは正方形、PCでは16:9比率を厳密に保持） */}
-                      <div className="relative w-20 h-20 sm:w-52 md:w-60 aspect-square sm:aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden rounded-lg sm:rounded-none">
-                        <img
-                          src={eyecatch}
-                          alt={article.title}
-                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
+              {/* 記事一覧 */}
+              {filteredArticles.length === 0 ? (
+                <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-2 shadow-xs">
+                  <p className="font-bold text-neutral-800 dark:text-neutral-200">
+                    {selectedCategory === 'system'
+                      ? '共通技術の記事は現在準備中です'
+                      : selectedCategory === 'coaching'
+                      ? 'コーチング記事は現在準備中です'
+                      : '該当する記事が見つかりませんでした'}
+                  </p>
+                  <p className="text-xs text-neutral-400">
+                    {selectedCategory === 'system'
+                      ? 'ファジーやヒット確認、ゲージ管理など全キャラに通じる共通技術・理論記事を順次公開予定です。お楽しみに！'
+                      : selectedCategory === 'coaching'
+                      ? '全キャラ1800MR達成に向けた実戦添削や指導アーカイブを順次公開予定です。お楽しみに！'
+                      : '別の条件やキーワードでお試しください。'}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {(
+                    // ピックアップ枠が表示されている時は、通常リスト側のリュウ完全攻略を除外して重複を防ぐ
+                    isPickupVisible
+                      ? filteredArticles.filter((a) => a.slug !== 'ryu-complete-guide')
+                      : filteredArticles
+                  ).map((article) => {
+                    const eyecatch = getArticleEyecatch(article);
+                    const isCompleteGuide =
+                      article.category === 'character' ||
+                      article.tags.includes('完全攻略') ||
+                      article.tags.includes('キャラ別攻略') ||
+                      article.slug.includes('complete');
+                    return (
+                      <Link
+                        key={article.id}
+                        href={`/articles/${article.slug}`}
+                        className="group flex flex-row items-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-3.5 gap-3 sm:gap-4"
+                      >
+                        {/* サムネイル画像（スマホでもPCでも16:9比率を崩さず見切れを防止） */}
+                        <div className="relative w-20 h-20 sm:w-52 md:w-60 aspect-square sm:aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden rounded-lg self-center">
+                          <img
+                            src={eyecatch}
+                            alt={article.title}
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
 
-                      {/* コンテンツ */}
-                      <div className="p-0 sm:p-4 md:p-5 flex flex-col justify-between flex-1 min-w-0">
+                        {/* コンテンツ */}
+                        <div className="p-0 flex flex-col justify-between flex-1 min-w-0">
                         <div>
                           <div className="flex items-center justify-between gap-1.5 mb-1 sm:mb-2">
                             <div className="flex items-center gap-1.5 flex-wrap">
@@ -891,7 +894,9 @@ export default function HomePage() {
                 })}
               </div>
             )}
-        </div>
+          </div>
+        );
+      })()}
       </main>
 
       {/* 逆引きリーサルツール 体験プレビューモーダル */}

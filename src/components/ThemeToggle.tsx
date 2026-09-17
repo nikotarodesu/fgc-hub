@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('fgc_theme') as 'light' | 'dark' | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initial = saved || (prefersDark ? 'dark' : 'light');
+    const initial = saved === 'light' ? 'light' : 'dark';
     setTheme(initial);
     if (initial === 'dark') {
       document.documentElement.classList.add('dark');
@@ -39,7 +38,7 @@ export default function ThemeToggle() {
         className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 transition-colors"
         aria-label="Toggle theme"
       >
-        <Moon className="w-4 h-4 opacity-50" />
+        <Sun className="w-4 h-4 opacity-50 text-amber-400" />
       </button>
     );
   }

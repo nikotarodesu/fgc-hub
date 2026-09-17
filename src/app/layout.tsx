@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#00a3c4',
+  themeColor: '#09090b',
   width: 'device-width',
   initialScale: 1,
 };
@@ -22,8 +22,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="h-full">
-      <body className="min-h-full flex flex-col bg-[#f8fafc] text-neutral-900 selection:bg-neutral-900 selection:text-white antialiased w-full max-w-full overflow-x-hidden">
+    <html lang="ja" className="h-full dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('fgc_theme');
+                  if (saved === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-neutral-900 antialiased w-full max-w-full overflow-x-hidden">
         <Header />
         <div className="flex-1 w-full max-w-full min-w-0">
           {children}

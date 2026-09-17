@@ -609,15 +609,14 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
-              {/* アイキャッチビジュアル（文字の重複を排除してすっきり配置） */}
+              {/* アイキャッチビジュアル（16:9比率を保ち見切れを防止） */}
               <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative">
-                <div className="aspect-[21/9] sm:aspect-[24/9] w-full relative overflow-hidden">
+                <div className="aspect-[16/9] w-full relative overflow-hidden flex items-center justify-center bg-neutral-950">
                   <img
                     src={getArticleEyecatch(article)}
                     alt={`${article.character || 'ストリートファイター6'} 公式アイキャッチ`}
                     className="w-full h-full object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
             </header>

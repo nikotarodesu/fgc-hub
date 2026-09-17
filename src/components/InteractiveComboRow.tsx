@@ -169,9 +169,15 @@ export default function InteractiveComboRow({
                     </span>
                   )}
 
-                  {/* その他プレフィックス（壁バウンド等） */}
+                  {/* その他プレフィックス（溜め、壁バウンド等） */}
                   {step.prefix && (
-                    <span className="text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200 shrink-0">
+                    <span
+                      className={`text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded shrink-0 ${
+                        step.prefix === '溜め'
+                          ? 'bg-amber-400 text-neutral-950 font-black shadow-2xs'
+                          : 'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200'
+                      }`}
+                    >
                       {step.prefix}
                     </span>
                   )}

@@ -160,18 +160,27 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   } else if (remaining.includes('前歩き')) {
     prefix = '前歩き';
     remaining = remaining.replace(/前歩き/g, '').trim();
+  } else if (remaining.includes('溜め') || remaining.includes('ホールド') || remaining.includes('タメ')) {
+    prefix = '溜め';
+    remaining = remaining.replace(/溜め|ホールド|タメ/g, '').trim();
   }
 
+  remaining = remaining.replace(/起き攻め/g, '').trim();
   remaining = remaining.replace(/〆|締め?$/, '').trim();
   const lower = remaining.toLowerCase();
 
-  // 状態表記（スタン、壁スタン等）はプレイヤーの入力コマンドではないためアコーディオン展開からスキップ
+  // 状態表記や起き攻め択等はプレイヤーの単一入力コマンドではないためアコーディオン展開からスキップ
   if (
     lower === 'スタン' ||
     lower === '壁スタン' ||
     lower === '相手スタン' ||
     lower === 'スタン時' ||
-    lower === 'ガードクラッシュ'
+    lower === 'ガードクラッシュ' ||
+    lower.includes(' or ') ||
+    (lower.includes('or') && (lower.includes('投げ') || lower.includes('大') || lower.includes('択'))) ||
+    lower.includes('2択') ||
+    lower.includes('二択') ||
+    lower.includes('択')
   ) {
     return [];
   }
@@ -392,8 +401,12 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   } else if (remaining.includes('壁バウンド')) {
     prefix = '壁バウンド';
     remaining = remaining.replace(/壁バウンド/g, '').trim();
+  } else if (remaining.includes('溜め') || remaining.includes('ホールド') || remaining.includes('タメ')) {
+    prefix = '溜め';
+    remaining = remaining.replace(/溜め|ホールド|タメ/g, '').trim();
   }
 
+  remaining = remaining.replace(/起き攻め/g, '').trim();
   // 再度〆や余分な空白を除去
   remaining = remaining.replace(/〆|締め?$/, '').trim();
 
@@ -449,7 +462,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     const isDouble = lower.includes('×2') || lower.includes('x2') || lower.includes('2回');
     const label = isDouble ? '前ステ×2' : '前ステ';
     return {
-      original: remaining,
+      original: label,
       isCancel,
       isRush,
       rushText,
@@ -467,6 +480,49 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       tip: isDouble
         ? '前キーを2回素早く入力×2回（前ステップ2回: →→ →→）'
         : '前キーを2回素早く入力（前ステップ: →→）',
+    };
+  }
+
+  // 0.52 詐欺飛び
+  if (lower.includes('詐欺飛び') || lower.includes('詐欺とび')) {
+    return {
+      original: '詐欺飛び',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↗'],
+      arrowStr: '↗',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: '詐欺飛び',
+        description: '詐欺飛び（安全飛び）',
+        iconText: '詐欺飛び',
+      },
+      suffix,
+      tip: '起き攻めでジャンプ攻撃をしても対空で落とされない攻め',
+    };
+  }
+
+  // 0.53 前飛び / 前ジャンプ（フレーム消費）
+  if (lower.includes('前飛び') || lower.includes('前ジャンプ') || lower === 'ジャンプ') {
+    return {
+      original: '前ジャンプ',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↗'],
+      arrowStr: '↗',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: '前ジャンプ',
+        description: '前ジャンプ（フレーム消費）',
+        iconText: '前ジャンプ',
+      },
+      suffix,
     };
   }
 
@@ -1218,6 +1274,109 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       },
       suffix,
       tip: `テンキー214+${isOD ? 'KK（2ボタン同時）' : strength + 'K'}（下・斜め後ろ・後ろ）`,
+    };
+  }
+
+  // 4.5 マリーザ必殺技：ディマカイルス (↓↙← + P)
+  if (lower.includes('ディマカイルス') || lower.includes('ディマ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    const iconText = isOD
+      ? 'PP'
+      : controlType === 'modern'
+      ? (isHeavy ? '大' : strength)
+      : `${strength}P`;
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODディマ' : `${strength}ディマ`,
+        description: isOD ? 'ODディマカイルス' : `${strength}ディマカイルス`,
+        iconText,
+        showLabel: false,
+      },
+      suffix,
+      tip: isOD
+        ? 'テンキー214+PP（下・斜め後ろ・後ろ＋パンチ2つ同時）'
+        : `テンキー214+${strength}（下・斜め後ろ・後ろ＋${strength}攻撃）`,
+    };
+  }
+
+  // 4.6 マリーザ必殺技：ファランクス (→↓↘ + P)
+  if (lower.includes('ファランクス') || lower.includes('ファラ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '大' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→', '↓', '↘'],
+      arrowStr: '→↓↘',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODファランクス' : '強ファランクス',
+        description: isOD ? 'ODファランクス' : '強ファランクス',
+        iconText: isOD ? 'PP' : '大P',
+        showLabel: false,
+      },
+      suffix,
+      tip: isOD
+        ? 'テンキー623+PP（前・下・斜め前＋パンチ2つ同時）'
+        : 'テンキー623+大P（前・下・斜め前＋強パンチ）',
+    };
+  }
+
+  // 4.7 マリーザ必殺技：グラディウス (↓↘→ + P)
+  if (lower.includes('グラディウス')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    const iconText = isOD
+      ? 'PP'
+      : controlType === 'modern'
+      ? (isHeavy ? '大' : strength)
+      : `${strength}P`;
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODグラディウス' : `${strength}グラディウス`,
+        description: isOD ? 'ODグラディウス' : `${strength}グラディウス`,
+        iconText,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー236+${isOD ? 'PP' : strength + 'P'}（下・斜め前・前＋パンチ）`,
     };
   }
 

@@ -20,7 +20,6 @@ export const COACHING_JURI_1400MR: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2025-04',
-  patchVersion: '2025年4月コーチング時',
   readTime: '8分',
   isPaid: true,
   subscriptionOnly: true,

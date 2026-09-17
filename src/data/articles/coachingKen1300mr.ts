@@ -20,7 +20,6 @@ export const COACHING_KEN_1300MR: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2024-12',
-  patchVersion: '2024年12月コーチング時',
   readTime: '8分',
   isPaid: true,
   subscriptionOnly: true,

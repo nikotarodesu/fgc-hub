@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Check, Sparkles, Trophy, ExternalLink, ChevronRight, CheckCircle2, ShieldCheck, HelpCircle, Flame } from 'lucide-react';
 import Link from 'next/link';
-import { ARTICLES_DATA, CHARACTERS_SF6 } from '@/data/articles';
+import { ARTICLES_DATA } from '@/data/articles';
 import LethalToolPreviewModal from '@/components/LethalToolPreviewModal';
 
 export default function MembershipPage() {
@@ -34,33 +34,11 @@ export default function MembershipPage() {
   // 実データからの集計
   const stats = useMemo(() => {
     const totalArticles = ARTICLES_DATA.length;
-    const coachingCount = ARTICLES_DATA.filter(
-      (a) => a.category === 'coaching' || a.tags.includes('コーチング')
-    ).length;
-    const guideCount = ARTICLES_DATA.filter(
-      (a) => a.category === 'character' || a.tags.includes('完全攻略')
-    ).length;
-    const neutralCount = ARTICLES_DATA.filter(
-      (a) => a.category === 'neutral' || a.tags.includes('立ち回り')
-    ).length;
-
-    // キャラクター別記事数の集計
-    const charCounts: Record<string, number> = {};
-    ARTICLES_DATA.forEach((a) => {
-      if (a.character) {
-        charCounts[a.character] = (charCounts[a.character] || 0) + 1;
-      }
-    });
-
-    const activeChars = Object.keys(charCounts);
+    const paidArticlesCount = ARTICLES_DATA.filter((a) => a.isPaid).length;
 
     return {
       totalArticles,
-      coachingCount,
-      guideCount,
-      neutralCount,
-      activeCharsCount: activeChars.length,
-      charCounts,
+      paidArticlesCount,
     };
   }, []);
 
@@ -98,33 +76,26 @@ export default function MembershipPage() {
           </div>
         </section>
 
-        {/* 2. 現在公開中の対象記事・対応キャラ・利用可能ツール（実データ自動集計） */}
+        {/* 2. 現在公開中の対象コンテンツ */}
         <section className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-6 sm:p-8 shadow-xs space-y-6">
           <div className="border-b border-neutral-100 dark:border-neutral-800 pb-3">
-            <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400 block mb-1">実データに基づく提供状況</span>
             <h2 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white">
               現在公開中の対象コンテンツ
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-center">
               <span className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white block">
-                {stats.totalArticles}
+                {stats.totalArticles}件
               </span>
               <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">公開中の全記事数</span>
             </div>
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-center">
               <span className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white block">
-                {stats.activeCharsCount}
+                {stats.paidArticlesCount}件
               </span>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">対応キャラクター数</span>
-            </div>
-            <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-center">
-              <span className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white block">
-                {stats.coachingCount}
-              </span>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">実戦コーチング記録</span>
+              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">うち有料記事</span>
             </div>
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-center">
               <span className="text-2xl sm:text-3xl font-black text-cyan-600 dark:text-cyan-400 block">
@@ -132,31 +103,6 @@ export default function MembershipPage() {
               </span>
               <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">逆引きリーサルツール</span>
             </div>
-          </div>
-
-          {/* キャラクター別記事内訳 */}
-          <div>
-            <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 block mb-2.5">
-              公開中キャラクター別の記事内訳：
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(stats.charCounts)
-                .sort((a, b) => b[1] - a[1])
-                .map(([charName, count]) => (
-                  <span
-                    key={charName}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-medium border border-neutral-200/70 dark:border-neutral-700/70"
-                  >
-                    <span>{charName}</span>
-                    <span className="font-bold text-neutral-900 dark:text-white bg-white dark:bg-neutral-700 px-1.5 py-0.2 rounded text-[11px]">
-                      {count}件
-                    </span>
-                  </span>
-                ))}
-            </div>
-            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-2">
-              ※ 将来追加予定のキャラクターや記事はカウントに含めておりません。現在ご利用いただけるコンテンツのみを集計しています。
-            </p>
           </div>
         </section>
 

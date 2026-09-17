@@ -67,9 +67,18 @@ export default function ArticleDetailPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [likes, setLikes] = useState(article ? article.likesCount : 0);
   const [hasLiked, setHasLiked] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // 記事リアクションの復元
+  useEffect(() => {
+    if (!article) return;
+    try {
+      if (localStorage.getItem(`fgc_liked_${article.slug}`) === 'true') {
+        setHasLiked(true);
+      }
+    } catch {}
+  }, [article]);
 
   // お気に入り（ブックマーク）と現在セクションID
   const [bookmarks, setBookmarks] = useState<string[]>([]);
@@ -457,13 +466,18 @@ export default function ArticleDetailPage() {
     .slice(0, 3);
 
   const handleLike = () => {
-    if (!hasLiked) {
-      setLikes((prev) => prev + 1);
-      setHasLiked(true);
-    } else {
-      setLikes((prev) => prev - 1);
-      setHasLiked(false);
-    }
+    if (!article) return;
+    setHasLiked((prev) => {
+      const next = !prev;
+      try {
+        if (next) {
+          localStorage.setItem(`fgc_liked_${article.slug}`, 'true');
+        } else {
+          localStorage.removeItem(`fgc_liked_${article.slug}`);
+        }
+      } catch {}
+      return next;
+    });
   };
 
   const handleShare = () => {
@@ -604,7 +618,7 @@ export default function ArticleDetailPage() {
                       <span>実施年月: {article.coachingDate}</span>
                     </div>
                   )}
-                  {(article.patchVersion || article.patchDate) && (
+                  {!isCoaching && (article.patchVersion || article.patchDate) && (
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <span>対応パッチ: {article.patchVersion || `${article.patchDate} Update`}</span>
@@ -1264,29 +1278,54 @@ export default function ArticleDetailPage() {
               <RecommendedGear productIds={article.recommendedGearIds} />
             )}
 
-            {/* いいね・シェア */}
-            <div className="mt-12 pt-6 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
+            {/* 読後リアクション・シェア */}
+            <div className="mt-12 pt-6 border-t border-neutral-100 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-3">
+              {/* 参考になったボタン（架空数値を廃止し誠実なリアクションへ） */}
               <button
                 type="button"
                 onClick={handleLike}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   hasLiked
-                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
-                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                    ? 'bg-rose-500 text-white shadow-xs scale-[1.02]'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 border border-neutral-200/60 dark:border-neutral-700/60'
                 }`}
               >
-                <Heart className={`w-3.5 h-3.5 ${hasLiked ? 'fill-current text-white dark:text-neutral-900' : 'text-neutral-500'}`} />
-                <span>役に立った ({likes})</span>
+                <Heart className={`w-4 h-4 transition-transform ${hasLiked ? 'fill-current scale-110' : 'text-neutral-500'}`} />
+                <span>{hasLiked ? '参考になりました！' : '参考になった'}</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleShare}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                <span>{copied ? 'コピー完了！' : 'シェア'}</span>
-              </button>
+              {/* シェアアクション */}
+              <div className="flex items-center gap-2">
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${article.title} | にこ太郎の格ゲーLAB`)}&url=${encodeURIComponent(`https://nikotaro.com/articles/${article.slug}`)}&hashtags=${encodeURIComponent('スト6,格ゲーLAB')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  <span>𝕏 で共有</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60 transition-colors cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">コピー完了！</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span>URLをコピー</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </main>
 

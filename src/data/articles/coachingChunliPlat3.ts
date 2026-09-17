@@ -20,7 +20,6 @@ export const COACHING_CHUNLI_PLAT3: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2024-10',
-  patchVersion: '2024年10月コーチング時',
   readTime: '8分',
   isPaid: true,
   subscriptionOnly: true,

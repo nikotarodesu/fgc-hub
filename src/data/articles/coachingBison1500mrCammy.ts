@@ -20,7 +20,6 @@ export const COACHING_BISON_1500MR_CAMMY: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2025-01',
-  patchVersion: '2025年1月コーチング時',
   readTime: '8分',
   isPaid: true,
   subscriptionOnly: true,

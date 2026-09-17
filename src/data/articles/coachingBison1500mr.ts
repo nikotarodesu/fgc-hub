@@ -20,7 +20,6 @@ export const COACHING_BISON_1500MR: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2024-12',
-  patchVersion: '2024年12月コーチング時',
   readTime: '7分',
   isPaid: true,
   subscriptionOnly: true,

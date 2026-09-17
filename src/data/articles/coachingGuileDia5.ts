@@ -20,7 +20,6 @@ export const COACHING_GUILE_DIA5: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2024-11',
-  patchVersion: '2024年11月コーチング時',
   readTime: '7分',
   isPaid: true,
   subscriptionOnly: true,

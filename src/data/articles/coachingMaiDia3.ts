@@ -20,7 +20,6 @@ export const COACHING_MAI_DIA3: Article = {
   publishedAt: '2026-09-16',
   updatedAt: '2026-09-16',
   patchDate: '2025-02',
-  patchVersion: '2025年2月コーチング時',
   readTime: '9分',
   isPaid: true,
   subscriptionOnly: true,

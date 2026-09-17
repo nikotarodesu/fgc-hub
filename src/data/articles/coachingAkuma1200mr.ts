@@ -20,7 +20,6 @@ export const COACHING_AKUMA_1200MR: Article = {
   publishedAt: '2026-09-15',
   updatedAt: '2026-09-15',
   patchDate: '2024-10',
-  patchVersion: '2024年10月コーチング時',
   readTime: '7分',
   isPaid: true,
   subscriptionOnly: true,

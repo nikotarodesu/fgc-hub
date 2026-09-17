@@ -283,32 +283,56 @@ export default function CommandMotionIcon({
     return (
       <span
         className={`inline-flex items-center justify-center shrink-0 select-none ${className}`}
-        title="レバー一回転コマンド（レバーを360度一周素早く入力）"
+        title="レバー一回転コマンド（レバーで360°円を描くように入力）"
       >
         <svg
-          viewBox="0 0 32 30"
-          className="w-7 h-[26px] drop-shadow-xs"
+          viewBox="0 0 34 32"
+          className="w-8 h-[28px] drop-shadow-xs"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* 中央のレバーボール（赤） */}
-          <circle cx="16" cy="15" r="5.5" fill="url(#leverRedGrad360)" stroke="#991b1b" strokeWidth="1" />
-          <circle cx="14" cy="13" r="2" fill="white" fillOpacity="0.55" />
-
-          {/* 360° 円形回転カーブ矢印（時計回りにほぼ一周） */}
+          {/* レバーで描く時計回りの円軌道矢印（360度） */}
           <path
-            d="M 12 6 A 10.5 10.5 0 1 1 15 4.5"
+            d="M 19 5.5 A 11.5 11.5 0 1 1 13.5 5.8"
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="3.2"
             strokeLinecap="round"
             className="text-neutral-900 dark:text-neutral-100"
           />
-          {/* 矢印の先端（右向き） */}
+          {/* 矢印の先端（右向き・円を閉じる方向） */}
           <polygon
-            points="14,1 20,4.5 15,8"
+            points="12,2 18.5,5.5 13.5,9.5"
             fill="currentColor"
             className="text-neutral-900 dark:text-neutral-100"
           />
+
+          {/* レバーの土台（中心のベースワッシャー） */}
+          <ellipse cx="17" cy="17" rx="4.2" ry="2.6" fill="#334155" stroke="#1e293b" strokeWidth="0.8" />
+
+          {/* レバーのシャフト（金属のスティック棒） */}
+          <line
+            x1="17"
+            y1="17"
+            x2="23"
+            y2="10"
+            stroke="#94a3b8"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="17"
+            y1="17"
+            x2="23"
+            y2="10"
+            stroke="#ffffff"
+            strokeWidth="1"
+            strokeLinecap="round"
+            opacity="0.8"
+          />
+
+          {/* 円軌道上を回るレバーボール（赤い球） */}
+          <circle cx="23.5" cy="9.5" r="5" fill="url(#leverRedGrad360)" stroke="#991b1b" strokeWidth="1" />
+          <circle cx="21.5" cy="7.5" r="1.6" fill="white" fillOpacity="0.65" />
 
           <defs>
             <radialGradient id="leverRedGrad360" cx="35%" cy="35%" r="65%">

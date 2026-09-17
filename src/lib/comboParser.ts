@@ -1037,6 +1037,118 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
+  // 2.83 エド必殺技：サイコフリッカー（フリッカー / 紐）
+  // ユーザー指示：アコーディオン内の表記は OD紐 ➔ 236PP、強紐 ➔ 236大K
+  if (
+    lower.includes('フリッカー') ||
+    lower.includes('紐') ||
+    lower.includes('ひも')
+  ) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↘', '→'],
+        arrowStr: '↓↘→',
+        button: {
+          kind: 'punch',
+          color: 'purple',
+          label: 'OD紐',
+          description: 'ODサイコフリッカー（236+PP）',
+          iconText: 'PP',
+          showLabel: false,
+        },
+        suffix,
+        tip: 'テンキー236+PP（下・斜め前・前＋パンチ2ボタン同時押し）',
+      };
+    }
+
+    const btnText = isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'kick',
+        color,
+        label: `${strength}紐`,
+        description: `${strength}サイコフリッカー（236+${btnText}）`,
+        iconText: btnText,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー236+${btnText}（下・斜め前・前＋${btnText}）`,
+    };
+  }
+
+  // 2.84 エド必殺技：サイコブリッツ（ブリッツ）
+  // ユーザー指示：アコーディオン内の表記は 強ブリッツ ➔ 214大P、中ブリッツ ➔ 214中P
+  if (lower.includes('ブリッツ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+
+    if (isOD) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↙', '←'],
+        arrowStr: '↓↙←',
+        button: {
+          kind: 'punch',
+          color: 'purple',
+          label: 'ODブリッツ',
+          description: 'ODサイコブリッツ（214+PP）',
+          iconText: 'PP',
+          showLabel: false,
+        },
+        suffix,
+        tip: 'テンキー214+PP（下・斜め後ろ・後ろ＋パンチ2ボタン同時押し）',
+      };
+    }
+
+    const btnText = isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'punch',
+        color,
+        label: `${strength}ブリッツ`,
+        description: `${strength}サイコブリッツ（214+${btnText}）`,
+        iconText: btnText,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー214+${btnText}（下・斜め後ろ・後ろ＋${btnText}）`,
+    };
+  }
+
   // 2.85 ザンギエフ必殺技：ダブルラリアット / ODラリアット
   // ユーザー指示：
   // ・ダブルラリアット ➔ PP（色は黄色のままでいい）
@@ -2330,9 +2442,17 @@ function cleanupModernStep(step: VisualStep): VisualStep {
   // OD必殺技（PPやKKを含む、またはA+SP、または技名がODで始まるもの）は維持
   const isOD =
     step.button.iconText === 'PP' ||
+    step.button.iconText === 'PPP' ||
     step.button.iconText === 'KK' ||
+    step.button.iconText === 'KKK' ||
     step.button.iconText === 'A+SP' ||
     (step.button.label && step.button.label.startsWith('OD'));
+
+  // 必殺技手動コマンド（矢印がある技で、大K, 中P, 大Pなどの指定があるもの）はモダンでも維持
+  const isManualCommand = step.arrows && step.arrows.length > 0 && /^[弱中強大][PK]$/.test(step.button.iconText);
+  if (isManualCommand) {
+    return step;
+  }
 
   // 1. ラベルからP/Kを除去（OD必殺技のPP/KKは除く）
   if (!isOD) {

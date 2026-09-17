@@ -74,7 +74,8 @@ export default function ArcadeButton({
     iconText === 'DP' ||
     iconText === 'PARRY' ||
     iconText.includes('派生') ||
-    iconText.startsWith('SA');
+    iconText.startsWith('SA') ||
+    /^[弱中強大][PK]$/.test(iconText);
 
   // モダン操作の通常攻撃（弱・中・強）：PやKなど文字は入らず色のみ！
   const isModernNormalAttack =

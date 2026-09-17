@@ -435,8 +435,17 @@ export default function ArticleDetailPage() {
     );
   }
 
-  // 関連記事
-  const relatedArticles = ARTICLES_DATA.filter((a) => a.slug !== article.slug).slice(0, 2);
+  // 関連記事：同一キャラクター（リュウ等）や完全攻略記事を優先的に選出
+  const relatedArticles = ARTICLES_DATA
+    .filter((a) => a.slug !== article.slug)
+    .sort((a, b) => {
+      const aSameChar = a.character && a.character === article.character ? 2 : 0;
+      const bSameChar = b.character && b.character === article.character ? 2 : 0;
+      const aComplete = a.slug.includes('complete') ? 1 : 0;
+      const bComplete = b.slug.includes('complete') ? 1 : 0;
+      return (bSameChar + bComplete) - (aSameChar + aComplete);
+    })
+    .slice(0, 3);
 
   const handleLike = () => {
     if (!hasLiked) {
@@ -569,14 +578,20 @@ export default function ArticleDetailPage() {
               {/* 2. 対応パッチ・最終確認日（タイトル直下の1か所に集約） */}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>対応パッチ: {article.patchVersion || (article.patchDate ? `${article.patchDate} Update` : '未設定')}</span>
-                    <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-normal">（主要技・コンボ検証済み）</span>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-medium">
-                    <span>最終確認日: {article.updatedAt || '未設定'}</span>
-                  </div>
+                  {(article.patchVersion || article.patchDate) && (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span>対応パッチ: {article.patchVersion || `${article.patchDate} Update`}</span>
+                      {isCompleteGuide && (
+                        <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-normal">（主要技・コンボ検証済み）</span>
+                      )}
+                    </div>
+                  )}
+                  {article.updatedAt && (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-medium">
+                      <span>最終更新日: {article.updatedAt}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 冒頭の控えめな「購入済みの方はこちら」入口 */}
@@ -648,46 +663,37 @@ export default function ArticleDetailPage() {
                 </div>
               )}
 
-              {/* 4. 「攻略を読む」「逆引きを使う」の導線ボタン */}
-              <div className="my-3 sm:my-4 grid grid-cols-2 gap-2 sm:gap-3">
-                <button
-                  type="button"
-                  onClick={() => handleJumpToSection('sec-free-0')}
-                  className="py-3 px-3 sm:px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
-                >
-                  <BookOpen className="w-4 h-4 shrink-0" />
-                  <span>攻略を読む</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (isUnlocked) {
-                      handleJumpToSection('combo-reverse-lookup');
-                    } else {
-                      handleJumpToSection('paywall-card-box');
-                      showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
-                    }
-                  }}
-                  className="py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>逆引きを使う</span>
-                  {!isUnlocked && (
-                    <span className="text-[10px] bg-cyan-900/80 px-1.5 py-0.5 rounded text-cyan-200 font-normal">
-                      要購入
-                    </span>
-                  )}
-                </button>
-              </div>
-
-              {/* 無料記事：YouTube動画プレイヤー（記事冒頭に配置） */}
-              {!article.isPaid && article.youtubeVideoId && (
-                <div className="mb-6">
-                  <YouTubeEmbed
-                    videoId={article.youtubeVideoId}
-                    title={article.title}
-                    caption="実戦解説・対戦リプレイ動画（YouTube）"
-                  />
+              {/* 4. 「攻略を読む」「逆引きを使う」の導線ボタン（完全攻略記事限定） */}
+              {isCompleteGuide && (
+                <div className="my-3 sm:my-4 grid grid-cols-2 gap-2 sm:gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleJumpToSection('sec-free-0')}
+                    className="py-3 px-3 sm:px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                  >
+                    <BookOpen className="w-4 h-4 shrink-0" />
+                    <span>攻略を読む</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isUnlocked) {
+                        handleJumpToSection('combo-reverse-lookup');
+                      } else {
+                        handleJumpToSection('paywall-card-box');
+                        showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
+                      }
+                    }}
+                    className="py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                  >
+                    <Sparkles className="w-4 h-4 shrink-0" />
+                    <span>逆引きを使う</span>
+                    {!isUnlocked && (
+                      <span className="text-[10px] bg-cyan-900/80 px-1.5 py-0.5 rounded text-cyan-200 font-normal">
+                        要購入
+                      </span>
+                    )}
+                  </button>
                 </div>
               )}
 
@@ -697,6 +703,17 @@ export default function ArticleDetailPage() {
                   <RichContent content={introText} controlType={activeControlType} />
                 </div>
               ) : null}
+
+              {/* 無料記事：YouTube動画プレイヤー（リード文・要点の直下に配置） */}
+              {!article.isPaid && article.youtubeVideoId && (
+                <div className="my-5 sm:my-6">
+                  <YouTubeEmbed
+                    videoId={article.youtubeVideoId}
+                    title={article.title}
+                    caption="実戦解説・対戦リプレイ動画（YouTube）"
+                  />
+                </div>
+              )}
 
               {/* 目次 */}
               <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] my-4 sm:my-6">
@@ -1184,6 +1201,32 @@ export default function ArticleDetailPage() {
                 </>
               )}
             </article>
+
+            {/* リュウ立ち回り記事からの次のおすすめ：リュウ完全攻略 */}
+            {article.character === 'リュウ' && !isCompleteGuide && (
+              <div className="mt-8 mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-indigo-50/40 dark:from-indigo-950/30 dark:via-neutral-900 dark:to-neutral-900 border border-indigo-200/80 dark:border-indigo-800/60 shadow-xs">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200">
+                      次のステップにおすすめ
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white mt-1.5">
+                      リュウ完全攻略｜クラシック・モダン対応
+                    </h3>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
+                      立ち回りの基本方針を掴んだら、実戦厳選コンボ・主要フレーム別起き攻め・逆引きツールで勝率をさらに盤石に。
+                    </p>
+                  </div>
+                  <Link
+                    href="/articles/ryu-complete-guide"
+                    className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm transition-all shadow-xs shrink-0 inline-flex items-center gap-1.5"
+                  >
+                    <span>完全攻略を読む</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            )}
 
             {/* 筆者の愛用アイテム＆アソシエイト（無料記事のみ表示） */}
             {!article.isPaid && (

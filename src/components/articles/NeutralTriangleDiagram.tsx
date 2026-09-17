@@ -44,7 +44,7 @@ const NODES: Record<NodeId, TriangleNode> = {
       '相手が技の間合いの外にいた場合、空振りの大きな隙を晒してしまう',
       '差し返しの的になりやすい',
     ],
-    sf6Examples: ['ルークの下中Ｐ', 'ジェイミーの中Ｋ', 'リリーの引大Ｐ'],
+    sf6Examples: ['リュウの下中P', 'リュウの立ち強P（大P）', '中足刀'],
   },
   sashikomi: {
     id: 'sashikomi',
@@ -66,7 +66,7 @@ const NODES: Record<NodeId, TriangleNode> = {
     weaknesses: [
       '相手が事前に攻撃を置いていた場合、前進モーションにカウンターで被弾する',
     ],
-    sf6Examples: ['中足ラッシュ', '突進技（覇山蹴・アクセルスピンナックル等）', 'ラッシュ弱P'],
+    sf6Examples: ['前歩き下中K（中足）', 'キャンセルラッシュ', 'ラッシュ前強P（大ゴス）'],
   },
   sashikaeshi: {
     id: 'sashikaeshi',
@@ -88,7 +88,7 @@ const NODES: Record<NodeId, TriangleNode> = {
     weaknesses: [
       '画面を凝視して待つ必要があるため、相手の突然の前歩きやラッシュに対応が遅れやすい',
     ],
-    sf6Examples: ['ケンの大K', 'リュウの大P', '下大K（大足）'],
+    sf6Examples: ['立ち強P（大P）パニカン狙い', '中足刀での空振り狩り', '下大K（大足）'],
   },
 };
 
@@ -281,10 +281,10 @@ export default function NeutralTriangleDiagram() {
         </div>
 
         {/* 結論サマリー */}
-        <div className="p-2.5 sm:p-3 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed flex items-center gap-2">
-          <span className="font-bold text-neutral-900 dark:text-white shrink-0">🧠 勝つための思考法:</span>
+        <div className="p-2.5 sm:p-3 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed flex items-start gap-2">
+          <span className="font-bold text-neutral-900 dark:text-white shrink-0 mt-0.5">🧠 立ち回りの整理枠組み:</span>
           <span>
-            相手が「技を振って牽制（置き）してくる」なら外から差し返す。相手が「差し返しを狙ってじっと待っている」なら前に歩いて差し込む。立ち回りは反射神経ではなく、「相手が今どれを選んでいるか」のジャンケンです。
+            「置き・差し込み・差し返し」は立ち回りの状況を整理するためのフレームワークです。実戦では互いの間合い・技のリーチ・硬直・タイミングによって結果が変わります。相手の動きの傾向を観察しながら、間合いを調整する基準として活用しましょう。
           </span>
         </div>
       </div>

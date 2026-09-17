@@ -69,6 +69,7 @@ export default function ArticleDetailPage() {
   const [activeSubheading, setActiveSubheading] = useState<string | null>(null);
   const [activeItemHeading, setActiveItemHeading] = useState<string | null>(null);
   const [showQuickJump, setShowQuickJump] = useState(false);
+  const [isTocModalOpen, setIsTocModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // セクションタイトルの二重番号（例:「01. ① 基本の立ち回り」）を解消し、「01 基本の立ち回り」形式に統一
@@ -494,18 +495,20 @@ export default function ArticleDetailPage() {
       <OkizemeQuickModal />
 
       {/* 画面追従セクションバー ＆ クイック目次ジャンプ */}
-      {showQuickJump && (
-        <ArticleQuickJump
-          sections={allSectionsList}
-          activeSectionId={activeSectionId}
-          activeSubheading={activeSubheading}
-          activeItemHeading={activeItemHeading}
-          bookmarks={bookmarks}
-          onToggleBookmark={handleToggleBookmark}
-          onJumpToSection={handleJumpToSection}
-          enableBookmarks={isCompleteGuide}
-        />
-      )}
+      <ArticleQuickJump
+        sections={allSectionsList}
+        activeSectionId={activeSectionId}
+        activeSubheading={activeSubheading}
+        activeItemHeading={activeItemHeading}
+        bookmarks={bookmarks}
+        onToggleBookmark={handleToggleBookmark}
+        onJumpToSection={handleJumpToSection}
+        enableBookmarks={isCompleteGuide}
+        showBars={showQuickJump}
+        isOpenModal={isTocModalOpen}
+        onOpenModal={() => setIsTocModalOpen(true)}
+        onCloseModal={() => setIsTocModalOpen(false)}
+      />
 
       {/* パンくずリスト */}
       <div className="bg-white dark:bg-[#141a24] border-b border-neutral-200/80 dark:border-neutral-800/80 w-full">
@@ -698,7 +701,7 @@ export default function ArticleDetailPage() {
                     {/* 2. 保存した攻略を見る */}
                     <button
                       type="button"
-                      onClick={() => handleJumpToSection(bookmarks.length > 0 ? bookmarks[0] : 'sec-free-0')}
+                      onClick={() => setIsTocModalOpen(true)}
                       className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-amber-500 dark:hover:border-amber-400 hover:shadow-xs text-left transition-all cursor-pointer group"
                     >
                       <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 mb-1">
@@ -712,7 +715,7 @@ export default function ArticleDetailPage() {
                       </div>
                       <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
                         {bookmarks.length > 0
-                          ? 'お気に入り章へジャンプ'
+                          ? '目次を開いて保存章へジャンプ'
                           : '各章の★でお気に入り登録可能'}
                       </p>
                     </button>

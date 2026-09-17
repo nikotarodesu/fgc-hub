@@ -98,12 +98,11 @@ export default function ArcadeButton({
 
     if (isAssist) {
       return (
-        <span className="inline-flex items-center gap-1 shrink-0" title={`アシスト＋${tooltipText}`}>
-          <span className="bg-neutral-800 dark:bg-neutral-900 text-white text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border border-neutral-700 shadow-2xs">
-            A
-          </span>
-          <span className="text-neutral-400 text-xs font-bold">+</span>
-          {buttonCircle}
+        <span
+          className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${dimension} ${size === 'sm' ? 'text-[11px]' : 'text-xs'} ${colorClasses} ${ringClasses}`}
+          title={`アシスト＋${tooltipText}`}
+        >
+          A
         </span>
       );
     }

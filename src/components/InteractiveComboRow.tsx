@@ -199,6 +199,12 @@ export default function InteractiveComboRow({
                           );
                         })}
                       </div>
+                    ) : step.arrows.length > 1 && !['↓↘→', '→↓↘', '↓↙←', '↓↘→↓↘→', '↓↙←↓↙←'].includes(step.arrowStr) ? (
+                      <div className="flex items-center gap-1 shrink-0">
+                        {step.arrows.map((arr, aIdx) => (
+                          <CommandMotionIcon key={aIdx} command={arr} />
+                        ))}
+                      </div>
                     ) : (
                       <CommandMotionIcon command={step.arrowStr} />
                     )
@@ -260,7 +266,7 @@ export default function InteractiveComboRow({
             <div className="mt-2 pt-1.5 sm:mt-2.5 sm:pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
               {steps.filter((s) => s.tip).map((s, sIdx) => (
                 <div key={sIdx} className="text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400 flex items-start gap-1 sm:gap-1.5">
-                  <span className="text-cyan-700 dark:text-cyan-400 font-bold shrink-0">・[{s.original}]:</span>
+                  <span className="text-cyan-700 dark:text-cyan-400 font-bold shrink-0">［{s.original}］</span>
                   <span className="break-all">{s.tip}</span>
                 </div>
               ))}

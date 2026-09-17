@@ -39,6 +39,9 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // 太字装飾（**）の除去
   cleanRecipe = cleanRecipe.replace(/\*\*/g, '');
 
+  // 文脈修飾語（の安定度、の安定化、の成功率、など、等）の除去
+  cleanRecipe = cleanRecipe.replace(/(?:の安定度|の安定化|の成功率|など|等)$/, '').trim();
+
   // 1. レシピ末尾のダメージ数値（例: （4247）, (4247), (4247ダメージ), [4247]）を除去
   cleanRecipe = cleanRecipe
     .replace(/[（\(\[]\s*\d+(?:\s*(?:ダメージ|dmg|DMG|d))?\s*[）\)\]]\s*$/, '')
@@ -58,7 +61,38 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // ">" または "→" で分割
   const rawParts = cleanRecipe.split(/>|→(?!\+|↓|↘|↗|←|↙|↖)/).map((p) => p.trim()).filter(Boolean);
 
-  return rawParts.flatMap((part) => parsePartToSteps(part, controlType));
+  const steps = rawParts.flatMap((part) => parsePartToSteps(part, controlType));
+
+  // 構え後のスピバの特別仕様判定
+  // （春麗は構えを経由したスピバのみ下溜め免除で「↓↑＋中K（OD時は下上KK）」で出せる仕様）
+  let seenKamae = false;
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    if (step.original.includes('構え') || step.button.label.includes('構え')) {
+      seenKamae = true;
+    }
+    if (
+      seenKamae &&
+      (step.original.includes('スピバ') ||
+        step.original.includes('スピニング') ||
+        step.button.label.includes('スピバ'))
+    ) {
+      step.original = '構え後のスピバ';
+      step.chargeArrows = [false, false]; // 下溜め免除
+      const isOD =
+        step.button.label.includes('OD') ||
+        step.original.includes('OD') ||
+        step.button.color === 'purple';
+      if (!isOD) {
+        step.button.label = '中K';
+        step.button.color = 'yellow';
+        step.button.iconText = controlType === 'modern' ? '中' : 'K';
+      }
+      step.tip = '構え後のスピバのみ下溜めをしなくても下上中Kで出せるようになる仕様があります';
+    }
+  }
+
+  return steps;
 }
 
 function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
@@ -140,6 +174,64 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     lower === 'ガードクラッシュ'
   ) {
     return [];
+  }
+
+  // 構え（行雲流水）および構え派生技判定（構え弱K、構え中K、構え強K、構え弱P、構え中P、構え強Pなど）
+  // 構えは 214P（↓↙← + P）のレバー風表記、派生技は単独ボタンの2ステップに展開
+  if (lower.startsWith('構え') || lower.startsWith('行雲流水')) {
+    const kamaeStep: VisualStep = {
+      original: '構え',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'punch',
+        color: 'neutral',
+        label: '構え',
+        description: 'パンチボタン（Pの強度は問わない）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      tip: 'Pの強度は問わない',
+    };
+
+    // 派生技があるか判定（例: 構え弱K, 構え中K, 構え強K, 構え弱P, 構え中P, 構え強P, 構え大K, 構え大P）
+    const followupPart = lower.replace(/^(?:行雲流水|構え)(?:[\(（].*?[\)）])?[\s・\-_>＞]*/, '').trim();
+
+    if (followupPart) {
+      const isKick = followupPart.includes('k') || followupPart.includes('キック');
+      const isWeak = followupPart.includes('弱') || followupPart.includes('l');
+      const isHeavy = followupPart.includes('強') || followupPart.includes('大') || followupPart.includes('h');
+
+      const strengthName = isHeavy ? (followupPart.includes('大') ? '大' : '強') : isWeak ? '弱' : '中';
+      const kind: ButtonKind = isKick ? 'kick' : 'punch';
+      const color: ButtonColor = isHeavy ? 'red' : isWeak ? 'blue' : 'yellow';
+      const btnChar = isKick ? 'K' : 'P';
+      const label = `${strengthName}${btnChar}`;
+
+      const followupStep: VisualStep = {
+        original: label,
+        arrows: [],
+        arrowStr: '',
+        button: {
+          kind,
+          color,
+          label,
+          description: `${label}ボタン`,
+          iconText: controlType === 'modern' ? strengthName : btnChar,
+          showLabel: false,
+        },
+        suffix,
+      };
+
+      return [kamaeStep, followupStep];
+    }
+
+    // 派生技なし（単に「構え」の場合）
+    return [kamaeStep];
   }
 
   // 大PTC / 二連撃 / 大TC / 大>大 判定（リュウの大PTCは大P>大Kなので2ステップに展開）
@@ -306,6 +398,29 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   remaining = remaining.replace(/〆|締め?$/, '').trim();
 
   const lower = remaining.toLowerCase();
+
+  // 構え（行雲流水）
+  if (lower.startsWith('構え') || lower.startsWith('行雲流水')) {
+    return {
+      original: '構え',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'punch',
+        color: 'neutral',
+        label: '構え',
+        description: 'パンチボタン（Pの強度は問わない）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'Pの強度は問わない',
+    };
+  }
 
   // 0. インパクト（赤い字で「インパクト」）
   if (lower.includes('インパクト') || lower.includes('ドライブインパクト') || /\bdi\b/.test(lower) || lower === 'di') {

@@ -129,7 +129,7 @@ function getLineType(line: string): LineType {
   if (trimmed.startsWith('【') && trimmed.includes('】')) return 'frame';
   if (
     (trimmed.startsWith('●') || trimmed.startsWith('・') || trimmed.startsWith('-')) &&
-    (trimmed.includes('〆') || trimmed.includes('>') || trimmed.includes('＞') || trimmed.includes('→'))
+    (trimmed.includes('〆') || trimmed.includes('>') || trimmed.includes('＞'))
   ) {
     return 'combo';
   }

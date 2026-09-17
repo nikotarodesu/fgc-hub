@@ -76,17 +76,6 @@ export default function RecommendedGear({
                 </ul>
               )}
 
-              {/* 筆者コメント・実戦メモ */}
-              {product.authorComment && (
-                <div className="mb-5 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/60 dark:border-neutral-750">
-                  <span className="block text-[11px] font-bold text-neutral-900 dark:text-white mb-1">
-                    💡 筆者の実戦コメント
-                  </span>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                    {product.authorComment}
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* アクションボタン群 */}

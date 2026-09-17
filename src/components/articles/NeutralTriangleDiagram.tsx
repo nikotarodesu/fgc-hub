@@ -281,11 +281,13 @@ export default function NeutralTriangleDiagram() {
         </div>
 
         {/* 結論サマリー */}
-        <div className="p-2.5 sm:p-3 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed flex items-start gap-2">
-          <span className="font-bold text-neutral-900 dark:text-white shrink-0 mt-0.5">🧠 立ち回りの整理枠組み:</span>
-          <span>
+        <div className="p-3 sm:p-3.5 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl text-xs leading-relaxed">
+          <div className="font-bold text-neutral-900 dark:text-white mb-1.5 flex items-center gap-1.5">
+            <span>🧠 立ち回りの整理ポイント</span>
+          </div>
+          <p className="text-neutral-600 dark:text-neutral-300">
             「置き・差し込み・差し返し」は立ち回りの状況を整理するためのフレームワークです。実戦では互いの間合い・技のリーチ・硬直・タイミングによって結果が変わります。相手の動きの傾向を観察しながら、間合いを調整する基準として活用しましょう。
-          </span>
+          </p>
         </div>
       </div>
     </div>

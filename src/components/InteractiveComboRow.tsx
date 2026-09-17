@@ -174,7 +174,7 @@ export default function InteractiveComboRow({
                     <span
                       className={`text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded shrink-0 ${
                         step.prefix === '溜め'
-                          ? 'bg-amber-400 text-neutral-950 font-black shadow-2xs'
+                          ? 'border border-neutral-400 dark:border-neutral-500 text-neutral-800 dark:text-neutral-200 bg-transparent font-sans'
                           : 'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200'
                       }`}
                     >
@@ -233,11 +233,17 @@ export default function InteractiveComboRow({
                     <span className="text-xs font-black text-rose-600 dark:text-rose-400 shrink-0">
                       インパクト
                     </span>
+                  ) : step.button.label === 'ラッシュ' ? (
+                    <span className="text-xs font-bold text-blue-600 dark:text-cyan-400 shrink-0">
+                      ラッシュ
+                    </span>
                   ) : step.button.label.includes('前ステ') ||
                     step.button.label.includes('バクステ') ||
                     step.button.label.includes('歩き') ||
                     step.button.label.includes('後退') ||
-                    step.button.label.includes('投げ') ? (
+                    step.button.label.includes('投げ') ||
+                    step.button.label.includes('飛び') ||
+                    step.button.label.includes('ジャンプ') ? (
                     <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 shrink-0">
                       {step.button.label}
                     </span>

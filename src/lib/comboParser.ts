@@ -361,6 +361,41 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     remaining = remaining.replace(/[（\(](.*?)[）\)]$/, '').trim();
   }
 
+  // 3.4 プレフィックス（壁ドン、壁バウンド、溜めなど）
+  let prefix: string | undefined;
+  if (remaining.includes('壁ドン')) {
+    prefix = '壁ドン';
+    remaining = remaining.replace(/壁ドン/g, '').trim();
+  } else if (remaining.includes('壁バウンド')) {
+    prefix = '壁バウンド';
+    remaining = remaining.replace(/壁バウンド/g, '').trim();
+  } else if (remaining.includes('溜め') || remaining.includes('ホールド') || remaining.includes('タメ')) {
+    prefix = '溜め';
+    remaining = remaining.replace(/溜め|ホールド|タメ/g, '').trim();
+  }
+
+  // 3.5 単独のラッシュ（例: 「ラッシュ」「ラッシュ起き攻め」「生ラッシュ」など技ボタンを伴わないパーツ）
+  const cleanRushCheck = remaining.replace(/起き攻め/g, '').trim();
+  if (cleanRushCheck === 'ラッシュ' || cleanRushCheck === '生ラッシュ' || cleanRushCheck === 'パリィラッシュ') {
+    return {
+      original: 'ラッシュ',
+      isCancel: false,
+      isRush: false,
+      rushText: undefined,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: 'ラッシュ',
+        description: 'ドライブラッシュ',
+        iconText: 'ラッシュ',
+      },
+      suffix,
+    };
+  }
+
   // 4. キャンセルの抽出（「キャンセルラッシュ」と書かれている場合は「キャンセル」のみとして扱う）
   let isCancel = false;
   if (remaining.includes('キャンセルラッシュ')) {
@@ -391,19 +426,6 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   } else {
     // キャンセルがある場合は余分な「ラッシュ」文字列を除去
     remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ラッシュ/g, '').trim();
-  }
-
-  // 6. その他のプレフィックス（壁ドン、壁バウンドなど）
-  let prefix: string | undefined;
-  if (remaining.includes('壁ドン')) {
-    prefix = '壁ドン';
-    remaining = remaining.replace(/壁ドン/g, '').trim();
-  } else if (remaining.includes('壁バウンド')) {
-    prefix = '壁バウンド';
-    remaining = remaining.replace(/壁バウンド/g, '').trim();
-  } else if (remaining.includes('溜め') || remaining.includes('ホールド') || remaining.includes('タメ')) {
-    prefix = '溜め';
-    remaining = remaining.replace(/溜め|ホールド|タメ/g, '').trim();
   }
 
   remaining = remaining.replace(/起き攻め/g, '').trim();

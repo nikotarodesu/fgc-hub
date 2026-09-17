@@ -154,9 +154,15 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
                     />
                   )}
 
-                  {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}
+                  {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み、CHは黄色・Pcは赤色） */}
                   {step.suffix && (
-                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">
+                    <span
+                      className={`text-[10px] font-bold ${
+                        /pc|パニカン|パニッシュ/i.test(step.suffix)
+                          ? 'text-rose-600 dark:text-rose-400'
+                          : 'text-amber-600 dark:text-amber-400'
+                      }`}
+                    >
                       {step.suffix}
                     </span>
                   )}

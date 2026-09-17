@@ -95,9 +95,14 @@ export default function InteractiveComboRow({
   const cleanText = comboLine.trim().replace(/^[●・\-▶︎▶■]\s*/, '');
 
   // 〜 または ～ で始まる、または 〜 または ～ で終わるコンボは派生・始動ルートのためアコーディオンタブを表示しない
-  const isPartialRoute = /^[〜～~]/.test(cleanText) || /[〜～~]\s*$/.test(cleanText);
+  // また、分岐択（orを含むもの）やセットプレイ（【...〆】など）はコマンド展開を表示しない
+  const isNoExpand =
+    /^[〜～~]/.test(cleanText) ||
+    /[〜～~]\s*$/.test(cleanText) ||
+    cleanText.includes(' or ') ||
+    /^【.*?〆】/.test(cleanText);
 
-  if (isPartialRoute) {
+  if (isNoExpand) {
     return (
       <div className="my-1 sm:my-1.5 rounded-lg border border-neutral-200/80 dark:border-neutral-700/70 bg-neutral-50/80 dark:bg-neutral-800/70 py-2 px-2.5 sm:px-3 flex items-start sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 shadow-2xs w-full max-w-full min-w-0">
         <span className="shrink-0 text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide mt-0.5 sm:mt-0">
@@ -257,9 +262,15 @@ export default function InteractiveComboRow({
                     />
                   )}
 
-                  {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み） */}
+                  {/* サフィックス（カス当たり等 ※ダメージ数値は除外済み、CHは黄色・Pcは赤色） */}
                   {step.suffix && (
-                    <span className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-bold shrink-0">
+                    <span
+                      className={`text-[9px] sm:text-[10px] font-bold shrink-0 ${
+                        /pc|パニカン|パニッシュ/i.test(step.suffix)
+                          ? 'text-rose-600 dark:text-rose-400'
+                          : 'text-amber-600 dark:text-amber-400'
+                      }`}
+                    >
                       {step.suffix}
                     </span>
                   )}

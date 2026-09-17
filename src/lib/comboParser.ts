@@ -33,8 +33,8 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // 全角の「＞」を「>」に正規化
   let cleanRecipe = recipe.replace(/＞/g, '>');
 
-  // 0. 先頭のラベル（例: ベスト：、次点：、推奨：、基本：、最大：等）を除去
-  cleanRecipe = cleanRecipe.replace(/^(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃)[：:]\s*/, '').trim();
+  // 0. 先頭のラベル（例: 【ノーマルヒット】：、ベスト：、次点：、推奨：、基本：、最大：等）を除去
+  cleanRecipe = cleanRecipe.replace(/^(?:【.*?】|(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃))[：:]\s*/, '').trim();
 
   // 太字装飾（**）の除去
   cleanRecipe = cleanRecipe.replace(/\*\*/g, '');
@@ -97,6 +97,9 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
 
 function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
   let remaining = text.trim();
+
+  // 先頭の【...】ラベルを除去
+  remaining = remaining.replace(/^【.*?】[：:]\s*/, '').trim();
 
   // 1. 各パーツ内のダメージ数値・フレーム差を除去
   remaining = remaining
@@ -341,6 +344,9 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
 
 function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
   let remaining = text.trim();
+
+  // 先頭の【...】ラベルを除去
+  remaining = remaining.replace(/^【.*?】[：:]\s*/, '').trim();
 
   // 1. 各パーツ内のダメージ数値を除去（例: SA3〆（4247）など各パーツ内に残っている場合）
   remaining = remaining
@@ -1756,6 +1762,38 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
+  // 10.8 コパ / 小パン（弱P）
+  if (
+    lower === 'コパ' ||
+    lower === '小パン' ||
+    lower === '立ちコパ' ||
+    lower === '立コパ' ||
+    lower.startsWith('コパ') ||
+    lower.startsWith('小パン')
+  ) {
+    const isModern = controlType === 'modern';
+    const label = isModern ? '弱' : '弱P';
+    const iconText = isModern ? '弱' : 'P';
+    return {
+      original: label,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'blue',
+        label,
+        description: isModern ? '青いボタン（弱）' : '青いボタン（弱P）',
+        iconText,
+        showLabel: false,
+      },
+      suffix,
+    };
+  }
+
   // 11. しゃがみ通常技（下中P, 下中K, 下大P, 下弱P, 下中, 下大, 下弱, 中足, 大足等）
   if (
     lower.startsWith('下') ||
@@ -1774,7 +1812,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     const label = isModern ? (isLight ? '弱' : isHeavy ? '大' : '中') : isKick ? 'K' : 'P';
 
     return {
-      original: remaining,
+      original: lower.includes('コパ') ? (isModern ? '下弱' : '下弱P') : remaining,
       isCancel,
       isRush,
       rushText,
@@ -1858,7 +1896,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   const isModern = controlType === 'modern';
   const isKick = lower.includes('k') || lower.includes('キック') || lower.includes('hk') || lower.includes('mk') || lower.includes('lk');
   const isHeavy = lower.includes('大') || lower.includes('強') || lower.includes('hp') || lower.includes('hk');
-  const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('lp') || lower.includes('lk');
+  const isLight = lower.includes('弱') || lower.includes('小') || lower.includes('コパ') || lower.includes('小パン') || lower.includes('lp') || lower.includes('lk');
   const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
   const kind: ButtonKind = isKick ? 'kick' : 'punch';
   const label = isModern

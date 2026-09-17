@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_ZANGIEF_1400MR: Article = {
   id: 'art-coaching-zangief-1400mr-vs-ken',
   slug: 'coaching-zangief-1400mr-vs-ken',
-  title: 'Cザンギ1400MR(vsケン) [2025ver]',
+  title: 'Cザンギ1400MR(vsケン)｜無敵技への確定反撃と起き攻めの規格化を徹底する',
+  subtitle: '無敵技への確定反撃と起き攻めの規格化を徹底する',
+  coachingDate: '2025年2月',
   summary:
     'クラシックザンギエフ（1400MR）の実戦リプレイ（vsケン）を徹底添削（2025年2月コーチング）。無敵技ガード後の状況別確反コンボ（中央スープレックス起き攻め・端5500超火力ODボルシチ＆前大P持続当てルート）、中距離の6大強行動、弱コマ投げ確反ポイント、感覚から理論へ移行する起き攻め効率化と地上戦の総合試合運びを完全解説します。',
   game: 'sf6',

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ARTICLES_DATA, getArticleEyecatch } from '@/data/articles';
+import { ARTICLES_DATA, getArticleEyecatch, parseArticleTitle } from '@/data/articles';
 import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
@@ -43,6 +43,14 @@ export default function ArticleDetailPage() {
       article.tags.includes('完全攻略') ||
       article.tags.includes('キャラ別攻略') ||
       slug.includes('complete')
+    )
+  );
+  const isCoaching = Boolean(
+    article && (
+      article.category === 'coaching' ||
+      article.tags.includes('過去のコーチング') ||
+      article.tags.includes('コーチング') ||
+      Boolean(article.coachingDate)
     )
   );
   const secretConfig = getSecretUnlockConfig(slug);
@@ -573,14 +581,29 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
-              {/* 1. タイトル（重複表示を統合） */}
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
-                {article.title}
-              </h1>
+              {/* 1. タイトル（前半とサブタイトルを美しく二段構成にしつつ主見出しとして統一） */}
+              {(() => {
+                const titleInfo = parseArticleTitle(article.title);
+                return (
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
+                    <span>{titleInfo.mainTitle}</span>
+                    {titleInfo.subtitle && (
+                      <span className="block text-base sm:text-lg md:text-xl font-bold text-neutral-600 dark:text-neutral-300 mt-1 sm:mt-1.5">
+                        {titleInfo.subtitle}
+                      </span>
+                    )}
+                  </h1>
+                );
+              })()}
 
-              {/* 2. 対応パッチ・最終確認日（タイトル直下の1か所に集約） */}
+              {/* 2. 対応パッチ・実施年月・最終確認日 */}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
+                  {article.coachingDate && (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
+                      <span>実施年月: {article.coachingDate}</span>
+                    </div>
+                  )}
                   {(article.patchVersion || article.patchDate) && (
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
@@ -611,6 +634,16 @@ export default function ArticleDetailPage() {
                   </button>
                 )}
               </div>
+
+              {/* コーチング記事のアーカイブ注記 */}
+              {isCoaching && (
+                <div className="mt-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-xs text-neutral-600 dark:text-neutral-400 flex items-start gap-2">
+                  <span className="font-bold text-neutral-800 dark:text-neutral-200 shrink-0">※ コーチング記録について:</span>
+                  <span className="leading-relaxed">
+                    本記事は{article.coachingDate ? `${article.coachingDate}時点の` : ''}実戦リプレイに基づく指導記録です。当時のバージョン仕様に基づいているため、最新パッチとは技性能やフレーム状況が一部異なる場合があります。普遍的な立ち回り方針や判断プロセスの事例としてご活用ください。
+                  </span>
+                </div>
+              )}
 
               {/* アイキャッチビジュアル（16:9比率を保ち見切れを防止） */}
               <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative">
@@ -1342,7 +1375,7 @@ export default function ArticleDetailPage() {
                 プレミアム会員で読み放題
               </h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                月額¥980でスト6全キャラ攻略＆立ち回り解説がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
+                月額¥980で公開中の攻略・立ち回り解説・コーチング添削がすべて読み放題。最新パッチ追記も含め追加費用なしで閲覧できます。
               </p>
               <Link
                 href="/membership"

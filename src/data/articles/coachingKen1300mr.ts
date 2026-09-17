@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_KEN_1300MR: Article = {
   id: 'art-coaching-ken-1300mr-vs-akuma',
   slug: 'coaching-ken-1300mr-vs-akuma',
-  title: 'Mケン1300MR(vs豪鬼)※コマンドなし [2024ver]',
+  title: 'Mケン1300MR(vs豪鬼)※コマンドなし｜固めの隙間を減らし距離ごとの技振りを絞り込む',
+  subtitle: '固めの隙間を減らし距離ごとの技振りを絞り込む',
+  coachingDate: '2024年12月',
   summary:
     'モダンケン（1300MR・コマンド入力なし）の実戦リプレイ（vs豪鬼）を徹底添削（2024年12月コーチング）。固め連携の隙間改善、A大ラッシュ後の択、昇竜〆後のラッシュ起き攻め、距離別の振る技の絞り込み、そして受講生のお悩み（中足被弾・A中迅雷・豪鬼＆キャミィ対策・差し返し）を徹底解説します。',
   game: 'sf6',

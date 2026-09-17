@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BLANKA_1500MR: Article = {
   id: 'art-coaching-blanka-1500mr-vs-akuma',
   slug: 'coaching-blanka-1500mr-vs-akuma',
-  title: 'Cブランカ1500MR(vs豪鬼) [2025ver]',
+  title: 'Cブランカ1500MR(vs豪鬼)｜起き攻めの規格化と立ち回りの主導権を握る',
+  subtitle: '起き攻めの規格化と立ち回りの主導権を握る',
+  coachingDate: '2025年3月',
   summary:
     'クラシックブランカ（1500MR）の実戦リプレイ（vs豪鬼）を徹底添削（2025年3月コーチング）。画面端電気ヒット後（+39F）＆中央前投げパニカン後の凶悪セットプレイ、アマリバの抑止力を起点とする立ち回り連鎖術、大Pフィアーダウンの確定被弾防止、長所・短所を踏まえた距離別立ち回り、そして人形（ブランカちゃん）をフル活用した勝利の方程式を完全解説します。',
   game: 'sf6',

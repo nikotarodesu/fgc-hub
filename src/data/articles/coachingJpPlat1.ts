@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_JP_PLAT1: Article = {
   id: 'art-coaching-jp-plat1-vs-ken',
   slug: 'coaching-jp-plat1-vs-ken',
-  title: 'C JPプラチナ1(vsケン) [2025ver]',
+  title: 'C JPプラチナ1(vsケン)｜インパクトの多用を見直し起き攻めの連携を身につける',
+  subtitle: 'インパクトの多用を見直し起き攻めの連携を身につける',
+  coachingDate: '2025年2月',
   summary:
     'クラシックJP（プラチナ1）の実戦リプレイ（vsケン）を徹底添削（2025年2月コーチング）。リスクだらけの生インパクト多用から脱却する3大発射ポイント、ヴィーハト設置後の起き攻め崩し、無敵技ガード後の最大反撃＆SA3リーサルコンボ、画面端飛びへのODアムネジア・空投げ・着地投げ、そして勝率を劇的に安定させる「後出しジャンケン」の立ち回りを完全解説します。',
   game: 'sf6',

@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_ED_1300MR_KEN: Article = {
   id: 'art-coaching-ed-1300mr-vs-ken',
   slug: 'coaching-ed-1300mr-vs-ken',
-  title: 'Mエド1300MR(vsケン) [2025ver]',
+  title: 'Mエド1300MR(vsケン)｜中足ラッシュによるバーンアウトを減らす',
+  subtitle: '中足ラッシュによるバーンアウトを減らす',
+  coachingDate: '2025年3月',
   summary:
     'モダンエド（1300MR）の実戦リプレイ（vsケン）を徹底添削（2025年3月コーチング）。+4F密着からの三択と中足ラッシュ依存の脱却、バーンアウトを防ぐDゲージ管理術（ゲージ4本未満の立ち回り）、A大>ODフリッカーを軸にした高効率・運び・リーサルコンボ、サイコスパーク弾消し技術、豪鬼の裏周り百鬼空対空とケン・豪鬼の中距離間合い管理を完全解説します。',
   game: 'sf6',

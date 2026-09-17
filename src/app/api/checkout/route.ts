@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
               currency: 'jpy',
               product_data: {
                 name: 'にこ太郎の格ゲーLAB プレミアム会員',
-                description: 'スト6全キャラ攻略＆実戦添削がすべて読み放題',
+                description: '公開中のスト6攻略＆実戦添削がすべて読み放題',
               },
               unit_amount: 980,
               recurring: {

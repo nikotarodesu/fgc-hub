@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BISON_1600MR: Article = {
   id: 'art-coaching-bison-1600mr-vs-honda',
   slug: 'coaching-bison-1600mr-vs-honda',
-  title: 'Mベガ1600MR(vs本田) [2024ver]',
+  title: 'Mベガ1600MR(vs本田)｜必殺技頼みから脱却し地上戦の組み立てを改善する',
+  subtitle: '必殺技頼みから脱却し地上戦の組み立てを改善する',
+  coachingDate: '2024年11月',
   summary:
     'モダンベガ（1600MR）の実戦リプレイ（vs本田）を徹底添削（2024年11月コーチング）。ダブルニープレスやデビルリバース頼みからの脱却、相手垂直への対空、地上戦での通常技・ラッシュ攻撃の重要性、そして受講生のお悩み（崩しの立ち回り・ダブニーとシャドウライズの活用法・2000MR到達への道）を徹底解説します。',
   game: 'sf6',

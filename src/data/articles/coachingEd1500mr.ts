@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_ED_1500MR: Article = {
   id: 'art-coaching-ed-1500mr-vs-ken',
   slug: 'coaching-ed-1500mr-vs-ken',
-  title: 'Mエド1500MR(vsケン) [2024ver]',
+  title: 'Mエド1500MR(vsケン)｜有利フレームでの技選択と生ラッシュの迎撃を見直す',
+  subtitle: '有利フレームでの技選択と生ラッシュの迎撃を見直す',
+  coachingDate: '2024年11月',
   summary:
     'モダンエド（1500MR）の実戦リプレイ（vsケン）を徹底添削（2024年11月コーチング）。起き攻めでのA中重ねリスク、ラッシュ弱P後の投げ・シミー択、生ラッシュの止め方、攻めと守りのフリッカー使い分け、そして手癖化の防止法まで徹底解説します。',
   game: 'sf6',

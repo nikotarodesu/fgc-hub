@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BISON_1500MR: Article = {
   id: 'art-coaching-bison-1500mr-vs-ken',
   slug: 'coaching-bison-1500mr-vs-ken',
-  title: 'Cベガ1500MR(vsケン) [2024ver]',
+  title: 'Cベガ1500MR(vsケン)｜引大Kの間合い管理と攻めの選択肢を広げる',
+  subtitle: '引大Kの間合い管理と攻めの選択肢を広げる',
+  coachingDate: '2024年12月',
   summary:
     'クラシックベガ（1500MR）の実戦リプレイ（vsケン）を徹底添削（2024年12月コーチング）。引大K（膝）の間合い管理、TC後の投げスカり防止とシミー択、ODクラッシャー対空リーサル、そして受講生のお悩み（単調な攻めの改善・パリィ頼み対空からの脱却・画面端の凌ぎ方）への具体的な回答を解説します。',
   game: 'sf6',

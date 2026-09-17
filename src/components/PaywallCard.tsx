@@ -280,7 +280,7 @@ export default function PaywallCard({
                   ¥980 <span className="text-sm font-normal text-neutral-400">/ 月</span>
                 </div>
                 <p className="text-sm text-neutral-300 dark:text-neutral-400 mb-5 leading-relaxed">
-                  本記事の実戦添削をはじめ、スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
+                  本記事の実戦添削をはじめ、公開中のキャラ攻略・立ち回り解説・コーチング記事がすべて読み放題。
                 </p>
               </div>
               <button
@@ -333,7 +333,7 @@ export default function PaywallCard({
                   ¥980 <span className="text-sm font-normal text-neutral-400">/ 月</span>
                 </div>
                 <p className="text-sm text-neutral-300 dark:text-neutral-400 mb-4 leading-relaxed">
-                  スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
+                  公開中のキャラ攻略・立ち回り解説・コーチング記事がすべて読み放題。
                 </p>
               </div>
               <button

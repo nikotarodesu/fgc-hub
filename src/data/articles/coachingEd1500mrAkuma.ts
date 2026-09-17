@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_ED_1500MR_AKUMA: Article = {
   id: 'art-coaching-ed-1500mr-vs-akuma',
   slug: 'coaching-ed-1500mr-vs-akuma',
-  title: 'Mエド1500MR(vs豪鬼) [2025ver]',
+  title: 'Mエド1500MR(vs豪鬼)｜中距離での空間掌握と画面端の脱出を整理する',
+  subtitle: '中距離での空間掌握と画面端の脱出を整理する',
+  coachingDate: '2025年2月',
   summary:
     'モダンエド（1500MR）の実戦リプレイ（vs豪鬼）を徹底添削（2025年2月コーチング）。近距離の弱さを補う中距離空間掌握、主要5キャラ対策（豪鬼・AKI・マノン・舞・ベガ）、画面端鳥籠からの脱出法、キルステ起き攻め三択＆端スパーク重ねループのゲージ節約セットプレイ、投げ抜け（グラップ）の適正タイミングまで完全解説します。',
   game: 'sf6',

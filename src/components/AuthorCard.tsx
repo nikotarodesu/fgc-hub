@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { AUTHOR_INFO, AuthorInfo } from '@/data/author';
-import { Trophy, ExternalLink } from 'lucide-react';
+import { Trophy, ExternalLink, ChevronRight } from 'lucide-react';
 
 interface AuthorCardProps {
   author?: AuthorInfo;
@@ -41,9 +42,20 @@ export default function AuthorCard({ author = AUTHOR_INFO, className = '' }: Aut
       </div>
 
       {/* 自己紹介文 */}
-      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed text-left mb-2">
+      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed text-left mb-2.5">
         {author.bio}
       </p>
+
+      {/* 著者紹介ページへの導線 */}
+      <div className="text-left mb-3">
+        <Link
+          href="/author"
+          className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-700 dark:text-cyan-300 hover:underline"
+        >
+          <span>詳しい実績・攻略方針を見る</span>
+          <ChevronRight className="w-3 h-3" />
+        </Link>
+      </div>
 
       {/* 🏆 note大会 記事リンク（さりげなく表示） */}
       {author.championshipArticles && author.championshipArticles.length > 0 && (

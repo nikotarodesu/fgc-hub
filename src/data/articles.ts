@@ -37,6 +37,8 @@ export interface Article {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
+  coachingDate?: string;
   summary: string;
   game: 'sf6' | 'general';
   category: 'character' | 'neutral' | 'system' | 'mindset' | 'coaching';
@@ -336,3 +338,12 @@ export const ARTICLES_DATA: Article[] = [
   },
   RYU_COMPLETE_GUIDE,
 ];
+
+export function parseArticleTitle(title: string): { mainTitle: string; subtitle?: string } {
+  const parts = title.split('｜');
+  if (parts.length > 1) {
+    return { mainTitle: parts[0].trim(), subtitle: parts.slice(1).join('｜').trim() };
+  }
+  return { mainTitle: title };
+}
+

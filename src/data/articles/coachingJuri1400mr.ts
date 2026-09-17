@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_JURI_1400MR: Article = {
   id: 'art-coaching-juri-1400mr-vs-ryu',
   slug: 'coaching-juri-1400mr-vs-ryu',
-  title: 'Mジュリ1400MR(vsリュウ) [2025ver]',
+  title: 'Mジュリ1400MR(vsリュウ)｜風破ストックの管理と手癖リスク行動を排除する',
+  subtitle: '風破ストックの管理と手癖リスク行動を排除する',
+  coachingDate: '2025年4月',
   summary:
     'モダンジュリ（1400MR）の実戦リプレイ（vsリュウ）を徹底添削（2025年4月コーチング）。風破ストック数別（1〜3本）の完全行動マニュアル、手癖インパクト・疾空閃の排除、中風破刃〆からの前ステ微歩きノーゲージ起き攻め三択、強風破刃コマンドコンボ導入、そして強化歳破衝を盾にした崩し連携まで完全解説します。',
   game: 'sf6',

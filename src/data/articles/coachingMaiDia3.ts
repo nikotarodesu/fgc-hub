@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_MAI_DIA3: Article = {
   id: 'art-coaching-mai-dia3-vs-juri-ken',
   slug: 'coaching-mai-dia3-vs-juri-ken',
-  title: 'C舞ダイヤ3(vsジュリ・ケン) [2025ver]',
+  title: 'C舞ダイヤ3(vsジュリ・ケン)｜防御時の思考を簡略化し起き攻めのフレームを把握する',
+  subtitle: '防御時の思考を簡略化し起き攻めのフレームを把握する',
+  coachingDate: '2025年2月',
   summary:
     'クラシック不知火舞（ダイヤ3）の実戦リプレイ（vsジュリ・ケン）を徹底添削（2025年2月コーチング）。試合展開の速さについていくための「思考簡略化（守りはガードのみ）」、起き攻め防御時のフレーム計算（ジュリ後ろ投げ+18Fの解体）、溜め花蝶扇からのラッシュ四択（中段・下段・投げ・シミー）、立ち回りの5大主力技、そして飛び落とされ後の対処まで完全解説します。',
   game: 'sf6',

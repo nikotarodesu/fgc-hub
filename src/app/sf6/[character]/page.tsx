@@ -52,7 +52,7 @@ export default async function CharacterHubPage({ params }: PageProps) {
             <span className="font-bold text-neutral-900 shrink-0">{char.name}</span>
           </nav>
           <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-            アプデ追従最速
+            実戦検証データ
           </span>
         </div>
       </div>

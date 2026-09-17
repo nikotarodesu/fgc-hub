@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BISON_1500MR_CAMMY: Article = {
   id: 'art-coaching-bison-1500mr-vs-cammy-juri',
   slug: 'coaching-bison-1500mr-vs-cammy-juri',
-  title: 'Cベガ1500MR(vsキャミィ・ジュリ) [2025ver]',
+  title: 'Cベガ1500MR(vsキャミィ・ジュリ)｜軌道変化技への対空と画面端の防御を見直す',
+  subtitle: '軌道変化技への対空と画面端の防御を見直す',
+  coachingDate: '2025年1月',
   summary:
     'クラシックベガ（1500MR）の実戦リプレイ（vsキャミィ・ジュリ）を徹底添削（2025年1月コーチング）。キャミィ・ジュリ・酒1ジェイミー等の軌道変化技に対するサイコクラッシャー対空、画面端の柔道（投げ重ね）を拒否するバクステ反撃、ダブニーの目的を持った撃ち分け、待ち相手へのデビリバ択と下中P仕込み強マインによる鉄板勝利方程式を完全解説します。',
   game: 'sf6',

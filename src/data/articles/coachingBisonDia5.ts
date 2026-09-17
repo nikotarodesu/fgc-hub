@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BISON_DIA5: Article = {
   id: 'art-coaching-bison-dia5-vs-all',
   slug: 'coaching-bison-dia5-vs-all',
-  title: 'Cベガダイヤ5(vsリュウ・ケン・ジェイミー) [2025ver]',
+  title: 'Cベガダイヤ5(vsリュウ・ケン・ジェイミー)｜通常技中心の地上戦と画面端の脱出を身につける',
+  subtitle: '通常技中心の地上戦と画面端の脱出を身につける',
+  coachingDate: '2025年1月',
   summary:
     'クラシックベガ（ダイヤ5・LP24,500）の実戦リプレイ（vsリュウ・ケン・ジェイミー）を徹底添削（2025年1月コーチング）。マスター目前の停滞期を突破するためのダブニー依存脱却と下中P・大Pの立ち回り、シャドウライズを活用した画面端脱出、8大苦手キャラ対策（リリー・胴着・ザンギ・キャミィ・本田・ジェイミー・テリー）、マイン付与・BO時の端攻め整理まで完全解説します。',
   game: 'sf6',

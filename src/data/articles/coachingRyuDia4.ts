@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_RYU_DIA4: Article = {
   id: 'art-coaching-ryu-dia4-vs-juri',
   slug: 'coaching-ryu-dia4-vs-juri',
-  title: 'Cリュウダイヤ4(vsジュリ) [2025ver]',
+  title: 'Cリュウダイヤ4(vsジュリ)｜波動拳と対空の使い分けを見直す',
+  subtitle: '波動拳と対空の使い分けを見直す',
+  coachingDate: '2025年1月',
   summary:
     'クラシックリュウ（ダイヤ4）の実戦リプレイ（vsジュリ）を徹底添削（2025年1月コーチング）。波動昇竜の基本戦法、コパ（弱P）ヒット確認ルート、波動拳の距離別撃ち分け、弱竜巻・昇竜〆後の起き攻めセットプレイ、vsジュリのラッシュ止め、そして防御力を飛躍させる無敵技封印トレーニングまで完全解説します。',
   game: 'sf6',

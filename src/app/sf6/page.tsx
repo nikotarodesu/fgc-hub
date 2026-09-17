@@ -28,7 +28,7 @@ export default function SF6HubPage() {
           </nav>
           <div className="flex items-center gap-2 shrink-0">
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-100 text-neutral-600">
-              最新バージョン対応
+              パッチ情報随時更新
             </span>
           </div>
         </div>

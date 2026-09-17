@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_GUILE_DIA5: Article = {
   id: 'art-coaching-guile-dia5-vs-ken',
   slug: 'coaching-guile-dia5-vs-ken',
-  title: 'Cガイルダイヤ5(vsマスターケン) [2024ver]',
+  title: 'Cガイルダイヤ5(vsマスターケン)｜相手バーンアウト時のリスク管理とヒット確認を徹底する',
+  subtitle: '相手バーンアウト時のリスク管理とヒット確認を徹底する',
+  coachingDate: '2024年11月',
   summary:
     'クラシックガイル（ダイヤ5）の実戦リプレイ（vsマスターケン）を徹底添削（2024年11月コーチング）。相手BO中の技振りとOD弾リスク、下中Pカウンターヒット確認、弱弾ラッシュの徹底、そして受講生のお悩み（シミーの判断・端の有利を活かす立ち回り）への具体的な回答を解説します。',
   game: 'sf6',

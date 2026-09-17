@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_MARISA_1500MR: Article = {
   id: 'art-coaching-marisa-1500mr-vs-ed',
   slug: 'coaching-marisa-1500mr-vs-ed',
-  title: 'Mマリーザ1500MR(vsエド) [2024ver]',
+  title: 'Mマリーザ1500MR(vsエド)｜突進技への依存を減らし間合い管理と差し返しを磨く',
+  subtitle: '突進技への依存を減らし間合い管理と差し返しを磨く',
+  coachingDate: '2024年12月',
   summary:
     'モダンマリーザ（1500MR）の実戦リプレイ（vsエド）を徹底添削（2024年12月コーチング）。グラディウスやファランクス依存からの脱却、間合い外キープからの置きA中・下中による差し返し、通常技からのコンボルート、大攻撃の使い所、そしてマリーザ本来の「歩きでじわじわ追い詰める」立ち回りの本質を徹底解説します。',
   game: 'sf6',

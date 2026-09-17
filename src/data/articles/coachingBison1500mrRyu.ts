@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_BISON_1500MR_RYU: Article = {
   id: 'art-coaching-bison-1500mr-vs-ryu',
   slug: 'coaching-bison-1500mr-vs-ryu',
-  title: 'Cベガ1500MR(vsリュウ) [2025ver]',
+  title: 'Cベガ1500MR(vsリュウ)｜弾へのジャストパリィ仕込みとフレームの理解を深める',
+  subtitle: '弾へのジャストパリィ仕込みとフレームの理解を深める',
+  coachingDate: '2025年2月',
   summary:
     'クラシックベガ（1500MR）の実戦リプレイ（vsリュウ）を徹底添削（2025年2月コーチング）。リュウ・ガイル等の安全弾を無効化するジャスパからの3大仕込み（下大K・前飛び・ラッシュ）、1500MR停滞を脱出するフレーム理解と三択構築、距離別シャドウライズ完全マニュアル、通常技一辺倒から脱却する必殺技アクセント運用まで完全解説します。',
   game: 'sf6',

@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_CHUNLI_PLAT3: Article = {
   id: 'art-coaching-chunli-plat3-vs-akuma',
   slug: 'coaching-chunli-plat3-vs-akuma',
-  title: 'C春麗プラチナ3(vs豪鬼) [2024ver]',
+  title: 'C春麗プラチナ3(vs豪鬼)｜気功拳を活かした接近とリソース管理を整理する',
+  subtitle: '気功拳を活かした接近とリソース管理を整理する',
+  coachingDate: '2024年10月',
   summary:
     'クラシック春麗（プラチナ3）の実戦リプレイ（vs豪鬼）を徹底添削（2024年10月コーチング）。後退する相手への弱気功拳盾アプローチや下中K差し、豪鬼の連携対策、起き攻めの選択肢、OD気功拳の適切なタイミング、そして受講生からの4大お悩み（攻めパターンの増やし方・気功拳の機能させ方・BO防止とコンボ効率・強みと弱点の分析）への具体的な回答を解説します。',
   game: 'sf6',

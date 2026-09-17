@@ -4,7 +4,9 @@ import { AUTHOR_INFO } from '../author';
 export const COACHING_KEN_1700MR: Article = {
   id: 'art-coaching-ken-1700mr-vs-bison',
   slug: 'coaching-ken-1700mr-vs-bison',
-  title: 'Cケン1700MR(vsベガ) [2024ver]',
+  title: 'Cケン1700MR(vsベガ)｜遅らせグラの精度向上とガード時の切り返しを整理する',
+  subtitle: '遅らせグラの精度向上とガード時の切り返しを整理する',
+  coachingDate: '2024年12月',
   summary:
     'クラシックケン（1700MR）の実戦リプレイ（vsベガ）を徹底添削（2024年12月コーチング）。遅らせグラの精度と±0F時の小技割り込み、ガード時の切り返し意識、そして受講生のお悩み（ベガ・ジェイミー対策、1800MRを超える置き・差し返し論、画面端での後退癖改善、守りでのパリィ依存脱却）を徹底解説します。',
   game: 'sf6',

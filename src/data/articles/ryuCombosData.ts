@@ -35,16 +35,16 @@ export const POSITION_OPTIONS = [
 
 export const STARTER_CATEGORY_OPTIONS = [
   { id: 'all', label: 'すべて' },
-  { id: 'light', label: '❶ 弱技始動' },
-  { id: 'medium', label: '❷ 中技始動' },
-  { id: 'heavy', label: '❸ 大技始動' },
-  { id: 'reversal_punish', label: '❹ 無敵技ガード後' },
-  { id: 'shimmy', label: '❺ シミー' },
-  { id: 'impact', label: '❻ インパクト・壁ドン' },
-  { id: 'switch', label: '❼ 入れ替え' },
-  { id: 'drive_reversal', label: '❽ Dリバガード後' },
+  { id: 'light', label: '① 弱技始動' },
+  { id: 'medium', label: '② 中技始動' },
+  { id: 'heavy', label: '③ 大技始動' },
+  { id: 'reversal_punish', label: '④ 無敵技ガード後' },
+  { id: 'shimmy', label: '⑤ シミー' },
+  { id: 'impact', label: '⑥ インパクト・壁ドン' },
+  { id: 'switch', label: '⑦ 入れ替え' },
+  { id: 'drive_reversal', label: '⑧ Dリバガード後' },
   { id: 'stun', label: 'スタン' },
-  { id: 'other', label: '❾ 投げ・ジャスパ' },
+  { id: 'other', label: '⑨ 投げ・ジャスパ' },
 ] as const;
 
 export const LETHAL_DAMAGE_PRESETS = [

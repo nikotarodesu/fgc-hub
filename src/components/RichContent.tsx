@@ -18,19 +18,45 @@ interface RichContentProps {
   onSecretUnlock?: () => void;
 }
 
-// 小見出し（❶ 弱技始動 等）のクイックチップ用短縮名
+// 丸数字・黒丸数字からアラビア数字（1, 2, 3...）へのマッピング
+export const CIRCLE_TO_NUM: Record<string, number> = {
+  '①': 1, '②': 2, '③': 3, '④': 4, '⑤': 5, '⑥': 6, '⑦': 7, '⑧': 8, '⑨': 9, '⑩': 10,
+  '⑪': 11, '⑫': 12, '⑬': 13, '⑭': 14, '⑮': 15, '⑯': 16, '⑰': 17, '⑱': 18, '⑲': 19, '⑳': 20,
+  '❶': 1, '❷': 2, '❸': 3, '❹': 4, '❺': 5, '❻': 6, '❼': 7, '❽': 8, '❾': 9, '❿': 10,
+  '➊': 1, '➋': 2, '➌': 3, '➍': 4, '➎': 5, '➏': 6, '➐': 7, '➑': 8, '➒': 9, '➓': 10,
+  '⓫': 11, '⓬': 12, '⓭': 13, '⓮': 14, '⓯': 15, '⓰': 16, '⓱': 17, '⓲': 18, '⓳': 19, '⓴': 20,
+};
+
+// アラビア数字から白丸数字（①, ②...）へのマッピング（追従バーやインライン表示用）
+export const NUM_TO_WHITE_CIRCLE: Record<number, string> = {
+  1: '①', 2: '②', 3: '③', 4: '④', 5: '⑤', 6: '⑥', 7: '⑦', 8: '⑧', 9: '⑨', 10: '⑩',
+  11: '⑪', 12: '⑫', 13: '⑬', 14: '⑭', 15: '⑮', 16: '⑯', 17: '⑰', 18: '⑱', 19: '⑲', 20: '⑳',
+};
+
+// 黒丸数字（❶）をPCでも視認性が高い白丸数字（①）へ正規化
+export function normalizeCircleNumbers(text: string): string {
+  return text.replace(/[❶-❿➊-➓]/g, (ch) => {
+    const num = CIRCLE_TO_NUM[ch];
+    return num && NUM_TO_WHITE_CIRCLE[num] ? NUM_TO_WHITE_CIRCLE[num] : ch;
+  });
+}
+
+// 小見出し（① 弱技始動 等）のクイックチップ用短縮名
 export function getShortSubheadingLabel(numChar: string, titleText: string): string {
+  const numVal = numChar ? CIRCLE_TO_NUM[numChar] : null;
+  const displayNum = numVal ? (NUM_TO_WHITE_CIRCLE[numVal] || numChar) : normalizeCircleNumbers(numChar);
   const label = titleText
     .replace(/始動$/, '')
     .replace(/(?:技)?ガード後$/, '後')
     .replace(/パニカン$/, '')
     .replace(/入れ替え$/, '入替');
-  return numChar ? `${numChar} ${label}` : label;
+  return displayNum ? `${displayNum} ${label}` : label;
 }
 
-// インライン装飾のパース（大事なところをクッキリとしたシンプルな太字で強調 & リンク対応）
+// インライン装飾のパース（大事なところをクッキリとしたシンプルな太字で強調 & リンク対応 & 黒丸数字正規化）
 function renderInline(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(https?:\/\/[^\s\)]+\)|https?:\/\/[^\s\)]+)/g);
+  const normalizedText = normalizeCircleNumbers(text);
+  const parts = normalizedText.split(/(\*\*.*?\*\*|\[.*?\]\(https?:\/\/[^\s\)]+\)|https?:\/\/[^\s\)]+)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       const inner = part.slice(2, -2);
@@ -461,33 +487,45 @@ export default function RichContent({
       );
     }
 
-    // 1.4 数字見出し（❶ 中技始動, ❷ 弱技始動, ① 等）
+    // 1.4 数字見出し（小見出し: ❶ 中技始動, ❷ 弱技始動, ① 等）
     if (block.type === 'numbered_heading') {
       return (
         <div
           key={blockKey}
-          className="pt-6 pb-2 mt-6 sm:mt-8 first:mt-0 first:pt-0 mb-3 sm:mb-4 border-b border-neutral-200 dark:border-neutral-800"
+          className="pt-6 pb-2.5 mt-7 sm:mt-9 first:mt-0 first:pt-0 mb-3 sm:mb-4 border-b border-neutral-200/90 dark:border-neutral-800"
         >
           {block.lines.map((line, lIdx) => {
             const match = line.trim().match(/^([①-⑳❶-❿➊-➓⓫-⓴])\s*(.*)$/);
-            const numChar = match ? match[1] : '';
+            const rawNumChar = match ? match[1] : '';
+            const numVal = rawNumChar ? CIRCLE_TO_NUM[rawNumChar] : null;
+            const whiteCircle = numVal ? (NUM_TO_WHITE_CIRCLE[numVal] || rawNumChar) : normalizeCircleNumbers(rawNumChar);
             const titleText = match ? match[2] : line.trim();
-            const fullName = `${numChar} ${titleText}`.trim();
-            const subId = sectionId ? `${sectionId}-sub-${numChar}` : undefined;
+            const fullName = `${whiteCircle} ${titleText}`.trim();
+            const subId = sectionId ? `${sectionId}-sub-${numVal || rawNumChar}` : undefined;
 
             return (
               <div
                 key={lIdx}
                 id={subId}
                 data-subheading={fullName}
-                className="flex items-center gap-2.5 pb-2 scroll-mt-20 sm:scroll-mt-24"
+                className="flex items-center gap-2.5 sm:gap-3 pb-1 scroll-mt-24 sm:scroll-mt-28"
               >
-                {numChar && (
-                  <span className="inline-flex items-center justify-center w-6.5 h-6.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-xs shrink-0 shadow-2xs">
-                    {numChar}
+                {numVal ? (
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white font-mono font-extrabold text-sm sm:text-[15px] shrink-0 shadow-xs ring-2 ring-indigo-600/20 dark:ring-indigo-400/20 select-none"
+                  >
+                    {numVal}
                   </span>
-                )}
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
+                ) : rawNumChar ? (
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white font-mono font-extrabold text-sm sm:text-[15px] shrink-0 shadow-xs select-none"
+                  >
+                    {whiteCircle}
+                  </span>
+                ) : null}
+                <h3 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
                   {renderInline(titleText)}
                 </h3>
               </div>

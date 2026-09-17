@@ -53,6 +53,9 @@ export default function ArticleDetailPage() {
 
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [forceShowTokenInput, setForceShowTokenInput] = useState(false);
+  const [lastReadSectionId, setLastReadSectionId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -67,6 +70,13 @@ export default function ArticleDetailPage() {
   const [activeItemHeading, setActiveItemHeading] = useState<string | null>(null);
   const [showQuickJump, setShowQuickJump] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  // セクションタイトルの二重番号（例:「01. ① 基本の立ち回り」）を解消し、「01 基本の立ち回り」形式に統一
+  const formatSectionTitle = (title: string, index: number): string => {
+    const cleanTitle = title.replace(/^[①-⑳❶-❿➊-➓\d\.\s]+/, '').trim();
+    const numStr = String(index + 1).padStart(2, '0');
+    return `${numStr} ${cleanTitle}`;
+  };
 
   // 記事タイトルをブラウザタブおよびメタ情報に同期
   useEffect(() => {
@@ -92,9 +102,7 @@ export default function ArticleDetailPage() {
           if (isGlobalAdmin || isSecretUnlocked) {
             setIsUnlocked(true);
             setIsAdminMode(true);
-          } else {
-            setIsUnlocked(false);
-            setIsAdminMode(false);
+            setAuthChecked(true);
           }
         }
       } catch {
@@ -110,6 +118,7 @@ export default function ArticleDetailPage() {
       const isEnabled = customEvent.detail ? customEvent.detail.enabled : localStorage.getItem('fgc_admin_mode') === 'true';
       setIsUnlocked(isEnabled);
       setIsAdminMode(isEnabled);
+      setAuthChecked(true);
     };
 
     window.addEventListener('fgc_admin_mode_changed', handleAdminEvent);
@@ -243,11 +252,34 @@ export default function ArticleDetailPage() {
         }
       } catch (e) {
         console.error('Failed to verify access token:', e);
+      } finally {
+        setAuthChecked(true);
       }
     }
 
     checkTokenAccess();
   }, [article]);
+
+  // 前回の閲覧位置（記事・操作タイプ別）の自動保存（スクロール位置連動）
+  useEffect(() => {
+    if (!article || !activeSectionId) return;
+    try {
+      localStorage.setItem(`fgc_last_pos_${article.slug}_${activeControlType}`, activeSectionId);
+    } catch {}
+  }, [article, activeSectionId, activeControlType]);
+
+  // 前回の閲覧位置の復元チェック
+  useEffect(() => {
+    if (!article) return;
+    try {
+      const saved = localStorage.getItem(`fgc_last_pos_${article.slug}_${activeControlType}`);
+      if (saved) {
+        setLastReadSectionId(saved);
+      } else {
+        setLastReadSectionId(null);
+      }
+    } catch {}
+  }, [article, activeControlType]);
 
   const handleApplyToken = async (manualToken: string): Promise<boolean> => {
     if (!article) return false;
@@ -285,12 +317,12 @@ export default function ArticleDetailPage() {
   const freeSections = currentVariant ? currentVariant.sections : article?.freeContent.sections || [];
   const paidSections = currentVariant ? currentVariant.paidSections : article?.paidContent.sections || [];
 
-  // 全セクション一覧（クイックジャンプ用）
+  // 全セクション一覧（クイックジャンプ用、二重番号を解消）
   const allSectionsList: QuickJumpSection[] = [];
   freeSections.forEach((sec, idx) => {
     allSectionsList.push({
       id: `sec-free-${idx}`,
-      title: sec.title,
+      title: formatSectionTitle(sec.title, idx),
       isPaid: false,
     });
   });
@@ -304,7 +336,7 @@ export default function ArticleDetailPage() {
     }
     allSectionsList.push({
       id: `sec-paid-${idx}`,
-      title: sec.title,
+      title: formatSectionTitle(sec.title, freeSections.length + idx),
       isPaid: true,
     });
   });
@@ -385,7 +417,8 @@ export default function ArticleDetailPage() {
     setActiveSectionId(id);
     const element = document.getElementById(id);
     if (element) {
-      const yOffset = -70;
+      // 固定ヘッダー（h-14）および上部追従バー（ArticleQuickJump）を考慮したオフセット
+      const yOffset = -100;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
@@ -490,58 +523,26 @@ export default function ArticleDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 w-full min-w-0">
           {/* メイン記事本文（8 / 12） */}
           <main className="lg:col-span-8 bg-white dark:bg-[#151c28] px-5 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-xs min-w-0 max-w-full">
-            {/* 記事ヘッダー */}
-            <header className="mb-4 sm:mb-8 pb-3 sm:pb-6 border-b border-neutral-100 dark:border-neutral-800/80 min-w-0">
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
+            {/* 記事ヘッダー（冒頭情報の整理・重複排除） */}
+            <header className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-neutral-200/80 dark:border-neutral-800/80 min-w-0">
+              {/* カテゴリ・ゲームバッジ */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 sm:mb-2.5">
                 <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 shrink-0">
                   {article.game === 'sf6' ? 'スト6' : '共通理論'}
                 </span>
-                {article.character && (
-                  <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shrink-0">
-                    {article.character}
-                  </span>
-                )}
-                {/* 立ち回り vs 完全攻略 vs コーチング vs 共通技術 の排他カテゴリバッジ */}
-                {(article.category === 'neutral' || article.slug.includes('neutral')) ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0">
-                    立ち回り
-                  </span>
-                ) : (article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略') || article.slug.includes('complete')) ? (
+                {(article.category === 'character' || article.tags.includes('完全攻略') || article.tags.includes('キャラ別攻略') || article.slug.includes('complete')) ? (
                   <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shrink-0">
                     完全攻略
+                  </span>
+                ) : (article.category === 'neutral' || article.slug.includes('neutral')) ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0">
+                    立ち回り
                   </span>
                 ) : (article.category === 'coaching' || article.tags.includes('過去のコーチング') || article.tags.includes('コーチング')) ? (
                   <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0">
                     コーチング
                   </span>
-                ) : (article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術') || article.tags.includes('共通理論')) ? (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 shrink-0">
-                    共通技術
-                  </span>
                 ) : null}
-
-                {article.controlType === 'both' ? (
-                  <span
-                    className="text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full text-white shrink-0"
-                    style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
-                  >
-                    <span>{activeControlType === 'classic' ? 'クラシック' : 'モダン'}</span>
-                  </span>
-                ) : article.controlType ? (
-                  <span
-                    className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded text-white shrink-0"
-                    style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
-                  >
-                    {article.controlType === 'classic' ? 'クラシック' : 'モダン'}
-                  </span>
-                ) : null}
-
-                {isCompleteGuide && (
-                  <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    <span>{article.patchDate ? `${article.patchDate} パッチ対応` : '最新パッチ対応'}</span>
-                  </span>
-                )}
 
                 {article.isPaid ? (
                   article.subscriptionOnly ? (
@@ -560,60 +561,55 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
+              {/* 1. タイトル（重複表示を統合） */}
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
                 {article.title}
               </h1>
 
-              {/* パッチ対応インフォメーションバナー（完全攻略記事のみ） */}
-              {isCompleteGuide && (
-                <div className="mt-3 sm:mt-4 p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-emerald-50/70 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-bold">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 shrink-0">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                    </span>
-                    <span>
-                      【{article.patchDate || '2026-08-03'}】最新パッチ検証済み（{article.patchVersion || '2026.08.03 Update'} 環境）
-                    </span>
+              {/* 2. 対応パッチ・最終確認日（タイトル直下の1か所に集約） */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>対応パッチ: {article.patchVersion || (article.patchDate ? `${article.patchDate} Update` : '未設定')}</span>
+                    <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-normal">（主要技・コンボ検証済み）</span>
                   </div>
-                  <div className="flex items-center gap-2.5 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold pl-7 sm:pl-0">
-                    <span>アップデート永久追従</span>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-medium">
+                    <span>最終確認日: {article.updatedAt || '未設定'}</span>
                   </div>
                 </div>
-              )}
 
-              {/* スト6公式キャラ アイキャッチヒーローバナー */}
-              <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative group">
-                <div className="aspect-[16/9] sm:aspect-[21/9] w-full relative overflow-hidden">
+                {/* 冒頭の控えめな「購入済みの方はこちら」入口 */}
+                {!isUnlocked && authChecked && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForceShowTokenInput(true);
+                      handleJumpToSection('paywall-card-box');
+                    }}
+                    className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white underline transition-colors cursor-pointer py-1"
+                  >
+                    <span>購入済みの方はこちら</span>
+                  </button>
+                )}
+              </div>
+
+              {/* アイキャッチビジュアル（文字の重複を排除してすっきり配置） */}
+              <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative">
+                <div className="aspect-[21/9] sm:aspect-[24/9] w-full relative overflow-hidden">
                   <img
                     src={getArticleEyecatch(article)}
                     alt={`${article.character || 'ストリートファイター6'} 公式アイキャッチ`}
-                    className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 right-3 sm:right-4 flex items-end justify-between gap-2 pointer-events-none">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/20 text-white font-bold text-xs sm:text-sm tracking-wider shadow-sm">
-                        STREET FIGHTER 6
-                      </span>
-                      {article.character && (
-                        <span className="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold text-xs sm:text-sm tracking-wide shadow-sm">
-                          {article.character}
-                        </span>
-                      )}
-                    </div>
-                    {article.controlType && (
-                      <span className="hidden sm:inline-block px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-neutral-300 text-xs font-medium">
-                        {article.controlType === 'both' ? 'C / M 両対応' : article.controlType === 'classic' ? 'クラシック' : 'モダン'}
-                      </span>
-                    )}
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
             </header>
 
-            {/* 本文 */}
+            {/* 本文コンテナ */}
             <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6 min-w-0 max-w-full">
-              {/* クラシック / モダン切り替えスイッチ */}
+              {/* 3. クラシック / モダン切り替えスイッチ */}
               {article.variants && (
                 <div className="p-2.5 sm:p-3 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
                   <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1.5 sm:px-2 pt-1 pb-1.5 flex items-center justify-between">
@@ -651,6 +647,38 @@ export default function ArticleDetailPage() {
                   </div>
                 </div>
               )}
+
+              {/* 4. 「攻略を読む」「逆引きを使う」の導線ボタン */}
+              <div className="my-3 sm:my-4 grid grid-cols-2 gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleJumpToSection('sec-free-0')}
+                  className="py-3 px-3 sm:px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                >
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span>攻略を読む</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isUnlocked) {
+                      handleJumpToSection('combo-reverse-lookup');
+                    } else {
+                      handleJumpToSection('paywall-card-box');
+                      showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
+                    }
+                  }}
+                  className="py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                >
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span>逆引きを使う</span>
+                  {!isUnlocked && (
+                    <span className="text-[10px] bg-cyan-900/80 px-1.5 py-0.5 rounded text-cyan-200 font-normal">
+                      要購入
+                    </span>
+                  )}
+                </button>
+              </div>
 
               {/* 無料記事：YouTube動画プレイヤー（記事冒頭に配置） */}
               {!article.isPaid && article.youtubeVideoId && (
@@ -721,8 +749,7 @@ export default function ArticleDetailPage() {
                         onClick={() => handleJumpToSection(`sec-free-${idx}`)}
                         className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1"
                       >
-                        <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">0{idx + 1}.</span>
-                        <span className="group-hover:underline">{sec.title}</span>
+                        <span className="group-hover:underline font-medium">{formatSectionTitle(sec.title, idx)}</span>
                       </button>
                       {isCompleteGuide && (
                         <button
@@ -747,9 +774,8 @@ export default function ArticleDetailPage() {
                         onClick={() => handleJumpToSection(`sec-paid-${idx}`)}
                         className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1"
                       >
-                        <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">0{freeSections.length + idx + 1}.</span>
-                        <span className="group-hover:underline">{sec.title}</span>
-                        <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1 py-0.2 rounded font-normal shrink-0">
+                        <span className="group-hover:underline">{formatSectionTitle(sec.title, freeSections.length + idx)}</span>
+                        <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1.5 py-0.5 rounded font-normal shrink-0">
                           {article.subscriptionOnly ? '会員限定' : '有料'}
                         </span>
                       </button>
@@ -774,12 +800,12 @@ export default function ArticleDetailPage() {
 
               {/* 無料公開セクション */}
               {freeSections.map((section, idx) => (
-                <div key={idx} id={`sec-free-${idx}`} className="pt-8 sm:pt-10 scroll-mt-16">
-                  <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                      <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                      <h2 className="text-[15px] sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
-                        {section.title}
+                <div key={idx} id={`sec-free-${idx}`} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
+                  <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                      <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                        {formatSectionTitle(section.title, idx)}
                       </h2>
                     </div>
                     {isCompleteGuide && (
@@ -884,6 +910,8 @@ export default function ArticleDetailPage() {
                       isUnlocked={isUnlocked}
                       isAdminMode={isAdminMode}
                       userEmail={userEmail}
+                      isCheckingAuth={!authChecked}
+                      forceShowTokenInput={forceShowTokenInput}
                       onAdminUnlock={!secretConfig ? handleAdminUnlock : undefined}
                       onAdminLock={handleAdminLock}
                       onBuyArticle={article.subscriptionOnly ? undefined : handleBuyArticle}
@@ -899,23 +927,86 @@ export default function ArticleDetailPage() {
                     />
                   </div>
 
-                  {/* アンロック時の有料限定コンテンツ */}
+                  {/* アンロック時の有料限定コンテンツ ＆ 購入済みユーザー向けクイック導線 */}
                   {isUnlocked && (
-                    <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-6">
-                      <div className="p-3.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs flex flex-wrap items-center justify-between gap-2 font-medium border border-emerald-200 dark:border-emerald-800">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                          <span>
-                            {article.subscriptionOnly
-                              ? 'ここから先はプレミアム会員限定の添削・攻略セクションです。'
-                              : 'ここから先は有料会員・購入者限定の攻略セクションです。'}
-                          </span>
+                    <div className="pt-2 sm:pt-4 space-y-6">
+                      {/* 購入済みユーザー向け 3大クイックナビゲーション */}
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-50 dark:from-neutral-900 dark:via-emerald-950/20 dark:to-neutral-900 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-3 border-b border-emerald-200/60 dark:border-emerald-800/40">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                            <span className="text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200">
+                              購入認証完了：有料限定の全コンテンツを閲覧中
+                            </span>
+                          </div>
+                          {userEmail && (
+                            <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+                              購入者: {userEmail}
+                            </span>
+                          )}
                         </div>
-                        {userEmail && (
-                          <span className="text-[11px] opacity-80 font-mono">
-                            購入認証: {userEmail}
-                          </span>
-                        )}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
+                          {/* 1. 逆引きを使う */}
+                          <button
+                            type="button"
+                            onClick={() => handleJumpToSection('combo-reverse-lookup')}
+                            className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-cyan-500 dark:hover:border-cyan-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                          >
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
+                              <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                              <span>逆引きを使う</span>
+                            </div>
+                            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                              実戦コンボ逆引きDBへ即移動
+                            </p>
+                          </button>
+
+                          {/* 2. 保存した攻略を見る */}
+                          <button
+                            type="button"
+                            onClick={() => handleJumpToSection(bookmarks.length > 0 ? bookmarks[0] : 'sec-free-0')}
+                            className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-amber-500 dark:hover:border-amber-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                          >
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 mb-1">
+                              <Star className="w-4 h-4 text-amber-500 fill-current" />
+                              <span>保存した攻略を見る</span>
+                              {bookmarks.length > 0 && (
+                                <span className="text-[10px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-1.5 py-0.2 rounded-full font-bold">
+                                  {bookmarks.length}件
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                              {bookmarks.length > 0
+                                ? 'お気に入り章へジャンプ'
+                                : '各章の★でお気に入り登録可能'}
+                            </p>
+                          </button>
+
+                          {/* 3. 前回の続きから読む */}
+                          {lastReadSectionId && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleJumpToSection(lastReadSectionId);
+                                showToast('前回の続きの位置へ移動しました');
+                              }}
+                              className="p-3 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xs text-left transition-all cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 mb-1">
+                                <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                                <span>前回の続きから読む</span>
+                              </div>
+                              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                                直前の閲覧位置へ復帰
+                              </p>
+                            </button>
+                          )}
+                        </div>
+                        <div className="mt-2.5 text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500 text-right">
+                          ※お気に入り・閲覧履歴はお使いのブラウザ（端末）内に保存されます
+                        </div>
                       </div>
 
                       {/* 有料限定イントロ（動画前メッセージ） */}
@@ -939,7 +1030,7 @@ export default function ArticleDetailPage() {
                           <React.Fragment key={idx}>
                             {/* 実戦コンボ逆引きデータベース */}
                             {isCompleteGuide && isCenterComboSec && (
-                              <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24">
+                              <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24 sm:scroll-mt-28">
                                 <ArticleComboReverseLookup
                                   controlType={activeControlType}
                                   isUnlocked={true}
@@ -947,12 +1038,12 @@ export default function ArticleDetailPage() {
                               </div>
                             )}
 
-                            <div id={`sec-paid-${idx}`} className="pt-8 sm:pt-10 scroll-mt-16">
-                              <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                                  <span className="w-1.5 h-4.5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                                  <h2 className="text-[15px] sm:text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
-                                    {section.title}
+                            <div id={`sec-paid-${idx}`} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
+                              <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                  <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                                  <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                                    {formatSectionTitle(section.title, freeSections.length + idx)}
                                   </h2>
                                 </div>
                                 {isCompleteGuide && (

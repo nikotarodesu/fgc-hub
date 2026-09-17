@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2, Trophy, ExternalLink } from 'lucide-react';
 
 interface PaywallCardProps {
@@ -8,6 +8,8 @@ interface PaywallCardProps {
   isUnlocked: boolean;
   isAdminMode?: boolean;
   userEmail?: string | null;
+  isCheckingAuth?: boolean;
+  forceShowTokenInput?: boolean;
   onToggleUnlock?: () => void;
   onAdminUnlock?: () => void;
   onAdminLock?: () => void;
@@ -24,6 +26,8 @@ export default function PaywallCard({
   isUnlocked,
   isAdminMode = false,
   userEmail,
+  isCheckingAuth = false,
+  forceShowTokenInput = false,
   onToggleUnlock,
   onAdminUnlock,
   onAdminLock,
@@ -38,6 +42,13 @@ export default function PaywallCard({
   const [inputToken, setInputToken] = useState('');
   const [tokenLoading, setTokenLoading] = useState(false);
   const [tokenError, setTokenError] = useState<string | null>(null);
+
+  // 外部からの展開トリガー（ページ冒頭の「購入済みの方はこちら」リンククリック時等）
+  useEffect(() => {
+    if (forceShowTokenInput) {
+      setShowTokenInput(true);
+    }
+  }, [forceShowTokenInput]);
 
   const handleTokenSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +107,22 @@ export default function PaywallCard({
     }
   };
 
+  // 認証検証中のチラつき防止プレースホルダー
+  if (isCheckingAuth) {
+    return (
+      <div className="relative mt-8 mb-12">
+        <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 p-8 text-center max-w-xl mx-auto shadow-sm">
+          <div className="flex flex-col items-center justify-center gap-3 py-6">
+            <Loader2 className="w-6 h-6 animate-spin text-cyan-600 dark:text-cyan-400" />
+            <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+              閲覧権限を確認中...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isUnlocked) {
     if (isAdminMode) {
       return (
@@ -143,12 +170,12 @@ export default function PaywallCard({
           <Lock className="w-5 h-5" />
         </button>
 
-        <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white mb-1.5">
+        <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white mb-2">
           この続きは有料エリアです
         </h3>
-        <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-5 leading-relaxed font-normal">
+        <p className="text-sm text-neutral-700 dark:text-neutral-300 max-w-md mx-auto mb-5 leading-relaxed">
           {description ||
-            '勝率を直結させる「起き攻めフレーム表」「厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を完全収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。'}
+            '勝率に直結する「起き攻めフレーム表」「画面中央・画面端の実戦向け厳選コンボ」「詐欺飛び・確定反撃集」「BO時削り連携」を収録しています（クラシック・モダン両対応／一度の購入で両方閲覧可能）。'}
         </p>
 
         {/* 執筆者の実績・note大会2連覇の信頼性 */}
@@ -208,27 +235,27 @@ export default function PaywallCard({
 
         {/* 有料部分で手に入るもの（有料移行のメリット） */}
         {!hideBenefits && (
-          <div className="mb-5 p-3.5 sm:p-4 rounded-xl bg-neutral-100/80 dark:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700 text-left text-xs space-y-2">
-            <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-neutral-200/60 dark:border-neutral-700/60">
+          <div className="mb-5 p-4 rounded-xl bg-neutral-100/80 dark:bg-neutral-800 border border-neutral-200/90 dark:border-neutral-700 text-left text-xs space-y-2">
+            <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5 mb-2 pb-1.5 border-b border-neutral-200/60 dark:border-neutral-700/60">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>有料限定エリアで手に入るメリット:</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-800 dark:text-neutral-100">
-              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-[13px] text-neutral-800 dark:text-neutral-100">
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2.5 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
                 <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0">✓</span>
-                <span className="leading-snug">全フレーム状況別の起き攻め完全網羅</span>
+                <span className="leading-snug">主要な有利フレーム別に起き攻めを整理</span>
               </div>
-              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2.5 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
                 <span className="text-amber-600 dark:text-amber-400 font-black shrink-0">✓</span>
-                <span className="leading-snug">中央・端・リーサルの最大火力コンボレシピ</span>
+                <span className="leading-snug">画面中央・画面端・倒し切りに使える実戦向け厳選コンボ</span>
               </div>
-              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2.5 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
                 <span className="text-cyan-600 dark:text-cyan-400 font-black shrink-0">✓</span>
                 <span className="leading-snug">逆引きリーサルツール使用可能＆実戦動画付き</span>
               </div>
-              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
+              <div className="flex items-start gap-2 bg-white/70 dark:bg-neutral-900/70 p-2.5 rounded-lg border border-neutral-200/50 dark:border-neutral-700/50">
                 <span className="text-indigo-600 dark:text-indigo-400 font-black shrink-0">✓</span>
-                <span className="leading-snug">今後のパッチ・キャラ調整時も<strong className="text-neutral-900 dark:text-white font-bold">永久に無料追記</strong></span>
+                <span className="leading-snug">今後のバージョンアップ・キャラ調整時も<strong className="text-neutral-900 dark:text-white font-bold">追加料金なしで追記</strong></span>
               </div>
             </div>
           </div>
@@ -239,25 +266,25 @@ export default function PaywallCard({
           <div className="max-w-md mx-auto mb-5 text-left">
             <div className="p-5 sm:p-6 rounded-2xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-sm border border-neutral-800 dark:border-neutral-700">
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
                     プレミアム会員限定
                   </span>
-                  <span className="text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+                  <span className="text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
                     読み放題
                   </span>
                 </div>
                 <div className="text-2xl font-bold text-white mb-2">
-                  ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
+                  ¥980 <span className="text-sm font-normal text-neutral-400">/ 月</span>
                 </div>
-                <p className="text-xs text-neutral-300 dark:text-neutral-400 mb-5 leading-relaxed">
+                <p className="text-sm text-neutral-300 dark:text-neutral-400 mb-5 leading-relaxed">
                   本記事の実戦添削をはじめ、スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onJoinMembership}
-                className="w-full py-3 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="w-full py-3 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 <span>プレミアム会員に入会して続きを読む</span>
               </button>
@@ -266,50 +293,51 @@ export default function PaywallCard({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-5">
             {/* 単体購入 */}
-            <div className="p-4.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700/80 flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700/80 flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">
+                <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">
                   この記事を購入
                 </span>
-                <div className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
-                  ¥{price.toLocaleString()} <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">（買い切り）</span>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                  ¥{price.toLocaleString()}{' '}
+                  <span className="text-sm font-bold text-neutral-600 dark:text-neutral-400">（買い切り）</span>
                 </div>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
-                  クラシック・モダン両対応（1回の購入で両方読み放題）。アプデ追記も含め永久閲覧できます。
+                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-4 leading-relaxed font-normal">
+                  クラシック・モダン両対応（1回の購入で両方閲覧可能）。今後のアップデート追記も含め追加料金なしで閲覧できます。
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onBuyArticle}
-                className="w-full py-2.5 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
-                <CreditCard className="w-3.5 h-3.5" />
+                <CreditCard className="w-4 h-4" />
                 <span>記事を購入する</span>
               </button>
             </div>
 
             {/* 月額サブスク */}
-            <div className="p-4.5 rounded-xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-xs border border-neutral-800 dark:border-neutral-700">
+            <div className="p-5 rounded-xl bg-neutral-950 dark:bg-neutral-800 text-white relative flex flex-col justify-between shadow-xs border border-neutral-800 dark:border-neutral-700">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                     プレミアム会員
                   </span>
-                  <span className="text-[10px] font-semibold bg-white/20 text-white px-2 py-0.5 rounded">
+                  <span className="text-[11px] font-semibold bg-white/20 text-white px-2 py-0.5 rounded">
                     おすすめ
                   </span>
                 </div>
-                <div className="text-xl font-bold text-white mb-2">
-                  ¥980 <span className="text-xs font-normal text-neutral-400">/ 月</span>
+                <div className="text-2xl font-bold text-white mb-2">
+                  ¥980 <span className="text-sm font-normal text-neutral-400">/ 月</span>
                 </div>
-                <p className="text-[11px] text-neutral-300 dark:text-neutral-400 mb-4 leading-relaxed">
+                <p className="text-sm text-neutral-300 dark:text-neutral-400 mb-4 leading-relaxed">
                   スト6全キャラ攻略＆立ち回り解説がすべて読み放題。
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onJoinMembership}
-                className="w-full py-2.5 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <span>プレミアム会員に入会</span>
               </button>
@@ -318,39 +346,47 @@ export default function PaywallCard({
         )}
 
         {/* 閲覧用トークン入力アコーディオン */}
-        <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs">
+        <div className="pt-4 border-t border-neutral-200/80 dark:border-neutral-800 text-xs sm:text-sm">
           {!showTokenInput ? (
             <button
               type="button"
               onClick={() => setShowTokenInput(true)}
-              className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white font-semibold transition-colors cursor-pointer py-1"
             >
-              <KeyRound className="w-3.5 h-3.5 text-cyan-600" />
-              <span>購入メールに届いた閲覧トークンをお持ちの方はこちら</span>
+              <KeyRound className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+              <span>購入済みの方はこちら</span>
             </button>
           ) : (
-            <form onSubmit={handleTokenSubmit} className="space-y-2 max-w-sm mx-auto text-left">
-              <label className="block text-[11px] font-medium text-neutral-600 dark:text-neutral-400">
-                購入メールまたは完了画面に表示された閲覧トークンを入力：
-              </label>
-              <div className="flex gap-1.5">
+            <form onSubmit={handleTokenSubmit} className="space-y-3 max-w-md mx-auto text-left">
+              <div className="space-y-1">
+                <label className="block text-xs sm:text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                  購入メールまたは完了画面に表示された閲覧トークンを入力：
+                </label>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  購入完了メールに記載された「閲覧用URL」を開いていただくか、メール内の「閲覧トークン」を下記に入力することで、いつでも閲覧を再開できます。
+                  <span className="block mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                    ※一度認証すると、同じブラウザでは次回以降自動的に閲覧可能になります。
+                  </span>
+                </p>
+              </div>
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={inputToken}
                   onChange={(e) => setInputToken(e.target.value)}
                   placeholder="トークンをペースト..."
-                  className="flex-1 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-xs text-neutral-900 dark:text-white focus:outline-none focus:border-cyan-600 font-mono"
+                  className="flex-1 px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-xs sm:text-sm text-neutral-900 dark:text-white focus:outline-none focus:border-cyan-600 font-mono"
                 />
                 <button
                   type="submit"
                   disabled={tokenLoading || !inputToken.trim()}
-                  className="px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold disabled:opacity-50 cursor-pointer flex items-center gap-1"
+                  className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs sm:text-sm font-bold disabled:opacity-50 cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
-                  {tokenLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : '認証'}
+                  {tokenLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : '認証'}
                 </button>
               </div>
               {tokenError && (
-                <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium">
                   {tokenError}
                 </p>
               )}

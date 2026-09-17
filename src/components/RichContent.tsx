@@ -255,7 +255,7 @@ function SecretSubheadingButton({
     <button
       type="button"
       onClick={handleTap}
-      className="text-xs sm:text-[15px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words cursor-pointer select-none active:scale-95 transition-transform touch-manipulation text-left"
+      className="text-[16.5px] sm:text-[17.5px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words cursor-pointer select-none active:scale-95 transition-transform touch-manipulation text-left"
     >
       {renderInline(cleanText)}
     </button>
@@ -483,11 +483,11 @@ export default function RichContent({
                 className="flex items-center gap-2.5 pb-2 scroll-mt-20 sm:scroll-mt-24"
               >
                 {numChar && (
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-xs shrink-0 shadow-2xs">
+                  <span className="inline-flex items-center justify-center w-6.5 h-6.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono font-bold text-xs shrink-0 shadow-2xs">
                     {numChar}
                   </span>
                 )}
-                <h3 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight">
+                <h3 className="text-[17px] sm:text-[18px] font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
                   {renderInline(titleText)}
                 </h3>
               </div>
@@ -509,12 +509,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-sm sm:text-[15.5px] tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-[16px] sm:text-[17px] tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-sm sm:text-[15px] text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
+                <h4 className="font-bold text-[16px] sm:text-[17px] text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -536,12 +536,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⚡️ ${cleanText}`}
-                className="flex items-center gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-xs sm:text-base tracking-tight scroll-mt-24"
+                className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-[16px] sm:text-[17px] tracking-tight scroll-mt-24"
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-500/20 dark:bg-orange-400/20 text-orange-600 dark:text-orange-400 text-xs font-bold shrink-0 select-none">
                   <Zap className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-xs sm:text-[15px] text-orange-950 dark:text-orange-100 tracking-tight">
+                <h4 className="font-bold text-[16px] sm:text-[17px] text-orange-950 dark:text-orange-100 tracking-tight leading-snug">
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -622,7 +622,7 @@ export default function RichContent({
                       renderInline={renderInline}
                     />
                   ) : (
-                    <h4 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words shadow-2xs">
+                    <h4 className="text-[16.5px] sm:text-[17.5px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words shadow-2xs">
                       {renderInline(cleanText)}
                     </h4>
                   )}
@@ -673,9 +673,9 @@ export default function RichContent({
             return (
               <div
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base font-normal text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
+                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] font-normal text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
               >
-                <span className="text-cyan-600/80 dark:text-cyan-400/80 text-xs sm:text-[13px] mt-[5px] sm:mt-[6px] shrink-0 select-none">
+                <span className="text-cyan-600 dark:text-cyan-400 text-xs sm:text-[13px] mt-[6px] sm:mt-[7px] shrink-0 select-none">
                   ▶
                 </span>
                 <span className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">
@@ -699,10 +699,10 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base font-normal text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
+                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] font-normal text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
               >
                 {isAction ? (
-                  <span className="text-cyan-600/80 dark:text-cyan-400/80 text-xs sm:text-[13px] mt-[5px] sm:mt-[6px] shrink-0 select-none">
+                  <span className="text-cyan-600 dark:text-cyan-400 text-xs sm:text-[13px] mt-[6px] sm:mt-[7px] shrink-0 select-none">
                     ▶
                   </span>
                 ) : (
@@ -730,7 +730,7 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2 sm:gap-2.5 text-[15px] sm:text-base text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.75]"
+                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
               >
                 <span className="font-bold text-neutral-900 dark:text-white font-mono text-sm shrink-0 mt-0.5">
                   {num}.
@@ -754,7 +754,7 @@ export default function RichContent({
             return (
               <div
                 key={lIdx}
-                className="flex items-center gap-2 text-[15px] sm:text-base text-neutral-800 dark:text-neutral-200 font-medium leading-relaxed"
+                className="flex items-center gap-2 text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 font-medium leading-[1.75] sm:leading-[1.85]"
               >
                 <span className="text-cyan-600 dark:text-cyan-400 shrink-0 font-bold">➔</span>
                 <span>{renderInline(itemText)}</span>
@@ -767,7 +767,7 @@ export default function RichContent({
 
     // 5. 通常テキスト段落
     return (
-      <p key={blockKey} className="text-[15px] sm:text-base text-neutral-700 dark:text-neutral-200 leading-relaxed sm:leading-[1.8] my-3">
+      <p key={blockKey} className="text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85] my-3">
         {block.lines?.map((line, lIdx) => (
           <React.Fragment key={lIdx}>
             {lIdx > 0 && <br />}
@@ -779,7 +779,7 @@ export default function RichContent({
   };
 
   return (
-    <div className="space-y-4 text-neutral-700 dark:text-neutral-300 leading-relaxed sm:leading-loose text-[15px] sm:text-base">
+    <div className="space-y-4 text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85] text-[16px] sm:text-[17px]">
       {blocks.map((block, bIdx) => renderBlock(block, `block-${bIdx}`))}
     </div>
   );

@@ -33,8 +33,8 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // 全角の「＞」を「>」に正規化
   let cleanRecipe = recipe.replace(/＞/g, '>');
 
-  // 0. 先頭のラベル（例: 【ノーマルヒット】：、ベスト：、次点：、推奨：、基本：、最大：等）を除去
-  cleanRecipe = cleanRecipe.replace(/^(?:【.*?】|(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃))[：:]\s*/, '').trim();
+  // 0. 先頭のラベル（例: 【ノーマルヒット】：、脱出パターンA：、ベスト：、次点：、推奨：、基本：、最大：等）を除去
+  cleanRecipe = cleanRecipe.replace(/^(?:【.*?】|(?:脱出パターン|パターン|ルート|ステップ|選択肢)[A-Za-z0-9Ａ-Ｚａ-ｚ０-９]*[：:]|(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃)[：:])\s*/, '').trim();
 
   // 太字装飾（**）の除去
   cleanRecipe = cleanRecipe.replace(/\*\*/g, '');
@@ -98,8 +98,8 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
 function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
   let remaining = text.trim();
 
-  // 先頭の【...】ラベルを除去
-  remaining = remaining.replace(/^【.*?】[：:]\s*/, '').trim();
+  // 先頭の【...】や脱出パターンA：等のラベルを除去
+  remaining = remaining.replace(/^(?:【.*?】|(?:脱出パターン|パターン|ルート|ステップ|選択肢)[A-Za-z0-9Ａ-Ｚａ-ｚ０-９]*[：:]|(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃)[：:])\s*/, '').trim();
 
   // 1. 各パーツ内のダメージ数値・フレーム差を除去
   remaining = remaining
@@ -345,8 +345,8 @@ function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'clas
 function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
   let remaining = text.trim();
 
-  // 先頭の【...】ラベルを除去
-  remaining = remaining.replace(/^【.*?】[：:]\s*/, '').trim();
+  // 先頭の【...】や脱出パターンA：等のラベルを除去
+  remaining = remaining.replace(/^(?:【.*?】|(?:脱出パターン|パターン|ルート|ステップ|選択肢)[A-Za-z0-9Ａ-Ｚａ-ｚ０-９]*[：:]|(?:ベスト|次点|推奨|基本|最大|中央|画面端|反撃|確定反撃)[：:])\s*/, '').trim();
 
   // 1. 各パーツ内のダメージ数値を除去（例: SA3〆（4247）など各パーツ内に残っている場合）
   remaining = remaining
@@ -380,9 +380,18 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     remaining = remaining.replace(/溜め|ホールド|タメ/g, '').trim();
   }
 
-  // 3.5 単独のラッシュ（例: 「ラッシュ」「ラッシュ起き攻め」「生ラッシュ」など技ボタンを伴わないパーツ）
+  // 3.5 単独のラッシュ（例: 「ラッシュ」「ドライブラッシュ」「生ラッシュ」「パリィラッシュ」など技ボタンを伴わないパーツ）
   const cleanRushCheck = remaining.replace(/起き攻め/g, '').trim();
-  if (cleanRushCheck === 'ラッシュ' || cleanRushCheck === '生ラッシュ' || cleanRushCheck === 'パリィラッシュ') {
+  if (
+    cleanRushCheck === 'ラッシュ' ||
+    cleanRushCheck === '生ラッシュ' ||
+    cleanRushCheck === 'パリィラッシュ' ||
+    cleanRushCheck === 'ドライブラッシュ' ||
+    cleanRushCheck === 'dラッシュ' ||
+    cleanRushCheck === 'ドライブ' ||
+    cleanRushCheck.toLowerCase() === 'dr' ||
+    cleanRushCheck === 'キャンセルラッシュ'
+  ) {
     return {
       original: 'ラッシュ',
       isCancel: false,
@@ -424,6 +433,10 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       isRush = true;
       rushText = 'ラッシュ';
       remaining = remaining.replace(/パリィラッシュ/g, '').trim();
+    } else if (remaining.includes('ドライブラッシュ')) {
+      isRush = true;
+      rushText = 'ラッシュ';
+      remaining = remaining.replace(/ドライブラッシュ/g, '').trim();
     } else if (remaining.includes('ラッシュ')) {
       isRush = true;
       rushText = 'ラッシュ';
@@ -431,7 +444,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     }
   } else {
     // キャンセルがある場合は余分な「ラッシュ」文字列を除去
-    remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ラッシュ/g, '').trim();
+    remaining = remaining.replace(/生ラッシュ|パリィラッシュ|ドライブラッシュ|ラッシュ/g, '').trim();
   }
 
   remaining = remaining.replace(/起き攻め/g, '').trim();
@@ -439,6 +452,27 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   remaining = remaining.replace(/〆|締め?$/, '').trim();
 
   const lower = remaining.toLowerCase();
+
+  // ラッシュやキャンセルを引いた後に技名がなく「ドライブ」だけ残った場合、または空文字の場合
+  if (!remaining || lower === 'ドライブ' || lower === 'dr' || lower === 'd') {
+    return {
+      original: 'ラッシュ',
+      isCancel: false,
+      isRush: false,
+      rushText: undefined,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'special',
+        color: 'neutral',
+        label: 'ラッシュ',
+        description: 'ドライブラッシュ',
+        iconText: 'ラッシュ',
+      },
+      suffix,
+    };
+  }
 
   // 構え（行雲流水）
   if (lower.startsWith('構え') || lower.startsWith('行雲流水')) {
@@ -1084,6 +1118,83 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       },
       suffix,
       tip: '前＋中P（追突拳）',
+    };
+  }
+
+  // 2.95 ベガ必殺技：シャドウライズ (↓(溜め)↑ + K)
+  if (lower.includes('シャドウライズ') || lower.includes('シャドーライズ') || lower === 'ライズ') {
+    const isOD = lower.includes('od');
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↑'],
+      arrowStr: '↓↑',
+      chargeArrows: [true, false], // ↓が溜め
+      button: {
+        kind: 'kick',
+        color: isOD ? 'purple' : 'yellow',
+        label: isOD ? 'ODライズ' : 'K',
+        description: isOD ? 'ODシャドウライズ' : 'キックボタン（下溜め上K）',
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: '下キーを約0.8秒溜めてから上＋K（下溜め上K）',
+    };
+  }
+
+  // 2.96 ベガシャドウライズ派生：ヘッドプレス（K派生）
+  if (lower.includes('ヘッドプレス') || lower === 'k派生' || lower === 'キック派生') {
+    return {
+      original: 'ヘッドプレス',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'kick',
+        color: 'yellow',
+        label: 'K派生',
+        description: 'K派生（ヘッドプレス）',
+        iconText: 'K派生',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'シャドウライズ中にKボタン（ヘッドプレスに派生）',
+    };
+  }
+
+  // 2.97 ベガシャドウライズ派生：サマーソルトスカルダイバー / デビリバ（P派生）
+  if (
+    lower.includes('デビリバ') ||
+    lower.includes('スカルダイバー') ||
+    lower.includes('サマーソルト') ||
+    lower === 'p派生' ||
+    lower === 'パンチ派生'
+  ) {
+    return {
+      original: 'デビリバ',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'blue',
+        label: 'P派生',
+        description: 'P派生（デビリバ）',
+        iconText: 'P派生',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'シャドウライズ中にPボタン（デビリバに派生）',
     };
   }
 

@@ -61,7 +61,7 @@ export default function ArcadeButton({
   }
 
   const isModern = controlType === 'modern';
-  // SP、SA、パリィなどの特殊ボタン・必殺技ボタンは文字を表示する
+  // SP、SA、パリィなどの特殊ボタン・必殺技ボタン・派生ボタンは文字を表示する
   const isSpecialOrSystem =
     iconText === 'SP' ||
     iconText === 'SA' ||
@@ -71,6 +71,7 @@ export default function ArcadeButton({
     iconText === 'DI' ||
     iconText === 'DP' ||
     iconText === 'PARRY' ||
+    iconText.includes('派生') ||
     iconText.startsWith('SA');
 
   // モダン操作の通常攻撃（弱・中・強）：PやKなど文字は入らず色のみ！

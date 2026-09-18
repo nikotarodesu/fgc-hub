@@ -90,17 +90,6 @@ export default function AuthorPage() {
                     <ExternalLink className="w-3 h-3 opacity-60" />
                   </a>
                 )}
-                {AUTHOR_INFO.youtubeUrl && (
-                  <a
-                    href={AUTHOR_INFO.youtubeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 transition-colors"
-                  >
-                    <span>YouTube</span>
-                    <ExternalLink className="w-3 h-3 opacity-60" />
-                  </a>
-                )}
               </div>
             </div>
           </div>

@@ -652,14 +652,27 @@ export default function ArticleDetailPage() {
                 )}
               </div>
 
-              {/* コーチング記事のアーカイブ注記 */}
+              {/* コーチング記事のアーカイブ注記（スマホ画面を圧迫しないスリムなアコーディオン仕様） */}
               {isCoaching && (
-                <div className="mt-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 text-xs text-neutral-600 dark:text-neutral-400 flex items-start gap-2">
-                  <span className="font-bold text-neutral-800 dark:text-neutral-200 shrink-0">※ コーチング記録について:</span>
-                  <span className="leading-relaxed">
+                <details className="group mt-2.5 rounded-lg bg-neutral-50/80 dark:bg-neutral-800/40 border border-neutral-200/60 dark:border-neutral-700/50 text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 transition-all">
+                  <summary className="px-3 py-2 cursor-pointer select-none flex items-center justify-between gap-2 font-medium hover:text-neutral-800 dark:hover:text-neutral-200 list-none [&::-webkit-details-marker]:hidden">
+                    <span className="flex items-center gap-1.5 truncate">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-700 dark:text-neutral-300 shrink-0">
+                        注記
+                      </span>
+                      <span className="truncate">当時のバージョン仕様・指導記録に関するご案内</span>
+                    </span>
+                    <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-normal shrink-0 group-open:hidden">
+                      詳細を表示 ▼
+                    </span>
+                    <span className="text-[10px] text-neutral-400 font-normal shrink-0 hidden group-open:inline">
+                      閉じる ▲
+                    </span>
+                  </summary>
+                  <div className="px-3 pb-2.5 pt-1.5 text-[11px] text-neutral-600 dark:text-neutral-400 border-t border-neutral-200/40 dark:border-neutral-700/40 leading-relaxed">
                     本記事は{article.coachingDate ? `${article.coachingDate}時点の` : ''}実戦リプレイに基づく指導記録です。当時のバージョン仕様に基づいているため、最新パッチとは技性能やフレーム状況が一部異なる場合があります。普遍的な立ち回り方針や判断プロセスの事例としてご活用ください。
-                  </span>
-                </div>
+                  </div>
+                </details>
               )}
 
               {/* アイキャッチビジュアル（16:9比率を保ち見切れを防止） */}

@@ -91,31 +91,17 @@ export default function AuthorCard({ author = AUTHOR_INFO, className = '' }: Aut
           </a>
         )}
 
-        <div className="grid grid-cols-2 gap-1.5">
-          {author.noteUrl && (
-            <a
-              href={author.noteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-neutral-100 hover:bg-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border border-neutral-200/70 dark:border-neutral-700/70 flex items-center justify-center gap-1 transition-colors"
-            >
-              <span>note</span>
-              <ExternalLink className="w-2.5 h-2.5 opacity-60" />
-            </a>
-          )}
-
-          {author.youtubeUrl && (
-            <a
-              href={author.youtubeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-neutral-100 hover:bg-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border border-neutral-200/70 dark:border-neutral-700/70 flex items-center justify-center gap-1 transition-colors"
-            >
-              <span>YouTube</span>
-              <ExternalLink className="w-2.5 h-2.5 opacity-60" />
-            </a>
-          )}
-        </div>
+        {author.noteUrl && (
+          <a
+            href={author.noteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-1.5 px-3 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border border-neutral-200/70 dark:border-neutral-700/70 flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <span>note公式ページ</span>
+            <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+          </a>
+        )}
       </div>
     </div>
   );

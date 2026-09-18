@@ -54,8 +54,8 @@ export default function ArticleDetailPage() {
       Boolean(article.coachingDate)
     )
   );
-  // コーチング記事の追従プレイヤー対象（現在は春麗コーチング記事限定で先行テスト）
-  const isCoachingStickyTarget = slug === 'coaching-chunli-1600mr-vs-akuma';
+  // 全てのコーチング記事に追従プレイヤーを適用
+  const isCoachingStickyTarget = isCoaching;
   const secretConfig = getSecretUnlockConfig(slug);
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(

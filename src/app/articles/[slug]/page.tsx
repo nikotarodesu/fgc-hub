@@ -831,8 +831,8 @@ export default function ArticleDetailPage() {
                 </div>
               ) : null}
 
-              {/* 無料記事：YouTube動画プレイヤー（リード文・要点の直下に配置） */}
-              {!article.isPaid && article.youtubeVideoId && (
+              {/* YouTube動画プレイヤー（コーチング記事の場合は記事冒頭に配置して全編追従、通常無料記事はここ） */}
+              {((!article.isPaid || isCoachingStickyTarget) && article.youtubeVideoId) && (
                 isCoachingStickyTarget ? (
                   <CoachingStickyPlayer
                     videoId={article.youtubeVideoId}
@@ -1090,19 +1090,11 @@ export default function ArticleDetailPage() {
                         </div>
                       )}
 
-                      {/* 有料限定：YouTube動画プレイヤー */}
-                      {article.youtubeVideoId && (
-                        isCoachingStickyTarget ? (
-                          <CoachingStickyPlayer
-                            videoId={article.youtubeVideoId}
-                            title={article.title}
-                            caption="実戦解説・対戦リプレイ動画（YouTube）"
-                          />
-                        ) : (
-                          <div className="my-6">
-                            <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
-                          </div>
-                        )
+                      {/* 有料限定：YouTube動画プレイヤー（isCoachingStickyTargetの場合は記事上部ですでに全編追従中） */}
+                      {article.youtubeVideoId && !isCoachingStickyTarget && (
+                        <div className="my-6">
+                          <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
+                        </div>
                       )}
 
                       {/* 有料セクション */}

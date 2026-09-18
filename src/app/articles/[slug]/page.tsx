@@ -345,7 +345,7 @@ export default function ArticleDetailPage() {
     });
   });
   paidSections.forEach((sec, idx) => {
-    if (isCompleteGuide && sec.title.includes('画面中央のコンボ')) {
+    if (isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ') && sec.title.includes('画面中央のコンボ')) {
       allSectionsList.push({
         id: 'combo-reverse-lookup',
         title: '⚡ 実戦コンボ逆引きデータベース',
@@ -1091,7 +1091,7 @@ export default function ArticleDetailPage() {
                         return (
                           <React.Fragment key={idx}>
                             {/* 実戦コンボ逆引きデータベース */}
-                            {isCompleteGuide && isCenterComboSec && (
+                            {isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ') && isCenterComboSec && (
                               <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24 sm:scroll-mt-28">
                                 <ArticleComboReverseLookup
                                   controlType={activeControlType}

@@ -61,7 +61,16 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   // ">" または "→" で分割
   const rawParts = cleanRecipe.split(/>|→(?!\+|↓|↘|↗|←|↙|↖)/).map((p) => p.trim()).filter(Boolean);
 
-  const steps = rawParts.flatMap((part) => parsePartToSteps(part, controlType));
+  const isElena =
+    cleanRecipe.includes('ライノ') ||
+    cleanRecipe.includes('コロ') ||
+    cleanRecipe.includes('スピン') ||
+    cleanRecipe.includes('ムーン') ||
+    cleanRecipe.includes('エレナ') ||
+    cleanRecipe.includes('中KTC') ||
+    cleanRecipe.includes('中PTC');
+
+  const steps = rawParts.flatMap((part) => parsePartToSteps(part, controlType, isElena));
 
   // 構え後のスピバの特別仕様判定
   // （春麗は構えを経由したスピバのみ下溜め免除で「↓↑＋中K（OD時は下上KK）」で出せる仕様）
@@ -95,7 +104,7 @@ export function parseVisualCombo(recipe: string, controlType: 'classic' | 'moder
   return steps;
 }
 
-function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep[] {
+function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep[] {
   let remaining = text.trim();
 
   // 先頭の【...】や脱出パターンA：等のラベルを除去
@@ -189,6 +198,293 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     lower.includes('択')
   ) {
     return [];
+  }
+
+  // エレナ複合パーツ判定（例: 中スピン弱コロ中派生、ODスピン弱コロ中派生、強スピン弱コロ中派生等）
+  const spinElenaMatch = remaining.match(/^(.*?(?:od|弱|中|強)?スピン(?:（.*?）)?)\s*((?:od|弱|中|強)?コロ(?:コロ)?.*)$/i);
+  if (spinElenaMatch) {
+    const part1 = spinElenaMatch[1].trim();
+    const part2 = spinElenaMatch[2].trim();
+    return [...parsePartToSteps(part1, controlType, true), ...parsePartToSteps(part2, controlType, true)];
+  }
+
+  // エレナ／共通TC：中KTC (中K ➔ 大K)
+  if (lower.includes('中ktc') || lower.includes('中k・大k') || lower === '中k>大k') {
+    const step1: VisualStep = {
+      original: remaining || '中KTC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'kick',
+        color: 'yellow',
+        label: '中K',
+        description: '中キック（中KTC 1段目）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      tip: '中Kヒット後に強Kを入力（中KTC: 中K ➔ 大K）',
+    };
+    const step2: VisualStep = {
+      original: '大K',
+      isCancel: false,
+      isRush: false,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'kick',
+        color: 'red',
+        label: '大K',
+        description: '強キック（中KTC 2段目）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      suffix,
+    };
+    return [step1, step2];
+  }
+
+  // エレナTC：中PTC (中P ➔ 中P)
+  if (lower.includes('中ptc') || lower.includes('中p・中p') || lower === '中p>中p') {
+    const step1: VisualStep = {
+      original: remaining || '中PTC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: '中P',
+        description: '中パンチ（中PTC 1段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      tip: '中Pヒット後にもう一度中Pを入力（中PTC: 中P ➔ 中P）',
+    };
+    const step2: VisualStep = {
+      original: '中P',
+      isCancel: false,
+      isRush: false,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: '中P',
+        description: '中パンチ（中PTC 2段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+    };
+    return [step1, step2];
+  }
+
+  // エレナTC：前大PTC / 大PTC (前大P ➔ 大P / 大P ➔ 大P)
+  // ユーザー指示：「大PTC-大P→大P」
+  if (lower.includes('前大ptc') || lower.includes('前大p・大p')) {
+    const step1: VisualStep = {
+      original: remaining || '前大PTC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→'],
+      arrowStr: '→',
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: '前大P',
+        description: '前強P（前大PTC 1段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      tip: '前＋強Pヒット後に強Pを入力（前大PTC: 前大P ➔ 大P）',
+    };
+    const step2: VisualStep = {
+      original: '大P',
+      isCancel: false,
+      isRush: false,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: '大P',
+        description: '強P（前大PTC 2段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+    };
+    return [step1, step2];
+  }
+
+  if (isElena && (lower.includes('大ptc') || lower.includes('大p・大p'))) {
+    const step1: VisualStep = {
+      original: remaining || '大PTC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: '大P',
+        description: '強P（大PTC 1段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      tip: '強Pヒット後にもう一度強Pを入力（大PTC: 大P ➔ 大P）',
+    };
+    const step2: VisualStep = {
+      original: '大P',
+      isCancel: false,
+      isRush: false,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: '大P',
+        description: '強P（大PTC 2段目）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+    };
+    return [step1, step2];
+  }
+
+  // エレナ：コロ派生技（例: 弱コロ中派生、ODコロ中派生、コロ中派生、弱コロコロ弱派生、強コロコロ強派生など）
+  // ユーザー指示：「弱コロ中派生→236弱P→中K」
+  if (lower.includes('コロ') && lower.includes('派生')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isWeak = lower.includes('弱');
+    const isMed = lower.includes('中') && !lower.includes('中派生');
+    const isCorocoro = lower.includes('コロコロ');
+
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isWeak ? '弱' : isMed ? '中' : '弱';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isWeak ? 'blue' : isMed ? 'yellow' : 'blue';
+    const btnP = isOD ? 'PP' : isHeavy ? '大P' : isWeak ? '弱P' : '中P';
+
+    // 派生キック
+    const hasHeavyFollowup = lower.includes('強派生') || lower.includes('大派生');
+    const hasWeakFollowup = lower.includes('弱派生');
+    const followupStrength = hasHeavyFollowup ? '強' : hasWeakFollowup ? '弱' : '中';
+    const followupColor: ButtonColor = hasHeavyFollowup ? 'red' : hasWeakFollowup ? 'blue' : 'yellow';
+    const followupBtn = hasHeavyFollowup ? '大K' : hasWeakFollowup ? '弱K' : '中K';
+
+    const step1: VisualStep = {
+      original: isCorocoro ? `${strength}コロコロ` : `${strength}コロ`,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODコロ' : `${strength}コロ`,
+        description: isOD ? 'ODリンクシング（236+PP）' : `${strength}リンクシング（236+${btnP}）`,
+        iconText: isOD ? 'PP' : btnP,
+        showLabel: false,
+      },
+      tip: `テンキー236+${btnP}（リンクシング）`,
+    };
+
+    const steps: VisualStep[] = [step1];
+
+    if (isCorocoro) {
+      steps.push({
+        original: '前P',
+        arrows: ['→'],
+        arrowStr: '→',
+        button: {
+          kind: 'punch',
+          color,
+          label: '前P',
+          description: `前＋${btnP}（リンクスワール）`,
+          iconText: btnP,
+          showLabel: false,
+        },
+        tip: `コロ中に前＋${btnP}でリンクスワールへ派生`,
+      });
+    }
+
+    steps.push({
+      original: `${followupStrength}派生`,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: 'kick',
+        color: followupColor,
+        label: `${followupStrength}派生`,
+        description: `${followupStrength}キック派生（${followupBtn}）`,
+        iconText: followupBtn,
+        showLabel: false,
+      },
+      suffix,
+      tip: `派生技：${followupBtn}（キックボタン）`,
+    });
+
+    return steps;
+  }
+
+  // エレナ：コロコロ（リンクスワール）
+  // ユーザー指示：「コロコロ→236p→前P」
+  if (lower.includes('コロコロ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isWeak = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isWeak ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isWeak ? 'blue' : 'yellow';
+    const btnP = isOD ? 'PP' : isHeavy ? '大P' : isWeak ? '弱P' : '中P';
+
+    const step1: VisualStep = {
+      original: `${strength}コロ`,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODコロ' : `${strength}コロ`,
+        description: `${strength}リンクシング（236+${btnP}）`,
+        iconText: isOD ? 'PP' : btnP,
+        showLabel: false,
+      },
+      tip: `テンキー236+${btnP}`,
+    };
+    const step2: VisualStep = {
+      original: '前P',
+      arrows: ['→'],
+      arrowStr: '→',
+      button: {
+        kind: 'punch',
+        color,
+        label: '前P',
+        description: `前＋${btnP}（リンクスワール）`,
+        iconText: btnP,
+        showLabel: false,
+      },
+      suffix,
+      tip: `コロ中に前＋${btnP}`,
+    };
+    return [step1, step2];
   }
 
   // 構え（行雲流水）および構え派生技判定（構え弱K、構え中K、構え強K、構え弱P、構え中P、構え強Pなど）
@@ -397,15 +693,15 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   }
 
   // 通常パーツは1ステップ
-  return [parseSinglePart(text, controlType)];
+  return [parseSinglePart(text, controlType, isElena)];
 }
 
-function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
-  const step = parseSinglePartInternal(text, controlType);
+function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep {
+  const step = parseSinglePartInternal(text, controlType, isElena);
   return controlType === 'modern' ? cleanupModernStep(step) : step;
 }
 
-function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern' = 'classic'): VisualStep {
+function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep {
   let remaining = text.trim();
 
   // 先頭の【...】や脱出パターンA：等のラベルを除去
@@ -537,6 +833,239 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         iconText: 'ラッシュ',
       },
       suffix,
+    };
+  }
+
+  // -------------------------------------------------------------
+  // エレナ専用技およびエレナコマンド
+  // -------------------------------------------------------------
+  // 1. ライノ（ライノホーン: 236K）
+  // ユーザー指示：ライノ→236K
+  if (lower.includes('ライノ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'ODライノ' : `${strength}ライノ`,
+        description: isOD ? 'ODライノホーン（236+KK）' : `${strength}ライノホーン（236+${btnK}）`,
+        iconText: btnK,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー236+${btnK}（下・斜め前・前＋キック: ライノホーン）`,
+    };
+  }
+
+  // 2. スピン（スピンサイズ: 214K）
+  // ユーザー指示：スピン→214K
+  if (lower.includes('スピン') && !lower.includes('スピバ') && !lower.includes('スピニング')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'ODスピン' : `${strength}スピン`,
+        description: isOD ? 'ODスピンサイズ（214+KK）' : `${strength}スピンサイズ（214+${btnK}）`,
+        iconText: btnK,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー214+${btnK}（下・斜め後ろ・後ろ＋キック: スピンサイズ）`,
+    };
+  }
+
+  // 3. コロ（リンクシング: 236P）
+  // ユーザー指示：コロ→236P
+  if (lower.includes('コロ') && !lower.includes('コロコロ')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnP = isOD ? 'PP' : isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODコロ' : `${strength}コロ`,
+        description: isOD ? 'ODリンクシング（236+PP）' : `${strength}リンクシング（236+${btnP}）`,
+        iconText: btnP,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー236+${btnP}（下・斜め前・前＋パンチ: リンクシング）`,
+    };
+  }
+
+  // 4. ムーン（ムーングライド: 214P）
+  // ユーザー指示：ムーン→214P
+  if (lower.includes('ムーン')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnP = isOD ? 'PP' : isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←'],
+      arrowStr: '↓↙←',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'ODムーン' : `${strength}ムーン`,
+        description: isOD ? 'ODムーングライド（214+PP）' : `${strength}ムーングライド（214+${btnP}）`,
+        iconText: btnP,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー214+${btnP}（下・斜め後ろ・後ろ＋パンチ: ムーングライド）`,
+    };
+  }
+
+  // 5. エレナの昇竜（スクラッチホイール: 623K）
+  // ユーザー指示：昇竜→623K
+  if (isElena && (lower.includes('昇竜') || lower.includes('昇龍') || lower.includes('スクラッチ') || lower.includes('ホイール'))) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→', '↓', '↘'],
+      arrowStr: '→↓↘',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD昇竜' : `${strength}昇竜`,
+        description: isOD ? 'ODスクラッチホイール（623+KK）' : `${strength}スクラッチホイール（623+${btnK}）`,
+        iconText: btnK,
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー623+${btnK}（前・下・斜め前＋キック: スクラッチホイール）`,
+    };
+  }
+
+  // 6. エレナのSA1（236236K）
+  // ユーザー指示：SA1→236236K
+  if (isElena && lower.includes('sa1')) {
+    return {
+      original: remaining || 'SA1',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: '↓↘→↓↘→',
+      button: {
+        kind: 'kick',
+        color: 'gold',
+        label: 'SA1',
+        description: '金のSA1ボタン（236236+K）',
+        iconText: 'SA1',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'テンキー236を2回素早く入力+キック（スピニングビート）',
+    };
+  }
+
+  // 7. エレナのSA2（236236P）
+  // ユーザー指示：SA2-236236P
+  if (isElena && lower.includes('sa2')) {
+    return {
+      original: remaining || 'SA2',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: '↓↘→↓↘→',
+      button: {
+        kind: 'punch',
+        color: 'gold',
+        label: 'SA2',
+        description: '金のSA2ボタン（236236+P）',
+        iconText: 'SA2',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'テンキー236を2回素早く入力+パンチ（ヒーリング）',
+    };
+  }
+
+  // 8. エレナのSA3 / CA（214214K）
+  // ユーザー指示：SA3-214214K
+  if (isElena && (lower.includes('sa3') || lower.includes('ca'))) {
+    const isCa = lower.includes('ca');
+    return {
+      original: remaining || (isCa ? 'CA' : 'SA3'),
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↙', '←', '↓', '↙', '←'],
+      arrowStr: '↓↙←↓↙←',
+      button: {
+        kind: 'kick',
+        color: 'gold',
+        label: isCa ? 'CA' : 'SA3',
+        description: isCa ? '金のCAボタン（214214+K）' : '金のSA3ボタン（214214+K）',
+        iconText: isCa ? 'CA' : 'SA3',
+        showLabel: false,
+      },
+      suffix,
+      tip: isCa
+        ? '体力25%以下で発動：テンキー214を2回素早く入力+キック（+250ダメージ）'
+        : 'テンキー214を2回素早く入力+キック',
     };
   }
 

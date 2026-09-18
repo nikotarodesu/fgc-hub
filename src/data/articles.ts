@@ -1,4 +1,5 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { ELENA_CLASSIC_COMPLETE_GUIDE } from './articles/elenaClassicCompleteGuide';
 import { COACHING_JURI_1400MR } from './articles/coachingJuri1400mr';
 import { COACHING_BLANKA_1500MR } from './articles/coachingBlanka1500mr';
 import { COACHING_ED_1300MR_KEN } from './articles/coachingEd1300mrKen';
@@ -237,10 +238,12 @@ export const CHARACTERS_SF6 = [
   { id: 'cammy', name: 'キャミィ (Cammy)', type: '高速ラッシュ', color: 'from-emerald-600 to-teal-800' },
   { id: 'ed', name: 'エド (Ed)', type: 'アウトボクシング', color: 'from-purple-600 to-indigo-700' },
   { id: 'mai', name: '不知火舞 (Mai)', type: 'DLC第2弾', color: 'from-pink-600 to-rose-700' },
+  { id: 'elena', name: 'エレナ (Elena)', type: 'リーチ・ヒーリング', color: 'from-amber-500 to-orange-600' },
 ];
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  ELENA_CLASSIC_COMPLETE_GUIDE,
   COACHING_JURI_1400MR,
   COACHING_BLANKA_1500MR,
   COACHING_ED_1300MR_KEN,

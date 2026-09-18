@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronUp, ChevronDown, Pin, PinOff, PlayCircle, ExternalLink } from 'lucide-react';
+import { Pin, PinOff, PlayCircle } from 'lucide-react';
 
 interface CoachingStickyPlayerProps {
   videoId: string;
@@ -14,8 +14,6 @@ export default function CoachingStickyPlayer({
   title = 'コーチング解説・対戦リプレイ動画',
   caption = '実戦解説・対戦リプレイ動画（YouTube）',
 }: CoachingStickyPlayerProps) {
-  // 最小化（スリムバー）状態：false = 展開（通常）、true = 最小化
-  const [isMinimized, setIsMinimized] = useState(false);
   // 上部固定（Fixed）追従の有効/無効：true = 追従、false = 通常配置
   const [isSticky, setIsSticky] = useState(true);
   // スクロールして画面上部を通過したかどうか
@@ -34,7 +32,7 @@ export default function CoachingStickyPlayer({
         setPlaceholderHeight(height);
       }
     }
-  }, [isMinimized, isFloating]);
+  }, [isFloating]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,11 +62,8 @@ export default function CoachingStickyPlayer({
       {shouldFloat && (
         <div
           style={{ height: placeholderHeight > 0 ? `${placeholderHeight}px` : undefined }}
-          className="w-full aspect-video rounded-xl bg-neutral-900/10 dark:bg-neutral-800/20 border border-dashed border-neutral-300 dark:border-neutral-700 flex flex-col items-center justify-center text-xs text-neutral-400 gap-1"
-        >
-          <PlayCircle className="w-5 h-5 text-neutral-400 animate-pulse" />
-          <span>動画は画面上部に追従中</span>
-        </div>
+          className="w-full aspect-video rounded-xl bg-neutral-900/10 dark:bg-neutral-800/20 border border-dashed border-neutral-300 dark:border-neutral-700"
+        />
       )}
 
       {/* プレイヤー本体 */}
@@ -99,92 +94,42 @@ export default function CoachingStickyPlayer({
                   <PlayCircle className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                   <span>{caption}</span>
                 </span>
-                {isMinimized && (
-                  <span className="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded font-medium border border-cyan-800/60 shrink-0">
-                    再生継続中
-                  </span>
+              </div>
+
+              {/* 追従（ピン留め）トグル */}
+              <button
+                type="button"
+                onClick={() => setIsSticky(!isSticky)}
+                className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 cursor-pointer ${
+                  isSticky
+                    ? 'bg-cyan-950/90 text-cyan-300 border border-cyan-800/80 hover:bg-cyan-900/80'
+                    : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
+                }`}
+                title={isSticky ? '追従を解除して元の位置に留める' : 'スクロール追従を有効にする'}
+              >
+                {isSticky ? (
+                  <>
+                    <Pin className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>追従 ON</span>
+                  </>
+                ) : (
+                  <>
+                    <PinOff className="w-3.5 h-3.5 text-neutral-400" />
+                    <span>追従 OFF</span>
+                  </>
                 )}
-              </div>
-
-              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-                {/* 追従（ピン留め）トグル */}
-                <button
-                  type="button"
-                  onClick={() => setIsSticky(!isSticky)}
-                  className={`p-1.5 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 cursor-pointer ${
-                    isSticky
-                      ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 hover:bg-cyan-900/80'
-                      : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
-                  }`}
-                  title={isSticky ? '追従を解除して元の位置に留める' : 'スクロール追従を有効にする'}
-                >
-                  {isSticky ? (
-                    <>
-                      <Pin className="w-3.5 h-3.5 text-cyan-400" />
-                      <span className="hidden sm:inline">追従ON</span>
-                    </>
-                  ) : (
-                    <>
-                      <PinOff className="w-3.5 h-3.5 text-neutral-400" />
-                      <span className="hidden sm:inline">追従OFF</span>
-                    </>
-                  )}
-                </button>
-
-                {/* 最小化 / 展開トグル */}
-                <button
-                  type="button"
-                  onClick={() => setIsMinimized(!isMinimized)}
-                  className="px-2.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-[11px] font-bold transition-colors flex items-center gap-1 cursor-pointer"
-                  title={isMinimized ? '動画画面を展開する' : '動画画面を最小化して本文を広く読む'}
-                >
-                  {isMinimized ? (
-                    <>
-                      <ChevronDown className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>動画を開く</span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronUp className="w-3.5 h-3.5 text-neutral-400" />
-                      <span className="hidden xs:inline">最小化</span>
-                    </>
-                  )}
-                </button>
-              </div>
+              </button>
             </div>
 
-            {/* 動画iframeコンテナ（最小化時は高さを0にして隠すが、DOMは保持して再生を継続） */}
-            <div
-              className={`transition-all duration-300 ease-in-out ${
-                isMinimized
-                  ? 'max-h-0 opacity-0 pointer-events-none overflow-hidden'
-                  : 'max-h-[600px] opacity-100'
-              }`}
-            >
-              <div className="relative w-full aspect-video bg-black">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${videoId}?playsinline=1&rel=0`}
-                  title={title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full border-0"
-                />
-              </div>
-
-              <div className="px-3 py-1.5 sm:px-4 sm:py-2 bg-neutral-950/90 border-t border-neutral-800 text-[11px] text-neutral-400 flex items-center justify-between">
-                <span className="text-[10px] sm:text-[11px] text-neutral-400">
-                  💡 スクロールしても画面上部に追従します（最小化で文章を広く読めます）
-                </span>
-                <a
-                  href={`https://www.youtube.com/watch?v=${videoId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-cyan-300 inline-flex items-center gap-1 transition-colors shrink-0"
-                >
-                  <span>YouTubeで開く</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
+            {/* 動画iframeコンテナ（16:9アスペクト比で固定） */}
+            <div className="relative w-full aspect-video bg-black">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoId}?playsinline=1&rel=0`}
+                title={title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
+              />
             </div>
           </div>
         </div>

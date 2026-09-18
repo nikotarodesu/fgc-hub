@@ -8,6 +8,7 @@ import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
+import CoachingStickyPlayer from '@/components/CoachingStickyPlayer';
 import RichContent from '@/components/RichContent';
 import AuthorCard from '@/components/AuthorCard';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
@@ -53,6 +54,8 @@ export default function ArticleDetailPage() {
       Boolean(article.coachingDate)
     )
   );
+  // コーチング記事の追従プレイヤー対象（現在は春麗コーチング記事限定で先行テスト）
+  const isCoachingStickyTarget = slug === 'coaching-chunli-1600mr-vs-akuma';
   const secretConfig = getSecretUnlockConfig(slug);
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
@@ -830,13 +833,21 @@ export default function ArticleDetailPage() {
 
               {/* 無料記事：YouTube動画プレイヤー（リード文・要点の直下に配置） */}
               {!article.isPaid && article.youtubeVideoId && (
-                <div className="my-5 sm:my-6">
-                  <YouTubeEmbed
+                isCoachingStickyTarget ? (
+                  <CoachingStickyPlayer
                     videoId={article.youtubeVideoId}
                     title={article.title}
                     caption="実戦解説・対戦リプレイ動画（YouTube）"
                   />
-                </div>
+                ) : (
+                  <div className="my-5 sm:my-6">
+                    <YouTubeEmbed
+                      videoId={article.youtubeVideoId}
+                      title={article.title}
+                      caption="実戦解説・対戦リプレイ動画（YouTube）"
+                    />
+                  </div>
+                )
               )}
 
               {/* 目次 */}
@@ -1081,9 +1092,17 @@ export default function ArticleDetailPage() {
 
                       {/* 有料限定：YouTube動画プレイヤー */}
                       {article.youtubeVideoId && (
-                        <div className="my-6">
-                          <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
-                        </div>
+                        isCoachingStickyTarget ? (
+                          <CoachingStickyPlayer
+                            videoId={article.youtubeVideoId}
+                            title={article.title}
+                            caption="実戦解説・対戦リプレイ動画（YouTube）"
+                          />
+                        ) : (
+                          <div className="my-6">
+                            <YouTubeEmbed videoId={article.youtubeVideoId} title={article.title} />
+                          </div>
+                        )
                       )}
 
                       {/* 有料セクション */}

@@ -16,6 +16,7 @@ interface RichContentProps {
   activeSubheading?: string | null;
   secretConfig?: CharacterSecretUnlockConfig;
   onSecretUnlock?: () => void;
+  isCoaching?: boolean;
 }
 
 // 丸数字・黒丸数字からアラビア数字（1, 2, 3...）へのマッピング
@@ -450,6 +451,7 @@ export default function RichContent({
   activeSubheading,
   secretConfig,
   onSecretUnlock,
+  isCoaching = false,
 }: RichContentProps) {
   if (!content) return null;
 
@@ -618,6 +620,17 @@ export default function RichContent({
 
     // 1.7 コンボ行（〆が付いている行）
     if (block.type === 'combo') {
+      if (isCoaching) {
+        return (
+          <div key={blockKey} className="my-2 sm:my-2.5 space-y-1.5 pl-1">
+            {block.lines.map((line, lIdx) => (
+              <p key={lIdx} className="text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
+                {renderInline(line)}
+              </p>
+            ))}
+          </div>
+        );
+      }
       return (
         <div key={blockKey} className="my-3 sm:my-3.5 space-y-2 sm:space-y-2.5 pl-0">
           {block.lines.map((line, lIdx) => (

@@ -824,7 +824,7 @@ export default function ArticleDetailPage() {
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
                 <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                  <RichContent content={introText} controlType={activeControlType} />
+                  <RichContent content={introText} controlType={activeControlType} isCoaching={isCoaching} />
                 </div>
               ) : null}
 
@@ -978,6 +978,7 @@ export default function ArticleDetailPage() {
                       controlType={activeControlType}
                       secretConfig={secretConfig}
                       onSecretUnlock={() => handleSecretUnlock(secretConfig?.characterSlug)}
+                      isCoaching={isCoaching}
                     />
                   </div>
 
@@ -1074,7 +1075,7 @@ export default function ArticleDetailPage() {
                       {/* 有料限定イントロ（動画前メッセージ） */}
                       {article.paidContent.intro && (
                         <div className="p-4 sm:p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                          <RichContent content={article.paidContent.intro} controlType={activeControlType} />
+                          <RichContent content={article.paidContent.intro} controlType={activeControlType} isCoaching={isCoaching} />
                         </div>
                       )}
 
@@ -1134,6 +1135,7 @@ export default function ArticleDetailPage() {
                                   activeSubheading={activeSubheading}
                                   isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
                                   controlType={activeControlType}
+                                  isCoaching={isCoaching}
                                 />
                               </div>
 

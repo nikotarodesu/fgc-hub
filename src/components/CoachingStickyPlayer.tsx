@@ -20,14 +20,27 @@ export default function CoachingStickyPlayer({
   const [isSticky, setIsSticky] = useState(true);
   // スクロールして画面上部を通過したかどうか
   const [isFloating, setIsFloating] = useState(false);
+  // プレースホルダー用のプレイヤー高さ（レイアウトシフト防止）
+  const [placeholderHeight, setPlaceholderHeight] = useState<number>(0);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const playerContentRef = useRef<HTMLDivElement | null>(null);
+
+  // プレイヤーの高さを計測して保持
+  useEffect(() => {
+    if (playerContentRef.current && !isFloating) {
+      const height = playerContentRef.current.offsetHeight;
+      if (height > 0) {
+        setPlaceholderHeight(height);
+      }
+    }
+  }, [isMinimized, isFloating]);
 
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      // 元の配置場所の上端が画面上部（0px以下）に来たらフローティング化
+      // 元の配置場所の上端が画面上部（0px以下）に来たらフローティング固定化
       if (rect.top <= 0) {
         setIsFloating(true);
       } else {
@@ -36,7 +49,6 @@ export default function CoachingStickyPlayer({
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // 初期判定
     handleScroll();
 
     return () => {
@@ -48,15 +60,20 @@ export default function CoachingStickyPlayer({
 
   return (
     <div ref={containerRef} className="my-6 relative">
-      {/* フローティング中のレイアウト崩れを防ぐプレースホルダー（高さを確保） */}
+      {/* フローティング中のレイアウト崩れ（カクつき）を防ぐプレースホルダー */}
       {shouldFloat && (
-        <div className="w-full aspect-video rounded-xl bg-neutral-900/10 dark:bg-neutral-800/20 border border-dashed border-neutral-300 dark:border-neutral-700 flex items-center justify-center text-xs text-neutral-400">
-          <span>（動画は画面上部に追従中）</span>
+        <div
+          style={{ height: placeholderHeight > 0 ? `${placeholderHeight}px` : undefined }}
+          className="w-full aspect-video rounded-xl bg-neutral-900/10 dark:bg-neutral-800/20 border border-dashed border-neutral-300 dark:border-neutral-700 flex flex-col items-center justify-center text-xs text-neutral-400 gap-1"
+        >
+          <PlayCircle className="w-5 h-5 text-neutral-400 animate-pulse" />
+          <span>動画は画面上部に追従中</span>
         </div>
       )}
 
       {/* プレイヤー本体 */}
       <div
+        ref={playerContentRef}
         className={
           shouldFloat
             ? 'fixed top-0 left-0 right-0 z-50 w-full shadow-2xl transition-all duration-200 animate-in fade-in slide-in-from-top-2'
@@ -66,7 +83,7 @@ export default function CoachingStickyPlayer({
         <div
           className={
             shouldFloat
-              ? 'max-w-4xl mx-auto px-0 sm:px-4'
+              ? 'max-w-3xl mx-auto px-0 sm:px-4'
               : 'w-full'
           }
         >

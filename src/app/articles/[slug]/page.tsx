@@ -58,7 +58,7 @@ export default function ArticleDetailPage() {
   // 全てのコーチング記事に追従プレイヤーを適用
   const isCoachingStickyTarget = isCoaching;
   const secretConfig = getSecretUnlockConfig(slug);
-  const { isPremium } = useAuth();
+  const { user, isPremium } = useAuth();
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
     isModernAlias ? 'modern' : (article?.controlType === 'modern' ? 'modern' : 'classic')
@@ -502,6 +502,13 @@ export default function ArticleDetailPage() {
   };
 
   const handleBuyArticle = async () => {
+    if (!user) {
+      // 未ログインの場合は購入前に安全なログインへ案内
+      const returnUrl = `/articles/${article.slug}`;
+      window.location.href = `/auth/login?next=${encodeURIComponent(returnUrl)}&action=buy`;
+      return;
+    }
+
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -511,6 +518,8 @@ export default function ArticleDetailPage() {
           slug: article.slug,
           title: article.title,
           price: article.price || 500,
+          userId: user.id,
+          userEmail: user.email,
         }),
       });
       const data = await res.json();
@@ -1083,7 +1092,13 @@ export default function ArticleDetailPage() {
                       onAdminUnlock={!secretConfig ? handleAdminUnlock : undefined}
                       onAdminLock={handleAdminLock}
                       onBuyArticle={article.subscriptionOnly ? undefined : handleBuyArticle}
-                      onJoinMembership={() => { window.location.href = '/membership'; }}
+                      onJoinMembership={() => {
+                        if (!user) {
+                          window.location.href = '/auth/login?next=/membership&action=subscribe';
+                        } else {
+                          window.location.href = '/membership';
+                        }
+                      }}
                       onApplyToken={handleApplyToken}
                       subscriptionOnly={article.subscriptionOnly}
                       hideBenefits={article.subscriptionOnly || !isCompleteGuide}

@@ -13,6 +13,12 @@ export default function MembershipPage() {
   const { user, isPremium } = useAuth();
 
   const handleSubscribe = async () => {
+    if (!user) {
+      // 未ログインの場合は購入前に安全なログインへ案内
+      window.location.href = '/auth/login?next=/membership&action=subscribe';
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch('/api/stripe/checkout', {

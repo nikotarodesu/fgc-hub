@@ -55,12 +55,15 @@ function LoginContent() {
     }
   }, [searchParams]);
 
+  const nextParam = searchParams.get("next") || "/account/subscription";
+  const actionParam = searchParams.get("action");
+
   // Google ログイン
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     setError(null);
     try {
-      const result = await loginWithGoogle("/account/subscription");
+      const result = await loginWithGoogle(nextParam);
       if (!result.success) {
         setError(result.error || "Googleログインの開始に失敗しました");
         setIsGoogleLoading(false);
@@ -83,7 +86,7 @@ function LoginContent() {
     try {
       const result = await login(email, password);
       if (result.success) {
-        router.push("/account/subscription");
+        router.push(nextParam);
       } else {
         setError(result.error || "ログインに失敗しました");
       }
@@ -120,6 +123,21 @@ function LoginContent() {
           <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-start gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <div className="flex-1">{error}</div>
+          </div>
+        )}
+
+        {/* 購入前・会員登録前の安全なログイン案内 */}
+        {actionParam && (
+          <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-cyan-900 dark:text-cyan-200 text-xs space-y-1.5 shadow-2xs">
+            <div className="font-bold flex items-center gap-1.5 text-cyan-700 dark:text-cyan-300">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-cyan-600 dark:text-cyan-400" />
+              <span>
+                {actionParam === "subscribe" ? "プレミアム会員登録の前にログイン" : "有料記事ご購入の前にログイン"}
+              </span>
+            </div>
+            <p className="text-[11px] leading-relaxed text-neutral-600 dark:text-neutral-300">
+              安全な決済および購入権限の保護のため、Googleアカウントまたはメールアドレスでログインしてください。購入した記事や会員資格があなたのアカウントに安全に紐づけられ、端末が変わっても追加料金なしでいつでも読めるようになります。
+            </p>
           </div>
         )}
 

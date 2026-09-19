@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { planType, slug, title, price } = body;
+    const { planType, slug, title, price, userId, userEmail } = body;
 
     const origin = req.headers.get('origin') || 'https://nikotaro.com';
 
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       // プレミアム会員定期購読（サブスクリプション）
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
+        customer_email: userEmail || undefined,
         line_items: [
           {
             price_data: {
@@ -42,9 +43,10 @@ export async function POST(req: NextRequest) {
           planType: 'membership',
           slug: slug || 'ryu-complete-guide',
           title: 'プレミアム会員',
+          userId: userId || '',
         },
         mode: 'subscription',
-        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&planType=membership`,
+        success_url: `${origin}/account/subscription?session_id={CHECKOUT_SESSION_ID}&upgraded=true&plan=monthly`,
         cancel_url: `${origin}/membership`,
       });
 
@@ -54,6 +56,7 @@ export async function POST(req: NextRequest) {
       const itemPrice = 500;
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
+        customer_email: userEmail || undefined,
         line_items: [
           {
             price_data: {
@@ -71,6 +74,7 @@ export async function POST(req: NextRequest) {
           planType: 'article',
           slug: slug || '',
           title: title || '',
+          userId: userId || '',
         },
         mode: 'payment',
         success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${encodeURIComponent(slug || '')}&planType=article`,

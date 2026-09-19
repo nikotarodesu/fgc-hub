@@ -13,7 +13,7 @@ export const SUBSCRIPTION_CONFIG = {
       displayPrice: "¥980",
       periodLabel: "月",
       billingInterval: "month",
-      stripePriceId: process.env.STRIPE_PRICE_ID_MONTHLY || "price_nikotaro_monthly_980",
+      stripePriceId: process.env.STRIPE_PRICE_ID_MONTHLY || "",
       description: "手軽に始められる月額プラン。いつでもマイページから解約可能。",
     },
     yearly: {
@@ -23,7 +23,7 @@ export const SUBSCRIPTION_CONFIG = {
       displayPrice: "¥9,800",
       periodLabel: "年",
       billingInterval: "year",
-      stripePriceId: process.env.STRIPE_PRICE_ID_YEARLY || "price_nikotaro_yearly_9800",
+      stripePriceId: process.env.STRIPE_PRICE_ID_YEARLY || "",
       description: "2ヶ月分お得な年額プラン（実質月額約817円）。継続して上達したいプレイヤーに最適。",
       savingLabel: "2ヶ月分お得",
       discountPercentage: 17,

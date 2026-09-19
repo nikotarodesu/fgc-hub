@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     if (planType === 'membership') {
       // プレミアム会員定期購読（サブスクリプション）
-      const session = await stripe.checkout.sessions.create({
+      const sessionParams: any = {
         payment_method_types: ['card'],
         customer_email: userEmail || undefined,
         line_items: [
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
               product_data: {
                 name: 'にこ太郎の格ゲーLAB プレミアム会員',
                 description: '公開中のスト6攻略＆実戦添削がすべて読み放題',
+                tax_code: 'txcd_10000000',
               },
               unit_amount: 980,
               recurring: {
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
             quantity: 1,
           },
         ],
+        managed_payments: { enabled: false },
         metadata: {
           planType: 'membership',
           slug: slug || 'ryu-complete-guide',
@@ -48,13 +50,14 @@ export async function POST(req: NextRequest) {
         mode: 'subscription',
         success_url: `${origin}/account/subscription?session_id={CHECKOUT_SESSION_ID}&upgraded=true&plan=monthly`,
         cancel_url: `${origin}/membership`,
-      });
+      };
+      const session = await stripe.checkout.sessions.create(sessionParams);
 
       return NextResponse.json({ url: session.url });
     } else if (planType === 'article') {
       // 記事単体購入（買い切り: 500円固定）
       const itemPrice = 500;
-      const session = await stripe.checkout.sessions.create({
+      const sessionParams: any = {
         payment_method_types: ['card'],
         customer_email: userEmail || undefined,
         line_items: [
@@ -64,12 +67,14 @@ export async function POST(req: NextRequest) {
               product_data: {
                 name: title ? `記事閲覧権: ${title}` : 'にこ太郎の格ゲーLAB 攻略記事',
                 description: '買い切り（追加料金なしでアプデ追記も含め永久閲覧）',
+                tax_code: 'txcd_10000000',
               },
               unit_amount: itemPrice,
             },
             quantity: 1,
           },
         ],
+        managed_payments: { enabled: false },
         metadata: {
           planType: 'article',
           slug: slug || '',
@@ -79,7 +84,8 @@ export async function POST(req: NextRequest) {
         mode: 'payment',
         success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&slug=${encodeURIComponent(slug || '')}&planType=article`,
         cancel_url: `${origin}/articles/${slug || ''}`,
-      });
+      };
+      const session = await stripe.checkout.sessions.create(sessionParams);
 
       return NextResponse.json({ url: session.url });
     }

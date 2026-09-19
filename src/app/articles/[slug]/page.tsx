@@ -9,7 +9,7 @@ import ComboCard from '@/components/ComboCard';
 import PaywallCard from '@/components/PaywallCard';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
 import CoachingStickyPlayer from '@/components/CoachingStickyPlayer';
-import RichContent from '@/components/RichContent';
+import RichContent, { CIRCLE_TO_NUM } from '@/components/RichContent';
 import AuthorCard from '@/components/AuthorCard';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import DiagramDispatcher from '@/components/articles/DiagramDispatcher';
@@ -106,8 +106,20 @@ export default function ArticleDetailPage() {
   const [isTocModalOpen, setIsTocModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // セクションタイトルの二重番号（例:「01. ① 基本の立ち回り」）を解消し、「01 基本の立ち回り」形式に統一
+  // セクションタイトルの二重番号を解消（丸数字がある場合はその番号、モダン特徴セクションは番号なしで表示）
   const formatSectionTitle = (title: string, index: number): string => {
+    const circleMatch = title.match(/^([①-⑳❶-❿➊-➓])/);
+    if (circleMatch) {
+      const circleChar = circleMatch[1];
+      const circleNum = CIRCLE_TO_NUM[circleChar];
+      if (circleNum) {
+        const cleanTitle = title.replace(/^[①-⑳❶-❿➊-➓\d\.\s]+/, '').trim();
+        return `${String(circleNum).padStart(2, '0')} ${cleanTitle}`;
+      }
+    }
+    if (title.includes('モダンにない技') || title.includes('モダンの強み')) {
+      return title.trim();
+    }
     const cleanTitle = title.replace(/^[①-⑳❶-❿➊-➓\d\.\s]+/, '').trim();
     const numStr = String(index + 1).padStart(2, '0');
     return `${numStr} ${cleanTitle}`;

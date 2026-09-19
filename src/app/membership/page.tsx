@@ -1,26 +1,30 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Check, Sparkles, Trophy, ExternalLink, ChevronRight, CheckCircle2, ShieldCheck, HelpCircle, Flame } from 'lucide-react';
+import { Check, Sparkles, Trophy, ExternalLink, ChevronRight, CheckCircle2, ShieldCheck, HelpCircle, Flame, Crown } from 'lucide-react';
 import Link from 'next/link';
 import { ARTICLES_DATA } from '@/data/articles';
 import LethalToolPreviewModal from '@/components/LethalToolPreviewModal';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function MembershipPage() {
   const [loading, setLoading] = useState(false);
   const [isLethalPreviewOpen, setIsLethalPreviewOpen] = useState(false);
+  const { user, isPremium } = useAuth();
 
   const handleSubscribe = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/checkout', {
+      const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planType: 'membership' }),
+        body: JSON.stringify({ plan: 'monthly', userId: user?.id, userEmail: user?.email }),
       });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
+      } else if (data.demo) {
+        window.location.href = data.redirectUrl || '/account/subscription';
       } else {
         alert(data.error || 'Stripe APIキーの設定後に本番決済が有効化されます。');
       }
@@ -59,21 +63,41 @@ export default function MembershipPage() {
             全キャラ1800MR以上の筆者による徹底攻略ガイド、実戦添削コーチングアーカイブ、逆引きリーサルツールがすべて使い放題。実戦の判断を迷わせない確かな攻略データをお届けします。
           </p>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={handleSubscribe}
-              disabled={loading}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
-            >
-              {loading ? '処理中...' : '今すぐプレミアム会員に登録する（¥980/月）'}
-            </button>
-            <Link
-              href="/"
-              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs sm:text-sm border border-neutral-200 dark:border-neutral-700 transition-colors text-center"
-            >
-              トップで記事を探す
-            </Link>
-          </div>
+          {isPremium ? (
+            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 max-w-md mx-auto space-y-2">
+              <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-bold text-sm">
+                <Crown className="w-4 h-4 fill-current text-amber-500" />
+                <span>すでにプレミアム会員としてご登録済みです</span>
+              </div>
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                すべての限定記事やツールをご利用いただけます。契約状況の確認・変更はマイページから行えます。
+              </p>
+              <div className="pt-1">
+                <Link
+                  href="/account/subscription"
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition-colors"
+                >
+                  マイページ・契約管理へ進む
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
+              >
+                {loading ? '処理中...' : '今すぐプレミアム会員に登録する（¥980/月）'}
+              </button>
+              <Link
+                href="/auth/login"
+                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs sm:text-sm border border-neutral-200 dark:border-neutral-700 transition-colors text-center"
+              >
+                ログイン
+              </Link>
+            </div>
+          )}
         </section>
 
         {/* 2. 現在公開中の対象コンテンツ */}

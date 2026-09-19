@@ -17,6 +17,7 @@ import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverse
 import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
 import RecommendedGear from '@/components/RecommendedGear';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Heart,
   Share2,
@@ -57,6 +58,7 @@ export default function ArticleDetailPage() {
   // 全てのコーチング記事に追従プレイヤーを適用
   const isCoachingStickyTarget = isCoaching;
   const secretConfig = getSecretUnlockConfig(slug);
+  const { isPremium } = useAuth();
 
   const [activeControlType, setActiveControlType] = useState<'classic' | 'modern'>(
     isModernAlias ? 'modern' : (article?.controlType === 'modern' ? 'modern' : 'classic')
@@ -65,6 +67,14 @@ export default function ArticleDetailPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+
+  // プレミアム会員の場合は自動アンロック
+  useEffect(() => {
+    if (isPremium) {
+      setIsUnlocked(true);
+      setAuthChecked(true);
+    }
+  }, [isPremium]);
   const [forceShowTokenInput, setForceShowTokenInput] = useState(false);
   const [lastReadSectionId, setLastReadSectionId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);

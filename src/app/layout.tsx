@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { constructMetadata } from "@/lib/seo";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   ...constructMetadata(),
@@ -42,11 +43,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-neutral-900 antialiased w-full max-w-full overflow-x-hidden">
-        <Header />
-        <div className="flex-1 w-full max-w-full min-w-0">
-          {children}
-        </div>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <div className="flex-1 w-full max-w-full min-w-0">
+            {children}
+          </div>
+          <Footer />
+        </AuthProvider>
         {/* Google Analytics (GA4) */}
         <GoogleAnalytics gaId="G-844CKYZJ9P" />
       </body>

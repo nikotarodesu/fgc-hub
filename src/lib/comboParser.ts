@@ -358,10 +358,11 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     }];
   }
 
-  // エレナTC：前大PTC (前大P大P) ➔ 1枠内にまとめる（指示書 6-1）
-  if (lower.includes('前大ptc') || lower.includes('前大p・大p')) {
+  // エレナTC：前大PTC / 前大TC (前大P大P / 前強・強) ➔ 1枠内にまとめる（指示書 6-1）
+  if (lower.includes('前大ptc') || lower.includes('前大tc') || lower.includes('前大p・大p')) {
+    const isModern = controlType === 'modern';
     return [{
-      original: remaining || '前大PTC',
+      original: remaining || (isModern ? '前大TC' : '前大PTC'),
       isCancel,
       isRush,
       rushText,
@@ -369,28 +370,28 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
       arrows: ['→'],
       arrowStr: '→',
       isTC: true,
-      tcText: '前大P大P',
+      tcText: isModern ? '前強・強' : '前大P大P',
       tcButtons: [
-        { color: 'red', iconText: 'P', label: '前大P' },
-        { color: 'red', iconText: 'P', label: '大P' },
+        { color: 'red', iconText: isModern ? '強' : 'P', label: isModern ? '前強' : '前大P' },
+        { color: 'red', iconText: isModern ? '強' : 'P', label: isModern ? '強' : '大P' },
       ],
       button: {
         kind: 'punch',
         color: 'red',
-        label: '前大PTC',
-        description: '前強Pターゲットコンボ（前大P・大P）',
-        iconText: 'P',
+        label: isModern ? '前大TC' : '前大PTC',
+        description: isModern ? '前強ターゲットコンボ' : '前強Pターゲットコンボ（前大P・大P）',
+        iconText: isModern ? '強' : 'P',
         showLabel: false,
       },
       suffix,
-      tip: '前＋強Pヒット後に強Pを入力（前大PTC: 前大P大P）',
+      tip: isModern ? '前＋強攻撃ヒット後に強攻撃を入力' : '前＋強Pヒット後に強Pを入力（前大PTC: 前大P大P）',
     }];
   }
 
-  // エレナTC：大PTC (大P大P) ➔ 1枠内にまとめる（指示書 6-1）
-  if (isElena && (lower.includes('大ptc') || lower.includes('大p・大p'))) {
+  // エレナTC：A大TC（アシスト強TC: A大・A大）
+  if (isElena && (lower.includes('a大tc') || lower.includes('a強tc') || lower.includes('アシスト大tc') || lower.includes('アシスト強tc'))) {
     return [{
-      original: remaining || '大PTC',
+      original: remaining || 'A大TC',
       isCancel,
       isRush,
       rushText,
@@ -398,21 +399,171 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
       arrows: [],
       arrowStr: '',
       isTC: true,
-      tcText: '大P大P',
+      tcText: 'A大・A大',
       tcButtons: [
-        { color: 'red', iconText: 'P', label: '大P' },
-        { color: 'red', iconText: 'P', label: '大P' },
+        { color: 'red', iconText: 'A大', label: 'A大' },
+        { color: 'red', iconText: 'A大', label: 'A大' },
       ],
       button: {
         kind: 'punch',
         color: 'red',
-        label: '大PTC',
-        description: '強Pターゲットコンボ（大P・大P）',
-        iconText: 'P',
+        label: 'A大TC',
+        description: 'アシスト強TC（A大・A大）',
+        iconText: 'A大',
         showLabel: false,
       },
       suffix,
-      tip: '強Pヒット後にもう一度強Pを入力（大PTC: 大P大P）',
+      tip: 'アシストボタンを押しながら強攻撃を連続入力',
+    }];
+  }
+
+  // エレナTC：J中TC（ジャンプ中TC: 空対空）
+  if (isElena && (lower.includes('j中tc') || lower.includes('空中tc'))) {
+    const isModern = controlType === 'modern';
+    return [{
+      original: remaining || 'J中TC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↗'],
+      arrowStr: '↗',
+      isTC: true,
+      tcText: isModern ? '中・強' : '中K・大P',
+      tcButtons: [
+        { color: 'yellow', iconText: isModern ? '中' : 'K', label: 'J中' },
+        { color: 'red', iconText: isModern ? '強' : 'P', label: 'J大' },
+      ],
+      button: {
+        kind: 'kick',
+        color: 'yellow',
+        label: 'J中TC',
+        description: 'ジャンプ中ターゲットコンボ（空対空）',
+        iconText: isModern ? '中' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'ジャンプ中に中攻撃から強攻撃を入力',
+    }];
+  }
+
+  // エレナTC：下中TC
+  if (isElena && lower.includes('下中tc')) {
+    const isModern = controlType === 'modern';
+    return [{
+      original: remaining || '下中TC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓'],
+      arrowStr: '↓',
+      isTC: true,
+      tcText: isModern ? '下中・中' : '下中P・中P',
+      tcButtons: [
+        { color: 'yellow', iconText: isModern ? '中' : 'P', label: '下中' },
+        { color: 'yellow', iconText: isModern ? '中' : 'P', label: '中' },
+      ],
+      button: {
+        kind: 'punch',
+        color: 'yellow',
+        label: '下中TC',
+        description: '下中ターゲットコンボ',
+        iconText: isModern ? '中' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'しゃがみ中攻撃ヒット後に中攻撃を入力',
+    }];
+  }
+
+  // エレナTC：中TC（立ち中TC）
+  if (isElena && (lower.includes('中tc') && !lower.includes('下中') && !lower.includes('j中'))) {
+    const isModern = controlType === 'modern';
+    return [{
+      original: remaining || '中TC',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      isTC: true,
+      tcText: isModern ? '中・中' : '中K中K',
+      tcButtons: [
+        { color: 'yellow', iconText: isModern ? '中' : 'K', label: '中' },
+        { color: 'yellow', iconText: isModern ? '中' : 'K', label: '中' },
+      ],
+      button: {
+        kind: 'kick',
+        color: 'yellow',
+        label: '中TC',
+        description: '中攻撃ターゲットコンボ',
+        iconText: isModern ? '中' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: '中攻撃ヒット後に続けて中攻撃を入力',
+    }];
+  }
+
+  // エレナTC：A弱コンボ
+  if (isElena && (lower.includes('a弱コンボ') || lower.includes('アシスト弱コンボ'))) {
+    return [{
+      original: remaining || 'A弱コンボ',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      isTC: true,
+      tcText: 'A弱×3',
+      tcButtons: [
+        { color: 'blue', iconText: 'A弱', label: 'A弱' },
+        { color: 'blue', iconText: 'A弱', label: 'A弱' },
+        { color: 'blue', iconText: 'A弱', label: 'A弱' },
+      ],
+      button: {
+        kind: 'punch',
+        color: 'blue',
+        label: 'A弱コンボ',
+        description: 'アシスト弱連打（下弱K>下弱P>強昇竜）',
+        iconText: 'A弱',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'アシストボタンを押しながら弱攻撃を連打（自動ヒット確認）',
+    }];
+  }
+
+  // エレナTC：大PTC / 大TC (大P大P / 強・強) ➔ 1枠内にまとめる（指示書 6-1）
+  if (isElena && (lower.includes('大ptc') || lower.includes('大tc') || lower.includes('大p・大p') || lower.includes('強tc'))) {
+    const isModern = controlType === 'modern';
+    return [{
+      original: remaining || (isModern ? '大TC' : '大PTC'),
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      isTC: true,
+      tcText: isModern ? '強・強' : '大P大P',
+      tcButtons: [
+        { color: 'red', iconText: isModern ? '強' : 'P', label: isModern ? '強' : '大P' },
+        { color: 'red', iconText: isModern ? '強' : 'P', label: isModern ? '強' : '大P' },
+      ],
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: isModern ? '大TC' : '大PTC',
+        description: isModern ? '強攻撃ターゲットコンボ' : '強Pターゲットコンボ（大P・大P）',
+        iconText: isModern ? '強' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: isModern ? '強攻撃ヒット後にもう一度強攻撃を入力' : '強Pヒット後にもう一度強Pを入力（大PTC: 大P大P）',
     }];
   }
 
@@ -995,15 +1146,38 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 5. エレナの昇竜（スクラッチホイール: 623K）
-  // ユーザー指示：昇竜→623K
+  // 5. エレナの昇竜（スクラッチホイール: 623K または ワンボタンSP）
+  // ユーザー指示：昇竜→623K（モダン対空ではワンボタン昇竜）
   if (isElena && (lower.includes('昇竜') || lower.includes('昇龍') || lower.includes('スクラッチ') || lower.includes('ホイール'))) {
+    const isOneButton = lower.includes('ワンボタン');
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大') || (!lower.includes('弱') && !lower.includes('中') && !isOD);
     const isLight = lower.includes('弱');
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    if (isOneButton || (controlType === 'modern' && !lower.includes('623') && !lower.includes('中昇竜') && !lower.includes('強昇竜') && !lower.includes('弱昇竜') && !isOD)) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['→'],
+        arrowStr: '→',
+        button: {
+          kind: 'special',
+          color: 'yellow',
+          label: '昇竜',
+          description: '前＋SPボタン（ワンボタン昇竜）',
+          iconText: 'SP',
+          showLabel: false,
+        },
+        suffix,
+        tip: '前＋必殺技ボタン（→＋SP）で即座に対空',
+      };
+    }
 
     return {
       original: remaining,
@@ -1026,9 +1200,32 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 6. エレナのSA1（236236K）
+  // 6. エレナのSA1（236236K / ワンボタンSA1）
   // ユーザー指示 5-2：SA1→236236K（キック）、ボタン内文字は「K」
   if (isElena && lower.includes('sa1')) {
+    const isOneButton = lower.includes('ワンボタン');
+    const isModern = controlType === 'modern';
+    if (isOneButton || (isModern && !lower.includes('236'))) {
+      return {
+        original: remaining || 'SA1',
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || 'SA1',
+        arrows: [],
+        arrowStr: 'N',
+        button: {
+          kind: 'special',
+          color: 'gold',
+          label: 'SA1',
+          description: 'ワンボタンSA1（強＋SP または SAボタン）',
+          iconText: 'SA1',
+          showLabel: false,
+        },
+        suffix,
+        tip: 'ワンボタンSA1（対空無敵あり）',
+      };
+    }
     return {
       original: remaining || 'SA1',
       isCancel,
@@ -1050,9 +1247,32 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 7. エレナのSA2（236236P）
+  // 7. エレナのSA2（236236P / ワンボタンSA2）
   // ユーザー指示 5-2：SA2→236236P（パンチ）、ボタン内文字は「P」
   if (isElena && lower.includes('sa2')) {
+    const isOneButton = lower.includes('ワンボタン');
+    const isModern = controlType === 'modern';
+    if (isOneButton || (isModern && !lower.includes('236'))) {
+      return {
+        original: remaining || 'SA2',
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || 'SA2',
+        arrows: ['←'],
+        arrowStr: '←',
+        button: {
+          kind: 'special',
+          color: 'gold',
+          label: 'SA2',
+          description: 'ワンボタンSA2（後ろ＋SP または 中＋SP）',
+          iconText: 'SA2',
+          showLabel: false,
+        },
+        suffix,
+        tip: '後ろ＋必殺技ボタンで即発動（弾抜け・回復派生）',
+      };
+    }
     return {
       original: remaining || 'SA2',
       isCancel,
@@ -1070,14 +1290,37 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         showLabel: false,
       },
       suffix,
-      tip: 'テンキー236を2回素早く入力+パンチ（ヒーリング）',
+      tip: 'テンキー236を2回素早く入力+パンチ（スピニングダンス / ヒーリング）',
     };
   }
 
-  // 8. エレナのSA3 / CA（214214K）
+  // 8. エレナのSA3 / CA（214214K または ワンボタン↓+SP）
   // ユーザー指示 5-2：SA3/CA→214214K（キック）、ボタン内文字は「K」
   if (isElena && (lower.includes('sa3') || lower.includes('ca'))) {
     const isCa = lower.includes('ca');
+    const isOneButton = lower.includes('ワンボタン');
+    const isModern = controlType === 'modern';
+    if (isOneButton || (isModern && !lower.includes('214'))) {
+      return {
+        original: remaining || (isCa ? 'CA' : 'SA3'),
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || (isCa ? 'CA' : 'SA3'),
+        arrows: ['↓'],
+        arrowStr: '↓',
+        button: {
+          kind: 'special',
+          color: 'gold',
+          label: isCa ? 'CA' : 'SA3',
+          description: isCa ? '金のCA（下＋SP または 弱＋SP）' : '金のSA3（下＋SP または 弱＋SP）',
+          iconText: isCa ? 'CA' : 'SA3',
+          showLabel: false,
+        },
+        suffix,
+        tip: isCa ? '体力25%以下で発動：下＋必殺技ボタン（CA）' : '下＋必殺技ボタンで即発動（SA3）',
+      };
+    }
     return {
       original: remaining || (isCa ? 'CA' : 'SA3'),
       isCancel,
@@ -1097,7 +1340,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       suffix,
       tip: isCa
         ? '体力25%以下で発動：テンキー214を2回素早く入力+キック（+250ダメージ）'
-        : 'テンキー214を2回素早く入力+キック',
+        : 'テンキー214を2回素早く入力+キック（ライジングチャリオット）',
     };
   }
 
@@ -1578,6 +1821,7 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     lower.startsWith('アシスト強') ||
     (controlType === 'modern' && (lower === '前大p' || lower === '大ゴス'))
   ) {
+    const isRyu = !isElena && lower.includes('大ゴス');
     return {
       original: remaining,
       isCancel,
@@ -1590,12 +1834,12 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         kind: 'punch',
         color: 'red',
         label: 'A大',
-        description: '赤いボタン（アシスト強攻撃 / 大ゴス）',
+        description: isRyu ? '赤いボタン（アシスト強攻撃 / 大ゴス）' : '赤いボタン（アシスト強攻撃）',
         iconText: 'A大',
         showLabel: false,
       },
       suffix,
-      tip: 'アシストボタンを押しながら強攻撃（大ゴス）',
+      tip: isRyu ? 'アシストボタンを押しながら強攻撃（大ゴス）' : 'アシストボタンを押しながら強攻撃',
     };
   }
 

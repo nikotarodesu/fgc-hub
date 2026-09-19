@@ -11,6 +11,8 @@ export async function generateMetadata({
   const canonicalSlug =
     slug === 'ryu-classic-complete-guide' || slug === 'ryu-modern-complete-guide'
       ? 'ryu-complete-guide'
+      : slug === 'elena-classic-complete-guide' || slug === 'elena-modern-complete-guide'
+      ? 'elena-complete-guide'
       : slug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === canonicalSlug);
@@ -43,6 +45,8 @@ export default async function ArticleLayout({
   const canonicalSlug =
     slug === 'ryu-classic-complete-guide' || slug === 'ryu-modern-complete-guide'
       ? 'ryu-complete-guide'
+      : slug === 'elena-classic-complete-guide' || slug === 'elena-modern-complete-guide'
+      ? 'elena-complete-guide'
       : slug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === canonicalSlug);

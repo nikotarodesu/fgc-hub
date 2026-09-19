@@ -35,9 +35,11 @@ import {
 export default function ArticleDetailPage() {
   const params = useParams();
   const rawSlug = params?.slug as string;
-  const isModernAlias = rawSlug === 'ryu-modern-complete-guide';
-  const slug = (rawSlug === 'ryu-classic-complete-guide' || isModernAlias)
+  const isModernAlias = rawSlug === 'ryu-modern-complete-guide' || rawSlug === 'elena-modern-complete-guide';
+  const slug = (rawSlug === 'ryu-classic-complete-guide' || rawSlug === 'ryu-modern-complete-guide')
     ? 'ryu-complete-guide'
+    : (rawSlug === 'elena-classic-complete-guide' || rawSlug === 'elena-modern-complete-guide')
+    ? 'elena-complete-guide'
     : rawSlug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === slug);
@@ -130,7 +132,12 @@ export default function ArticleDetailPage() {
               (localStorage.getItem('fgc_secret_unlocked_ryu') === 'true' ||
                 localStorage.getItem('fgc_secret_unlocked_ryu-complete-guide') === 'true' ||
                 localStorage.getItem('fgc_secret_unlocked_ryu-classic-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true'));
+                localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true')) ||
+            (slug.includes('elena') &&
+              (localStorage.getItem('fgc_secret_unlocked_elena') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_elena-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_elena-classic-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_elena-modern-complete-guide') === 'true'));
 
           if (isGlobalAdmin || isSecretUnlocked) {
             setIsUnlocked(true);
@@ -184,6 +191,12 @@ export default function ArticleDetailPage() {
         localStorage.setItem('fgc_secret_unlocked_ryu-classic-complete-guide', 'true');
         localStorage.setItem('fgc_secret_unlocked_ryu-modern-complete-guide', 'true');
       }
+      if (char === 'elena' || slug.includes('elena')) {
+        localStorage.setItem('fgc_secret_unlocked_elena', 'true');
+        localStorage.setItem('fgc_secret_unlocked_elena-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_elena-classic-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_elena-modern-complete-guide', 'true');
+      }
     } catch {}
     const msg = secretConfig?.toastMessage || 'シークレット解放（note購入者特典）: 有料コンテンツを開放しました！';
     showToast(msg);
@@ -210,6 +223,12 @@ export default function ArticleDetailPage() {
         localStorage.removeItem('fgc_secret_unlocked_ryu-classic-complete-guide');
         localStorage.removeItem('fgc_secret_unlocked_ryu-modern-complete-guide');
       }
+      if (slug.includes('elena')) {
+        localStorage.removeItem('fgc_secret_unlocked_elena');
+        localStorage.removeItem('fgc_secret_unlocked_elena-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_elena-classic-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_elena-modern-complete-guide');
+      }
     } catch {}
     showToast('通常表示（ロック状態）に戻しました');
   };
@@ -233,6 +252,8 @@ export default function ArticleDetailPage() {
     const targetSlug = article.slug;
     const candidateSlugs = targetSlug.includes('ryu')
       ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+      : targetSlug.includes('elena')
+      ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
       : [targetSlug];
 
     async function checkTokenAccess() {
@@ -318,6 +339,8 @@ export default function ArticleDetailPage() {
     if (!article) return false;
     const candidateSlugs = article.slug.includes('ryu')
       ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+      : article.slug.includes('elena')
+      ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
       : [article.slug];
 
     try {
@@ -349,6 +372,7 @@ export default function ArticleDetailPage() {
   const introText = currentVariant ? currentVariant.intro : article?.freeContent.intro || '';
   const freeSections = currentVariant ? currentVariant.sections : article?.freeContent.sections || [];
   const paidSections = currentVariant ? currentVariant.paidSections : article?.paidContent.sections || [];
+  const currentAbbreviations = currentVariant?.abbreviations || article?.abbreviations;
 
   // 完全攻略記事用：大見出しごとの折りたたみ状態（キー: `sec-free-0`, `sec-paid-1` 等、true=収納中）
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
@@ -1061,7 +1085,7 @@ export default function ArticleDetailPage() {
               </div>
 
               {/* この記事で使用する略称一覧テーブル（指示書 4: 目次直下に配置） */}
-              {article.abbreviations && article.abbreviations.length > 0 && (
+              {currentAbbreviations && currentAbbreviations.length > 0 && (
                 <div className="my-4 sm:my-6 p-4 sm:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-neutral-50 to-neutral-100/70 dark:from-[#1a2332]/60 dark:to-[#1a2332]/30 border border-neutral-200/90 dark:border-[#253247] shadow-2xs">
                   <div className="flex items-center gap-2 mb-3 text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider">
                     <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
@@ -1077,7 +1101,7 @@ export default function ArticleDetailPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-neutral-200/60 dark:divide-neutral-700/50">
-                        {article.abbreviations.map((item, aIdx) => (
+                        {currentAbbreviations.map((item, aIdx) => (
                           <tr key={aIdx} className="hover:bg-neutral-100/50 dark:hover:bg-neutral-800/40 transition-colors">
                             <td className="py-2 px-3 font-medium text-neutral-800 dark:text-neutral-200 font-sans">{item.formal}</td>
                             <td className="py-2 px-2 text-center text-neutral-400 text-xs">➔</td>

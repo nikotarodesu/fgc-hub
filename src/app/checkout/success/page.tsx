@@ -41,6 +41,8 @@ function SuccessContent() {
           if (data.token) {
             const relatedSlugs = data.slug.includes('ryu')
               ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+              : data.slug.includes('elena')
+              ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
               : [data.slug];
             relatedSlugs.forEach((s) => {
               localStorage.setItem(`fgc_unlocked_${s}`, data.token);

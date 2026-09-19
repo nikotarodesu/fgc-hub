@@ -1,5 +1,7 @@
 import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
+import { ELENA_COMPLETE_GUIDE } from './articles/elenaCompleteGuide';
 import { ELENA_CLASSIC_COMPLETE_GUIDE } from './articles/elenaClassicCompleteGuide';
+import { ELENA_MODERN_COMPLETE_GUIDE } from './articles/elenaModernCompleteGuide';
 import { COACHING_JURI_1400MR } from './articles/coachingJuri1400mr';
 import { COACHING_BLANKA_1500MR } from './articles/coachingBlanka1500mr';
 import { COACHING_ED_1300MR_KEN } from './articles/coachingEd1300mrKen';
@@ -28,6 +30,7 @@ export interface ArticleVariant {
   intro: string;
   sections: Article['freeContent']['sections'];
   paidSections: Article['paidContent']['sections'];
+  abbreviations?: Article['abbreviations'];
 }
 
 import { AuthorInfo, AUTHOR_INFO } from './author';
@@ -247,7 +250,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
-  ELENA_CLASSIC_COMPLETE_GUIDE,
+  ELENA_COMPLETE_GUIDE,
   COACHING_JURI_1400MR,
   COACHING_BLANKA_1500MR,
   COACHING_ED_1300MR_KEN,
@@ -353,4 +356,7 @@ export function parseArticleTitle(title: string): { mainTitle: string; subtitle?
   }
   return { mainTitle: title };
 }
+
+export { ELENA_COMPLETE_GUIDE, ELENA_CLASSIC_COMPLETE_GUIDE, ELENA_MODERN_COMPLETE_GUIDE };
+
 

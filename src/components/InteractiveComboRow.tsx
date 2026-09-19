@@ -238,8 +238,8 @@ export default function InteractiveComboRow({
 
                   {/* アクション表示（TC、インパクト、移動、ボタン等） */}
                   {step.isTC ? (
-                    <div className="flex items-center gap-1 shrink-0" title={step.button.description || step.tcText}>
-                      {step.tcButtons && step.tcButtons.length > 0 && (
+                    <div className="flex items-center gap-0.5 shrink-0" title={step.button.description || step.tcText}>
+                      {step.tcButtons && step.tcButtons.length > 0 ? (
                         <div className="flex items-center gap-0.5 shrink-0">
                           {step.tcButtons.map((btn, bIdx) => (
                             <span key={bIdx} className="flex items-center">
@@ -258,11 +258,14 @@ export default function InteractiveComboRow({
                             </span>
                           ))}
                         </div>
-                      )}
-                      {step.tcText && (
-                        <span className="text-xs font-bold font-mono text-neutral-800 dark:text-neutral-200 shrink-0">
-                          {step.tcText}
-                        </span>
+                      ) : (
+                        <ArcadeButton
+                          color={step.button.color}
+                          iconText={step.button.iconText}
+                          label={step.button.label}
+                          size="sm"
+                          controlType={controlType}
+                        />
                       )}
                     </div>
                   ) : step.button.label === 'インパクト' ? (

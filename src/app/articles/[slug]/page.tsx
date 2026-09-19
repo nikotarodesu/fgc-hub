@@ -28,6 +28,8 @@ import {
   X,
   CheckCircle2,
   RefreshCw,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 export default function ArticleDetailPage() {
@@ -348,6 +350,39 @@ export default function ArticleDetailPage() {
   const freeSections = currentVariant ? currentVariant.sections : article?.freeContent.sections || [];
   const paidSections = currentVariant ? currentVariant.paidSections : article?.paidContent.sections || [];
 
+  // 完全攻略記事用：大見出しごとの折りたたみ状態（キー: `sec-free-0`, `sec-paid-1` 等、true=収納中）
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
+
+  // コントロールタイプ変更や記事変更時に折りたたみ状態をリセット
+  useEffect(() => {
+    setCollapsedSections({});
+  }, [activeControlType, slug]);
+
+  const toggleSectionCollapse = (secId: string) => {
+    setCollapsedSections((prev) => ({
+      ...prev,
+      [secId]: !prev[secId],
+    }));
+  };
+
+  const allSectionIds = [
+    ...freeSections.map((_, idx) => `sec-free-${idx}`),
+    ...(isUnlocked ? paidSections.map((_, idx) => `sec-paid-${idx}`) : []),
+  ];
+  const isAllCollapsed = allSectionIds.length > 0 && allSectionIds.every((id) => collapsedSections[id]);
+
+  const handleToggleAllCollapse = () => {
+    if (isAllCollapsed) {
+      setCollapsedSections({});
+    } else {
+      const next: Record<string, boolean> = {};
+      allSectionIds.forEach((id) => {
+        next[id] = true;
+      });
+      setCollapsedSections(next);
+    }
+  };
+
   // 全セクション一覧（クイックジャンプ用、二重番号を解消）
   const allSectionsList: QuickJumpSection[] = [];
   freeSections.forEach((sec, idx) => {
@@ -446,13 +481,24 @@ export default function ArticleDetailPage() {
 
   const handleJumpToSection = (id: string) => {
     setActiveSectionId(id);
-    const element = document.getElementById(id);
-    if (element) {
-      // 固定ヘッダー（h-14）および上部追従バー（ArticleQuickJump）を考慮したオフセット
-      const yOffset = -100;
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+    if (isCompleteGuide) {
+      if (collapsedSections[id]) {
+        setCollapsedSections((prev) => ({ ...prev, [id]: false }));
+      }
+      const matchedSecId = allSectionIds.find((secId) => id.startsWith(secId));
+      if (matchedSecId && collapsedSections[matchedSecId]) {
+        setCollapsedSections((prev) => ({ ...prev, [matchedSecId]: false }));
+      }
     }
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        // 固定ヘッダー（h-14）および上部追従バー（ArticleQuickJump）を考慮したオフセット
+        const yOffset = -100;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   if (!article) {
@@ -876,19 +922,41 @@ export default function ArticleDetailPage() {
 
               {/* 目次 */}
               <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] my-4 sm:my-6">
-                <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-2.5 flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                     <span>目次</span>
                   </div>
-                  {currentVariant && (
-                    <span
-                      className="text-[11px] font-bold text-white px-2 py-0.5 rounded shrink-0"
-                      style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
-                    >
-                      {activeControlType === 'classic' ? 'クラシック編' : 'モダン編'}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {isCompleteGuide && (
+                      <button
+                        type="button"
+                        onClick={handleToggleAllCollapse}
+                        className="text-[11px] font-normal text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:bg-cyan-100/60 dark:hover:bg-cyan-950/60 cursor-pointer flex items-center gap-1 bg-cyan-50/90 dark:bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-200/80 dark:border-cyan-800/60 transition-colors"
+                        title={isAllCollapsed ? 'すべての章を展開します' : 'すべての章を折りたたみます'}
+                      >
+                        {isAllCollapsed ? (
+                          <>
+                            <ChevronDown className="w-3.5 h-3.5" />
+                            <span>すべて展開</span>
+                          </>
+                        ) : (
+                          <>
+                            <ChevronUp className="w-3.5 h-3.5" />
+                            <span>すべて折りたたむ</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                    {currentVariant && (
+                      <span
+                        className="text-[11px] font-bold text-white px-2 py-0.5 rounded shrink-0"
+                        style={{ backgroundColor: activeControlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                      >
+                        {activeControlType === 'classic' ? 'クラシック編' : 'モダン編'}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* ★ お気に入り登録済みセクションのクイックトレイ */}
@@ -918,153 +986,216 @@ export default function ArticleDetailPage() {
                 )}
 
                 <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-300">
-                  {freeSections.map((sec, idx) => (
-                    <li key={idx} className="flex items-center justify-between gap-2 group">
-                      <button
-                        type="button"
-                        onClick={() => handleJumpToSection(`sec-free-${idx}`)}
-                        className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1"
-                      >
-                        <span className="group-hover:underline font-medium">{formatSectionTitle(sec.title, idx)}</span>
-                      </button>
-                      {isCompleteGuide && (
+                  {freeSections.map((sec, idx) => {
+                    const secId = `sec-free-${idx}`;
+                    const isSecCollapsed = Boolean(isCompleteGuide && collapsedSections[secId]);
+                    return (
+                      <li key={idx} className="flex items-center justify-between gap-2 group">
                         <button
                           type="button"
-                          onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
-                          className={`p-1 rounded transition-colors cursor-pointer ${
-                            bookmarks.includes(`sec-free-${idx}`)
-                              ? 'text-amber-500'
-                              : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
-                          }`}
-                          title="お気に入り登録"
+                          onClick={() => handleJumpToSection(secId)}
+                          className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1 min-w-0"
                         >
-                          <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
+                          <span className="group-hover:underline font-medium truncate">{formatSectionTitle(sec.title, idx)}</span>
+                          {isSecCollapsed && (
+                            <span className="text-[10px] bg-neutral-200/70 dark:bg-neutral-700/70 text-neutral-500 dark:text-neutral-400 px-1.5 py-0.5 rounded font-normal shrink-0">
+                              収納中
+                            </span>
+                          )}
                         </button>
-                      )}
-                    </li>
-                  ))}
-                  {paidSections.map((sec, idx) => (
-                    <li key={idx} className="flex items-center justify-between gap-2 group text-neutral-800 dark:text-neutral-200 font-medium">
-                      <button
-                        type="button"
-                        onClick={() => handleJumpToSection(`sec-paid-${idx}`)}
-                        className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1"
-                      >
-                        <span className="group-hover:underline">{formatSectionTitle(sec.title, freeSections.length + idx)}</span>
-                        <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1.5 py-0.5 rounded font-normal shrink-0">
-                          {article.subscriptionOnly ? '会員限定' : '有料'}
-                        </span>
-                      </button>
-                      {isCompleteGuide && (
+                        {isCompleteGuide && (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleBookmark(secId)}
+                            className={`p-1 rounded transition-colors cursor-pointer shrink-0 ${
+                              bookmarks.includes(secId)
+                                ? 'text-amber-500'
+                                : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
+                            }`}
+                            title="お気に入り登録"
+                          >
+                            <Star className={`w-3.5 h-3.5 ${bookmarks.includes(secId) ? 'fill-current' : ''}`} />
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                  {paidSections.map((sec, idx) => {
+                    const secId = `sec-paid-${idx}`;
+                    const isSecCollapsed = Boolean(isCompleteGuide && collapsedSections[secId]);
+                    return (
+                      <li key={idx} className="flex items-center justify-between gap-2 group text-neutral-800 dark:text-neutral-200 font-medium">
                         <button
                           type="button"
-                          onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                          className={`p-1 rounded transition-colors cursor-pointer ${
-                            bookmarks.includes(`sec-paid-${idx}`)
-                              ? 'text-amber-500'
-                              : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
-                          }`}
-                          title="お気に入り登録"
+                          onClick={() => handleJumpToSection(secId)}
+                          className="flex items-center gap-2 hover:text-neutral-900 dark:hover:text-white text-left cursor-pointer flex-1 min-w-0"
                         >
-                          <Star className={`w-3.5 h-3.5 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
+                          <span className="group-hover:underline truncate">{formatSectionTitle(sec.title, freeSections.length + idx)}</span>
+                          {isSecCollapsed && (
+                            <span className="text-[10px] bg-neutral-200/70 dark:bg-neutral-700/70 text-neutral-500 dark:text-neutral-400 px-1.5 py-0.5 rounded font-normal shrink-0">
+                              収納中
+                            </span>
+                          )}
+                          <span className="text-[10px] bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-1.5 py-0.5 rounded font-normal shrink-0">
+                            {article.subscriptionOnly ? '会員限定' : '有料'}
+                          </span>
                         </button>
-                      )}
-                    </li>
-                  ))}
+                        {isCompleteGuide && (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleBookmark(secId)}
+                            className={`p-1 rounded transition-colors cursor-pointer shrink-0 ${
+                              bookmarks.includes(secId)
+                                ? 'text-amber-500'
+                                : 'text-neutral-300 dark:text-neutral-600 hover:text-amber-500'
+                            }`}
+                            title="お気に入り登録"
+                          >
+                            <Star className={`w-3.5 h-3.5 ${bookmarks.includes(secId) ? 'fill-current' : ''}`} />
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
               {/* 無料公開セクション */}
-              {freeSections.map((section, idx) => (
-                <div key={idx} id={`sec-free-${idx}`} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
-                  <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                      <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                      <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
-                        {formatSectionTitle(section.title, idx)}
-                      </h2>
+              {freeSections.map((section, idx) => {
+                const secId = `sec-free-${idx}`;
+                const isCollapsed = Boolean(isCompleteGuide && collapsedSections[secId]);
+
+                return (
+                  <div key={idx} id={secId} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
+                    <div
+                      onClick={isCompleteGuide ? () => toggleSectionCollapse(secId) : undefined}
+                      className={`flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs transition-all ${
+                        isCompleteGuide
+                          ? 'cursor-pointer hover:bg-neutral-100/90 dark:hover:bg-neutral-800/90 hover:border-neutral-300 dark:hover:border-neutral-600 select-none'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                        <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
+                        <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                          {formatSectionTitle(section.title, idx)}
+                        </h2>
+                      </div>
+                      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                        {isCompleteGuide && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleBookmark(secId);
+                            }}
+                            className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
+                              bookmarks.includes(secId)
+                                ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                                : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                            }`}
+                            title={bookmarks.includes(secId) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                          >
+                            <Star className={`w-4 h-4 ${bookmarks.includes(secId) ? 'fill-current' : ''}`} />
+                            <span className="hidden sm:inline text-[11px]">
+                              {bookmarks.includes(secId) ? '登録済み' : 'お気に入り'}
+                            </span>
+                          </button>
+                        )}
+                        {isCompleteGuide && (
+                          <div
+                            className="p-1.5 rounded-lg flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+                            title={isCollapsed ? 'タップして展開' : 'タップして折りたたむ'}
+                          >
+                            <span className="text-[11px] font-medium hidden sm:inline text-neutral-500 dark:text-neutral-400">
+                              {isCollapsed ? '開く' : '閉じる'}
+                            </span>
+                            {isCollapsed ? (
+                              <ChevronDown className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {isCompleteGuide && (
+
+                    {!isCollapsed ? (
+                      <>
+                        <div className="mb-6 sm:mb-8">
+                          <RichContent
+                            content={section.body}
+                            sectionId={secId}
+                            sectionTitle={section.title}
+                            activeSubheading={activeSubheading}
+                            isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                            controlType={activeControlType}
+                            secretConfig={secretConfig}
+                            onSecretUnlock={() => handleSecretUnlock(secretConfig?.characterSlug)}
+                            isCoaching={isCoaching}
+                          />
+                        </div>
+
+                        {/* 図解ダイアグラム */}
+                        {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
+
+                        {/* スクショ画像 */}
+                        {section.image && (
+                          <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 shadow-sm">
+                            <Image
+                              src={section.image.src}
+                              alt={section.image.alt}
+                              width={1200}
+                              height={675}
+                              className="w-full h-auto object-cover"
+                            />
+                            {section.image.caption && (
+                              <div className="p-2.5 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 text-center font-medium">
+                                {section.image.caption}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* 箇条書きポイント */}
+                        {section.bulletPoints && (
+                          <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                            {section.bulletPoints.map((bp, bpIdx) => (
+                              <li key={bpIdx} className="flex items-start gap-2">
+                                <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
+                                <span className="leading-relaxed min-w-0 break-words [overflow-wrap:anywhere]">{bp}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {/* コンボレシピ */}
+                        {section.combo && section.combo.map((c, cIdx) => (
+                          <ComboCard
+                            key={cIdx}
+                            name={c.name}
+                            recipe={c.recipe}
+                            damage={c.damage}
+                            driveGauge={c.driveGauge}
+                            situation={c.situation}
+                            note={c.note}
+                            controlType={activeControlType}
+                          />
+                        ))}
+                      </>
+                    ) : (
                       <button
                         type="button"
-                        onClick={() => handleToggleBookmark(`sec-free-${idx}`)}
-                        className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
-                          bookmarks.includes(`sec-free-${idx}`)
-                            ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
-                            : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                        }`}
-                        title={bookmarks.includes(`sec-free-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                        onClick={() => toggleSectionCollapse(secId)}
+                        className="w-full py-2.5 px-4 mb-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-cyan-500 dark:hover:border-cyan-500 bg-neutral-50/50 dark:bg-neutral-900/30 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 text-xs text-neutral-500 dark:text-neutral-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center justify-center gap-2 transition-all cursor-pointer"
                       >
-                        <Star className={`w-4 h-4 ${bookmarks.includes(`sec-free-${idx}`) ? 'fill-current' : ''}`} />
-                        <span className="hidden sm:inline text-[11px]">
-                          {bookmarks.includes(`sec-free-${idx}`) ? '登録済み' : 'お気に入り'}
-                        </span>
+                        <ChevronDown className="w-3.5 h-3.5" />
+                        <span>この章を展開して読む</span>
                       </button>
                     )}
                   </div>
-
-                  <div className="mb-6 sm:mb-8">
-                    <RichContent
-                      content={section.body}
-                      sectionId={`sec-free-${idx}`}
-                      sectionTitle={section.title}
-                      activeSubheading={activeSubheading}
-                      isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
-                      controlType={activeControlType}
-                      secretConfig={secretConfig}
-                      onSecretUnlock={() => handleSecretUnlock(secretConfig?.characterSlug)}
-                      isCoaching={isCoaching}
-                    />
-                  </div>
-
-                  {/* 図解ダイアグラム */}
-                  {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
-
-                  {/* スクショ画像 */}
-                  {section.image && (
-                    <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 shadow-sm">
-                      <Image
-                        src={section.image.src}
-                        alt={section.image.alt}
-                        width={1200}
-                        height={675}
-                        className="w-full h-auto object-cover"
-                      />
-                      {section.image.caption && (
-                        <div className="p-2.5 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 text-center font-medium">
-                          {section.image.caption}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 箇条書きポイント */}
-                  {section.bulletPoints && (
-                    <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
-                      {section.bulletPoints.map((bp, bpIdx) => (
-                        <li key={bpIdx} className="flex items-start gap-2">
-                          <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
-                          <span className="leading-relaxed min-w-0 break-words [overflow-wrap:anywhere]">{bp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* コンボレシピ */}
-                  {section.combo && section.combo.map((c, cIdx) => (
-                    <ComboCard
-                      key={cIdx}
-                      name={c.name}
-                      recipe={c.recipe}
-                      damage={c.damage}
-                      driveGauge={c.driveGauge}
-                      situation={c.situation}
-                      note={c.note}
-                      controlType={activeControlType}
-                    />
-                  ))}
-                </div>
-              ))}
+                );
+              })}
 
               {/* 有料記事ロック & アンロック後コンテンツ */}
               {article.isPaid && (
@@ -1138,6 +1269,9 @@ export default function ArticleDetailPage() {
                       {/* 有料セクション */}
                       {paidSections.map((section, idx) => {
                         const isCenterComboSec = section.title.includes('画面中央のコンボ');
+                        const secId = `sec-paid-${idx}`;
+                        const isCollapsed = Boolean(isCompleteGuide && collapsedSections[secId]);
+
                         return (
                           <React.Fragment key={idx}>
                             {/* 実戦コンボ逆引きデータベース */}
@@ -1150,148 +1284,188 @@ export default function ArticleDetailPage() {
                               </div>
                             )}
 
-                            <div id={`sec-paid-${idx}`} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
-                              <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                            <div id={secId} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
+                              <div
+                                onClick={isCompleteGuide ? () => toggleSectionCollapse(secId) : undefined}
+                                className={`flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs transition-all ${
+                                  isCompleteGuide
+                                    ? 'cursor-pointer hover:bg-neutral-100/90 dark:hover:bg-neutral-800/90 hover:border-neutral-300 dark:hover:border-neutral-600 select-none'
+                                    : ''
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                                   <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
                                   <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
                                     {formatSectionTitle(section.title, freeSections.length + idx)}
                                   </h2>
                                 </div>
-                                {isCompleteGuide && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleToggleBookmark(`sec-paid-${idx}`)}
-                                    className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
-                                      bookmarks.includes(`sec-paid-${idx}`)
-                                        ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
-                                        : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                                    }`}
-                                    title={bookmarks.includes(`sec-paid-${idx}`) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
-                                  >
-                                    <Star className={`w-4 h-4 ${bookmarks.includes(`sec-paid-${idx}`) ? 'fill-current' : ''}`} />
-                                    <span className="hidden sm:inline text-[11px]">
-                                      {bookmarks.includes(`sec-paid-${idx}`) ? '登録済み' : 'お気に入り'}
-                                    </span>
-                                  </button>
-                                )}
-                              </div>
-
-                              <div className="mb-6 sm:mb-8">
-                                <RichContent
-                                  content={section.body}
-                                  sectionId={`sec-paid-${idx}`}
-                                  activeSubheading={activeSubheading}
-                                  isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
-                                  controlType={activeControlType}
-                                  isCoaching={isCoaching}
-                                />
-                              </div>
-
-                          {/* 図解ダイアグラム */}
-                          {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
-
-                          {/* スクショ画像 */}
-                          {section.image && (
-                            <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 shadow-sm">
-                              <Image
-                                src={section.image.src}
-                                alt={section.image.alt}
-                                width={1200}
-                                height={675}
-                                className="w-full h-auto object-cover"
-                              />
-                              {section.image.caption && (
-                                <div className="p-2.5 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 text-center font-medium">
-                                  {section.image.caption}
+                                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                                  {isCompleteGuide && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleToggleBookmark(secId);
+                                      }}
+                                      className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-colors cursor-pointer shrink-0 ${
+                                        bookmarks.includes(secId)
+                                          ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/40 font-bold'
+                                          : 'text-neutral-400 hover:text-amber-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                      }`}
+                                      title={bookmarks.includes(secId) ? 'お気に入りを解除' : 'この章をお気に入りに登録'}
+                                    >
+                                      <Star className={`w-4 h-4 ${bookmarks.includes(secId) ? 'fill-current' : ''}`} />
+                                      <span className="hidden sm:inline text-[11px]">
+                                        {bookmarks.includes(secId) ? '登録済み' : 'お気に入り'}
+                                      </span>
+                                    </button>
+                                  )}
+                                  {isCompleteGuide && (
+                                    <div
+                                      className="p-1.5 rounded-lg flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+                                      title={isCollapsed ? 'タップして展開' : 'タップして折りたたむ'}
+                                    >
+                                      <span className="text-[11px] font-medium hidden sm:inline text-neutral-500 dark:text-neutral-400">
+                                        {isCollapsed ? '開く' : '閉じる'}
+                                      </span>
+                                      {isCollapsed ? (
+                                        <ChevronDown className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                                      ) : (
+                                        <ChevronUp className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
+                              </div>
+
+                              {!isCollapsed ? (
+                                <>
+                                  <div className="mb-6 sm:mb-8">
+                                    <RichContent
+                                      content={section.body}
+                                      sectionId={secId}
+                                      activeSubheading={activeSubheading}
+                                      isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
+                                      controlType={activeControlType}
+                                      isCoaching={isCoaching}
+                                    />
+                                  </div>
+
+                                  {/* 図解ダイアグラム */}
+                                  {section.diagramType && <DiagramDispatcher diagramType={section.diagramType} />}
+
+                                  {/* スクショ画像 */}
+                                  {section.image && (
+                                    <div className="my-5 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 shadow-sm">
+                                      <Image
+                                        src={section.image.src}
+                                        alt={section.image.alt}
+                                        width={1200}
+                                        height={675}
+                                        className="w-full h-auto object-cover"
+                                      />
+                                      {section.image.caption && (
+                                        <div className="p-2.5 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 text-center font-medium">
+                                          {section.image.caption}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* 箇条書き */}
+                                  {section.bulletPoints && (
+                                    <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                                      {section.bulletPoints.map((bp, bpIdx) => (
+                                        <li key={bpIdx} className="flex items-start gap-2">
+                                          <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
+                                          <span className="leading-relaxed min-w-0 break-words [overflow-wrap:anywhere]">{bp}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+
+                                  {/* コンボレシピ */}
+                                  {section.combo && section.combo.map((c, cIdx) => (
+                                    <ComboCard
+                                      key={cIdx}
+                                      name={c.name}
+                                      recipe={c.recipe}
+                                      damage={c.damage}
+                                      driveGauge={c.driveGauge}
+                                      situation={c.situation}
+                                      note={c.note}
+                                      controlType={activeControlType}
+                                    />
+                                  ))}
+
+                                  {/* Q&A相談リスト */}
+                                  {section.qaList && (
+                                    <div className="my-6 space-y-4">
+                                      {section.qaList.map((qa, qaIdx) => (
+                                        <div key={qaIdx} className="p-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 shadow-xs">
+                                          <div className="flex items-start gap-2.5 mb-3">
+                                            <span className="px-2 py-0.5 rounded bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs shrink-0">
+                                              Q{qa.number}
+                                            </span>
+                                            <h4 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white leading-snug">
+                                              {qa.question}
+                                            </h4>
+                                          </div>
+                                          <div className="pt-3 border-t border-neutral-200/80 dark:border-neutral-700/80 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-line leading-relaxed">
+                                            {qa.answer}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {section.tips && (
+                                    <div className="my-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800">
+                                      <h4 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5">
+                                        実戦のポイント
+                                      </h4>
+                                      <ul className="space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
+                                        {section.tips.map((tip, tIdx) => (
+                                          <li key={tIdx} className="flex items-start gap-2">
+                                            <span className="text-neutral-400 font-bold">•</span>
+                                            <span>{tip}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {section.secretSetplay && section.secretSetplay.map((sp, spIdx) => (
+                                    <div key={spIdx} className="my-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700">
+                                      <div className="flex items-center justify-between gap-2 mb-2">
+                                        <span className="font-bold text-sm text-neutral-900 dark:text-white">{sp.name}</span>
+                                        <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200">
+                                          {sp.frameAdvantage}
+                                        </span>
+                                      </div>
+                                      <div className="p-2.5 rounded-lg bg-neutral-900 dark:bg-black text-white font-mono text-xs sm:text-sm mb-2 border border-neutral-800">
+                                        {sp.input}
+                                      </div>
+                                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                                        {sp.explanation}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleSectionCollapse(secId)}
+                                  className="w-full py-2.5 px-4 mb-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-cyan-500 dark:hover:border-cyan-500 bg-neutral-50/50 dark:bg-neutral-900/30 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 text-xs text-neutral-500 dark:text-neutral-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                                >
+                                  <ChevronDown className="w-3.5 h-3.5" />
+                                  <span>この章を展開して読む</span>
+                                </button>
                               )}
                             </div>
-                          )}
-
-                          {/* 箇条書き */}
-                          {section.bulletPoints && (
-                            <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
-                              {section.bulletPoints.map((bp, bpIdx) => (
-                                <li key={bpIdx} className="flex items-start gap-2">
-                                  <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
-                                  <span className="leading-relaxed min-w-0 break-words [overflow-wrap:anywhere]">{bp}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-
-                          {/* コンボレシピ */}
-                          {section.combo && section.combo.map((c, cIdx) => (
-                            <ComboCard
-                              key={cIdx}
-                              name={c.name}
-                              recipe={c.recipe}
-                              damage={c.damage}
-                              driveGauge={c.driveGauge}
-                              situation={c.situation}
-                              note={c.note}
-                              controlType={activeControlType}
-                            />
-                          ))}
-
-                          {/* Q&A相談リスト */}
-                          {section.qaList && (
-                            <div className="my-6 space-y-4">
-                              {section.qaList.map((qa, qaIdx) => (
-                                <div key={qaIdx} className="p-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 shadow-xs">
-                                  <div className="flex items-start gap-2.5 mb-3">
-                                    <span className="px-2 py-0.5 rounded bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs shrink-0">
-                                      Q{qa.number}
-                                    </span>
-                                    <h4 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white leading-snug">
-                                      {qa.question}
-                                    </h4>
-                                  </div>
-                                  <div className="pt-3 border-t border-neutral-200/80 dark:border-neutral-700/80 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-line leading-relaxed">
-                                    {qa.answer}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {section.tips && (
-                            <div className="my-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800">
-                              <h4 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-2.5">
-                                実戦のポイント
-                              </h4>
-                              <ul className="space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
-                                {section.tips.map((tip, tIdx) => (
-                                  <li key={tIdx} className="flex items-start gap-2">
-                                    <span className="text-neutral-400 font-bold">•</span>
-                                    <span>{tip}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {section.secretSetplay && section.secretSetplay.map((sp, spIdx) => (
-                            <div key={spIdx} className="my-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700">
-                              <div className="flex items-center justify-between gap-2 mb-2">
-                                <span className="font-bold text-sm text-neutral-900 dark:text-white">{sp.name}</span>
-                                <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200">
-                                  {sp.frameAdvantage}
-                                </span>
-                              </div>
-                              <div className="p-2.5 rounded-lg bg-neutral-900 dark:bg-black text-white font-mono text-xs sm:text-sm mb-2 border border-neutral-800">
-                                {sp.input}
-                              </div>
-                              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                                {sp.explanation}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </React.Fragment>
-                    );
-                  })}
+                          </React.Fragment>
+                        );
+                      })}
                     </div>
                   )}
                 </>

@@ -6,20 +6,22 @@ import ArcadeButton from './ArcadeButton';
 import CommandMotionIcon from './CommandMotionIcon';
 import { ChevronDown, ChevronUp, Gamepad2 } from 'lucide-react';
 
-import { findOkizemeData } from '@/data/articles/ryuOkizemeData';
+import { getOkizemeDataByCharacter } from '@/data/articles/okizemeRegistry';
 
 interface InteractiveComboRowProps {
   comboLine: string;
   renderInlineText?: (text: string) => React.ReactNode[];
   controlType?: 'classic' | 'modern';
+  character?: string;
 }
 
 // コンボ行内の有利フレーム表記（例: 「+37」や「（+37）」）を検出し、
-// ⑤の起き攻めフレームデータに存在する場合のみタップ可能にするヘルパー
+// キャラクター固有の起き攻めフレームデータに存在する場合のみタップ可能にするヘルパー
 // （カッコ内の単なる数字「（2150）」等はダメージ値なので無視し、その後に続く「+37」等を対象とする）
 function renderComboLineWithOkizeme(
   text: string,
-  renderInlineText: (t: string) => React.ReactNode[]
+  renderInlineText: (t: string) => React.ReactNode[],
+  character?: string
 ): React.ReactNode {
   // プラス記号で始まるフレーム表記のみを検出（カッコ付き（+37）または単独の+37）
   // 注意: （2610）のようなプラスのない数値（ダメージ）は絶対にマッチさせない
@@ -34,15 +36,15 @@ function renderComboLineWithOkizeme(
     const matchEnd = frameRegex.lastIndex;
     const matchedStr = match[0];
 
-    // ⑤の起き攻めフレームデータに存在するか確認
-    const okiData = findOkizemeData(matchedStr);
+    // キャラクター固有の起き攻めフレームデータに存在するか確認（他キャラへの流用は行わない）
+    const okiData = getOkizemeDataByCharacter(character, matchedStr);
 
     if (matchStart > lastIndex) {
       parts.push(renderInlineText(text.slice(lastIndex, matchStart)));
     }
 
     if (okiData) {
-      // ⑤の起き攻めフレームにある場合のみクリック可能なボタンとして表示
+      // 起き攻めフレームにある場合のみクリック可能なボタンとして表示
       parts.push(
         <button
           key={matchStart}
@@ -52,7 +54,7 @@ function renderComboLineWithOkizeme(
             if (typeof window !== 'undefined') {
               window.dispatchEvent(
                 new CustomEvent('open_okizeme_modal', {
-                  detail: { frame: okiData.frameKey },
+                  detail: { frame: okiData.frameKey, character: character },
                 })
               );
             }
@@ -90,6 +92,7 @@ export default function InteractiveComboRow({
   comboLine,
   renderInlineText = (text) => [text],
   controlType = 'classic',
+  character,
 }: InteractiveComboRowProps) {
   const [isOpen, setIsOpen] = useState(false);
   const cleanText = comboLine.trim().replace(/^[●・\-▶︎▶■]\s*/, '');
@@ -109,13 +112,13 @@ export default function InteractiveComboRow({
           コンボ
         </span>
         <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
-          {renderComboLineWithOkizeme(cleanText, renderInlineText)}
+          {renderComboLineWithOkizeme(cleanText, renderInlineText, character)}
         </span>
       </div>
     );
   }
 
-  const steps: VisualStep[] = parseVisualCombo(cleanText, controlType);
+  const steps: VisualStep[] = parseVisualCombo(cleanText, controlType, character);
 
   return (
     <div className="my-1.5 sm:my-2 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 bg-neutral-50/90 dark:bg-neutral-800/80 overflow-hidden transition-all shadow-2xs w-full max-w-full min-w-0">
@@ -130,7 +133,7 @@ export default function InteractiveComboRow({
             コンボ
           </span>
           <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
-            {renderComboLineWithOkizeme(cleanText, renderInlineText)}
+            {renderComboLineWithOkizeme(cleanText, renderInlineText, character)}
           </span>
         </div>
 
@@ -233,8 +236,36 @@ export default function InteractiveComboRow({
                       <span className="text-neutral-400 text-xs font-bold shrink-0">+</span>
                     )}
 
-                  {/* アクション表示（インパクトは赤文字、前ステ等は通常文字、通常技・必殺技はアーケードボタン） */}
-                  {step.button.label === 'インパクト' ? (
+                  {/* アクション表示（TC、インパクト、移動、ボタン等） */}
+                  {step.isTC ? (
+                    <div className="flex items-center gap-1 shrink-0" title={step.button.description || step.tcText}>
+                      {step.tcButtons && step.tcButtons.length > 0 && (
+                        <div className="flex items-center gap-0.5 shrink-0">
+                          {step.tcButtons.map((btn, bIdx) => (
+                            <span key={bIdx} className="flex items-center">
+                              <ArcadeButton
+                                color={btn.color}
+                                iconText={btn.iconText}
+                                label={btn.label}
+                                size="sm"
+                                controlType={controlType}
+                              />
+                              {bIdx < step.tcButtons!.length - 1 && (
+                                <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-bold mx-0.5 select-none">
+                                  ・
+                                </span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {step.tcText && (
+                        <span className="text-xs font-bold font-mono text-neutral-800 dark:text-neutral-200 shrink-0">
+                          {step.tcText}
+                        </span>
+                      )}
+                    </div>
+                  ) : step.button.label === 'インパクト' ? (
                     <span className="text-xs font-black text-rose-600 dark:text-rose-400 shrink-0">
                       インパクト
                     </span>

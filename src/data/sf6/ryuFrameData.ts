@@ -196,3 +196,5 @@ export function findNeutralMoveKeyFrame(cleanText: string): KeyFrameInfo | null 
 
   return null;
 }
+
+export { findNeutralMoveKeyFrame as findRyuNeutralMoveKeyFrame };

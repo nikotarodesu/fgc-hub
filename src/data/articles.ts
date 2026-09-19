@@ -59,6 +59,10 @@ export interface Article {
   likesCount: number;
   eyecatchImage?: string;
   recommendedGearIds?: string[];
+  abbreviations?: {
+    formal: string;
+    abbreviation: string;
+  }[];
   freeContent: {
     intro: string;
     sections: {

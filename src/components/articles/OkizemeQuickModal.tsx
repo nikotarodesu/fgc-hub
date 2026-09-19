@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  findOkizemeData,
+  getOkizemeDataByCharacter,
   FrameOkizemeData,
-} from '@/data/articles/ryuOkizemeData';
+} from '@/data/articles/okizemeRegistry';
 import {
   X,
   Zap,
@@ -19,14 +19,17 @@ interface OkizemeQuickModalProps {
   frameText?: string | null;
   preferredPosition?: 'center' | 'corner';
   onClose?: () => void;
+  character?: string;
 }
 
 export default function OkizemeQuickModal({
   frameText: propFrameText,
   preferredPosition: propPosition,
   onClose: propOnClose,
+  character: propCharacter,
 }: OkizemeQuickModalProps) {
   const [activeFrame, setActiveFrame] = useState<string | null>(propFrameText || null);
+  const [activeCharacter, setActiveCharacter] = useState<string | undefined>(propCharacter);
   const [activePosition, setActivePosition] = useState<'center' | 'corner' | 'all'>(
     propPosition || 'all'
   );
@@ -41,12 +44,23 @@ export default function OkizemeQuickModal({
     }
   }, [propFrameText, propPosition]);
 
+  useEffect(() => {
+    if (propCharacter) {
+      setActiveCharacter(propCharacter);
+    }
+  }, [propCharacter]);
+
   // グローバルカスタムイベント 'open_okizeme_modal' をリッスン（どこからでもワンタップで呼出可能）
   useEffect(() => {
     const handleOpenEvent = (e: Event) => {
-      const customEvent = e as CustomEvent<{ frame: string; position?: 'center' | 'corner' }>;
+      const customEvent = e as CustomEvent<{ frame: string; position?: 'center' | 'corner'; character?: string }>;
       if (customEvent.detail && customEvent.detail.frame) {
         setActiveFrame(customEvent.detail.frame);
+        if (customEvent.detail.character) {
+          setActiveCharacter(customEvent.detail.character);
+        } else if (propCharacter) {
+          setActiveCharacter(propCharacter);
+        }
         if (customEvent.detail.position) {
           setActivePosition(customEvent.detail.position);
         } else {
@@ -60,7 +74,7 @@ export default function OkizemeQuickModal({
     return () => {
       window.removeEventListener('open_okizeme_modal', handleOpenEvent);
     };
-  }, []);
+  }, [propCharacter]);
 
   // ESCキーで閉じる
   useEffect(() => {
@@ -80,13 +94,14 @@ export default function OkizemeQuickModal({
 
   if (!isOpen || !activeFrame) return null;
 
-  const data: FrameOkizemeData | null = findOkizemeData(activeFrame);
+  // キャラクター固有の起き攻めデータを取得（他キャラへの流用・フォールバックは絶対に行わない）
+  const currentCharacter = activeCharacter || propCharacter;
+  const data: FrameOkizemeData | null = getOkizemeDataByCharacter(currentCharacter, activeFrame);
 
-  // ⑤セクション該当見出しへのスムーズスクロール
-  const handleScrollToSection5 = () => {
+  // 起き攻めフレームセクション該当見出しへのスムーズスクロール
+  const handleScrollToSection = () => {
     handleClose();
     setTimeout(() => {
-      // ⑤ 起き攻めフレームセクション内の該当フレームテキストを検索
       const allElements = Array.from(document.querySelectorAll('div, span, h3, h4, p'));
       const targetEl = allElements.find((el) => {
         const txt = el.textContent || '';
@@ -112,12 +127,13 @@ export default function OkizemeQuickModal({
           targetEl.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-50/70', 'dark:bg-emerald-950/50');
         }, 3000);
       } else {
-        // 見つからない場合はセクション⑤の先頭へスクロール
-        const sec5El = Array.from(document.querySelectorAll('h2')).find((el) =>
-          el.textContent?.includes('⑤ 起き攻めフレーム')
-        );
-        if (sec5El) {
-          sec5El.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 見つからない場合は起き攻めセクションの先頭へスクロール（エレナは⑥、リュウ等は⑤）
+        const secHeader = Array.from(document.querySelectorAll('h2')).find((el) => {
+          const txt = el.textContent || '';
+          return txt.includes('起き攻めフレーム') || txt.includes('起き攻め');
+        });
+        if (secHeader) {
+          secHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
     }, 120);
@@ -144,7 +160,7 @@ export default function OkizemeQuickModal({
                 {data?.displayFrame || activeFrame}
               </span>
               <span className="font-bold text-xs sm:text-sm text-white">
-                起き攻め連携（⑤連動）
+                起き攻め連携（{currentCharacter === 'エレナ' ? '⑥' : '⑤'}連動）
               </span>
             </div>
           </div>
@@ -202,11 +218,14 @@ export default function OkizemeQuickModal({
         <div className="p-4 overflow-y-auto space-y-4 text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 [scrollbar-width:thin]">
           {!data ? (
             <div className="py-6 text-center text-neutral-400">
-              <p className="font-bold text-sm">
-                「{activeFrame}」の個別データが見つかりませんでした。
+              <p className="font-bold text-sm text-neutral-700 dark:text-neutral-300">
+                「{activeFrame}」の起き攻め連携データはありません。
               </p>
-              <p className="text-xs mt-1">
-                ⑤ 起き攻めフレームセクションの全体解説をご確認ください。
+              <p className="text-xs mt-1 text-neutral-500 dark:text-neutral-400">
+                {currentCharacter === 'エレナ' ? '⑥' : '⑤'} 起き攻めフレームセクションの全体解説をご確認ください。
+              </p>
+              <p className="text-[11px] mt-2 text-neutral-400 dark:text-neutral-500">
+                ※ 他キャラクターの起き攻めデータは流用せず、キャラクター固有の確定データのみを表示しています。
               </p>
             </div>
           ) : (
@@ -269,10 +288,10 @@ export default function OkizemeQuickModal({
         <div className="p-3 bg-neutral-50 dark:bg-neutral-800/90 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 shrink-0">
           <button
             type="button"
-            onClick={handleScrollToSection5}
+            onClick={handleScrollToSection}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-xs"
           >
-            <span>⑤の解説全文へ移動</span>
+            <span>{currentCharacter === 'エレナ' ? '⑥' : '⑤'}の解説全文へ移動</span>
             <ArrowDown className="w-3.5 h-3.5" />
           </button>
 

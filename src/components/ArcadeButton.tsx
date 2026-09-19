@@ -115,8 +115,31 @@ export default function ArcadeButton({
   }
 
   // クラシック操作、またはモダン特殊ボタン（SP, SA, A+SP等）
-  const isLong = iconText.length >= 3;
-  const isMultiChar = iconText.length >= 2;
+  // 5-1準拠: クラシック操作のボタン内文字は原則として「P」「K」「PP」「KK」のみとし、漢字や技分類を入れない
+  let renderedIconText = iconText;
+  if (!isModern) {
+    if (iconText === 'PP' || iconText === 'PPP') {
+      renderedIconText = 'PP';
+    } else if (iconText === 'KK' || iconText === 'KKK') {
+      renderedIconText = 'KK';
+    } else if (iconText.includes('KK') || iconText.includes('kk')) {
+      renderedIconText = 'KK';
+    } else if (iconText.includes('PP') || iconText.includes('pp')) {
+      renderedIconText = 'PP';
+    } else if (iconText.includes('K') || iconText.includes('k') || (label && (label.includes('K') || label.includes('キック') || label.includes('脚')))) {
+      renderedIconText = 'K';
+    } else if (iconText.includes('P') || iconText.includes('p') || (label && (label.includes('P') || label.includes('パンチ') || label.includes('拳')))) {
+      renderedIconText = 'P';
+    } else if (color === 'gold') {
+      renderedIconText = (label && (label.includes('K') || label.includes('キック'))) ? 'K' : 'P';
+    } else {
+      const stripped = iconText.replace(/[弱中強大小前後下上SA123CA]/g, '').trim();
+      renderedIconText = stripped || 'P';
+    }
+  }
+
+  const isLong = renderedIconText.length >= 3;
+  const isMultiChar = renderedIconText.length >= 2;
   const textDimension =
     size === 'sm'
       ? isLong
@@ -133,9 +156,9 @@ export default function ArcadeButton({
   return (
     <span
       className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${textDimension} ${colorClasses} ${ringClasses}`}
-      title={label || iconText}
+      title={label || renderedIconText}
     >
-      {iconText}
+      {renderedIconText}
     </span>
   );
 }

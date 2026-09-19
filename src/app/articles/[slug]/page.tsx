@@ -582,7 +582,7 @@ export default function ArticleDetailPage() {
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f141c] text-neutral-900 dark:text-neutral-200 transition-colors">
       {/* ⑤起き攻めフレーム連動クイックモーダル */}
-      <OkizemeQuickModal />
+      <OkizemeQuickModal character={article?.character} />
 
       {/* 画面追従セクションバー ＆ クイック目次ジャンプ */}
       <ArticleQuickJump
@@ -905,7 +905,7 @@ export default function ArticleDetailPage() {
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (
                 <div className="px-3.5 py-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50/90 dark:bg-[#1a2332]/50 border border-neutral-200/80 dark:border-[#253247] text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                  <RichContent content={introText} controlType={activeControlType} isCoaching={isCoaching} />
+                  <RichContent content={introText} controlType={activeControlType} isCoaching={isCoaching} character={article?.character} />
                 </div>
               ) : null}
 
@@ -1060,6 +1060,39 @@ export default function ArticleDetailPage() {
                 </ul>
               </div>
 
+              {/* この記事で使用する略称一覧テーブル（指示書 4: 目次直下に配置） */}
+              {article.abbreviations && article.abbreviations.length > 0 && (
+                <div className="my-4 sm:my-6 p-4 sm:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-neutral-50 to-neutral-100/70 dark:from-[#1a2332]/60 dark:to-[#1a2332]/30 border border-neutral-200/90 dark:border-[#253247] shadow-2xs">
+                  <div className="flex items-center gap-2 mb-3 text-xs font-bold text-neutral-900 dark:text-neutral-100 uppercase tracking-wider">
+                    <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                    <span>この記事で使用する略称一覧</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs sm:text-sm border-collapse">
+                      <thead>
+                        <tr className="border-b border-neutral-200 dark:border-neutral-700/80 text-left text-neutral-500 dark:text-neutral-400">
+                          <th className="py-2 px-3 font-semibold">正式名称</th>
+                          <th className="py-2 px-2 text-center w-8 text-neutral-400">➔</th>
+                          <th className="py-2 px-3 font-semibold text-cyan-600 dark:text-cyan-400">記事内の略称</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-200/60 dark:divide-neutral-700/50">
+                        {article.abbreviations.map((item, aIdx) => (
+                          <tr key={aIdx} className="hover:bg-neutral-100/50 dark:hover:bg-neutral-800/40 transition-colors">
+                            <td className="py-2 px-3 font-medium text-neutral-800 dark:text-neutral-200 font-sans">{item.formal}</td>
+                            <td className="py-2 px-2 text-center text-neutral-400 text-xs">➔</td>
+                            <td className="py-2 px-3 font-bold text-cyan-700 dark:text-cyan-300 font-mono">{item.abbreviation}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-2.5 text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                    ※ 本文およびコンボ解説では、初心者の方でも直感的に理解できるよう上記の略称を使用しています。
+                  </p>
+                </div>
+              )}
+
               {/* 無料公開セクション */}
               {freeSections.map((section, idx) => {
                 const secId = `sec-free-${idx}`;
@@ -1133,6 +1166,7 @@ export default function ArticleDetailPage() {
                             secretConfig={secretConfig}
                             onSecretUnlock={() => handleSecretUnlock(secretConfig?.characterSlug)}
                             isCoaching={isCoaching}
+                            character={article?.character}
                           />
                         </div>
 
@@ -1247,7 +1281,7 @@ export default function ArticleDetailPage() {
                       {/* 有料限定イントロ（動画前メッセージ） */}
                       {article.paidContent.intro && (
                         <div className="p-4 sm:p-5 rounded-xl bg-neutral-50/90 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                          <RichContent content={article.paidContent.intro} controlType={activeControlType} isCoaching={isCoaching} />
+                          <RichContent content={article.paidContent.intro} controlType={activeControlType} isCoaching={isCoaching} character={article?.character} />
                         </div>
                       )}
 
@@ -1348,6 +1382,7 @@ export default function ArticleDetailPage() {
                                       isNeutralMovesSection={section.title.includes('立ち回りで振る技')}
                                       controlType={activeControlType}
                                       isCoaching={isCoaching}
+                                      character={article?.character}
                                     />
                                   </div>
 

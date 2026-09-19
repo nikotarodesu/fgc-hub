@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { findNeutralMoveKeyFrame } from '@/data/sf6/ryuFrameData';
+import { findRyuNeutralMoveKeyFrame, KeyFrameInfo } from '@/data/sf6/ryuFrameData';
+import { findElenaNeutralMoveKeyFrame } from '@/data/sf6/elenaFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
 import { Star, Zap, Film, Eye, ChevronDown, ChevronUp, Play, Pause } from 'lucide-react';
 import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
@@ -17,6 +18,21 @@ interface RichContentProps {
   secretConfig?: CharacterSecretUnlockConfig;
   onSecretUnlock?: () => void;
   isCoaching?: boolean;
+  character?: string;
+}
+
+/**
+ * キャラクターごとの通常技フレームデータを取得するヘルパー
+ * 最重要ルール：別キャラクターのデータへフォールバックさせず、一致するキャラのみ参照する
+ */
+function getNeutralMoveKeyFrame(character: string | undefined, cleanText: string): KeyFrameInfo | null {
+  if (character === 'リュウ') {
+    return findRyuNeutralMoveKeyFrame(cleanText);
+  }
+  if (character === 'エレナ') {
+    return findElenaNeutralMoveKeyFrame(cleanText);
+  }
+  return null;
 }
 
 // 丸数字・黒丸数字からアラビア数字（1, 2, 3...）へのマッピング
@@ -452,6 +468,7 @@ export default function RichContent({
   secretConfig,
   onSecretUnlock,
   isCoaching = false,
+  character,
 }: RichContentProps) {
   if (!content) return null;
 
@@ -639,6 +656,7 @@ export default function RichContent({
               comboLine={line}
               renderInlineText={renderInline}
               controlType={controlType}
+              character={character}
             />
           ))}
         </div>
@@ -651,8 +669,8 @@ export default function RichContent({
         <div key={blockKey} className="pt-3 sm:pt-4 pb-1 first:pt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[●■・\-\*]\s*/, '');
-            // ②の立ち回りで振る技セクションかつ通常技・特殊技のみフレームデータを取得（必殺技や他セクションは除外）
-            const frameData = isNeutralMovesSection ? findNeutralMoveKeyFrame(cleanText) : null;
+            // ②の立ち回りで振る技セクションかつ通常技・特殊技のみフレームデータを取得（キャラ固有データのみ参照）
+            const frameData = isNeutralMovesSection ? getNeutralMoveKeyFrame(character, cleanText) : null;
 
             const isSecretTarget = Boolean(
               secretConfig &&

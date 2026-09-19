@@ -37,6 +37,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     async function initAuth() {
       try {
+        // 0. 管理者モード（フッターⒸタップによる管理者権限）が有効な場合
+        const isAdminMode = typeof window !== "undefined" && localStorage.getItem("fgc_admin_mode") === "true";
+        if (isAdminMode && mounted) {
+          const adminUser: User = {
+            id: "admin_user",
+            email: "admin@nikotaro.com",
+            name: "管理者（全権限）",
+            authProvider: "demo",
+            role: "admin",
+            subscription: {
+              plan: "monthly",
+              status: "active",
+              currentPeriodStart: Date.now(),
+              currentPeriodEnd: Date.now() + 365 * 24 * 60 * 60 * 1000,
+              cancelAtPeriodEnd: false,
+            },
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          setUser(adminUser);
+          setIsLoading(false);
+          return;
+        }
+
         // 1. Supabaseが設定されている場合、Supabaseのセッションを確認
         if (isSupabaseConfigured()) {
           const supabase = createClient();
@@ -156,9 +180,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    // 管理者モード変更イベント（フッターⒸタップ）のリアルタイム監視
+    const handleAdminModeEvent = (e: Event) => {
+      if (!mounted) return;
+      const customEvent = e as CustomEvent<{ enabled: boolean }>;
+      const isEnabled = customEvent.detail ? customEvent.detail.enabled : localStorage.getItem('fgc_admin_mode') === 'true';
+
+      if (isEnabled) {
+        const adminUser: User = {
+          id: 'admin_user',
+          email: 'admin@nikotaro.com',
+          name: '管理者（全権限）',
+          authProvider: 'demo',
+          role: 'admin',
+          subscription: {
+            plan: 'monthly',
+            status: 'active',
+            currentPeriodStart: Date.now(),
+            currentPeriodEnd: Date.now() + 365 * 24 * 60 * 60 * 1000,
+            cancelAtPeriodEnd: false,
+          },
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        };
+        setUser(adminUser);
+        try {
+          localStorage.setItem('fgc_membership_token', 'active_admin_session');
+        } catch {}
+      } else {
+        setUser(null);
+        try {
+          localStorage.removeItem('fgc_membership_token');
+          localStorage.removeItem(AUTH_STORAGE_KEY);
+        } catch {}
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('fgc_admin_mode_changed', handleAdminModeEvent);
+    }
+
     return () => {
       mounted = false;
       if (authListener) authListener.subscription.unsubscribe();
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('fgc_admin_mode_changed', handleAdminModeEvent);
+      }
     };
   }, []);
 

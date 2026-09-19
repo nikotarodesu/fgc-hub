@@ -22,18 +22,18 @@ export default function Footer() {
     }, 3500);
   };
 
-  // フッターのⒸを3秒以内に5回タップで管理者モード切り替え
+  // フッターのⒸを5秒以内に10回タップで管理者モード（プレミアム会員全権限）切り替え
   const handleCopyrightClick = () => {
     if (!resetTimerRef.current) {
       resetTimerRef.current = setTimeout(() => {
         tapCountRef.current = 0;
         resetTimerRef.current = null;
-      }, 3000);
+      }, 5000);
     }
 
     tapCountRef.current += 1;
 
-    if (tapCountRef.current >= 5) {
+    if (tapCountRef.current >= 10) {
       if (resetTimerRef.current) {
         clearTimeout(resetTimerRef.current);
         resetTimerRef.current = null;
@@ -45,13 +45,15 @@ export default function Footer() {
         const next = !current;
         if (next) {
           localStorage.setItem('fgc_admin_mode', 'true');
-          showToast('🔑 管理者権限を有効化しました（全有料記事を開放中）');
+          localStorage.setItem('fgc_membership_token', 'active_admin_session');
+          showToast('👑 管理者モード（プレミアム会員権限）を有効化しました');
         } else {
           localStorage.removeItem('fgc_admin_mode');
-          showToast('🔒 管理者権限を解除しました（通常表示に戻しました）');
+          localStorage.removeItem('fgc_membership_token');
+          showToast('🔒 管理者モードを解除しました（通常表示に戻しました）');
         }
 
-        // 開いている記事ページ等へリアルタイム即時反映
+        // 開いている記事ページ・ヘッダー・マイページ等へリアルタイム即時反映
         if (typeof window !== 'undefined') {
           window.dispatchEvent(
             new CustomEvent('fgc_admin_mode_changed', { detail: { enabled: next } })

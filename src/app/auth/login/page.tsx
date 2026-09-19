@@ -40,6 +40,13 @@ function LoginContent() {
   const { login, loginWithGoogle, setDemoRole, isConfigured } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdmin(localStorage.getItem("fgc_admin_mode") === "true");
+    }
+  }, []);
 
   // URLパラメータ（OAuthエラー等の検知）
   useEffect(() => {
@@ -179,30 +186,31 @@ function LoginContent() {
           </button>
         </form>
 
-        {/* 3. 開発・テスト用クイックデモ切り替え */}
-        <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-2.5">
-          <div className="flex items-center justify-between text-[11px] font-bold text-neutral-500">
-            <span>クイック動作確認（デモ）</span>
-            <span className="text-[10px] font-normal text-cyan-600 dark:text-cyan-400">ワンクリック</span>
+        {/* 3. 開発・テスト用クイックデモ切り替え（管理者モードの端末にのみ表示） */}
+        {isAdmin && (
+          <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-2.5">
+            <div className="flex items-center justify-between text-[11px] font-bold text-amber-600 dark:text-amber-400">
+              <span>🔒 管理者用クイックログイン（一般ユーザーには非表示）</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => handleQuickDemo("free")}
+                className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs font-semibold transition-colors text-center cursor-pointer"
+              >
+                無料会員で入る
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDemo("premium")}
+                className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-300" />
+                <span>プレミアム会員で入る</span>
+              </button>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickDemo("free")}
-              className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs font-semibold transition-colors text-center cursor-pointer"
-            >
-              無料会員で入る
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickDemo("premium")}
-              className="px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
-            >
-              <Crown className="w-3.5 h-3.5 text-amber-300" />
-              <span>プレミアム会員で入る</span>
-            </button>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* フッターリンク */}

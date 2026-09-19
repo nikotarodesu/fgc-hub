@@ -39,6 +39,13 @@ function SubscriptionContent() {
 
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdmin(localStorage.getItem("fgc_admin_mode") === "true" || user?.role === "admin");
+    }
+  }, [user]);
 
   // URLパラメータのチェック（Stripe Checkout後のリダイレクト等）
   useEffect(() => {
@@ -164,7 +171,12 @@ function SubscriptionContent() {
                 <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white">
                   {user ? user.name : "ゲストユーザー"}
                 </h2>
-                {isPremium ? (
+                {user?.role === "admin" ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-2xs">
+                    <Crown className="w-3 h-3 fill-current text-amber-300" />
+                    <span>管理者（全機能開放中）</span>
+                  </span>
+                ) : isPremium ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-2xs">
                     <Crown className="w-3 h-3 fill-current" />
                     <span>PREMIUM</span>
@@ -397,36 +409,50 @@ function SubscriptionContent() {
         </div>
       </div>
 
-      {/* 開発・テスト用クイック切り替えモード（下部に控えめに配置） */}
-      <div className="p-4 rounded-2xl bg-neutral-100/70 dark:bg-neutral-900/60 border border-neutral-200/70 dark:border-neutral-800 text-xs space-y-2">
-        <div className="flex items-center justify-between text-neutral-500">
-          <span className="font-bold">動作確認用ツール（開発・デモモード）</span>
-          <span className="text-[10px]">状態を即座に切り替えてテストできます</span>
+      {/* 管理者限定: 動作確認用切り替えツール（一般ユーザーには一切非表示） */}
+      {isAdmin && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 dark:border-amber-400/20 text-xs space-y-2">
+          <div className="flex items-center justify-between text-amber-800 dark:text-amber-300">
+            <span className="font-bold flex items-center gap-1.5">
+              <span>🔒 管理者専用ツール（一般ユーザーには非表示）</span>
+            </span>
+            <span className="text-[10px] text-amber-600 dark:text-amber-400">フッターⒸタップ有効時のみ表示</span>
+          </div>
+          <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            ※このパネルは管理者モード（フッターの©を10回タップした端末）にのみ表示されます。一般の無料会員・プレミアム会員には一切表示されません。
+          </p>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => setDemoRole("free")}
+              className="px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-semibold cursor-pointer hover:bg-neutral-50 shadow-2xs"
+            >
+              無料会員画面をテスト
+            </button>
+            <button
+              type="button"
+              onClick={() => setDemoRole("premium", "monthly")}
+              className="px-3 py-1.5 rounded-lg bg-cyan-600 text-white font-bold cursor-pointer hover:bg-cyan-700 shadow-2xs"
+            >
+              プレミアム会員画面をテスト
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  localStorage.removeItem("fgc_admin_mode");
+                  localStorage.removeItem("fgc_membership_token");
+                  window.dispatchEvent(new CustomEvent("fgc_admin_mode_changed", { detail: { enabled: false } }));
+                } catch {}
+                logout();
+              }}
+              className="px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold cursor-pointer hover:opacity-90 shadow-2xs"
+            >
+              管理者モードを終了（一般画面へ）
+            </button>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setDemoRole("free")}
-            className="px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-semibold cursor-pointer hover:bg-neutral-50"
-          >
-            無料会員としてテスト
-          </button>
-          <button
-            type="button"
-            onClick={() => setDemoRole("premium", "monthly")}
-            className="px-3 py-1.5 rounded-lg bg-cyan-600 text-white font-bold cursor-pointer hover:bg-cyan-700"
-          >
-            プレミアム会員としてテスト
-          </button>
-          <button
-            type="button"
-            onClick={logout}
-            className="px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 font-semibold cursor-pointer hover:bg-neutral-50"
-          >
-            ログアウト状態に戻す
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -23,6 +23,7 @@ import { COACHING_KEN_1700MR } from './articles/coachingKen1700mr';
 import { COACHING_KEN_1300MR } from './articles/coachingKen1300mr';
 import { COACHING_MARISA_1500MR } from './articles/coachingMarisa1500mr';
 import { COACHING_AKUMA_1200MR } from './articles/coachingAkuma1200mr';
+import { SF6_COMMON_TECHNIQUES_ARTICLES } from './articles/sf6CommonTechniques';
 
 export interface ArticleVariant {
   label: string;
@@ -62,6 +63,13 @@ export interface Article {
   likesCount: number;
   eyecatchImage?: string;
   recommendedGearIds?: string[];
+  series?: 'sf6-common-techniques';
+  articleNumber?: number;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  difficultyLabel?: '初級' | '中級' | '上級';
+  difficultyOrder?: number;
+  markdownContent?: string;
+  antigravityNotes?: string;
   abbreviations?: {
     formal: string;
     abbreviation: string;
@@ -347,6 +355,7 @@ export const ARTICLES_DATA: Article[] = [
     },
   },
   RYU_COMPLETE_GUIDE,
+  ...SF6_COMMON_TECHNIQUES_ARTICLES,
 ];
 
 export function parseArticleTitle(title: string): { mainTitle: string; subtitle?: string } {

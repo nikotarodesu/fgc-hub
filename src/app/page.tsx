@@ -422,6 +422,35 @@ export default function HomePage() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-6">
         <div className="max-w-4xl mx-auto space-y-4">
           
+          {/* 共通技術タブ選択時の特設シリーズバナー */}
+          {selectedCategory === 'system' && (
+            <Link
+              href="/sf6/strategy"
+              className="group block p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-cyan-950 text-white border border-cyan-500/40 shadow-sm hover:shadow-md transition-all mb-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-black bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                      全25講・完全無料
+                    </span>
+                    <span className="text-xs text-neutral-300">初級・中級・上級の推奨学習順で学べる</span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-white group-hover:text-cyan-300 transition-colors">
+                    SF6共通技術シリーズ 特設一覧ページはこちら
+                  </h3>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    難易度別フィルター（初級9・中級10・上級6）や学習順並び替えに対応した専用ビューで閲覧できます
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:translate-x-1 transition-transform shrink-0">
+                  <span>特設ページ</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+          )}
+
           {/* ピックアップ枠（未絞り込み時またはリュウ選択時のみ表示） */}
           {isPickupVisible && (
             <div className="mb-2">
@@ -537,7 +566,7 @@ export default function HomePage() {
                 return (
                   <Link
                     key={article.id}
-                    href={`/articles/${article.slug}`}
+                    href={article.series === 'sf6-common-techniques' ? `/sf6/strategy/${article.slug}` : `/articles/${article.slug}`}
                     className="group flex flex-row items-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-3.5 gap-3 sm:gap-4"
                   >
                     {/* サムネイル画像 */}
@@ -555,6 +584,24 @@ export default function HomePage() {
                         {/* バッジ・メタ行 */}
                         <div className="flex items-center justify-between gap-1.5 mb-1 sm:mb-1.5 flex-wrap">
                           <div className="flex items-center gap-1.5 flex-wrap">
+                            {article.articleNumber && (
+                              <span className="font-mono text-[9px] sm:text-[10px] font-black text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
+                                #{String(article.articleNumber).padStart(2, '0')}
+                              </span>
+                            )}
+                            {article.difficultyLabel && (
+                              <span
+                                className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded border ${
+                                  article.difficulty === 'beginner'
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800'
+                                    : article.difficulty === 'intermediate'
+                                    ? 'bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800'
+                                    : 'bg-purple-50 text-purple-700 border-purple-300 dark:bg-purple-950/50 dark:text-purple-300 dark:border-purple-800'
+                                }`}
+                              >
+                                {article.difficultyLabel}
+                              </span>
+                            )}
                             {article.character && (
                               <span className="text-[10px] sm:text-[11px] font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-1.5 sm:px-2 py-0.5 rounded">
                                 {article.character}
@@ -575,7 +622,7 @@ export default function HomePage() {
                                 コーチング
                               </span>
                             )}
-                            {(article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術')) && (
+                            {(article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術')) && !article.difficultyLabel && (
                               <span className="text-[9px] sm:text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
                                 共通技術
                               </span>

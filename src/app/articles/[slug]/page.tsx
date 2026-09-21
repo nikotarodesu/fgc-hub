@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ARTICLES_DATA, getArticleEyecatch, parseArticleTitle } from '@/data/articles';
 import Image from 'next/image';
 import ComboCard from '@/components/ComboCard';
@@ -34,6 +34,7 @@ import {
 
 export default function ArticleDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const rawSlug = params?.slug as string;
   const isModernAlias = rawSlug === 'ryu-modern-complete-guide' || rawSlug === 'elena-modern-complete-guide';
   const slug = (rawSlug === 'ryu-classic-complete-guide' || rawSlug === 'ryu-modern-complete-guide')
@@ -43,6 +44,13 @@ export default function ArticleDetailPage() {
     : rawSlug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === slug);
+
+  // SF6共通技術シリーズは /sf6/strategy/[slug] へリダイレクト
+  useEffect(() => {
+    if (article?.series === 'sf6-common-techniques') {
+      router.replace(`/sf6/strategy/${article.slug}`);
+    }
+  }, [article, router]);
   const isCompleteGuide = Boolean(
     article && (
       article.category === 'character' ||

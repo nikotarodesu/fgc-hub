@@ -8,10 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 記事ページのURL
   const articleUrls = ARTICLES_DATA.map((article) => ({
-    url: `${baseUrl}/articles/${article.slug}`,
+    url: article.series === 'sf6-common-techniques'
+      ? `${baseUrl}/sf6/strategy/${article.slug}`
+      : `${baseUrl}/articles/${article.slug}`,
     lastModified: new Date(article.updatedAt),
     changeFrequency: 'weekly' as const,
-    priority: article.isPaid ? 0.9 : 0.8,
+    priority: article.isPaid ? 0.9 : 0.85,
   }));
 
   // スト6 キャラクター個別ページのURL (/sf6/[character])
@@ -41,6 +43,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // スト6ハブトップ
     {
       url: `${baseUrl}/sf6`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    // スト6共通技術シリーズトップ
+    {
+      url: `${baseUrl}/sf6/strategy`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.95,

@@ -27,6 +27,7 @@ export interface VisualStep {
   tip?: string;
   // ターゲットコンボ（TC）1枠表記用フィールド（6-1共通ルール）
   isTC?: boolean;
+  buttonSeparator?: string; // 同時押し等の区切り文字（デフォルトは「・」、'+'など指定可能）
   tcButtons?: Array<{
     color: ButtonColor;
     iconText: string;
@@ -568,8 +569,9 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   }
 
   // エレナ：コロ派生技（例: 弱コロ中派生、ODコロ中派生、コロ中派生、弱コロコロ弱派生、強コロコロ強派生など）
-  // ユーザー指示：「弱コロ中派生→236弱P→中K」
+  // ユーザー指示：モダンは 弱コロ→1SP, 中コロ→2SP, 強コロ→3SP
   if (lower.includes('コロ') && lower.includes('派生')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isWeak = lower.includes('弱');
@@ -587,41 +589,68 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     const followupColor: ButtonColor = hasHeavyFollowup ? 'red' : hasWeakFollowup ? 'blue' : 'yellow';
     const followupBtn = hasHeavyFollowup ? '大K' : hasWeakFollowup ? '弱K' : '中K';
 
-    const step1: VisualStep = {
-      original: isCorocoro ? `${strength}コロコロ` : `${strength}コロ`,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['↓', '↘', '→'],
-      arrowStr: '↓↘→',
-      button: {
-        kind: 'punch',
-        color,
-        label: isOD ? 'ODコロ' : `${strength}コロ`,
-        description: isOD ? 'ODリンクシング（236+PP）' : `${strength}リンクシング（236+${btnP}）`,
-        iconText: isOD ? 'PP' : btnP,
-        showLabel: false,
-      },
-      tip: `テンキー236+${btnP}（リンクシング）`,
-    };
+    const step1: VisualStep = isModern
+      ? {
+          original: isCorocoro ? `${strength}コロコロ` : `${strength}コロ`,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: isOD ? [] : isWeak ? ['↙'] : isMed ? ['↓'] : ['↘'],
+          arrowStr: isOD ? '' : isWeak ? '↙' : isMed ? '↓' : '↘',
+          button: {
+            kind: 'special',
+            color: isOD ? 'purple' : 'emerald',
+            label: isOD ? 'ODコロ' : isWeak ? '1SP' : isMed ? '2SP' : '3SP',
+            description: isOD
+              ? 'ODリンクシング（A+SP）'
+              : `${strength}リンクシング（${isWeak ? '1SP' : isMed ? '2SP' : '3SP'}）`,
+            iconText: isOD ? 'A+SP' : 'SP',
+            showLabel: false,
+          },
+          tip: isOD
+            ? 'アシスト＋SP（ODコロ）'
+            : isWeak
+            ? 'テンキー1+SP（↙＋SP: 弱コロ）'
+            : isMed
+            ? 'テンキー2+SP（↓＋SP: 中コロ）'
+            : 'テンキー3+SP（↘＋SP: 強コロ）',
+        }
+      : {
+          original: isCorocoro ? `${strength}コロコロ` : `${strength}コロ`,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓', '↘', '→'],
+          arrowStr: '↓↘→',
+          button: {
+            kind: 'punch',
+            color,
+            label: isOD ? 'ODコロ' : `${strength}コロ`,
+            description: isOD ? 'ODリンクシング（236+PP）' : `${strength}リンクシング（236+${btnP}）`,
+            iconText: isOD ? 'PP' : btnP,
+            showLabel: false,
+          },
+          tip: `テンキー236+${btnP}（リンクシング）`,
+        };
 
     const steps: VisualStep[] = [step1];
 
     if (isCorocoro) {
       steps.push({
-        original: '前P',
+        original: isModern ? '前攻撃' : '前P',
         arrows: ['→'],
         arrowStr: '→',
         button: {
-          kind: 'punch',
+          kind: isModern ? 'special' : 'punch',
           color,
-          label: '前P',
-          description: `前＋${btnP}（リンクスワール）`,
-          iconText: btnP,
+          label: isModern ? '前攻撃' : '前P',
+          description: isModern ? '前＋通常攻撃（リンクスワール）' : `前＋${btnP}（リンクスワール）`,
+          iconText: isModern ? (isWeak ? '弱' : isHeavy ? '強' : '中') : btnP,
           showLabel: false,
         },
-        tip: `コロ中に前＋${btnP}でリンクスワールへ派生`,
+        tip: isModern ? 'コロ中に前＋攻撃ボタンでリンクスワールへ派生' : `コロ中に前＋${btnP}でリンクスワールへ派生`,
       });
     }
 
@@ -632,21 +661,22 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
       button: {
         kind: 'kick',
         color: followupColor,
-        label: `${followupStrength}派生`,
-        description: `${followupStrength}キック派生（${followupBtn}）`,
-        iconText: followupBtn,
+        label: isModern ? `${followupStrength}` : `${followupStrength}派生`,
+        description: `${followupStrength}キック派生（${isModern ? `${followupStrength}ボタン` : followupBtn}）`,
+        iconText: isModern ? followupStrength : followupBtn,
         showLabel: false,
       },
       suffix,
-      tip: `派生技：${followupBtn}（キックボタン）`,
+      tip: isModern ? `派生技：${followupStrength}ボタン` : `派生技：${followupBtn}（キックボタン）`,
     });
 
     return steps;
   }
 
   // エレナ：コロコロ（リンクスワール）
-  // ユーザー指示：「コロコロ→236p→前P」
+  // ユーザー指示：「コロコロ→236p→前P」、モダンは 弱コロ→1SP, 中コロ→2SP, 強コロ→3SP
   if (lower.includes('コロコロ')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isWeak = lower.includes('弱');
@@ -654,38 +684,58 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isWeak ? 'blue' : 'yellow';
     const btnP = isOD ? 'PP' : isHeavy ? '大P' : isWeak ? '弱P' : '中P';
 
-    const step1: VisualStep = {
-      original: `${strength}コロ`,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['↓', '↘', '→'],
-      arrowStr: '↓↘→',
-      button: {
-        kind: 'punch',
-        color,
-        label: isOD ? 'ODコロ' : `${strength}コロ`,
-        description: `${strength}リンクシング（236+${btnP}）`,
-        iconText: isOD ? 'PP' : btnP,
-        showLabel: false,
-      },
-      tip: `テンキー236+${btnP}`,
-    };
+    const step1: VisualStep = isModern
+      ? {
+          original: `${strength}コロ`,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: isOD ? [] : isWeak ? ['↙'] : ['↘'],
+          arrowStr: isOD ? '' : isWeak ? '↙' : '↘',
+          button: {
+            kind: 'special',
+            color: isOD ? 'purple' : 'emerald',
+            label: isOD ? 'ODコロ' : isWeak ? '1SP' : '3SP',
+            description: isOD ? 'ODリンクシング（A+SP）' : `${strength}リンクシング（${isWeak ? '1SP' : '3SP'}）`,
+            iconText: isOD ? 'A+SP' : 'SP',
+            showLabel: false,
+          },
+          tip: isOD ? 'アシスト＋SP（ODコロ）' : isWeak ? 'テンキー1+SP（↙＋SP: 弱コロ）' : 'テンキー3+SP（↘＋SP: 強コロ）',
+        }
+      : {
+          original: `${strength}コロ`,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓', '↘', '→'],
+          arrowStr: '↓↘→',
+          button: {
+            kind: 'punch',
+            color,
+            label: isOD ? 'ODコロ' : `${strength}コロ`,
+            description: `${strength}リンクシング（236+${btnP}）`,
+            iconText: isOD ? 'PP' : btnP,
+            showLabel: false,
+          },
+          tip: `テンキー236+${btnP}`,
+        };
+
     const step2: VisualStep = {
-      original: '前P',
+      original: isModern ? '前攻撃' : '前P',
       arrows: ['→'],
       arrowStr: '→',
       button: {
-        kind: 'punch',
+        kind: isModern ? 'special' : 'punch',
         color,
-        label: '前P',
-        description: `前＋${btnP}（リンクスワール）`,
-        iconText: btnP,
+        label: isModern ? '前攻撃' : '前P',
+        description: isModern ? '前＋通常攻撃（リンクスワール）' : `前＋${btnP}（リンクスワール）`,
+        iconText: isModern ? (isWeak ? '弱' : isHeavy ? '強' : '中') : btnP,
         showLabel: false,
       },
       suffix,
-      tip: `コロ中に前＋${btnP}`,
+      tip: isModern ? 'コロ中に前＋攻撃ボタン' : `コロ中に前＋${btnP}`,
     };
     return [step1, step2];
   }
@@ -1085,14 +1135,49 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   }
 
   // 3. コロ（リンクシング: 236P）
-  // ユーザー指示：コロ→236P
+  // ユーザー指示：モダンは 弱コロ→1SP, 中コロ→2SP, 強コロ→3SP
   if (lower.includes('コロ') && !lower.includes('コロコロ')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isLight = lower.includes('弱');
+    const isMed = lower.includes('中');
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const btnP = isOD ? 'PP' : isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    if (isModern) {
+      const modernArrows = isOD ? [] : isLight ? ['↙'] : isMed ? ['↓'] : ['↘'];
+      const modernArrowStr = isOD ? '' : isLight ? '↙' : isMed ? '↓' : '↘';
+      const modernLabel = isOD ? 'ODコロ' : isLight ? '1SP' : isMed ? '2SP' : '3SP';
+      const modernTip = isOD
+        ? 'アシスト＋SP（ODコロ）'
+        : isLight
+        ? 'テンキー1+SP（↙＋SP: 弱コロ）'
+        : isMed
+        ? 'テンキー2+SP（↓＋SP: 中コロ）'
+        : 'テンキー3+SP（↘＋SP: 強コロ）';
+
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: modernArrows,
+        arrowStr: modernArrowStr,
+        button: {
+          kind: 'special',
+          color: isOD ? 'purple' : 'emerald',
+          label: modernLabel,
+          description: isOD ? 'ODリンクシング（A+SP）' : `${strength}リンクシング（${modernLabel}）`,
+          iconText: isOD ? 'A+SP' : 'SP',
+          showLabel: false,
+        },
+        suffix,
+        tip: modernTip,
+      };
+    }
 
     return {
       original: remaining,
@@ -1116,14 +1201,37 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   }
 
   // 4. ムーン（ムーングライド: 214P）
-  // ユーザー指示：ムーン→214P
+  // ユーザー指示：ムーンは弱が左SP、ODが左ASPで、中と強はない
   if (lower.includes('ムーン')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isLight = lower.includes('弱');
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const btnP = isOD ? 'PP' : isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    if (isModern) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['←'],
+        arrowStr: '←',
+        button: {
+          kind: 'special',
+          color: isOD ? 'purple' : 'emerald',
+          label: isOD ? '左ASP' : '左SP',
+          description: isOD ? 'ODムーングライド（左＋A＋SP）' : '弱ムーングライド（左＋SP）',
+          iconText: isOD ? 'A+SP' : 'SP',
+          showLabel: false,
+        },
+        suffix,
+        tip: isOD ? '左＋アシスト＋SP（ODムーングライド）' : '左＋SP（弱ムーングライド ※モダンは中・強なし）',
+      };
+    }
 
     return {
       original: remaining,
@@ -1597,80 +1705,162 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   }
 
   // 1. SA (スーパーアーツ) / CA (クリティカルアーツ)
+  // ユーザー指示：全モダン共通（SA3/CAは下+SP+強、SA1は前+SP+強、SA2は左+SP+強）
   if (lower.includes('sa3') || lower.includes('真・昇龍') || lower.includes('ca')) {
     const isModern = controlType === 'modern';
     const isCa = lower.includes('ca');
     const saLabel = isCa ? 'CA' : 'SA3';
+
+    if (isModern) {
+      return {
+        original: remaining || saLabel,
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || saLabel,
+        arrows: ['↓'],
+        arrowStr: '↓',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
+        button: {
+          kind: 'punch',
+          color: 'gold',
+          label: saLabel,
+          description: isCa ? 'CA（下＋SP＋強ボタン）' : 'SA3（下＋SP＋強ボタン）',
+          iconText: saLabel,
+          showLabel: false,
+        },
+        suffix,
+        tip: isCa ? '下＋SP＋強ボタン（体力25%以下でCA発動 / +250ダメージ）' : '下＋SP＋強ボタン（スーパーアーツ3）',
+      };
+    }
+
     return {
       original: remaining || saLabel,
       isCancel,
       isRush,
       rushText,
       prefix: prefix || saLabel,
-      arrows: isModern ? ['↓'] : ['↓', '↘', '→', '↓', '↘', '→'],
-      arrowStr: isModern ? '↓' : '↓↘→↓↘→',
+      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: '↓↘→↓↘→',
       button: {
         kind: 'punch',
         color: 'gold',
         label: saLabel,
         description: isCa ? '金のCAボタン（クリティカルアーツ）' : '金のSAボタン',
-        iconText: isModern ? saLabel : 'P',
+        iconText: 'P',
         showLabel: false,
       },
       suffix,
-      tip: isModern
-        ? (isCa ? '体力25%以下で発動：↓＋弱＋中 または ↓＋SP＋強（+250ダメージ）' : '↓＋弱＋中 または ↓＋SP＋強（手動テンキー236×2+攻撃でも入力可能）')
-        : (isCa ? '体力25%以下で発動：テンキー236を2回素早く入力+パンチ（+250ダメージ）' : 'テンキー236を2回素早く入力+パンチ'),
+      tip: isCa ? '体力25%以下で発動：テンキー236を2回素早く入力+パンチ（+250ダメージ）' : 'テンキー236を2回素早く入力+パンチ',
     };
   }
 
   if (lower.includes('sa2') || lower.includes('真・波掌')) {
     const isModern = controlType === 'modern';
+
+    if (isModern) {
+      return {
+        original: remaining || 'SA2',
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || 'SA2',
+        arrows: ['←'],
+        arrowStr: '←',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
+        button: {
+          kind: 'punch',
+          color: 'gold',
+          label: 'SA2',
+          description: 'SA2（左＋SP＋強ボタン）',
+          iconText: 'SA2',
+          showLabel: false,
+        },
+        suffix,
+        tip: '左＋SP＋強ボタン（スーパーアーツ2）',
+      };
+    }
+
     return {
       original: remaining || 'SA2',
       isCancel,
       isRush,
       rushText,
       prefix: prefix || 'SA2',
-      arrows: isModern ? ['←'] : ['↓', '↙', '←', '↓', '↙', '←'],
-      arrowStr: isModern ? '←' : '↓↙←↓↙←',
+      arrows: ['↓', '↙', '←', '↓', '↙', '←'],
+      arrowStr: '↓↙←↓↙←',
       button: {
         kind: 'punch',
         color: 'gold',
         label: 'SA2',
         description: '金のSAボタン',
-        iconText: isModern ? 'SA2' : 'P',
+        iconText: 'P',
         showLabel: false,
       },
       suffix,
-      tip: isModern
-        ? '後ろ＋弱＋中 または 後ろ＋SP＋強（手動テンキー214×2+攻撃でも入力可能）'
-        : 'テンキー214を2回素早く入力+パンチ',
+      tip: 'テンキー214を2回素早く入力+パンチ',
     };
   }
 
   if (lower.includes('sa1') || lower.includes('真空波動')) {
     const isModern = controlType === 'modern';
+
+    if (isModern) {
+      return {
+        original: remaining || 'SA1',
+        isCancel,
+        isRush,
+        rushText,
+        prefix: prefix || 'SA1',
+        arrows: ['→'],
+        arrowStr: '→',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
+        button: {
+          kind: 'punch',
+          color: 'gold',
+          label: 'SA1',
+          description: 'SA1（前＋SP＋強ボタン）',
+          iconText: 'SA1',
+          showLabel: false,
+        },
+        suffix,
+        tip: '前＋SP＋強ボタン（スーパーアーツ1）',
+      };
+    }
+
     return {
       original: remaining || 'SA1',
       isCancel,
       isRush,
       rushText,
       prefix: prefix || 'SA1',
-      arrows: isModern ? [] : ['↓', '↘', '→', '↓', '↘', '→'],
-      arrowStr: isModern ? 'N' : '↓↘→↓↘→',
+      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: '↓↘→↓↘→',
       button: {
         kind: 'punch',
         color: 'gold',
         label: 'SA1',
         description: '金のSAボタン',
-        iconText: isModern ? 'SA1' : 'P',
+        iconText: 'P',
         showLabel: false,
       },
       suffix,
-      tip: isModern
-        ? 'N＋弱＋中 または N＋SP＋強（手動テンキー236×2+攻撃でも入力可能）'
-        : 'テンキー236を2回素早く入力+パンチ',
+      tip: 'テンキー236を2回素早く入力+パンチ',
     };
   }
 

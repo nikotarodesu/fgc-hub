@@ -108,7 +108,7 @@ export default function InteractiveComboRow({
   if (isNoExpand) {
     return (
       <div className="my-1 sm:my-1.5 rounded-lg border border-neutral-200/80 dark:border-neutral-700/70 bg-neutral-50/80 dark:bg-neutral-800/70 py-2 px-2.5 sm:px-3 flex items-start sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 shadow-2xs w-full max-w-full min-w-0">
-        <span className="shrink-0 text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide mt-0.5 sm:mt-0">
+        <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
           コンボ
         </span>
         <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
@@ -129,7 +129,7 @@ export default function InteractiveComboRow({
         title="タップして矢印コマンドとボタン入力順を表示"
       >
         <div className="flex items-start sm:items-center gap-1.5 sm:gap-2 flex-1 text-xs sm:text-sm font-mono text-neutral-900 dark:text-neutral-100 min-w-0">
-          <span className="shrink-0 text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide mt-0.5 sm:mt-0">
+          <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-600 text-white font-sans tracking-wide">
             コンボ
           </span>
           <span className="font-semibold whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed select-text">
@@ -252,7 +252,7 @@ export default function InteractiveComboRow({
                               />
                               {bIdx < step.tcButtons!.length - 1 && (
                                 <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-bold mx-0.5 select-none">
-                                  ・
+                                  {step.buttonSeparator || '・'}
                                 </span>
                               )}
                             </span>

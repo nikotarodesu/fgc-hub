@@ -544,7 +544,7 @@ export default function RichContent({
                     {whiteCircle}
                   </span>
                 ) : null}
-                <h3 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
+                <h3 className={`${isCoaching ? 'text-[16px] sm:text-[19px]' : 'text-[18px] sm:text-[20px]'} font-bold text-neutral-900 dark:text-white tracking-tight leading-snug`}>
                   {renderInline(titleText)}
                 </h3>
               </div>
@@ -566,12 +566,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold text-[16px] sm:text-[17px] tracking-tight scroll-mt-24"
+                className={`flex items-center gap-2 ${isCoaching ? 'px-2.5 py-1.5 sm:px-3 sm:py-2 text-[14.5px] sm:text-[16.5px]' : 'px-3 py-2 text-[16px] sm:text-[17px]'} rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold tracking-tight scroll-mt-24`}
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-[16px] sm:text-[17px] text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug">
+                <h4 className={`font-bold ${isCoaching ? 'text-[14.5px] sm:text-[16.5px]' : 'text-[16px] sm:text-[17px]'} text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug`}>
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -593,12 +593,12 @@ export default function RichContent({
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⚡️ ${cleanText}`}
-                className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold text-[16px] sm:text-[17px] tracking-tight scroll-mt-24"
+                className={`flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-orange-500/10 dark:bg-orange-400/10 text-neutral-900 dark:text-white font-bold ${isCoaching ? 'text-[14.5px] sm:text-[16.5px]' : 'text-[16px] sm:text-[17px]'} tracking-tight scroll-mt-24`}
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-500/20 dark:bg-orange-400/20 text-orange-600 dark:text-orange-400 text-xs font-bold shrink-0 select-none">
                   <Zap className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className="font-bold text-[16px] sm:text-[17px] text-orange-950 dark:text-orange-100 tracking-tight leading-snug">
+                <h4 className={`font-bold ${isCoaching ? 'text-[14.5px] sm:text-[16.5px]' : 'text-[16px] sm:text-[17px]'} text-orange-950 dark:text-orange-100 tracking-tight leading-snug`}>
                   {renderInline(cleanText)}
                 </h4>
               </div>
@@ -691,7 +691,7 @@ export default function RichContent({
                       renderInline={renderInline}
                     />
                   ) : (
-                    <h4 className="text-[16.5px] sm:text-[17.5px] font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 px-3 py-1.5 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words shadow-2xs">
+                    <h4 className={`${isCoaching ? 'text-[14px] sm:text-[16px] px-2.5 py-1' : 'text-[16.5px] sm:text-[17.5px] px-3 py-1.5'} font-bold text-neutral-900 dark:text-white bg-neutral-100/90 dark:bg-neutral-800/80 rounded-lg border border-neutral-200/90 dark:border-neutral-700/80 inline-block max-w-full whitespace-normal break-words shadow-2xs`}>
                       {renderInline(cleanText)}
                     </h4>
                   )}
@@ -736,13 +736,13 @@ export default function RichContent({
     // 1.9 ▶︎ 解説・説明文行（例: ▶︎ 発生の早い4Fで相手の暴れを潰すことができる）
     if (block.type === 'action_heading' && block.lines) {
       return (
-        <div key={blockKey} className="my-3 sm:my-3.5 space-y-2.5 sm:space-y-3 first:mt-0">
+        <div key={blockKey} className="my-2.5 sm:my-3.5 space-y-2 sm:space-y-3 first:mt-0">
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[▶︎▶]\s*/, '');
             return (
               <div
                 key={lIdx}
-                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] font-normal text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
+                className={`flex items-start gap-2.5 ${isCoaching ? 'text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} font-normal text-neutral-800 dark:text-neutral-200`}
               >
                 <span className="text-cyan-600 dark:text-cyan-400 text-xs sm:text-[13px] mt-[6px] sm:mt-[7px] shrink-0 select-none">
                   ▶
@@ -768,7 +768,7 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] font-normal text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
+                className={`flex items-start gap-2.5 ${isCoaching ? 'text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} font-normal text-neutral-800 dark:text-neutral-200`}
               >
                 {isAction ? (
                   <span className="text-cyan-600 dark:text-cyan-400 text-xs sm:text-[13px] mt-[6px] sm:mt-[7px] shrink-0 select-none">
@@ -799,7 +799,7 @@ export default function RichContent({
             return (
               <li
                 key={lIdx}
-                className="flex items-start gap-2.5 text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85]"
+                className={`flex items-start gap-2.5 ${isCoaching ? 'text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} text-neutral-800 dark:text-neutral-200`}
               >
                 <span className="font-bold text-neutral-900 dark:text-white font-mono text-sm shrink-0 mt-0.5">
                   {num}.
@@ -817,13 +817,13 @@ export default function RichContent({
     // 4. 矢印行（結論・効果）
     if (block.type === 'arrow' && block.lines) {
       return (
-        <div key={blockKey} className="my-2.5 sm:my-3 space-y-2 pl-1 sm:pl-2">
+        <div key={blockKey} className="my-2 sm:my-3 space-y-1.5 sm:space-y-2 pl-1 sm:pl-2">
           {block.lines.map((line, lIdx) => {
             const itemText = line.trim().replace(/^(=>|→)\s*/, '');
             return (
               <div
                 key={lIdx}
-                className="flex items-center gap-2 text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 font-medium leading-[1.75] sm:leading-[1.85]"
+                className={`flex items-center gap-2 ${isCoaching ? 'text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} text-neutral-800 dark:text-neutral-200 font-medium`}
               >
                 <span className="text-cyan-600 dark:text-cyan-400 shrink-0 font-bold">➔</span>
                 <span>{renderInline(itemText)}</span>
@@ -836,7 +836,7 @@ export default function RichContent({
 
     // 5. 通常テキスト段落
     return (
-      <p key={blockKey} className="text-[16px] sm:text-[17px] text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85] my-3">
+      <p key={blockKey} className={`${isCoaching ? 'text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} text-neutral-800 dark:text-neutral-200 my-2.5 sm:my-3`}>
         {block.lines?.map((line, lIdx) => (
           <React.Fragment key={lIdx}>
             {lIdx > 0 && <br />}
@@ -848,7 +848,7 @@ export default function RichContent({
   };
 
   return (
-    <div className="space-y-4 text-neutral-800 dark:text-neutral-200 leading-[1.75] sm:leading-[1.85] text-[16px] sm:text-[17px]">
+    <div className={`${isCoaching ? 'space-y-3 sm:space-y-4 text-[14.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8]' : 'space-y-4 text-[16px] sm:text-[17px] leading-[1.75] sm:leading-[1.85]'} text-neutral-800 dark:text-neutral-200`}>
       {blocks.map((block, bIdx) => renderBlock(block, `block-${bIdx}`))}
     </div>
   );

@@ -75,6 +75,9 @@ export default function ArcadeButton({
     iconText === 'PARRY' ||
     iconText.includes('派生') ||
     iconText.startsWith('SA') ||
+    iconText === '強' ||
+    iconText === '中' ||
+    iconText === '弱' ||
     /^[弱中強大][PK]$/.test(iconText);
 
   // モダン操作の通常攻撃（弱・中・強）：PやKなど文字は入らず色のみ！

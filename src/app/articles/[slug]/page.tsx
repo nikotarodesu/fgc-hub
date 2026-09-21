@@ -437,7 +437,7 @@ export default function ArticleDetailPage() {
     });
   });
   paidSections.forEach((sec, idx) => {
-    if (isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ') && sec.title.includes('画面中央のコンボ')) {
+    if (isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ') && sec.title.includes('画面中央のコンボ')) {
       allSectionsList.push({
         id: 'combo-reverse-lookup',
         title: '⚡ 実戦コンボ逆引きデータベース',
@@ -711,10 +711,10 @@ export default function ArticleDetailPage() {
               {(() => {
                 const titleInfo = parseArticleTitle(article.title);
                 return (
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]">
+                  <h1 className={`${isCoaching ? 'text-lg sm:text-2xl md:text-3xl' : 'text-xl sm:text-2xl md:text-3xl'} font-extrabold text-neutral-900 dark:text-neutral-100 leading-snug sm:leading-tight tracking-tight break-words [overflow-wrap:anywhere]`}>
                     <span>{titleInfo.mainTitle}</span>
                     {titleInfo.subtitle && (
-                      <span className="block text-base sm:text-lg md:text-xl font-bold text-neutral-600 dark:text-neutral-300 mt-1 sm:mt-1.5">
+                      <span className={`block ${isCoaching ? 'text-sm sm:text-lg md:text-xl' : 'text-base sm:text-lg md:text-xl'} font-bold text-neutral-600 dark:text-neutral-300 mt-1 sm:mt-1.5`}>
                         {titleInfo.subtitle}
                       </span>
                     )}
@@ -1154,7 +1154,7 @@ export default function ArticleDetailPage() {
                     >
                       <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                         <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                        <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                        <h2 className={`${isCoaching ? 'text-[17px] sm:text-[21px]' : 'text-[20px] sm:text-[22px]'} font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]`}>
                           {formatSectionTitle(section.title, idx)}
                         </h2>
                       </div>
@@ -1237,7 +1237,7 @@ export default function ArticleDetailPage() {
 
                         {/* 箇条書きポイント */}
                         {section.bulletPoints && (
-                          <ul className="my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                          <ul className={`my-3 sm:my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 ${isCoaching ? 'p-3 sm:p-4' : 'p-3.5 sm:p-4'} rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800`}>
                             {section.bulletPoints.map((bp, bpIdx) => (
                               <li key={bpIdx} className="flex items-start gap-2">
                                 <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
@@ -1353,11 +1353,12 @@ export default function ArticleDetailPage() {
                         return (
                           <React.Fragment key={idx}>
                             {/* 実戦コンボ逆引きデータベース */}
-                            {isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ') && isCenterComboSec && (
+                            {isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ') && isCenterComboSec && (
                               <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24 sm:scroll-mt-28">
                                 <ArticleComboReverseLookup
                                   controlType={activeControlType}
                                   isUnlocked={true}
+                                  character={article?.character || (slug.includes('elena') ? 'エレナ' : 'リュウ')}
                                 />
                               </div>
                             )}
@@ -1373,7 +1374,7 @@ export default function ArticleDetailPage() {
                               >
                                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                                   <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                                  <h2 className="text-[20px] sm:text-[22px] font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]">
+                                  <h2 className={`${isCoaching ? 'text-[17px] sm:text-[21px]' : 'text-[20px] sm:text-[22px]'} font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug break-words [overflow-wrap:anywhere]`}>
                                     {formatSectionTitle(section.title, freeSections.length + idx)}
                                   </h2>
                                 </div>
@@ -1453,7 +1454,7 @@ export default function ArticleDetailPage() {
 
                                   {/* 箇条書き */}
                                   {section.bulletPoints && (
-                                    <ul className="my-4 space-y-2.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 p-3.5 sm:p-4 rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800">
+                                    <ul className={`my-3 sm:my-4 space-y-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800/40 ${isCoaching ? 'p-3 sm:p-4' : 'p-3.5 sm:p-4'} rounded-lg sm:rounded-xl border border-neutral-200 dark:border-neutral-800`}>
                                       {section.bulletPoints.map((bp, bpIdx) => (
                                         <li key={bpIdx} className="flex items-start gap-2">
                                           <span className="text-neutral-900 dark:text-white font-bold shrink-0 mt-0.5">▶</span>
@@ -1479,18 +1480,18 @@ export default function ArticleDetailPage() {
 
                                   {/* Q&A相談リスト */}
                                   {section.qaList && (
-                                    <div className="my-6 space-y-4">
+                                    <div className="my-4 sm:my-6 space-y-3 sm:space-y-4">
                                       {section.qaList.map((qa, qaIdx) => (
-                                        <div key={qaIdx} className="p-3.5 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 shadow-xs">
-                                          <div className="flex items-start gap-2.5 mb-3">
-                                            <span className="px-2 py-0.5 rounded bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs shrink-0">
+                                        <div key={qaIdx} className="p-3 sm:p-5 rounded-lg sm:rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 shadow-xs">
+                                          <div className="flex items-start gap-2 sm:gap-2.5 mb-2.5 sm:mb-3">
+                                            <span className="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-[11px] sm:text-xs shrink-0">
                                               Q{qa.number}
                                             </span>
-                                            <h4 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white leading-snug">
+                                            <h4 className="font-bold text-xs sm:text-base text-neutral-900 dark:text-white leading-snug">
                                               {qa.question}
                                             </h4>
                                           </div>
-                                          <div className="pt-3 border-t border-neutral-200/80 dark:border-neutral-700/80 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-line leading-relaxed">
+                                          <div className="pt-2.5 sm:pt-3 border-t border-neutral-200/80 dark:border-neutral-700/80 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-line leading-relaxed">
                                             {qa.answer}
                                           </div>
                                         </div>

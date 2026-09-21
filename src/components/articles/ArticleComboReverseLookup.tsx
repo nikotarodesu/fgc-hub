@@ -7,8 +7,9 @@ import {
   STARTER_CATEGORY_OPTIONS,
   RYU_ARTICLE_COMBOS,
 } from '@/data/articles/ryuCombosData';
+import { ELENA_ARTICLE_COMBOS } from '@/data/articles/elenaCombosData';
 import InteractiveComboRow from '@/components/InteractiveComboRow';
-import { findOkizemeData } from '@/data/articles/ryuOkizemeData';
+import { getOkizemeDataByCharacter } from '@/data/articles/okizemeRegistry';
 import {
   Flame,
   Zap,
@@ -21,12 +22,14 @@ interface ArticleComboReverseLookupProps {
   controlType: 'classic' | 'modern';
   isUnlocked: boolean;
   onScrollToPaywall?: () => void;
+  character?: string;
 }
 
 export default function ArticleComboReverseLookup({
   controlType,
   isUnlocked,
   onScrollToPaywall,
+  character = 'リュウ',
 }: ArticleComboReverseLookupProps) {
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
   const [selectedStarter, setSelectedStarter] = useState<string>('all');
@@ -38,7 +41,8 @@ export default function ArticleComboReverseLookup({
 
   // フィルタリング処理
   const filteredCombos = useMemo(() => {
-    return RYU_ARTICLE_COMBOS.filter((c) => {
+    const combos = character === 'エレナ' ? ELENA_ARTICLE_COMBOS : RYU_ARTICLE_COMBOS;
+    return combos.filter((c) => {
       // ステージ状況・位置（画面中央 / 画面端）
       if (selectedPosition !== 'all') {
         if (c.position !== selectedPosition && c.position !== 'any') {
@@ -88,7 +92,7 @@ export default function ArticleComboReverseLookup({
       }
       return 0;
     });
-  }, [selectedPosition, selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword]);
+  }, [character, selectedPosition, selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword]);
 
   const isFilterActive =
     selectedPosition !== 'all' ||
@@ -584,6 +588,7 @@ export default function ArticleComboReverseLookup({
                   <InteractiveComboRow
                     comboLine={recipe}
                     controlType={controlType}
+                    character={character}
                   />
                 </div>
 
@@ -591,7 +596,7 @@ export default function ArticleComboReverseLookup({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/80 text-[11px]">
                   <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed min-w-0">
                     {combo.advantageFrames && (() => {
-                      const okiData = findOkizemeData(combo.advantageFrames);
+                      const okiData = getOkizemeDataByCharacter(character, combo.advantageFrames);
                       if (okiData) {
                         return (
                           <button
@@ -603,6 +608,7 @@ export default function ArticleComboReverseLookup({
                                     detail: {
                                       frame: okiData.frameKey,
                                       position: combo.position === 'corner' ? 'corner' : 'center',
+                                      character: character,
                                     },
                                   })
                                 );

@@ -74,18 +74,32 @@ const DIFFICULTY_BADGE_STYLE = {
   advanced: 'bg-purple-50 text-purple-700 border-purple-300 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800',
 };
 
+const DIFFICULTY_WEIGHT: Record<string, number> = {
+  beginner: 1,
+  intermediate: 2,
+  advanced: 3,
+};
+
+// 学習推奨順（初級1〜9 → 中級1〜10 → 上級1〜6）にソートされた全記事リスト
+const ORDERED_TECHNIQUES = [...SF6_COMMON_TECHNIQUES_ARTICLES].sort((a, b) => {
+  const diffA = DIFFICULTY_WEIGHT[a.difficulty || 'beginner'] || 99;
+  const diffB = DIFFICULTY_WEIGHT[b.difficulty || 'beginner'] || 99;
+  if (diffA !== diffB) return diffA - diffB;
+  return (a.difficultyOrder || 0) - (b.difficultyOrder || 0);
+});
+
 export default async function StrategyArticlePage({ params }: PageProps) {
   const resolvedParams = await params;
-  const articleIndex = SF6_COMMON_TECHNIQUES_ARTICLES.findIndex((a) => a.slug === resolvedParams.slug);
-  if (articleIndex === -1) {
+  const orderedIndex = ORDERED_TECHNIQUES.findIndex((a) => a.slug === resolvedParams.slug);
+  if (orderedIndex === -1) {
     notFound();
   }
 
-  const article = SF6_COMMON_TECHNIQUES_ARTICLES[articleIndex];
+  const article = ORDERED_TECHNIQUES[orderedIndex];
 
-  // 記事番号順での前後ナビゲーション（最初と最後の記事でも破綻しない）
-  const prevArticle = articleIndex > 0 ? SF6_COMMON_TECHNIQUES_ARTICLES[articleIndex - 1] : null;
-  const nextArticle = articleIndex < SF6_COMMON_TECHNIQUES_ARTICLES.length - 1 ? SF6_COMMON_TECHNIQUES_ARTICLES[articleIndex + 1] : null;
+  // 推奨学習順での前後ナビゲーション（最初と最後の記事でも破綻しない）
+  const prevArticle = orderedIndex > 0 ? ORDERED_TECHNIQUES[orderedIndex - 1] : null;
+  const nextArticle = orderedIndex < ORDERED_TECHNIQUES.length - 1 ? ORDERED_TECHNIQUES[orderedIndex + 1] : null;
 
   // 構造化データ (Article & BreadcrumbList)
   const jsonLd = {
@@ -185,9 +199,10 @@ export default async function StrategyArticlePage({ params }: PageProps) {
 
             {/* 難易度タグ */}
             <span
-              className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-md border shadow-2xs ${badgeStyle}`}
+              className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-0.5 rounded-md border shadow-2xs ${badgeStyle}`}
             >
               <span>難易度: {article.difficultyLabel}</span>
+              <span className="text-[11px] font-mono opacity-80">(STEP {article.difficultyOrder})</span>
             </span>
 
             <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
@@ -226,7 +241,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           />
         </div>
 
-        {/* 前後の記事ナビゲーション */}
+        {/* 前後の記事ナビゲーション（推奨学習順） */}
         <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {prevArticle ? (
             <Link
@@ -235,7 +250,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             >
               <div className="flex items-center gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
                 <ChevronLeft className="w-4 h-4" />
-                <span>前の記事</span>
+                <span>前の記事（{prevArticle.difficultyLabel} STEP {prevArticle.difficultyOrder}）</span>
               </div>
               <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
                 {prevArticle.title}
@@ -243,7 +258,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             </Link>
           ) : (
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>最初の記事です</span>
+              <span>最初の記事です（初級 STEP 1）</span>
             </div>
           )}
 
@@ -253,7 +268,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs text-right"
             >
               <div className="flex items-center justify-end gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
-                <span>次の記事</span>
+                <span>次の記事（{nextArticle.difficultyLabel} STEP {nextArticle.difficultyOrder}）</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
               <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
@@ -262,7 +277,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             </Link>
           ) : (
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>最後の記事です</span>
+              <span>全25記事を修了しました！（上級 STEP 6）</span>
             </div>
           )}
         </section>

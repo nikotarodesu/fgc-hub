@@ -221,6 +221,8 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     const spinPart = spinElenaMatch[1].trim();
     const coloDerivPart = spinElenaMatch[2].trim();
 
+    const isModern = controlType === 'modern';
+
     // 1. スピン部分
     const isSpinOD = /od/i.test(spinPart);
     const isSpinHeavy = /強|大/i.test(spinPart);
@@ -228,24 +230,43 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     const spinStrength = isSpinOD ? 'OD' : isSpinHeavy ? '強' : isSpinLight ? '弱' : '中';
     const spinColor: ButtonColor = isSpinOD ? 'purple' : isSpinHeavy ? 'red' : isSpinLight ? 'blue' : 'yellow';
 
-    const spinStep: VisualStep = {
-      original: spinPart,
-      isCancel,
-      isRush,
-      rushText,
-      prefix,
-      arrows: ['↓', '↙', '←'],
-      arrowStr: '↓↙←',
-      button: {
-        kind: 'kick',
-        color: spinColor,
-        label: `${spinStrength}スピン`,
-        description: `${spinStrength}スピンサイズ（214+${isSpinOD ? 'KK' : 'K'}）`,
-        iconText: isSpinOD ? 'KK' : 'K',
-        showLabel: false,
-      },
-      tip: `テンキー214+${isSpinOD ? 'KK' : 'K'}（スピンサイズ）`,
-    };
+    const spinStep: VisualStep = isModern
+      ? {
+          original: spinPart,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓', '↙', '←'],
+          arrowStr: '↓↙←',
+          button: {
+            kind: 'kick',
+            color: spinColor,
+            label: isSpinOD ? 'ODスピン' : `214${spinStrength}`,
+            description: isSpinOD ? 'ODスピンサイズ（214+中+強）' : `${spinStrength}スピンサイズ（214+${spinStrength}）`,
+            iconText: isSpinOD ? 'OD' : spinStrength,
+            showLabel: false,
+          },
+          tip: `テンキー214+${isSpinOD ? '中+強' : spinStrength}ボタン（スピンサイズ）`,
+        }
+      : {
+          original: spinPart,
+          isCancel,
+          isRush,
+          rushText,
+          prefix,
+          arrows: ['↓', '↙', '←'],
+          arrowStr: '↓↙←',
+          button: {
+            kind: 'kick',
+            color: spinColor,
+            label: `${spinStrength}スピン`,
+            description: `${spinStrength}スピンサイズ（214+${isSpinOD ? 'KK' : 'K'}）`,
+            iconText: isSpinOD ? 'KK' : 'K',
+            showLabel: false,
+          },
+          tip: `テンキー214+${isSpinOD ? 'KK' : 'K'}（スピンサイズ）`,
+        };
 
     // 2. コロ + 派生キック の分解
     if (coloDerivPart.includes('派生')) {
@@ -261,39 +282,82 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
       const derivColor: ButtonColor = isDerivHeavy ? 'red' : isDerivLight ? 'blue' : 'yellow';
       const isDelay = /ディレイ/i.test(coloDerivPart);
 
-      // スピン中に入力するコロは「前P」（レバー前＋パンチ）
-      const coloStep: VisualStep = {
-        original: `前${coloStrength}P`,
-        arrows: ['→'],
-        arrowStr: '→',
-        button: {
-          kind: 'punch',
-          color: coloColor,
-          label: `前${coloStrength}P`,
-          description: `前＋${isColoOD ? 'PP' : 'P'}（スピン中リンクシング派生）`,
-          iconText: isColoOD ? 'PP' : 'P',
-          showLabel: false,
-        },
-        tip: `スピン中に前＋${isColoOD ? 'PP' : 'P'}でコロ派生`,
-      };
+      // コロ部分
+      // ユーザー指示：モダンは 弱コロ→1SP, 中コロ→2SP, 強コロ→3SP（1SPは↙+SP）
+      // クラシック：スピン中に入力するコロは「前P」（レバー前＋パンチ）
+      const coloStep: VisualStep = isModern
+        ? {
+            original: isColoOD ? 'ODコロ' : isColoLight ? '1SP' : isColoHeavy ? '3SP' : '2SP',
+            arrows: isColoOD ? [] : isColoLight ? ['↙'] : isColoHeavy ? ['↘'] : ['↓'],
+            arrowStr: isColoOD ? '' : isColoLight ? '↙' : isColoHeavy ? '↘' : '↓',
+            button: {
+              kind: 'special',
+              color: isColoOD ? 'purple' : 'emerald',
+              label: isColoOD ? 'ODコロ' : isColoLight ? '1SP' : isColoHeavy ? '3SP' : '2SP',
+              description: isColoOD
+                ? 'ODリンクシング（A+SP）'
+                : `${coloStrength}リンクシング（${isColoLight ? '1SP' : isColoHeavy ? '3SP' : '2SP'}）`,
+              iconText: isColoOD ? 'A+SP' : 'SP',
+              showLabel: false,
+            },
+            tip: isColoOD
+              ? 'アシスト＋SP（ODコロ）'
+              : isColoLight
+              ? 'テンキー1+SP（↙＋SP: 弱コロ）'
+              : isColoHeavy
+              ? 'テンキー3+SP（↘＋SP: 強コロ）'
+              : 'テンキー2+SP（↓＋SP: 中コロ）',
+          }
+        : {
+            original: `前${coloStrength}P`,
+            arrows: ['→'],
+            arrowStr: '→',
+            button: {
+              kind: 'punch',
+              color: coloColor,
+              label: `前${coloStrength}P`,
+              description: `前＋${isColoOD ? 'PP' : 'P'}（スピン中リンクシング派生）`,
+              iconText: isColoOD ? 'PP' : 'P',
+              showLabel: false,
+            },
+            tip: `スピン中に前＋${isColoOD ? 'PP' : 'P'}でコロ派生`,
+          };
 
       // コロ後の派生攻撃（キック）
-      const derivStep: VisualStep = {
-        original: `${derivStrength}派生`,
-        prefix: isDelay ? 'ディレイ' : undefined,
-        arrows: [],
-        arrowStr: '',
-        button: {
-          kind: 'kick',
-          color: derivColor,
-          label: `${derivStrength}K`,
-          description: `${derivStrength}派生（キック）`,
-          iconText: 'K',
-          showLabel: false,
-        },
-        suffix,
-        tip: isDelay ? 'ワンテンポ遅らせてキック（ディレイ派生）' : 'コロ中にキックを入力して派生',
-      };
+      // ユーザー指示：モダンは派生キック＝「中」「弱」「強」
+      const derivStep: VisualStep = isModern
+        ? {
+            original: `${derivStrength}派生`,
+            prefix: isDelay ? 'ディレイ' : undefined,
+            arrows: [],
+            arrowStr: '',
+            button: {
+              kind: 'kick',
+              color: derivColor,
+              label: derivStrength,
+              description: `${derivStrength}派生（${derivStrength}ボタン）`,
+              iconText: derivStrength,
+              showLabel: false,
+            },
+            suffix,
+            tip: isDelay ? `ワンテンポ遅らせて${derivStrength}ボタン` : `コロ中に${derivStrength}ボタンを押して派生`,
+          }
+        : {
+            original: `${derivStrength}派生`,
+            prefix: isDelay ? 'ディレイ' : undefined,
+            arrows: [],
+            arrowStr: '',
+            button: {
+              kind: 'kick',
+              color: derivColor,
+              label: `${derivStrength}K`,
+              description: `${derivStrength}派生（キック）`,
+              iconText: 'K',
+              showLabel: false,
+            },
+            suffix,
+            tip: isDelay ? 'ワンテンポ遅らせてキック（ディレイ派生）' : 'コロ中にキックを入力して派生',
+          };
 
       return [spinStep, coloStep, derivStep];
     }
@@ -1072,15 +1136,38 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
   // -------------------------------------------------------------
   // エレナ専用技およびエレナコマンド（指示書 5-1 / 5-2）
   // -------------------------------------------------------------
-  // 1. ライノ（ライノホーン: 236K）
-  // ユーザー指示：ライノ→236K
+  // 1. ライノ（ライノホーン: 236K / モダン 236+攻撃）
+  // ユーザー指示：ライノ→236K、モダンは 236弱/中/強（例: 弱ライノ〆なら 236弱）
   if (lower.includes('ライノ')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isLight = lower.includes('弱');
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    if (isModern) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↘', '→'],
+        arrowStr: '↓↘→',
+        button: {
+          kind: 'kick',
+          color,
+          label: isOD ? 'ODライノ' : `236${strength}`,
+          description: isOD ? 'ODライノホーン（236+中+強）' : `${strength}ライノホーン（236+${strength}）`,
+          iconText: isOD ? 'OD' : strength,
+          showLabel: false,
+        },
+        suffix,
+        tip: `テンキー236+${isOD ? '中+強' : strength}ボタン（ライノホーン）`,
+      };
+    }
 
     return {
       original: remaining,
@@ -1103,15 +1190,38 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 2. スピン（スピンサイズ: 214K）
-  // ユーザー指示：スピン→214K
+  // 2. スピン（スピンサイズ: 214K / モダン 214+攻撃）
+  // ユーザー指示：スピン→214K、モダンは 214弱/中/強（例: 中スピンなら 214中）
   if (lower.includes('スピン') && !lower.includes('スピバ') && !lower.includes('スピニング')) {
+    const isModern = controlType === 'modern';
     const isOD = lower.includes('od');
     const isHeavy = lower.includes('強') || lower.includes('大');
     const isLight = lower.includes('弱');
     const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
     const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    if (isModern) {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↙', '←'],
+        arrowStr: '↓↙←',
+        button: {
+          kind: 'kick',
+          color,
+          label: isOD ? 'ODスピン' : `214${strength}`,
+          description: isOD ? 'ODスピンサイズ（214+中+強）' : `${strength}スピンサイズ（214+${strength}）`,
+          iconText: isOD ? 'OD' : strength,
+          showLabel: false,
+        },
+        suffix,
+        tip: `テンキー214+${isOD ? '中+強' : strength}ボタン（スピンサイズ）`,
+      };
+    }
 
     return {
       original: remaining,
@@ -1287,6 +1397,28 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       };
     }
 
+    if (controlType === 'modern') {
+      return {
+        original: remaining,
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['→', '↓', '↘'],
+        arrowStr: '→↓↘',
+        button: {
+          kind: 'kick',
+          color,
+          label: isOD ? 'OD昇竜' : `623${strength}`,
+          description: isOD ? 'ODスクラッチホイール（623+中+強）' : `${strength}スクラッチホイール（623+${strength}）`,
+          iconText: isOD ? 'OD' : strength,
+          showLabel: false,
+        },
+        suffix,
+        tip: `テンキー623+${isOD ? '中+強' : strength}ボタン（スクラッチホイール）`,
+      };
+    }
+
     return {
       original: remaining,
       isCancel,
@@ -1308,30 +1440,35 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 6. エレナのSA1（236236K / ワンボタンSA1）
-  // ユーザー指示 5-2：SA1→236236K（キック）、ボタン内文字は「K」
+  // 6. エレナのSA1（236236K / モダン: 前＋SP＋強ボタン）
+  // ユーザー指示：全モダン共通（SA1は前＋SP＋強ボタン）
   if (isElena && lower.includes('sa1')) {
-    const isOneButton = lower.includes('ワンボタン');
     const isModern = controlType === 'modern';
-    if (isOneButton || (isModern && !lower.includes('236'))) {
+    if (isModern && !lower.includes('236236')) {
       return {
         original: remaining || 'SA1',
         isCancel,
         isRush,
         rushText,
         prefix: prefix || 'SA1',
-        arrows: [],
-        arrowStr: 'N',
+        arrows: ['→'],
+        arrowStr: '→',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
         button: {
           kind: 'special',
           color: 'gold',
           label: 'SA1',
-          description: 'ワンボタンSA1（強＋SP または SAボタン）',
+          description: 'SA1（前＋SP＋強ボタン）',
           iconText: 'SA1',
           showLabel: false,
         },
         suffix,
-        tip: 'ワンボタンSA1（対空無敵あり）',
+        tip: '前＋SP＋強ボタン（スーパーアーツ1: スピニングビート）',
       };
     }
     return {
@@ -1355,12 +1492,11 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 7. エレナのSA2（236236P / ワンボタンSA2）
-  // ユーザー指示 5-2：SA2→236236P（パンチ）、ボタン内文字は「P」
+  // 7. エレナのSA2（236236P / モダン: 左＋SP＋強ボタン）
+  // ユーザー指示：全モダン共通（SA2は左＋SP＋強ボタン）
   if (isElena && lower.includes('sa2')) {
-    const isOneButton = lower.includes('ワンボタン');
     const isModern = controlType === 'modern';
-    if (isOneButton || (isModern && !lower.includes('236'))) {
+    if (isModern && !lower.includes('236236')) {
       return {
         original: remaining || 'SA2',
         isCancel,
@@ -1369,16 +1505,22 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         prefix: prefix || 'SA2',
         arrows: ['←'],
         arrowStr: '←',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
         button: {
           kind: 'special',
           color: 'gold',
           label: 'SA2',
-          description: 'ワンボタンSA2（後ろ＋SP または 中＋SP）',
+          description: 'SA2（左＋SP＋強ボタン）',
           iconText: 'SA2',
           showLabel: false,
         },
         suffix,
-        tip: '後ろ＋必殺技ボタンで即発動（弾抜け・回復派生）',
+        tip: '左＋SP＋強ボタン（スーパーアーツ2: ヒーリング）',
       };
     }
     return {
@@ -1402,13 +1544,12 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 8. エレナのSA3 / CA（214214K または ワンボタン↓+SP）
-  // ユーザー指示 5-2：SA3/CA→214214K（キック）、ボタン内文字は「K」
+  // 8. エレナのSA3 / CA（214214K / モダン: 下＋SP＋強ボタン）
+  // ユーザー指示：全モダン共通（SA3/CAは下＋SP＋強ボタン）
   if (isElena && (lower.includes('sa3') || lower.includes('ca'))) {
     const isCa = lower.includes('ca');
-    const isOneButton = lower.includes('ワンボタン');
     const isModern = controlType === 'modern';
-    if (isOneButton || (isModern && !lower.includes('214'))) {
+    if (isModern && !lower.includes('214214')) {
       return {
         original: remaining || (isCa ? 'CA' : 'SA3'),
         isCancel,
@@ -1417,16 +1558,24 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
         prefix: prefix || (isCa ? 'CA' : 'SA3'),
         arrows: ['↓'],
         arrowStr: '↓',
+        isTC: true,
+        buttonSeparator: '+',
+        tcButtons: [
+          { color: 'emerald', iconText: 'SP', label: 'SP' },
+          { color: 'red', iconText: '強', label: '強' },
+        ],
         button: {
           kind: 'special',
           color: 'gold',
           label: isCa ? 'CA' : 'SA3',
-          description: isCa ? '金のCA（下＋SP または 弱＋SP）' : '金のSA3（下＋SP または 弱＋SP）',
+          description: isCa ? 'CA（下＋SP＋強ボタン）' : 'SA3（下＋SP＋強ボタン）',
           iconText: isCa ? 'CA' : 'SA3',
           showLabel: false,
         },
         suffix,
-        tip: isCa ? '体力25%以下で発動：下＋必殺技ボタン（CA）' : '下＋必殺技ボタンで即発動（SA3）',
+        tip: isCa
+          ? '下＋SP＋強ボタン（体力25%以下でCA発動 / +250ダメージ）'
+          : '下＋SP＋強ボタン（スーパーアーツ3: ライジングチャリオット）',
       };
     }
     return {

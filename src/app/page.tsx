@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, getArticleEyecatch, parseArticleTitle } from '@/data/articles';
+import TechniqueEyecatch from '@/components/strategy/TechniqueEyecatch';
 import {
   Search,
   Lock,
@@ -35,7 +36,7 @@ const QUICK_CHARACTERS = [
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
   const [selectedControlType, setSelectedControlType] = useState<'all' | 'classic' | 'modern'>('all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export default function HomePage() {
 
   // フィルタリング処理
   const filteredArticles = useMemo(() => {
-    return ARTICLES_DATA.filter((article) => {
+    const list = ARTICLES_DATA.filter((article) => {
       if (selectedCategory === 'character') {
         const isCharGuide =
           article.category === 'character' ||
@@ -87,12 +88,12 @@ export default function HomePage() {
           article.category === 'mindset' ||
           article.tags.includes('共通技術') ||
           article.tags.includes('共通理論') ||
-          article.tags.includes('システム');
+          article.tags.includes('システム') ||
+          article.series === 'sf6-common-techniques';
         if (!isSystem) return false;
 
-        if (selectedDifficulty !== 'all') {
-          if (article.difficulty !== selectedDifficulty) return false;
-        }
+        // 難易度でフィルタリング
+        if (article.difficulty !== selectedDifficulty) return false;
       }
       if (selectedCharacter && article.character !== selectedCharacter) return false;
       if (selectedTag && !article.tags.includes(selectedTag)) return false;
@@ -108,6 +109,13 @@ export default function HomePage() {
 
       return true;
     });
+
+    // 共通技術選択時は推奨される学習の順番（difficultyOrder）で上から順に並べる
+    if (selectedCategory === 'system') {
+      list.sort((a, b) => (a.difficultyOrder ?? 999) - (b.difficultyOrder ?? 999));
+    }
+
+    return list;
   }, [selectedCategory, selectedControlType, selectedDifficulty, selectedCharacter, selectedTag, searchQuery]);
 
   // ピックアップ枠の表示可否（全記事一覧かつ絞り込みがない、またはリュウ選択時のみ表示）
@@ -121,7 +129,7 @@ export default function HomePage() {
     setSelectedCharacter(null);
     setSelectedCategory('all');
     setSelectedControlType('all');
-    setSelectedDifficulty('all');
+    setSelectedDifficulty('beginner');
     setSearchQuery('');
     setSelectedTag(null);
   };
@@ -283,7 +291,7 @@ export default function HomePage() {
               <button
                 onClick={() => {
                   setSelectedCategory('all');
-                  setSelectedDifficulty('all');
+                  setSelectedDifficulty('beginner');
                 }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'all'
@@ -296,7 +304,7 @@ export default function HomePage() {
               <button
                 onClick={() => {
                   setSelectedCategory('character');
-                  setSelectedDifficulty('all');
+                  setSelectedDifficulty('beginner');
                 }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'character'
@@ -309,7 +317,7 @@ export default function HomePage() {
               <button
                 onClick={() => {
                   setSelectedCategory('neutral');
-                  setSelectedDifficulty('all');
+                  setSelectedDifficulty('beginner');
                 }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'neutral'
@@ -320,7 +328,10 @@ export default function HomePage() {
                 立ち回り
               </button>
               <button
-                onClick={() => setSelectedCategory('system')}
+                onClick={() => {
+                  setSelectedCategory('system');
+                  setSelectedDifficulty('beginner');
+                }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'system'
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -332,7 +343,7 @@ export default function HomePage() {
               <button
                 onClick={() => {
                   setSelectedCategory('coaching');
-                  setSelectedDifficulty('all');
+                  setSelectedDifficulty('beginner');
                 }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'coaching'
@@ -383,20 +394,9 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* 難易度切り替え（共通技術選択時） */}
+            {/* 難易度切り替え（共通技術選択時: 初級・中級・上級） */}
             {selectedCategory === 'system' && (
               <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200/60 dark:border-neutral-700/60 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setSelectedDifficulty('all')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
-                    selectedDifficulty === 'all'
-                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                  }`}
-                >
-                  すべて
-                </button>
                 <button
                   type="button"
                   onClick={() => setSelectedDifficulty('beginner')}
@@ -461,7 +461,7 @@ export default function HomePage() {
               </span>
             )}
 
-            {selectedCategory === 'system' && selectedDifficulty !== 'all' && (
+            {selectedCategory === 'system' && (
               <span
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-bold text-[11px] ${
                   selectedDifficulty === 'beginner'
@@ -491,7 +491,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          {(selectedCharacter || selectedCategory !== 'all' || selectedDifficulty !== 'all' || searchQuery || selectedTag) && (
+          {(selectedCharacter || selectedCategory !== 'all' || searchQuery || selectedTag) && (
             <button
               type="button"
               onClick={handleResetFilters}
@@ -625,14 +625,22 @@ export default function HomePage() {
                     href={article.series === 'sf6-common-techniques' ? `/sf6/strategy/${article.slug}` : `/articles/${article.slug}`}
                     className="group flex flex-row items-center bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-md transition-all overflow-hidden p-2.5 sm:p-3.5 gap-3 sm:gap-4"
                   >
-                    {/* サムネイル画像 */}
-                    <div className="relative w-20 h-20 sm:w-48 md:w-56 aspect-square sm:aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden rounded-lg self-center">
-                      <img
-                        src={eyecatch}
-                        alt={article.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    {/* サムネイル画像 / 共通技術学習順アイキャッチ */}
+                    {article.series === 'sf6-common-techniques' ? (
+                      <TechniqueEyecatch
+                        difficulty={article.difficulty}
+                        difficultyLabel={article.difficultyLabel}
+                        order={article.difficultyOrder || 1}
                       />
-                    </div>
+                    ) : (
+                      <div className="relative w-20 h-20 sm:w-48 md:w-56 aspect-square sm:aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden rounded-lg self-center">
+                        <img
+                          src={eyecatch}
+                          alt={article.title}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
 
                     {/* コンテンツ */}
                     <div className="p-0 flex flex-col justify-between flex-1 min-w-0">

@@ -150,10 +150,39 @@ export interface Article {
   };
 }
 
+function getCommonTechniqueSvgDataUrl(difficulty?: string, difficultyLabel?: string, order?: number): string {
+  const num = String(order || 1).padStart(2, '0');
+  const label = difficultyLabel || '共通技術';
+  const isBeginner = difficulty === 'beginner';
+  const isIntermediate = difficulty === 'intermediate';
+  const bg1 = isBeginner ? '#022c22' : isIntermediate ? '#451a03' : '#2e1065';
+  const bg2 = isBeginner ? '#064e3b' : isIntermediate ? '#78350f' : '#4c1d95';
+  const accent = isBeginner ? '#34d399' : isIntermediate ? '#fbbf24' : '#c084fc';
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" width="400" height="225">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${bg1}" />
+        <stop offset="50%" stop-color="#171717" />
+        <stop offset="100%" stop-color="${bg2}" />
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#bg)" />
+    <rect x="140" y="24" width="120" height="28" rx="6" fill="${accent}" fill-opacity="0.2" stroke="${accent}" stroke-width="1.5" />
+    <text x="200" y="43" font-family="system-ui, sans-serif" font-weight="900" font-size="14" fill="${accent}" text-anchor="middle">${label}</text>
+    <text x="200" y="145" font-family="monospace, system-ui" font-weight="900" font-size="80" fill="#ffffff" text-anchor="middle">${num}</text>
+    <text x="200" y="185" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="${accent}" letter-spacing="3" text-anchor="middle">STEP ${order || 1}</text>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 // キャラクター名またはスラッグからスト6公式アイキャッチ画像を取得するヘルパー関数
 export function getArticleEyecatch(article: Article): string {
   if (article.eyecatchImage) {
     return article.eyecatchImage;
+  }
+  if (article.series === 'sf6-common-techniques') {
+    return getCommonTechniqueSvgDataUrl(article.difficulty, article.difficultyLabel, article.difficultyOrder);
   }
   const charLower = (article.character || '').toLowerCase();
   if (charLower.includes('リュウ') || charLower.includes('ryu')) {

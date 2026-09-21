@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const baseUrl = 'https://nikotaro.com';
   const pageUrl = `${baseUrl}/sf6/strategy/${article.slug}`;
-  const fullTitle = `${article.title} | SF6共通技術 #${String(article.articleNumber).padStart(2, '0')}【${article.difficultyLabel}】 - にこ太郎の格ゲーLAB`;
+  const fullTitle = `${article.title} | SF6共通技術【${article.difficultyLabel}】 - にこ太郎の格ゲーLAB`;
 
   return {
     title: fullTitle,
@@ -128,7 +128,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             '@type': 'ListItem',
             position: 3,
             name: '共通技術',
-            item: 'https://nikotaro.com/sf6/strategy',
+            item: 'https://nikotaro.com',
           },
           {
             '@type': 'ListItem',
@@ -164,7 +164,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               スト6
             </Link>
             <span>/</span>
-            <Link href="/sf6/strategy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+            <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
               共通技術
             </Link>
             <span>/</span>
@@ -173,28 +173,21 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             </span>
           </nav>
 
-          {/* シリーズ名と記事番号、難易度バッジ */}
+          {/* シリーズ名と難易度バッジ */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-3">
             <Link
-              href="/sf6/strategy"
+              href="/"
               className="inline-flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline bg-cyan-50 dark:bg-cyan-950/60 px-2.5 py-0.5 rounded-full border border-cyan-200/80 dark:border-cyan-800/60"
             >
               <GraduationCap className="w-3.5 h-3.5" />
               <span>SF6共通技術</span>
             </Link>
 
-            <span className="font-mono text-xs font-black text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
-              #{String(article.articleNumber).padStart(2, '0')}
-            </span>
-
-            {/* 難易度タグ（文字併記必須・ハイコントラスト） */}
+            {/* 難易度タグ */}
             <span
               className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-md border shadow-2xs ${badgeStyle}`}
             >
               <span>難易度: {article.difficultyLabel}</span>
-              <span className="text-[10px] opacity-75 font-normal">
-                (推奨学習順: {article.difficultyOrder})
-              </span>
             </span>
 
             <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
@@ -233,7 +226,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           />
         </div>
 
-        {/* 前後の記事ナビゲーション（最初と最後の記事でも破綻しない設計） */}
+        {/* 前後の記事ナビゲーション */}
         <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {prevArticle ? (
             <Link
@@ -242,7 +235,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             >
               <div className="flex items-center gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
                 <ChevronLeft className="w-4 h-4" />
-                <span>前の記事 (第{prevArticle.articleNumber}講)</span>
+                <span>前の記事</span>
               </div>
               <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
                 {prevArticle.title}
@@ -250,7 +243,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             </Link>
           ) : (
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>これが最初の講義（第1講）です</span>
+              <span>最初の記事です</span>
             </div>
           )}
 
@@ -260,7 +253,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs text-right"
             >
               <div className="flex items-center justify-end gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
-                <span>次の記事 (第{nextArticle.articleNumber}講)</span>
+                <span>次の記事</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
               <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
@@ -269,19 +262,19 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             </Link>
           ) : (
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>全25講を修了しました！</span>
+              <span>最後の記事です</span>
             </div>
           )}
         </section>
 
-        {/* シリーズ一覧へ戻るリンク */}
+        {/* トップへ戻るリンク */}
         <div className="mt-6 text-center">
           <Link
-            href="/sf6/strategy"
+            href="/"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs sm:text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>SF6共通技術シリーズ一覧（全25選）へ戻る</span>
+            <span>トップページ（共通技術一覧）へ戻る</span>
           </Link>
         </div>
       </main>

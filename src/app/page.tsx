@@ -35,6 +35,7 @@ const QUICK_CHARACTERS = [
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
   const [selectedControlType, setSelectedControlType] = useState<'all' | 'classic' | 'modern'>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -88,6 +89,10 @@ export default function HomePage() {
           article.tags.includes('共通理論') ||
           article.tags.includes('システム');
         if (!isSystem) return false;
+
+        if (selectedDifficulty !== 'all') {
+          if (article.difficulty !== selectedDifficulty) return false;
+        }
       }
       if (selectedCharacter && article.character !== selectedCharacter) return false;
       if (selectedTag && !article.tags.includes(selectedTag)) return false;
@@ -103,7 +108,7 @@ export default function HomePage() {
 
       return true;
     });
-  }, [selectedCategory, selectedControlType, selectedCharacter, selectedTag, searchQuery]);
+  }, [selectedCategory, selectedControlType, selectedDifficulty, selectedCharacter, selectedTag, searchQuery]);
 
   // ピックアップ枠の表示可否（全記事一覧かつ絞り込みがない、またはリュウ選択時のみ表示）
   const isPickupVisible =
@@ -116,6 +121,7 @@ export default function HomePage() {
     setSelectedCharacter(null);
     setSelectedCategory('all');
     setSelectedControlType('all');
+    setSelectedDifficulty('all');
     setSearchQuery('');
     setSelectedTag(null);
   };
@@ -275,7 +281,10 @@ export default function HomePage() {
           <div className="pt-1 flex flex-wrap items-center justify-between gap-2.5">
             <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/80 p-1 rounded-lg border border-neutral-200/60 dark:border-neutral-700/60 overflow-x-auto">
               <button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedDifficulty('all');
+                }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'all'
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -285,7 +294,10 @@ export default function HomePage() {
                 全記事
               </button>
               <button
-                onClick={() => setSelectedCategory('character')}
+                onClick={() => {
+                  setSelectedCategory('character');
+                  setSelectedDifficulty('all');
+                }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'character'
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -295,7 +307,10 @@ export default function HomePage() {
                 攻略記事
               </button>
               <button
-                onClick={() => setSelectedCategory('neutral')}
+                onClick={() => {
+                  setSelectedCategory('neutral');
+                  setSelectedDifficulty('all');
+                }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'neutral'
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -315,7 +330,10 @@ export default function HomePage() {
                 共通技術
               </button>
               <button
-                onClick={() => setSelectedCategory('coaching')}
+                onClick={() => {
+                  setSelectedCategory('coaching');
+                  setSelectedDifficulty('all');
+                }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === 'coaching'
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
@@ -332,7 +350,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedControlType('all')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold ${
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
                     selectedControlType === 'all'
                       ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs'
                       : 'text-neutral-600 dark:text-neutral-400'
@@ -343,7 +361,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedControlType('classic')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold ${
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
                     selectedControlType === 'classic'
                       ? 'bg-[#8B5BB7] text-white shadow-xs'
                       : 'text-neutral-600 dark:text-neutral-400'
@@ -354,13 +372,63 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedControlType('modern')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold ${
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
                     selectedControlType === 'modern'
                       ? 'bg-[#D8843F] text-white shadow-xs'
                       : 'text-neutral-600 dark:text-neutral-400'
                   }`}
                 >
                   モダン
+                </button>
+              </div>
+            )}
+
+            {/* 難易度切り替え（共通技術選択時） */}
+            {selectedCategory === 'system' && (
+              <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200/60 dark:border-neutral-700/60 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty('all')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
+                    selectedDifficulty === 'all'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  すべて
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty('beginner')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
+                    selectedDifficulty === 'beginner'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  初級
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty('intermediate')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
+                    selectedDifficulty === 'intermediate'
+                      ? 'bg-amber-600 text-white shadow-xs'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  中級
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty('advanced')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
+                    selectedDifficulty === 'advanced'
+                      ? 'bg-purple-600 text-white shadow-xs'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  上級
                 </button>
               </div>
             )}
@@ -393,6 +461,24 @@ export default function HomePage() {
               </span>
             )}
 
+            {selectedCategory === 'system' && selectedDifficulty !== 'all' && (
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-bold text-[11px] ${
+                  selectedDifficulty === 'beginner'
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                    : selectedDifficulty === 'intermediate'
+                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                    : 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
+                }`}
+              >
+                {selectedDifficulty === 'beginner'
+                  ? '初級'
+                  : selectedDifficulty === 'intermediate'
+                  ? '中級'
+                  : '上級'}
+              </span>
+            )}
+
             {searchQuery.trim() && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 text-[11px]">
                 &quot;{searchQuery}&quot;
@@ -405,7 +491,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          {(selectedCharacter || selectedCategory !== 'all' || searchQuery || selectedTag) && (
+          {(selectedCharacter || selectedCategory !== 'all' || selectedDifficulty !== 'all' || searchQuery || selectedTag) && (
             <button
               type="button"
               onClick={handleResetFilters}
@@ -421,36 +507,6 @@ export default function HomePage() {
       {/* 4. 結果一覧エリア */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          
-          {/* 共通技術タブ選択時の特設シリーズバナー */}
-          {selectedCategory === 'system' && (
-            <Link
-              href="/sf6/strategy"
-              className="group block p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-cyan-950 text-white border border-cyan-500/40 shadow-sm hover:shadow-md transition-all mb-4"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-black bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
-                      全25講・完全無料
-                    </span>
-                    <span className="text-xs text-neutral-300">初級・中級・上級の推奨学習順で学べる</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-white group-hover:text-cyan-300 transition-colors">
-                    SF6共通技術シリーズ 特設一覧ページはこちら
-                  </h3>
-                  <p className="text-xs text-neutral-400 mt-0.5">
-                    難易度別フィルター（初級9・中級10・上級6）や学習順並び替えに対応した専用ビューで閲覧できます
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:translate-x-1 transition-transform shrink-0">
-                  <span>特設ページ</span>
-                  <ChevronRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-          )}
-
           {/* ピックアップ枠（未絞り込み時またはリュウ選択時のみ表示） */}
           {isPickupVisible && (
             <div className="mb-2">
@@ -584,11 +640,13 @@ export default function HomePage() {
                         {/* バッジ・メタ行 */}
                         <div className="flex items-center justify-between gap-1.5 mb-1 sm:mb-1.5 flex-wrap">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            {article.articleNumber && (
-                              <span className="font-mono text-[9px] sm:text-[10px] font-black text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
-                                #{String(article.articleNumber).padStart(2, '0')}
+                            {/* 共通技術タグ */}
+                            {(article.series === 'sf6-common-techniques' || article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術')) && (
+                              <span className="text-[9px] sm:text-[10px] font-bold text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-1.5 sm:px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
+                                共通技術
                               </span>
                             )}
+                            {/* 難易度タグ */}
                             {article.difficultyLabel && (
                               <span
                                 className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded border ${
@@ -620,11 +678,6 @@ export default function HomePage() {
                             {isCoaching && (
                               <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                                 コーチング
-                              </span>
-                            )}
-                            {(article.category === 'system' || article.category === 'mindset' || article.tags.includes('共通技術')) && !article.difficultyLabel && (
-                              <span className="text-[9px] sm:text-[10px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-1.5 sm:px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
-                                共通技術
                               </span>
                             )}
                             {article.controlType === 'both' ? (

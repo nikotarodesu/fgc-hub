@@ -47,13 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.95,
     },
-    // スト6共通技術シリーズトップ
-    {
-      url: `${baseUrl}/sf6/strategy`,
-      lastModified: now,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
     // プレミアム会員案内
     {
       url: `${baseUrl}/membership`,

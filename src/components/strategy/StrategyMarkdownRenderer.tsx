@@ -131,6 +131,9 @@ type Block =
   | { type: 'diagram'; index: number; raw: string }
   | { type: 'p'; lines: string[] };
 
+export type { TocItem } from './tocUtils';
+export { extractTocFromMarkdown } from './tocUtils';
+
 export default function StrategyMarkdownRenderer({
   content,
   articleNumber,
@@ -149,6 +152,7 @@ export default function StrategyMarkdownRenderer({
   let currentList: { type: 'ul' | 'ol'; items: string[] } | null = null;
   let currentQuote: string[] = [];
   let diagramCount = 0;
+  const idCounts = new Map<string, number>();
 
   const flushParagraph = () => {
     if (currentParagraph.length > 0) {
@@ -229,7 +233,10 @@ export default function StrategyMarkdownRenderer({
       flushList();
       flushQuote();
       const text = trimmed.slice(3).trim();
-      const id = `heading-${blocks.length}`;
+      const baseId = text.replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff-]/g, '').trim().toLowerCase() || 'heading';
+      const count = idCounts.get(baseId) || 0;
+      idCounts.set(baseId, count + 1);
+      const id = count === 0 ? `sec-${baseId}` : `sec-${baseId}-${count}`;
       blocks.push({ type: 'h2', text, id });
       continue;
     }
@@ -240,7 +247,10 @@ export default function StrategyMarkdownRenderer({
       flushList();
       flushQuote();
       const text = trimmed.slice(4).trim();
-      const id = `heading-${blocks.length}`;
+      const baseId = text.replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff-]/g, '').trim().toLowerCase() || 'heading';
+      const count = idCounts.get(baseId) || 0;
+      idCounts.set(baseId, count + 1);
+      const id = count === 0 ? `sec-${baseId}` : `sec-${baseId}-${count}`;
       blocks.push({ type: 'h3', text, id });
       continue;
     }
@@ -282,24 +292,28 @@ export default function StrategyMarkdownRenderer({
             .slice(1, -1)
             .map((c) => c.trim())
         );
-        blocks.push({ type: 'table', header: headerCells, rows });
+        blocks.push({
+          type: 'table',
+          header: headerCells,
+          rows,
+        });
       }
       continue;
     }
 
-    // 引用 ( > )
-    if (trimmed.startsWith('>')) {
+    // 引用
+    if (trimmed.startsWith('> ')) {
       flushParagraph();
       flushList();
-      currentQuote.push(trimmed.replace(/^>\s*/, ''));
+      currentQuote.push(trimmed.slice(2).trim());
       continue;
     }
 
-    // 箇条書き ( - , * , ・ )
-    if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('・')) {
+    // 箇条書きリスト (- または *)
+    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       flushParagraph();
       flushQuote();
-      const itemText = trimmed.replace(/^[-*・]\s*/, '');
+      const itemText = trimmed.slice(2).trim();
       if (!currentList || currentList.type !== 'ul') {
         flushList();
         currentList = { type: 'ul', items: [itemText] };
@@ -309,12 +323,12 @@ export default function StrategyMarkdownRenderer({
       continue;
     }
 
-    // 番号付きリスト ( 1. , 2. )
-    const numberedMatch = trimmed.match(/^(\d+)[\.|\)]\s+(.*)$/);
-    if (numberedMatch) {
+    // 番号付きリスト (1. 2. 等)
+    const olMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
+    if (olMatch) {
       flushParagraph();
       flushQuote();
-      const itemText = numberedMatch[2];
+      const itemText = olMatch[2].trim();
       if (!currentList || currentList.type !== 'ol') {
         flushList();
         currentList = { type: 'ol', items: [itemText] };
@@ -333,14 +347,14 @@ export default function StrategyMarkdownRenderer({
   flushQuote();
 
   return (
-    <div className="space-y-4 text-neutral-800 dark:text-neutral-200 leading-[1.8] sm:leading-[1.9] text-[15.5px] sm:text-[16.5px]">
+    <div className="space-y-4 text-neutral-800 dark:text-neutral-200 leading-[1.85] sm:leading-[1.95] text-[16.5px] sm:text-[18px]">
       {blocks.map((block, idx) => {
         if (block.type === 'h2') {
           return (
-            <div key={idx} id={block.id} className="pt-8 sm:pt-10 scroll-mt-24">
-              <div className="flex items-center gap-2.5 sm:gap-3 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/70 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+            <div key={idx} id={block.id} className="pt-8 sm:pt-11 scroll-mt-24">
+              <div className="flex items-center gap-2.5 sm:gap-3 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/70 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
                 <span className="w-1.5 h-5 sm:h-6 rounded-full bg-cyan-600 dark:bg-cyan-400 shrink-0" />
-                <h2 className="text-[19px] sm:text-[21px] font-black text-neutral-900 dark:text-white tracking-tight leading-snug">
+                <h2 className="text-[19px] sm:text-[22px] font-black text-neutral-900 dark:text-white tracking-tight leading-snug">
                   {block.text}
                 </h2>
               </div>
@@ -350,10 +364,10 @@ export default function StrategyMarkdownRenderer({
 
         if (block.type === 'h3') {
           return (
-            <div key={idx} id={block.id} className="pt-4 sm:pt-5 scroll-mt-24">
+            <div key={idx} id={block.id} className="pt-5 sm:pt-6 scroll-mt-24">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-4 rounded-full bg-emerald-500 shrink-0" />
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug">
+                <h3 className="text-[17px] sm:text-[19px] font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug">
                   {block.text}
                 </h3>
               </div>
@@ -365,7 +379,7 @@ export default function StrategyMarkdownRenderer({
           return (
             <h4
               key={idx}
-              className="text-[15px] sm:text-[16px] font-bold text-neutral-800 dark:text-neutral-200 pt-2"
+              className="text-[15.5px] sm:text-[17px] font-bold text-neutral-800 dark:text-neutral-200 pt-2.5"
             >
               {block.text}
             </h4>
@@ -376,9 +390,13 @@ export default function StrategyMarkdownRenderer({
           return (
             <div
               key={idx}
-              className="my-5 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden"
+              className="my-6 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden"
             >
-              <div className="overflow-x-auto scrollbar-none">
+              {/* スマホ用横スクロール案内 */}
+              <div className="sm:hidden px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
+                ← 左右にスクロールして全体を表示 →
+              </div>
+              <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[500px]">
                   <thead>
                     <tr className="bg-neutral-100 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
@@ -418,9 +436,9 @@ export default function StrategyMarkdownRenderer({
               {block.items.map((item, itemIdx) => (
                 <li
                   key={itemIdx}
-                  className="flex items-start gap-2.5 text-[15.5px] sm:text-[16.5px] leading-relaxed"
+                  className="flex items-start gap-2.5 text-[16.5px] sm:text-[18px] leading-relaxed"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 mt-2.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 mt-3 shrink-0" />
                   <div className="flex-1 min-w-0 break-words">{renderInlineText(item)}</div>
                 </li>
               ))}

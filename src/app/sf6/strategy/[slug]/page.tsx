@@ -4,16 +4,19 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SF6_COMMON_TECHNIQUES_ARTICLES } from '@/data/articles/sf6CommonTechniques';
 import StrategyMarkdownRenderer from '@/components/strategy/StrategyMarkdownRenderer';
+import { extractTocFromMarkdown } from '@/components/strategy/tocUtils';
+import StrategyToc from '@/components/strategy/StrategyToc';
 import {
   ChevronLeft,
   ChevronRight,
-  BookOpen,
   GraduationCap,
   Calendar,
   Clock,
   ArrowLeft,
-  Share2,
-  Bookmark,
+  CheckCircle2,
+  Target,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 
 interface PageProps {
@@ -101,6 +104,9 @@ export default async function StrategyArticlePage({ params }: PageProps) {
   const prevArticle = orderedIndex > 0 ? ORDERED_TECHNIQUES[orderedIndex - 1] : null;
   const nextArticle = orderedIndex < ORDERED_TECHNIQUES.length - 1 ? ORDERED_TECHNIQUES[orderedIndex + 1] : null;
 
+  // 目次抽出
+  const tocItems = extractTocFromMarkdown(article.markdownContent || '');
+
   // 構造化データ (Article & BreadcrumbList)
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -142,7 +148,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             '@type': 'ListItem',
             position: 3,
             name: '共通技術',
-            item: 'https://nikotaro.com',
+            item: 'https://nikotaro.com/sf6/strategy',
           },
           {
             '@type': 'ListItem',
@@ -167,7 +173,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
 
       {/* ヘッダーセクション */}
       <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 pt-6 pb-6 sm:pt-8 sm:pb-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {/* パンくずリスト */}
           <nav aria-label="Breadcrumb" className="mb-4 text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 flex-wrap">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
@@ -178,7 +184,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               スト6
             </Link>
             <span>/</span>
-            <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+            <Link href="/sf6/strategy" className="hover:text-neutral-900 dark:hover:text-white transition-colors font-medium">
               共通技術
             </Link>
             <span>/</span>
@@ -190,8 +196,8 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           {/* シリーズ名と難易度バッジ */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-3">
             <Link
-              href="/"
-              className="inline-flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline bg-cyan-50 dark:bg-cyan-950/60 px-2.5 py-0.5 rounded-full border border-cyan-200/80 dark:border-cyan-800/60"
+              href="/sf6/strategy"
+              className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:underline bg-cyan-50 dark:bg-cyan-950/60 px-2.5 py-0.5 rounded-full border border-cyan-200/80 dark:border-cyan-800/60"
             >
               <GraduationCap className="w-3.5 h-3.5" />
               <span>SF6共通技術</span>
@@ -205,6 +211,14 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               <span className="text-[11px] font-mono opacity-80">(STEP {article.difficultyOrder})</span>
             </span>
 
+            {/* テーマバッジ */}
+            {article.themeLabel && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 rounded-md border border-neutral-200/80 dark:border-neutral-700">
+                <Layers className="w-3 h-3 text-neutral-500" />
+                <span>{article.themeLabel}</span>
+              </span>
+            )}
+
             <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
               完全無料公開
             </span>
@@ -215,8 +229,16 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             {article.title}
           </h1>
 
+          {/* 対象読者 */}
+          {article.targetAudience && (
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mb-4 flex items-center gap-1.5">
+              <span className="font-bold text-neutral-700 dark:text-neutral-300 shrink-0">こんな人向け:</span>
+              <span>{article.targetAudience}</span>
+            </p>
+          )}
+
           {/* 記事メタ情報 */}
-          <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 dark:text-neutral-400 pt-1">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 dark:text-neutral-400 pt-1 border-t border-neutral-100 dark:border-neutral-800">
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-neutral-400" />
               <span>読了目安: 約{article.readTime}</span>
@@ -232,67 +254,164 @@ export default async function StrategyArticlePage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* 本文エリア */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="bg-white dark:bg-neutral-900/90 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 p-5 sm:p-8 lg:p-10 shadow-xs">
-          <StrategyMarkdownRenderer
-            content={article.markdownContent || ''}
-            articleNumber={article.articleNumber || 0}
-          />
-        </div>
-
-        {/* 前後の記事ナビゲーション（推奨学習順） */}
-        <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {prevArticle ? (
-            <Link
-              href={`/sf6/strategy/${prevArticle.slug}`}
-              className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs"
+      {/* メインレイアウト（中央揃え・PC追従目次付き） */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-start justify-center">
+        {/* 本文メインカラム（最大幅 max-w-3xl で日本語の最適な可読性を維持） */}
+        <main className="w-full lg:max-w-3xl min-w-0">
+          {/* この記事の要点（3項目ハイライトカード） */}
+          {article.keyTakeaways && article.keyTakeaways.length > 0 && (
+            <section
+              aria-label="この記事の要点"
+              className="mb-6 p-4 sm:p-5 rounded-xl border border-cyan-300 dark:border-cyan-800/80 bg-cyan-50/70 dark:bg-cyan-950/30 shadow-xs"
             >
-              <div className="flex items-center gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
-                <ChevronLeft className="w-4 h-4" />
-                <span>前の記事（{prevArticle.difficultyLabel} STEP {prevArticle.difficultyOrder}）</span>
+              <div className="flex items-center gap-2 mb-3 text-cyan-800 dark:text-cyan-300 font-bold text-sm sm:text-base">
+                <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                <span>この記事の要点</span>
               </div>
-              <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
-                {prevArticle.title}
-              </span>
-            </Link>
-          ) : (
-            <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>最初の記事です（初級 STEP 1）</span>
-            </div>
+              <ul className="space-y-2">
+                {article.keyTakeaways.map((point, pIdx) => (
+                  <li
+                    key={pIdx}
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                    <span className="flex-1 font-medium">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
 
-          {nextArticle ? (
-            <Link
-              href={`/sf6/strategy/${nextArticle.slug}`}
-              className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs text-right"
+          {/* まず試すこと（1課題＋手順ハイライトカード） */}
+          {article.actionStep && (
+            <section
+              aria-label="まず試すこと"
+              className="mb-8 p-4 sm:p-5 rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50/70 dark:bg-amber-950/30 shadow-xs"
             >
-              <div className="flex items-center justify-end gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
-                <span>次の記事（{nextArticle.difficultyLabel} STEP {nextArticle.difficultyOrder}）</span>
-                <ChevronRight className="w-4 h-4" />
+              <div className="flex items-center gap-2 mb-2 text-amber-800 dark:text-amber-300 font-bold text-sm sm:text-base">
+                <Target className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>まず試すこと（トレーニング課題）</span>
               </div>
-              <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
-                {nextArticle.title}
-              </span>
-            </Link>
-          ) : (
-            <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-              <span>全25記事を修了しました！（上級 STEP 6）</span>
-            </div>
+              <p className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-3 bg-white/70 dark:bg-neutral-900/60 p-2.5 rounded-lg border border-amber-200/80 dark:border-amber-900/50 leading-relaxed">
+                🎯 {article.actionStep.task}
+              </p>
+              <ol className="space-y-1.5 pl-1">
+                {article.actionStep.steps.map((step, sIdx) => (
+                  <li
+                    key={sIdx}
+                    className="flex items-start gap-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed"
+                  >
+                    <span className="font-bold text-amber-700 dark:text-amber-400 font-mono text-xs shrink-0 mt-0.5">
+                      STEP {sIdx + 1}.
+                    </span>
+                    <span className="flex-1">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
           )}
-        </section>
 
-        {/* トップへ戻るリンク */}
-        <div className="mt-6 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs sm:text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>トップページ（共通技術一覧）へ戻る</span>
-          </Link>
-        </div>
-      </main>
+          {/* モバイル用開閉式目次 */}
+          <StrategyToc items={tocItems} />
+
+          {/* 本文カード */}
+          <div className="bg-white dark:bg-neutral-900/90 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 p-6 sm:p-8 lg:p-10 shadow-xs">
+            <StrategyMarkdownRenderer
+              content={article.markdownContent || ''}
+              articleNumber={article.articleNumber || 0}
+            />
+          </div>
+
+          {/* 前後の記事ナビゲーション（推奨学習順） */}
+          <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {prevArticle ? (
+              <Link
+                href={`/sf6/strategy/${prevArticle.slug}`}
+                className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs"
+              >
+                <div className="flex items-center gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>前の記事（{prevArticle.difficultyLabel} STEP {prevArticle.difficultyOrder}）</span>
+                </div>
+                <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
+                  {prevArticle.title}
+                </span>
+              </Link>
+            ) : (
+              <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
+                <span>最初の記事です（初級 STEP 1）</span>
+              </div>
+            )}
+
+            {nextArticle ? (
+              <Link
+                href={`/sf6/strategy/${nextArticle.slug}`}
+                className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500/80 transition-all shadow-2xs text-right"
+              >
+                <div className="flex items-center justify-end gap-1 text-xs font-bold text-neutral-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 mb-1">
+                  <span>次の記事（{nextArticle.difficultyLabel} STEP {nextArticle.difficultyOrder}）</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+                <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1 mb-1">
+                  {nextArticle.title}
+                </span>
+                {article.nextArticleReason && (
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 text-left bg-neutral-50 dark:bg-neutral-800/50 p-2 rounded border border-neutral-100 dark:border-neutral-700/60 mt-1">
+                    💡 <span className="font-semibold text-neutral-700 dark:text-neutral-300">次を読む理由:</span> {article.nextArticleReason}
+                  </p>
+                )}
+              </Link>
+            ) : (
+              <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
+                <span>全25記事を修了しました！（上級 STEP 6）</span>
+              </div>
+            )}
+          </section>
+
+          {/* 共通技術一覧ポータルへ戻るリンク */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/sf6/strategy"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>SF6共通技術 一覧ポータル（全25記事）へ戻る</span>
+            </Link>
+          </div>
+        </main>
+
+        {/* PC用サイドバー固定追従目次（lg以上で表示） */}
+        <aside
+          aria-label="ページ内目次"
+          className="hidden lg:block w-64 shrink-0"
+        >
+          <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto p-4 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xs shadow-2xs">
+            <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+              <GraduationCap className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>目次ナビゲーション</span>
+            </div>
+            {tocItems.length > 0 ? (
+              <ul className="space-y-1 text-xs">
+                {tocItems.map((item) => (
+                  <li
+                    key={item.id}
+                    className={item.level === 3 ? 'pl-3 border-l border-neutral-200 dark:border-neutral-800' : ''}
+                  >
+                    <a
+                      href={`#${item.id}`}
+                      className="block py-1 text-neutral-600 dark:text-neutral-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors leading-relaxed line-clamp-2"
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-neutral-400">見出しがありません</p>
+            )}
+          </div>
+        </aside>
+      </div>
     </article>
   );
 }

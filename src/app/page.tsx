@@ -432,6 +432,16 @@ export default function HomePage() {
                 </button>
               </div>
             )}
+
+            {selectedCategory === 'system' && (
+              <Link
+                href="/sf6/strategy"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 text-cyan-700 dark:text-cyan-300 font-bold text-xs border border-cyan-200 dark:border-cyan-800 transition-colors shadow-2xs"
+              >
+                <span>専用ポータルで探す</span>
+                <span className="text-[11px]">→</span>
+              </Link>
+            )}
           </div>
         </div>
       </section>

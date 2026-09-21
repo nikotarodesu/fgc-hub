@@ -68,6 +68,15 @@ export interface Article {
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   difficultyLabel?: '初級' | '中級' | '上級';
   difficultyOrder?: number;
+  theme?: 'ground' | 'advantage' | 'defense' | 'resource' | 'training';
+  themeLabel?: string;
+  targetAudience?: string;
+  keyTakeaways?: string[];
+  actionStep?: {
+    task: string;
+    steps: string[];
+  };
+  nextArticleReason?: string;
   markdownContent?: string;
   antigravityNotes?: string;
   abbreviations?: {

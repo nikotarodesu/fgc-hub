@@ -88,20 +88,26 @@ export default function MembershipPage() {
               </div>
             </div>
           ) : (
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                onClick={handleSubscribe}
-                disabled={loading}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
-              >
-                {loading ? '処理中...' : '今すぐプレミアム会員に登録する（¥980/月）'}
-              </button>
-              <Link
-                href="/auth/login"
-                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs sm:text-sm border border-neutral-200 dark:border-neutral-700 transition-colors text-center"
-              >
-                ログイン
-              </Link>
+            <div className="space-y-2">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={handleSubscribe}
+                  disabled={loading}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
+                >
+                  {loading ? '処理中...' : '今すぐプレミアム会員に登録する（¥980/月）'}
+                </button>
+                <Link
+                  href="/auth/login"
+                  className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs sm:text-sm border border-neutral-200 dark:border-neutral-700 transition-colors text-center"
+                >
+                  ログイン
+                </Link>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 pt-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Stripe暗号化決済 / クレジットカード情報非保持 / いつでも解約可能</span>
+              </div>
             </div>
           )}
         </section>
@@ -391,6 +397,15 @@ export default function MembershipPage() {
                 Stripe決済完了後、即座に閲覧トークンがブラウザに付与され、有料記事の鍵（Paywall）が自動解除されます。また、登録完了メールに記載の専用認証リンクからもいつでも閲覧状態を復元できます。
               </p>
             </div>
+
+            <div className="p-5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
+              <h4 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white mb-2">
+                Q. 支払い方法やクレジットカード情報・個人情報の安全性はどうなっていますか？
+              </h4>
+              <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                お支払いには各種クレジットカード（Visa、Mastercard、JCB、American Express等）をご利用いただけます。決済は国際的なセキュリティ基準（PCI DSS）に準拠したStripe（Stripe, Inc.）により安全に直接処理され、当サイトのサーバーにお客様のクレジットカード情報が保持されることは一切ありません。個人情報の適切な取り扱いについては<Link href="/privacy" className="text-cyan-600 dark:text-cyan-400 underline font-medium">プライバシーポリシー</Link>をご確認ください。
+              </p>
+            </div>
           </div>
         </section>
 
@@ -410,6 +425,17 @@ export default function MembershipPage() {
             >
               {loading ? '処理中...' : 'プレミアム会員に登録する（Stripe安全決済）'}
             </button>
+            <p className="text-[11px] text-neutral-400 mt-2.5">
+              ご登録の際は、
+              <Link href="/privacy" className="text-cyan-300 underline underline-offset-2 hover:text-white mx-1">
+                プライバシーポリシー
+              </Link>
+              および
+              <Link href="/legal/tokusho" className="text-cyan-300 underline underline-offset-2 hover:text-white mx-1">
+                特定商取引法に基づく表記
+              </Link>
+              をご確認ください。
+            </p>
           </div>
         </section>
 

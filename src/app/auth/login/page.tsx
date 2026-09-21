@@ -37,7 +37,7 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const { login, loginWithGoogle, setDemoRole, isConfigured } = useAuth();
+  const { login, loginWithGoogle, setDemoRole } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -152,11 +152,7 @@ function LoginContent() {
             <GoogleIcon className="w-5 h-5 shrink-0" />
             <span>{isGoogleLoading ? "Google認証中..." : "Googleアカウントでログイン"}</span>
           </button>
-          {!isConfigured && (
-            <p className="text-[11px] text-amber-600 dark:text-amber-400 text-center leading-relaxed">
-              ※Supabase環境変数未設定時は、下の「デモ・確認用アカウント」で即時ログインできます。
-            </p>
-          )}
+
         </div>
 
         {/* 区切り線 */}
@@ -202,7 +198,32 @@ function LoginContent() {
           >
             {isLoading ? "処理中..." : "メールアドレスでログイン"}
           </button>
+
+          {/* 同意事項・プライバシー表記 */}
+          <div className="pt-2 text-center text-[11px] text-neutral-400 dark:text-neutral-500 leading-relaxed">
+            ログインまたはアカウント作成により、当サイトの{" "}
+            <Link href="/privacy" className="text-cyan-600 dark:text-cyan-400 font-semibold underline underline-offset-2 hover:text-cyan-500">
+              プライバシーポリシー
+            </Link>
+            {" "}および{" "}
+            <Link href="/legal/tokusho" className="text-neutral-500 dark:text-neutral-400 underline underline-offset-2 hover:text-neutral-700 dark:hover:text-neutral-200">
+              特定商取引法に基づく表記
+            </Link>
+            {" "}に同意したものとみなされます。
+          </div>
         </form>
+
+        {/* セキュリティ・安心の明記 */}
+        <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-neutral-400 dark:text-neutral-500">
+          <div className="flex items-center gap-1">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+            <span>SSL/TLS暗号化通信</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Lock className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
+            <span>カード情報非保持（Stripe直接決済）</span>
+          </div>
+        </div>
 
         {/* 3. 開発・テスト用クイックデモ切り替え（管理者モードの端末にのみ表示） */}
         {isAdmin && (

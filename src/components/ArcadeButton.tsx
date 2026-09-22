@@ -61,52 +61,100 @@ export default function ArcadeButton({
   }
 
   const isModern = controlType === 'modern';
-  // SP、SA、パリィなどの特殊ボタン・必殺技ボタン・派生ボタンは文字を表示する
-  const isSpecialOrSystem =
-    iconText === 'SP' ||
-    iconText === 'SA' ||
-    iconText === 'A+SP' ||
-    iconText === 'PP' ||
-    iconText === 'PPP' ||
-    iconText === 'KK' ||
-    iconText === 'KKK' ||
-    iconText === 'DI' ||
-    iconText === 'DP' ||
-    iconText === 'PARRY' ||
-    iconText.includes('派生') ||
-    iconText.startsWith('SA') ||
-    iconText === '強' ||
-    iconText === '中' ||
-    iconText === '弱' ||
-    /^[弱中強大][PK]$/.test(iconText);
-
-  // モダン操作の通常攻撃（弱・中・強）：PやKなど文字は入らず色のみ！
-  const isModernNormalAttack =
-    isModern && !isSpecialOrSystem && (color === 'blue' || color === 'yellow' || color === 'red');
-
-  // アシスト攻撃（A弱、A中、A強など）の判定
-  const isAssist = isModernNormalAttack && (iconText.startsWith('A') || (label && label.startsWith('A')));
-
   const dimension = size === 'sm' ? 'w-6 h-6' : 'w-7 h-7';
 
-  // モダン通常攻撃：ボタンの中に文字は入らず色のみの丸ボタンを表示
-  if (isModernNormalAttack) {
-    const tooltipText = label || (color === 'blue' ? '弱攻撃（水色）' : color === 'yellow' ? '中攻撃（黄色）' : '強攻撃（赤色）');
+  // モダン操作時の判定
+  if (isModern) {
+    // 1. OD技（PP, KK等）は例外として文字を表示
+    const isOD =
+      iconText === 'PP' ||
+      iconText === 'PPP' ||
+      iconText === 'KK' ||
+      iconText === 'KKK' ||
+      iconText.includes('PP') ||
+      iconText.includes('KK') ||
+      iconText.includes('pp') ||
+      iconText.includes('kk');
 
-    const buttonCircle = (
-      <span
-        className={`inline-flex items-center justify-center rounded-full border-2 shrink-0 select-none ${dimension} ${colorClasses} ${ringClasses}`}
-        title={tooltipText}
-      >
-        {/* アーケードプッシュボタン特有の中央ドームハイライト（文字なし・色のみ） */}
-        <span className="w-2 h-2 rounded-full bg-white/35 shadow-inner pointer-events-none" />
-      </span>
-    );
+    // 2. 必殺技ボタン（SP, A+SP）やシステムボタン（DI, DP, PARRY, 派生）は文字を表示
+    const isSpecialButton =
+      iconText === 'SP' ||
+      iconText === 'A+SP' ||
+      iconText === 'DI' ||
+      iconText === 'DP' ||
+      iconText === 'PARRY' ||
+      iconText.includes('派生');
+
+    if (isOD || isSpecialButton) {
+      let displayIcon = iconText;
+      if (isOD) {
+        displayIcon = iconText.toUpperCase().includes('K') ? 'KK' : 'PP';
+      }
+      const isLong = displayIcon.length >= 3;
+      const isMultiChar = displayIcon.length >= 2;
+      const textDimension =
+        size === 'sm'
+          ? isLong
+            ? 'min-w-7 h-6 px-1 text-[9px]'
+            : isMultiChar
+            ? 'min-w-6.5 h-6 px-0.5 text-[10px]'
+            : 'w-6 h-6 text-[11px]'
+          : isLong
+          ? 'min-w-8 h-7 px-1.5 text-[10px]'
+          : isMultiChar
+          ? 'min-w-7.5 h-7 px-1 text-xs'
+          : 'w-7 h-7 text-xs';
+
+      return (
+        <span
+          className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${textDimension} ${colorClasses} ${ringClasses}`}
+          title={label || displayIcon}
+        >
+          {displayIcon}
+        </span>
+      );
+    }
+
+    // 3. SA（スーパーアーツ）：文字（SA/SA1/SA2/SA3等）は入れず、金色の丸ボタンのみ
+    const isSA =
+      color === 'gold' ||
+      iconText === 'SA' ||
+      iconText.startsWith('SA') ||
+      iconText === 'CA';
+
+    if (isSA) {
+      const saClasses =
+        'bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-600 text-neutral-950 border-amber-700 ring-1 ring-amber-400/80 shadow-[0_2px_5px_rgba(245,158,11,0.4),inset_0_1px_2px_rgba(255,255,255,0.8)]';
+
+      return (
+        <span
+          className={`inline-flex items-center justify-center rounded-full border-2 shrink-0 select-none ${dimension} ${saClasses}`}
+          title={label || 'スーパーアーツ（金色）'}
+        >
+          <span className="w-2 h-2 rounded-full bg-white/40 shadow-inner pointer-events-none" />
+        </span>
+      );
+    }
+
+    // 4. 通常技（弱・中・強）：文字（弱・中・強・P・K等）は入れず色のみ！
+    // ただしアシスト（A弱、A中、A強）の場合は「A」を表示
+    const isAssist =
+      iconText.startsWith('A') || (label && label.startsWith('A'));
+
+    const tooltipText =
+      label ||
+      (color === 'blue'
+        ? '弱攻撃（水色）'
+        : color === 'yellow'
+        ? '中攻撃（黄色）'
+        : '強攻撃（赤色）');
 
     if (isAssist) {
       return (
         <span
-          className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${dimension} ${size === 'sm' ? 'text-[11px]' : 'text-xs'} ${colorClasses} ${ringClasses}`}
+          className={`inline-flex items-center justify-center rounded-full font-black font-mono border-2 shrink-0 select-none tracking-tighter ${dimension} ${
+            size === 'sm' ? 'text-[11px]' : 'text-xs'
+          } ${colorClasses} ${ringClasses}`}
           title={`アシスト＋${tooltipText}`}
         >
           A
@@ -114,10 +162,18 @@ export default function ArcadeButton({
       );
     }
 
-    return buttonCircle;
+    // 文字なし・色のみの丸ボタン＋中央ドームハイライト
+    return (
+      <span
+        className={`inline-flex items-center justify-center rounded-full border-2 shrink-0 select-none ${dimension} ${colorClasses} ${ringClasses}`}
+        title={tooltipText}
+      >
+        <span className="w-2 h-2 rounded-full bg-white/35 shadow-inner pointer-events-none" />
+      </span>
+    );
   }
 
-  // クラシック操作、またはモダン特殊ボタン（SP, SA, A+SP等）
+  // クラシック操作
   // 5-1準拠: クラシック操作のボタン内文字は原則として「P」「K」「PP」「KK」のみとし、漢字や技分類を入れない
   let renderedIconText = iconText;
   if (!isModern) {

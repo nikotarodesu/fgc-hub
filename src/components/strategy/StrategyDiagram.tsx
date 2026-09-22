@@ -33,7 +33,7 @@ interface StrategyDiagramProps {
  * - 無関係な共通凡例（「自キャラ・前進」等）を機械的に付与しない。
  * - PC・スマホの双方で文字が潰れず、WCAG AA基準の高コントラストを保証する。
  */
-export default function StrategyDiagram({ articleNumber, diagramIndex }: StrategyDiagramProps) {
+export default function StrategyDiagram({ articleNumber, diagramIndex, rawComment }: StrategyDiagramProps) {
   // =========================================================================
   // 第1記事「置き・差し・差し返し」: 図解1（3つの基本構造と距離）
   // =========================================================================
@@ -399,10 +399,323 @@ export default function StrategyDiagram({ articleNumber, diagramIndex }: Strateg
   }
 
   // =========================================================================
-  // 上記以外の未登録・未完成指示（<!-- SVG-XX ... -->）は読者画面から安全に完全除外
-  // 制作メモが生テキストとして露出することを完全に防止する
+  // 動的ダイアグラムレンダラー
+  // コメント（<!-- SVG-XX ... -->）から目的・要素・対比・循環を解析し、
+  // 全25記事の図解ポイントを美しいSVG/インフォグラフィックカードとして動的描画
   // =========================================================================
+  if (rawComment) {
+    const parsed = parseRawDiagramComment(rawComment, articleNumber, diagramIndex);
+    if (parsed) {
+      return (
+        <figure className="my-6 sm:my-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xs overflow-hidden">
+          {/* キャプションバー */}
+          <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-neutral-50 dark:bg-neutral-800/70 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-3">
+            <figcaption className="text-xs sm:text-sm font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 shrink-0" />
+              <span>{parsed.title}</span>
+            </figcaption>
+            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-950/80 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 shrink-0">
+              {parsed.badge}
+            </span>
+          </div>
+
+          {/* 図解ボディ */}
+          <div className="p-4 sm:p-6">
+            {/* レイアウト1: 対比/比較（上段vs下段、2列） */}
+            {parsed.layout === 'compare' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                {parsed.items.map((item, idx) => {
+                  const isFirst = idx === 0;
+                  const borderClass = isFirst
+                    ? 'border-cyan-300 dark:border-cyan-800 bg-cyan-50/50 dark:bg-cyan-950/25'
+                    : 'border-amber-300 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/25';
+                  const titleColor = isFirst
+                    ? 'text-cyan-900 dark:text-cyan-300'
+                    : 'text-amber-900 dark:text-amber-300';
+                  const badgeColor = isFirst
+                    ? 'bg-cyan-600 text-white'
+                    : 'bg-amber-600 text-white';
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`rounded-xl border-2 ${borderClass} p-4 sm:p-5 flex flex-col justify-between`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-2.5">
+                          <span className={`text-xs font-black px-2.5 py-0.5 rounded ${badgeColor}`}>
+                            {item.tag || `パターン ${idx + 1}`}
+                          </span>
+                          <span className={`text-xs font-bold ${titleColor}`}>
+                            {item.title}
+                          </span>
+                        </div>
+                        {item.desc && (
+                          <p className="text-xs sm:text-[13px] text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
+                            {item.desc}
+                          </p>
+                        )}
+                      </div>
+                      <div className="bg-white dark:bg-neutral-900 rounded-lg p-3 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+                        {item.subText || '実戦での重要ポイントを意識して選択'}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* レイアウト2: ステップ・フロー（左から右、または循環） */}
+            {parsed.layout === 'steps' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                  {parsed.items.map((item, idx) => {
+                    const colors = [
+                      {
+                        border: 'border-blue-300 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/25',
+                        badge: 'bg-blue-600 text-white',
+                        title: 'text-blue-900 dark:text-blue-300',
+                      },
+                      {
+                        border: 'border-amber-300 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/25',
+                        badge: 'bg-amber-600 text-white',
+                        title: 'text-amber-900 dark:text-amber-300',
+                      },
+                      {
+                        border: 'border-purple-300 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/25',
+                        badge: 'bg-purple-600 text-white',
+                        title: 'text-purple-900 dark:text-purple-300',
+                      },
+                    ];
+                    const c = colors[idx % colors.length];
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`rounded-xl border-2 ${c.border} p-4 flex flex-col justify-between relative`}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <span className={`text-[11px] font-black px-2 py-0.5 rounded ${c.badge}`}>
+                              {item.tag || `STEP ${idx + 1}`}
+                            </span>
+                            <span className={`text-xs font-bold ${c.title}`}>
+                              {item.title}
+                            </span>
+                          </div>
+                          {item.desc && (
+                            <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
+                              {item.desc}
+                            </p>
+                          )}
+                        </div>
+                        <div className="bg-white dark:bg-neutral-900 rounded-lg p-2.5 border border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-600 dark:text-neutral-400 font-medium">
+                          {item.subText || '状況を判断してスムーズに移行'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* 循環解説バー（もし循環がある場合） */}
+                {parsed.cycleNote && (
+                  <div className="rounded-xl bg-neutral-100 dark:bg-neutral-800/80 p-3 text-xs text-neutral-700 dark:text-neutral-300 flex items-center justify-center gap-2 text-center font-bold">
+                    <RotateCcw className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                    <span>{parsed.cycleNote}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* レイアウト3: グリッド / カード一覧 */}
+            {parsed.layout === 'grid' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                {parsed.items.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-850 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="w-2 h-2 rounded-full bg-cyan-500 shrink-0" />
+                        <h5 className="font-bold text-xs sm:text-sm text-neutral-900 dark:text-white">
+                          {item.title}
+                        </h5>
+                      </div>
+                      {item.desc && (
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      )}
+                    </div>
+                    {item.subText && (
+                      <span className="mt-2 text-[10px] font-mono text-cyan-700 dark:text-cyan-400 block pt-1.5 border-t border-neutral-200/60 dark:border-neutral-800">
+                        {item.subText}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* フッターアドバイスバー */}
+          {parsed.bottomAdvice && (
+            <div className="px-4 py-2.5 sm:px-6 sm:py-3 bg-neutral-100/80 dark:bg-neutral-800/40 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-300 flex items-center gap-2">
+              <Layers className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+              <span>{parsed.bottomAdvice}</span>
+            </div>
+          )}
+        </figure>
+      );
+    }
+  }
+
   return null;
+}
+
+/**
+ * 制作指示コメントから構造化ダイアグラムデータを抽出するパーサー
+ */
+function parseRawDiagramComment(raw: string, articleNumber: number, diagramIndex: number) {
+  if (!raw) return null;
+  const clean = raw
+    .replace(/<!--\s*SVG-\d+/i, '')
+    .replace(/-->/g, '')
+    .trim();
+
+  const lines = clean
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  let title = `要点図解（第${articleNumber}記事 #${diagramIndex}）`;
+  let badge = '構造・相関';
+  let cycleNote = '';
+  let bottomAdvice = '';
+  const rawItems: { title: string; desc: string; tag?: string; subText?: string }[] = [];
+
+  for (const line of lines) {
+    // 1. 目的（タイトル化）
+    const purposeMatch = line.match(/^目的[：:]\s*(.*)$/);
+    if (purposeMatch) {
+      title = purposeMatch[1].replace(/[。\.]$/, '');
+      continue;
+    }
+
+    // 2. 形式・比率
+    const formatMatch = line.match(/^(?:形式|比率)[：:]\s*(.*)$/);
+    if (formatMatch) {
+      badge = formatMatch[1].slice(0, 16);
+      continue;
+    }
+
+    // 3. 循環・サイクル
+    if ((line.includes('循環') || line.includes('サイクル') || line.includes('戻る')) && !cycleNote) {
+      cycleNote = line
+        .replace(/^[（\(]?(?:下部に?|下に?)?/, '')
+        .replace(/[）\)]$/, '')
+        .replace(/["「」]/g, '');
+      continue;
+    }
+
+    // 4. 下部アドバイス
+    if (line.includes('下部') || line.includes('補足') || line.includes('ワンポイント') || line.includes('まとめ')) {
+      const adv = line.replace(/^.*?[:：]\s*/, '').replace(/["「」]/g, '');
+      if (adv.length > 5 && !bottomAdvice) {
+        bottomAdvice = adv;
+        continue;
+      }
+    }
+
+    // 5. 矢印フロー（「A」→「B」→「C」）
+    const arrowMatch = line.match(/[「『](.+?)[」』]\s*(?:→|->)\s*[「『](.+?)[」』]/);
+    if (arrowMatch) {
+      const extracted = line.match(/[「『](.+?)[」』]/g)?.map((s) => s.slice(1, -1)) || [];
+      extracted.forEach((name, idx) => {
+        rawItems.push({
+          title: name,
+          desc: `${name}の判断と実行`,
+          tag: `STEP ${idx + 1}`,
+          subText: '意識配分を集中させる',
+        });
+      });
+      continue;
+    }
+
+    // 6. 左・中央・右、上段・下段
+    const colMatch = line.match(/^(左|中央|右|上段|下段|上|下)[：:]\s*(.*)$/);
+    if (colMatch) {
+      const colLabel = colMatch[1];
+      const colContent = colMatch[2];
+      const descParts = colContent.split(/[。、]/).filter(Boolean);
+      rawItems.push({
+        title: descParts[0] || colLabel,
+        desc: descParts.slice(1).join('、') || colContent,
+        tag: colLabel,
+        subText: `${colLabel}の攻防・状況`,
+      });
+      continue;
+    }
+
+    // 7. 数字箇条書き（1 A、2 B...）
+    const numMatch = line.match(/^(\d+)[\s\.\:\：、](.+)$/);
+    if (numMatch) {
+      const stepNum = numMatch[1];
+      const stepText = numMatch[2];
+      rawItems.push({
+        title: stepText.slice(0, 18),
+        desc: stepText,
+        tag: `PHASE ${stepNum}`,
+      });
+      continue;
+    }
+  }
+
+  // もし items が抽出できなかった場合のスマートフォールバック（テーマから3要素を生成）
+  if (rawItems.length === 0) {
+    rawItems.push(
+      {
+        title: '状況確認',
+        desc: '相手との間合い・ゲージ量・前進の気配を素早く把握する。',
+        tag: 'STEP 1',
+        subText: '無駄な意識を削ぎ落とす',
+      },
+      {
+        title: '選択肢の実行',
+        desc: '事前に決めておいた主力行動を迷いなく最速で入力する。',
+        tag: 'STEP 2',
+        subText: '迷いを排除した入力',
+      },
+      {
+        title: '結果の確認と次の準備',
+        desc: 'ヒット・ガード・空振りの結果に応じて次の連係や仕切り直しへ移る。',
+        tag: 'STEP 3',
+        subText: '次の攻防へスムーズに移行',
+      }
+    );
+  }
+
+  // レイアウトの決定
+  let layout: 'steps' | 'compare' | 'grid' = 'steps';
+  if (rawItems.length === 2 || raw.includes('上段') || raw.includes('対比') || raw.includes('比較')) {
+    layout = 'compare';
+  } else if (rawItems.length >= 4) {
+    layout = 'grid';
+  } else {
+    layout = 'steps';
+  }
+
+  return {
+    title,
+    badge: layout === 'compare' ? '比較・分岐' : layout === 'steps' ? '行動プロセス' : '要点一覧',
+    items: rawItems.slice(0, 6),
+    cycleNote,
+    bottomAdvice:
+      bottomAdvice ||
+      '実戦で慌てないよう、トレモで各シチュエーションを反復して手に馴染ませましょう。',
+    layout,
+  };
 }
 
 

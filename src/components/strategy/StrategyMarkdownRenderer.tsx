@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import StrategyDiagram from './StrategyDiagram';
+import { generateHeadingId } from './tocUtils';
 
 interface StrategyMarkdownRendererProps {
   content: string;
@@ -232,12 +233,9 @@ export default function StrategyMarkdownRenderer({
       flushParagraph();
       flushList();
       flushQuote();
-      const text = trimmed.slice(3).trim();
-      const baseId = text.replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff-]/g, '').trim().toLowerCase() || 'heading';
-      const count = idCounts.get(baseId) || 0;
-      idCounts.set(baseId, count + 1);
-      const id = count === 0 ? `sec-${baseId}` : `sec-${baseId}-${count}`;
-      blocks.push({ type: 'h2', text, id });
+      const rawText = trimmed.slice(3).trim();
+      const { id, cleanText } = generateHeadingId(rawText, idCounts);
+      blocks.push({ type: 'h2', text: cleanText, id });
       continue;
     }
 
@@ -246,12 +244,9 @@ export default function StrategyMarkdownRenderer({
       flushParagraph();
       flushList();
       flushQuote();
-      const text = trimmed.slice(4).trim();
-      const baseId = text.replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff-]/g, '').trim().toLowerCase() || 'heading';
-      const count = idCounts.get(baseId) || 0;
-      idCounts.set(baseId, count + 1);
-      const id = count === 0 ? `sec-${baseId}` : `sec-${baseId}-${count}`;
-      blocks.push({ type: 'h3', text, id });
+      const rawText = trimmed.slice(4).trim();
+      const { id, cleanText } = generateHeadingId(rawText, idCounts);
+      blocks.push({ type: 'h3', text: cleanText, id });
       continue;
     }
 

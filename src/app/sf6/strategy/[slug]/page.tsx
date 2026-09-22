@@ -17,7 +17,11 @@ import {
   Target,
   Sparkles,
   Layers,
+  ShoppingBag,
+  ExternalLink,
 } from 'lucide-react';
+import StrategyQuickJump from '@/components/strategy/StrategyQuickJump';
+import { AFFILIATE_PRODUCTS } from '@/data/affiliateProducts';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -172,10 +176,10 @@ export default async function StrategyArticlePage({ params }: PageProps) {
       />
 
       {/* ヘッダーセクション */}
-      <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 pt-6 pb-6 sm:pt-8 sm:pb-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 pt-5 pb-5 sm:pt-8 sm:pb-8">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6">
           {/* パンくずリスト */}
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 flex-wrap">
+          <nav aria-label="Breadcrumb" className="mb-3 sm:mb-4 text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 flex-wrap">
             <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
               ホーム
             </Link>
@@ -254,15 +258,15 @@ export default async function StrategyArticlePage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* メインレイアウト（中央揃え・PC追従目次付き） */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-start justify-center">
+      {/* メインレイアウト（中央揃え・PC追従目次付き・スマホ時は左右パディングを狭めてSVGを広々と表示） */}
+      <div className="max-w-6xl mx-auto px-2 sm:px-6 py-4 sm:py-8 flex flex-col lg:flex-row gap-8 items-start justify-center">
         {/* 本文メインカラム（最大幅 max-w-3xl で日本語の最適な可読性を維持） */}
         <main className="w-full lg:max-w-3xl min-w-0">
           {/* この記事の要点（3項目ハイライトカード） */}
           {article.keyTakeaways && article.keyTakeaways.length > 0 && (
             <section
               aria-label="この記事の要点"
-              className="mb-6 p-4 sm:p-5 rounded-xl border border-cyan-300 dark:border-cyan-800/80 bg-cyan-50/70 dark:bg-cyan-950/30 shadow-xs"
+              className="mb-5 p-3.5 sm:p-5 rounded-xl border border-cyan-300 dark:border-cyan-800/80 bg-cyan-50/70 dark:bg-cyan-950/30 shadow-xs"
             >
               <div className="flex items-center gap-2 mb-3 text-cyan-800 dark:text-cyan-300 font-bold text-sm sm:text-base">
                 <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
@@ -286,7 +290,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           {article.actionStep && (
             <section
               aria-label="まず試すこと"
-              className="mb-8 p-4 sm:p-5 rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50/70 dark:bg-amber-950/30 shadow-xs"
+              className="mb-6 sm:mb-8 p-3.5 sm:p-5 rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50/70 dark:bg-amber-950/30 shadow-xs"
             >
               <div className="flex items-center gap-2 mb-2 text-amber-800 dark:text-amber-300 font-bold text-sm sm:text-base">
                 <Target className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -314,12 +318,40 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           {/* モバイル用開閉式目次 */}
           <StrategyToc items={tocItems} />
 
-          {/* 本文カード */}
-          <div className="bg-white dark:bg-neutral-900/90 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 p-6 sm:p-8 lg:p-10 shadow-xs">
+          {/* 本文カード（スマホ時はパディングを抑えてSVGやテーブルを広々と表示） */}
+          <div className="bg-white dark:bg-neutral-900/90 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-800 p-3.5 sm:p-8 lg:p-10 shadow-xs">
             <StrategyMarkdownRenderer
               content={article.markdownContent || ''}
               articleNumber={article.articleNumber || 0}
             />
+          </div>
+
+          {/* さりげないAmazonアソシエイト商品リンク（リンク切れしにくい検索型URL・指サック/ギアケア） */}
+          <div className="mt-6 p-4 rounded-xl bg-neutral-50/90 dark:bg-neutral-900/60 border border-neutral-200/70 dark:border-neutral-800 text-xs">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <span className="font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                <ShoppingBag className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>トレモ・対戦を快適にする筆者おすすめギア</span>
+              </span>
+              <span className="text-[10px] text-neutral-400 dark:text-neutral-500">PR・Amazonアソシエイト</span>
+            </div>
+            <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed mb-2 text-[11px] sm:text-xs">
+              長時間のランクマや入力練習で指や手首の引っかかり・疲労を防ぐ定番ケアアイテム。滑らかな操作感を維持してコマンド抜けを防止します。
+            </p>
+            <div className="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-neutral-200/50 dark:border-neutral-800/60">
+              <span className="font-bold text-neutral-900 dark:text-white truncate max-w-xs">
+                {AFFILIATE_PRODUCTS['gaming-finger-sleeve'].name}
+              </span>
+              <a
+                href={AFFILIATE_PRODUCTS['gaming-finger-sleeve'].amazonUrl}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400 hover:underline text-xs shrink-0"
+              >
+                <span>Amazonで見る</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
 
           {/* 前後の記事ナビゲーション（推奨学習順） */}
@@ -352,14 +384,9 @@ export default async function StrategyArticlePage({ params }: PageProps) {
                   <span>次の記事（{nextArticle.difficultyLabel} STEP {nextArticle.difficultyOrder}）</span>
                   <ChevronRight className="w-4 h-4" />
                 </div>
-                <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1 mb-1">
+                <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200 group-hover:underline line-clamp-1">
                   {nextArticle.title}
                 </span>
-                {article.nextArticleReason && (
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 text-left bg-neutral-50 dark:bg-neutral-800/50 p-2 rounded border border-neutral-100 dark:border-neutral-700/60 mt-1">
-                    💡 <span className="font-semibold text-neutral-700 dark:text-neutral-300">次を読む理由:</span> {article.nextArticleReason}
-                  </p>
-                )}
               </Link>
             ) : (
               <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
@@ -412,6 +439,12 @@ export default async function StrategyArticlePage({ params }: PageProps) {
           </div>
         </aside>
       </div>
+
+      {/* 上下ホバー移動バナー ＆ クイック目次ジャンプ（お気に入り登録はプレミアム会員限定） */}
+      <StrategyQuickJump
+        sections={tocItems.map((item) => ({ id: item.id, title: item.text }))}
+        slug={article.slug}
+      />
     </article>
   );
 }

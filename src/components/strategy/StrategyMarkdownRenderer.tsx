@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Camera } from 'lucide-react';
 import StrategyDiagram from './StrategyDiagram';
 import { generateHeadingId } from './tocUtils';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface StrategyMarkdownRendererProps {
   content: string;
@@ -130,6 +132,7 @@ type Block =
   | { type: 'ol'; items: string[] }
   | { type: 'quote'; lines: string[] }
   | { type: 'diagram'; index: number; raw: string }
+  | { type: 'admin-image'; note: string }
   | { type: 'p'; lines: string[] };
 
 export type { TocItem } from './tocUtils';
@@ -139,6 +142,15 @@ export default function StrategyMarkdownRenderer({
   content,
   articleNumber,
 }: StrategyMarkdownRendererProps) {
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const adminMode =
+      typeof window !== 'undefined' && localStorage.getItem('fgc_admin_mode') === 'true';
+    setIsAdmin(user?.role === 'admin' || adminMode);
+  }, [user]);
+
   // 1. Antigravity実装メモは読者向け本文から除外（もし存在する場合）
   let cleanContent = content;
   const notesIdx = cleanContent.indexOf('## Antigravity実装メモ');
@@ -182,6 +194,22 @@ export default function StrategyMarkdownRenderer({
   for (let i = 0; i < lines.length; i++) {
     const rawLine = lines[i];
     const trimmed = rawLine.trim();
+
+    // 管理者専用画像プレースホルダー（<!-- ADMIN-IMAGE: ... --> または <!-- IMAGE: ... -->）
+    if (trimmed.startsWith('<!-- ADMIN-IMAGE:') || trimmed.startsWith('<!-- IMAGE:')) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      const note = trimmed
+        .replace(/^<!--\s*(?:ADMIN-IMAGE|IMAGE):\s*/i, '')
+        .replace(/\s*-->$/, '')
+        .trim();
+      blocks.push({
+        type: 'admin-image',
+        note,
+      });
+      continue;
+    }
 
     // SVG仕様コメントブロックの検出
     if (trimmed.startsWith('<!-- SVG-') || (inSvgComment && !trimmed.endsWith('-->'))) {
@@ -482,6 +510,25 @@ export default function StrategyMarkdownRenderer({
               diagramIndex={block.index}
               rawComment={block.raw}
             />
+          );
+        }
+
+        if (block.type === 'admin-image') {
+          if (!isAdmin) return null;
+          return (
+            <aside
+              key={idx}
+              className="my-5 p-4 rounded-xl border-2 border-dashed border-amber-400/90 dark:border-amber-600/80 bg-amber-50/80 dark:bg-amber-950/25 text-neutral-900 dark:text-neutral-100 shadow-2xs animate-in fade-in duration-200"
+              aria-label="管理者用画像配置メモ"
+            >
+              <div className="flex items-center gap-2 text-xs font-black text-amber-700 dark:text-amber-400 mb-1.5 uppercase tracking-wider">
+                <Camera className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>【管理者専用メモ】ここにはこんな画像を入れる</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-200 leading-relaxed pl-6">
+                📸 {block.note}
+              </p>
+            </aside>
           );
         }
 

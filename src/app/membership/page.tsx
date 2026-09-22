@@ -237,7 +237,7 @@ export default function MembershipPage() {
                   バージョンアップ・キャラ調整時も無料追記
                 </h3>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  バランス調整や新シーズン突入時も攻略記事を随時アップデート。契約期間中は追加費用なしで常に最新の攻略追記内容を閲覧し続けられます。
+                  バランス調整や新シーズン突入時も攻略記事を随時アップデート。契約期間中は追加費用なしでアップデート時の追記・修正内容を閲覧いただけます。
                 </p>
               </div>
             </div>

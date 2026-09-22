@@ -10,16 +10,11 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
   const pathname = usePathname();
-  const isHome = pathname === '/';
   const { user, isPremium } = useAuth();
 
   return (
     <header
-      className={`${
-        isHome
-          ? 'sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md'
-          : 'relative bg-white dark:bg-neutral-950'
-      } w-full border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors`}
+      className="sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md w-full border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full">
         <div className="flex items-center justify-between h-14 gap-2 w-full">

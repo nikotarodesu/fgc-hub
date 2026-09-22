@@ -158,7 +158,7 @@ export default function PaywallCard({
   }
 
   return (
-    <div className="relative mt-8 mb-12">
+    <div id="paywall-card" className="relative mt-8 mb-12">
       {/* ぼかしグラデーション */}
       <div className="absolute -top-24 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-neutral-900 via-white/90 dark:via-neutral-900/90 to-transparent pointer-events-none" />
 

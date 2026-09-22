@@ -18,6 +18,7 @@ import {
 
 const QUICK_CHARACTERS = [
   { name: 'リュウ', image: '/images/characters/ryu/sns.jpg' },
+  { name: 'エレナ', image: '/images/characters/elena/sns.jpg' },
   { name: 'ケン', image: '/images/characters/ken/sns.jpg' },
   { name: '豪鬼', image: '/images/characters/akuma/sns.jpg' },
   { name: 'ジュリ', image: '/images/characters/juri/sns.jpg' },
@@ -32,6 +33,24 @@ const QUICK_CHARACTERS = [
   { name: '不知火舞', image: '/images/characters/mai/sns.jpg' },
   { name: 'ガイル', image: '/images/characters/guile/sns.jpg' },
 ];
+
+const CHARACTER_EXTRA_CONTENT: Record<string, { label: string; url: string; description: string }> = {
+  リュウ: {
+    label: 'リュウの逆引きリーサルツール＆起き攻め表',
+    url: '/articles/ryu-complete-guide#combo-reverse-lookup',
+    description: '相手残り体力やゲージ状況から倒し切りルートを逆引き検索できます。',
+  },
+  エレナ: {
+    label: 'エレナの逆引きリーサルツール＆起き攻め表',
+    url: '/articles/elena-complete-guide#combo-reverse-lookup',
+    description: '相手残り体力やゲージ状況から倒し切りルートを逆引き検索できます。',
+  },
+  キャミィ: {
+    label: 'キャミィの技表・フレームデータ・実戦コンボ',
+    url: '/sf6/cammy',
+    description: '基本技の発生・硬直差フレームおよび実戦コンボデータを閲覧できます。',
+  },
+};
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
@@ -118,12 +137,20 @@ export default function HomePage() {
     return list;
   }, [selectedCategory, selectedControlType, selectedDifficulty, selectedCharacter, selectedTag, searchQuery]);
 
-  // ピックアップ枠の表示可否（全記事一覧かつ絞り込みがない、またはリュウ選択時のみ表示）
-  const isPickupVisible =
-    selectedCategory === 'all' &&
-    (!selectedCharacter || selectedCharacter === 'リュウ') &&
-    !searchQuery.trim() &&
-    !selectedTag;
+  // ピックアップ対象の攻略記事（全記事かつ未絞り込み時はリュウ、エレナ選択時はエレナ、リュウ選択時はリュウ。それ以外のキャラ絞り込みや検索時は非表示）
+  const pickupArticleSlug = useMemo(() => {
+    if (selectedCategory !== 'all' || searchQuery.trim() || selectedTag) return null;
+    if (!selectedCharacter || selectedCharacter === 'リュウ') return 'ryu-complete-guide';
+    if (selectedCharacter === 'エレナ') return 'elena-complete-guide';
+    return null;
+  }, [selectedCategory, selectedCharacter, searchQuery, selectedTag]);
+
+  const pickupArticle = useMemo(() => {
+    if (!pickupArticleSlug) return null;
+    return ARTICLES_DATA.find((a) => a.slug === pickupArticleSlug) || null;
+  }, [pickupArticleSlug]);
+
+  const isPickupVisible = Boolean(pickupArticle);
 
   const handleResetFilters = () => {
     setSelectedCharacter(null);
@@ -497,8 +524,14 @@ export default function HomePage() {
 
             <span className="text-neutral-400 dark:text-neutral-500">|</span>
             <span className="text-neutral-600 dark:text-neutral-300 font-medium">
-              該当 <strong className="text-neutral-900 dark:text-white font-black text-sm">{filteredArticles.length}</strong> 件
+              該当 記事 <strong className="text-neutral-900 dark:text-white font-black text-sm">{filteredArticles.length}</strong> 件
             </span>
+            {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
+                <Sparkles className="w-3 h-3" />
+                <span>ツール・データあり</span>
+              </span>
+            )}
           </div>
 
           {(selectedCharacter || selectedCategory !== 'all' || searchQuery || selectedTag) && (
@@ -517,8 +550,34 @@ export default function HomePage() {
       {/* 4. 結果一覧エリア */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          {/* ピックアップ枠（未絞り込み時またはリュウ選択時のみ表示） */}
-          {isPickupVisible && (
+          {/* 選択中キャラクターの利用可能なツール・データ案内 */}
+          {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
+            <div className="p-3 sm:p-3.5 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-800/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shadow-2xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="px-2 py-0.5 rounded-md bg-cyan-600 text-white text-[10px] font-black shrink-0">
+                  TOOL / DATA
+                </span>
+                <div className="min-w-0">
+                  <span className="text-xs font-bold text-neutral-900 dark:text-white block sm:inline mr-2">
+                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].label}
+                  </span>
+                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:inline">
+                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].description}
+                  </span>
+                </div>
+              </div>
+              <Link
+                href={CHARACTER_EXTRA_CONTENT[selectedCharacter].url}
+                className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:text-cyan-900 dark:hover:text-white transition-colors shrink-0 whitespace-nowrap self-end sm:self-auto"
+              >
+                <span>ツールを開く</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
+
+          {/* ピックアップ枠（未絞り込み時または選択キャラに完全攻略が存在する場合のみ表示） */}
+          {pickupArticle && (
             <div className="mb-2">
               <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold text-xs tracking-wide shadow-xs">
@@ -528,14 +587,14 @@ export default function HomePage() {
               </div>
 
               <Link
-                href="/articles/ryu-complete-guide"
+                href={`/articles/${pickupArticle.slug}`}
                 className="group relative block rounded-2xl overflow-hidden border-2 border-cyan-500/80 dark:border-cyan-500/60 bg-gradient-to-br from-white via-cyan-50/20 to-white dark:from-neutral-900 dark:via-neutral-900 dark:to-cyan-950/30 shadow-md hover:shadow-xl hover:border-cyan-500 transition-all"
               >
                 <div className="flex flex-col md:flex-row md:items-center">
                   <div className="relative w-full md:w-80 lg:w-96 aspect-[16/9] shrink-0 bg-neutral-950 overflow-hidden self-center">
                     <img
-                      src="/images/characters/ryu/sns.jpg"
-                      alt="C・Mリュウの完全攻略"
+                      src={getArticleEyecatch(pickupArticle)}
+                      alt={pickupArticle.title}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:hidden" />
@@ -555,9 +614,11 @@ export default function HomePage() {
                         <span className="hidden md:inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-cyan-600 text-white">
                           ★ 完全攻略
                         </span>
-                        <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
-                          リュウ
-                        </span>
+                        {pickupArticle.character && (
+                          <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                            {pickupArticle.character}
+                          </span>
+                        )}
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold">
                           <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold bg-[#8B5BB7]">C</span>
                           <span className="px-1.5 py-0.5 rounded text-white text-[9px] font-bold bg-[#D8843F]">M</span>
@@ -570,11 +631,11 @@ export default function HomePage() {
                       </div>
 
                       <h3 className="text-base sm:text-lg lg:text-xl font-black text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors leading-snug mb-1.5">
-                        C・Mリュウの完全攻略：立ち回り,起き攻め,厳選コンボなど
+                        {pickupArticle.title}
                       </h3>
 
                       <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3 line-clamp-2 sm:line-clamp-3">
-                        全シチュエーション別の実戦コンボレシピ、フレーム状況に応じた起き攻めセットプレイ、距離別の立ち回り方針、そして相手残り体力から最適解を逆引きする専用リーサルツールまで収録。
+                        {pickupArticle.summary}
                       </p>
                     </div>
 
@@ -585,7 +646,7 @@ export default function HomePage() {
                       </span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-neutral-900 dark:text-white">
-                          ¥500 / 会員読み放題
+                          ¥{pickupArticle.price || 500} / 会員読み放題
                         </span>
                         <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-bold text-xs group-hover:bg-cyan-600 dark:group-hover:bg-cyan-500 dark:group-hover:text-white transition-colors shadow-xs">
                           <span>攻略を読む</span>
@@ -601,14 +662,37 @@ export default function HomePage() {
 
           {/* 該当記事一覧 */}
           {filteredArticles.length === 0 ? (
-            <div className="p-10 text-center bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-3 shadow-xs">
+            <div className="p-8 sm:p-10 text-center bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-4 shadow-xs">
               <p className="font-bold text-base text-neutral-800 dark:text-neutral-200">
                 該当する記事が見つかりませんでした
               </p>
               <p className="text-xs text-neutral-400 max-w-md mx-auto">
                 選択中の条件（{selectedCharacter || '全キャラ'} / {selectedCategory === 'all' ? '全記事' : selectedCategory}）に合致する記事が現在ありません。条件を解除して他の記事をご覧ください。
               </p>
-              <div className="pt-2">
+
+              {/* 同キャラで利用可能なコンテンツがある場合はその入口を案内 */}
+              {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
+                <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-left max-w-md mx-auto space-y-1.5">
+                  <div className="text-xs font-bold text-cyan-800 dark:text-cyan-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
+                    <span>{selectedCharacter}の利用可能なツール・データ：</span>
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].description}
+                  </p>
+                  <div className="pt-1">
+                    <Link
+                      href={CHARACTER_EXTRA_CONTENT[selectedCharacter].url}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:underline"
+                    >
+                      <span>{CHARACTER_EXTRA_CONTENT[selectedCharacter].label} を見る</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-1">
                 <button
                   type="button"
                   onClick={handleResetFilters}
@@ -621,8 +705,8 @@ export default function HomePage() {
           ) : (
             <div className="space-y-3 sm:space-y-3.5">
               {(
-                isPickupVisible
-                  ? filteredArticles.filter((a) => a.slug !== 'ryu-complete-guide')
+                pickupArticle
+                  ? filteredArticles.filter((a) => a.slug !== pickupArticle.slug)
                   : filteredArticles
               ).map((article) => {
                 const eyecatch = getArticleEyecatch(article);

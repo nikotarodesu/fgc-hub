@@ -37,6 +37,7 @@ export default function ArticleComboReverseLookup({
   const [maxDriveCost, setMaxDriveCost] = useState<number>(6);
   const [maxSaCost, setMaxSaCost] = useState<number>(3);
   const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const [includeCa, setIncludeCa] = useState<boolean>(true);
   const [expandedCombos, setExpandedCombos] = useState<Record<string, boolean>>({});
 
   // フィルタリング処理
@@ -53,9 +54,10 @@ export default function ArticleComboReverseLookup({
       if (selectedStarter !== 'all' && c.starterCategory !== selectedStarter) {
         return false;
       }
-      // 必要ダメージ（指定ダメージ以上をすべて抽出）
+      // 必要ダメージ（指定ダメージ以上をすべて抽出。SA3かつincludeCa時はCA締めの+250を含めて判定）
       if (targetDamage > 0) {
-        if (c.damage < targetDamage) {
+        const effectiveDamage = includeCa && c.saCost === 3 ? c.damage + 250 : c.damage;
+        if (effectiveDamage < targetDamage) {
           return false;
         }
       }
@@ -82,8 +84,10 @@ export default function ArticleComboReverseLookup({
     }).sort((a, b) => {
       // リーサル指定時は targetDamage を上回り、かつ targetDamage に近い順（昇順）
       if (targetDamage > 0) {
-        if (a.damage !== b.damage) {
-          return a.damage - b.damage;
+        const effA = includeCa && a.saCost === 3 ? a.damage + 250 : a.damage;
+        const effB = includeCa && b.saCost === 3 ? b.damage + 250 : b.damage;
+        if (effA !== effB) {
+          return effA - effB;
         }
         if (a.driveCost !== b.driveCost) {
           return a.driveCost - b.driveCost;
@@ -92,7 +96,7 @@ export default function ArticleComboReverseLookup({
       }
       return 0;
     });
-  }, [character, selectedPosition, selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword]);
+  }, [character, selectedPosition, selectedStarter, targetDamage, maxDriveCost, maxSaCost, searchKeyword, includeCa]);
 
   const isFilterActive =
     selectedPosition !== 'all' ||
@@ -176,6 +180,9 @@ export default function ArticleComboReverseLookup({
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
             画面端・スタンコンボ
           </span>
+          <span className="text-[11px] px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 font-bold border border-rose-300/60">
+            CA締め（+250 dmg）自動計算
+          </span>
           <span className="text-[11px] px-2.5 py-1 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold">
             7,171 最大ダメージ逆引き
           </span>
@@ -211,7 +218,7 @@ export default function ArticleComboReverseLookup({
 
           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
             <span className="text-xs text-neutral-300 font-mono bg-white/10 px-2.5 py-1 rounded-lg">
-              該当 <strong className="text-cyan-400 font-black text-sm">{filteredCombos.length}</strong> / {RYU_ARTICLE_COMBOS.length} 件
+              該当 <strong className="text-cyan-400 font-black text-sm">{filteredCombos.length}</strong> / {character === 'エレナ' ? ELENA_ARTICLE_COMBOS.length : RYU_ARTICLE_COMBOS.length} 件
             </span>
             {isFilterActive && (
               <button
@@ -227,16 +234,27 @@ export default function ArticleComboReverseLookup({
         </div>
       </div>
 
+      {/* 全完全攻略共通仕様の案内バナー */}
+      <div className="px-3.5 sm:px-4 py-2 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-b border-amber-500/20 text-xs text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
+        <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-white shrink-0">
+          全攻略共通
+        </span>
+        <span className="text-[11px] leading-tight">
+          SA3フィニッシュは、体力25%以下（黄色ゲージ）で<strong>CA（クリティカルアーツ）締めにすると一律＋250ダメージ</strong>になります。
+        </span>
+      </div>
+
       {/* フィルターコントロール群 */}
       <div className="p-3 sm:p-4 space-y-3 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
         {/* 0. ステージ状況・位置タブ（画面中央 / 画面端） */}
         <div className="grid grid-cols-3 gap-2">
           {POSITION_OPTIONS.map((pos) => {
+            const allCombos = character === 'エレナ' ? ELENA_ARTICLE_COMBOS : RYU_ARTICLE_COMBOS;
             const active = selectedPosition === pos.id;
             const count =
               pos.id === 'all'
-                ? RYU_ARTICLE_COMBOS.length
-                : RYU_ARTICLE_COMBOS.filter((c) => c.position === pos.id || c.position === 'any').length;
+                ? allCombos.length
+                : allCombos.filter((c) => c.position === pos.id || c.position === 'any').length;
 
             return (
               <button
@@ -287,7 +305,7 @@ export default function ArticleComboReverseLookup({
 
         {/* 2. リーサルダメージ（スライダー操作のみに簡素化） */}
         <div className="space-y-2 pt-2 border-t border-neutral-200/60 dark:border-neutral-800">
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-rose-500" />
@@ -304,15 +322,30 @@ export default function ArticleComboReverseLookup({
               )}
             </div>
 
-            {targetDamage > 0 && (
-              <button
-                type="button"
-                onClick={() => setTargetDamage(0)}
-                className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer flex items-center gap-1 shrink-0"
-              >
-                <span>解除（全件表示）</span>
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {/* CA締め（+250 dmg）を計算に含めるトグル */}
+              <label className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer select-none bg-white dark:bg-neutral-800 px-2 py-1 rounded-md border border-neutral-200 dark:border-neutral-700 hover:border-rose-400 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={includeCa}
+                  onChange={(e) => setIncludeCa(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded text-rose-600 accent-rose-600 cursor-pointer"
+                />
+                <span className="font-semibold text-[11px]">
+                  CA締め<span className="text-rose-600 dark:text-rose-400 font-mono font-bold ml-0.5">(+250)</span>を含める
+                </span>
+              </label>
+
+              {targetDamage > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setTargetDamage(0)}
+                  className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer flex items-center gap-1 shrink-0"
+                >
+                  <span>解除</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* スライダー本体 */}
@@ -511,7 +544,7 @@ export default function ArticleComboReverseLookup({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[11px] shrink-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[11px] shrink-0 flex-wrap justify-end">
                     <span
                       className={`font-black text-xs px-2 py-0.5 rounded shadow-2xs border ${
                         targetDamage > 0
@@ -522,10 +555,39 @@ export default function ArticleComboReverseLookup({
                       {combo.damage.toLocaleString()} dmg
                       {targetDamage > 0 && (
                         <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 ml-1 opacity-90">
-                          (+{(combo.damage - targetDamage).toLocaleString()})
+                          ({combo.damage >= targetDamage ? `+${(combo.damage - targetDamage).toLocaleString()}` : `${(combo.damage - targetDamage).toLocaleString()}`})
                         </span>
                       )}
                     </span>
+
+                    {/* SA3コンボ：CA締め（+250 dmg）の明示表示 */}
+                    {combo.saCost === 3 && (
+                      <span
+                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-bold font-mono transition-all ${
+                          targetDamage > combo.damage && targetDamage <= combo.damage + 250
+                            ? 'bg-rose-600 text-white border-rose-500 shadow-xs animate-pulse ring-2 ring-rose-400/50'
+                            : 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/80 dark:border-rose-800'
+                        }`}
+                        title="体力25%以下（黄色ゲージ）でCA締め可能：一律+250ダメージ"
+                      >
+                        <span
+                          className={`px-1 py-[0.5px] rounded text-[8px] font-black leading-none ${
+                            targetDamage > combo.damage && targetDamage <= combo.damage + 250
+                              ? 'bg-white text-rose-600'
+                              : 'bg-rose-600 text-white'
+                          }`}
+                        >
+                          CA
+                        </span>
+                        <span>{(combo.damage + 250).toLocaleString()} dmg</span>
+                        <span className="text-[9px] opacity-80">(+250)</span>
+                        {targetDamage > combo.damage && targetDamage <= combo.damage + 250 && (
+                          <span className="text-[9px] font-black bg-white/20 px-1 rounded ml-0.5">
+                            CAでリーサル!
+                          </span>
+                        )}
+                      </span>
+                    )}
 
                     {/* Dゲージ使用量表示（6ブロックゲージ + 内訳ラベル） */}
                     <div
@@ -631,6 +693,11 @@ export default function ArticleComboReverseLookup({
                       );
                     })()}
                     {combo.note}
+                    {combo.saCost === 3 && !combo.note.includes('CA') && (
+                      <span className="inline-block text-[10px] text-rose-600 dark:text-rose-400 font-semibold ml-1.5">
+                        ※CA締めで＋250ダメージ（計 {(combo.damage + 250).toLocaleString()} dmg）
+                      </span>
+                    )}
                   </p>
 
                   <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">

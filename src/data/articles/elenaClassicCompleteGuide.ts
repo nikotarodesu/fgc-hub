@@ -171,6 +171,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 中Kを置いたり、前大Pを当てたり、下中Pにキャンセルラッシュを仕込むなどして中距離戦をする
 ▶︎ この距離の弾抜けは意外と難しいので無理に狙わないほうがいい
 ▶︎ AKIや春麗の弱弾など、弾速遅い組はODコロ中派生等で弾抜けが狙いやすい
+![ODコロ中派生での弾抜け実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-tamanuke.mp4)
 
 ⭐️ 近距離
 ▶︎ 距離によって下弱Pと弱Kを使い分ける
@@ -181,7 +182,6 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
         body: `● J中TC
 ▶︎ 空中TCで空対空すると、距離が近いと弱ライノ、遠目だとODライノ、SA2が繋がる
 ▶︎ 画面端だと各種SAで追撃ができる
-▶︎ TCの中→大の部分にディレイをかけると、弱コロコロ強派生が割られない起き攻めができる
 
 ● 昇竜
 ▶︎ 使いやすい普通の対空
@@ -349,6 +349,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ SA1>強昇竜〆（2652）
 ▶︎ SA2〆（3120）
 ▶︎ 中ライノ>SA3〆（4096）
+![小技始動リーサル実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-kowazari-saru.mp4)
 
 ❷ 中技始動
 
@@ -442,6 +443,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 ● 前歩き>下大P>強スピン>中ライノ>（画面端到達時）強昇竜〆（3460）+23
 ▶︎ 画面中央からでも画面端に到達する
 ▶︎ 画面端到達時のみこのコンボを選択する
+![画面中央からのインパクト端運び実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-hakobi.mp4)
 
 ● 前歩き>大PTC>ラッシュ下中P>中スピン弱コロ中派生>中ライノ〆（3460）+36
 ▶︎ 画面中央より少し後ろから画面端まで運びたい時に使う
@@ -459,7 +461,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ● インパクト>前歩き>下大P>強スピン強コロコロ強派生〆
 ▶︎ 入れ替えて中段を持続当てするルート（ヒット+5/ガード+4）
-▶︎ 強コロからコロコロ派生しなかったら+26でインパクトが埋まる
+![位置入れ替え中段持続実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-irekae.mp4)
 
 ● 下中P>キャンセル大K>中KTC>中スピン強コロコロ強派生〆
 ▶︎ このルートは中段が持続当てにならないが強派生が埋まり、インパクトを返せる
@@ -530,6 +532,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 ▶︎ 下中Pをガードさせて-4Fから…
 ▶︎ 弱ムーンで相手の中足を避けて…
 ▶︎ パニカンヒットさせられる（ヒット確認で派生まで繋げる）
+![ノーキャンセル弱ムーンでの中足避けパニカン実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-sapu.mp4)
 
 ⭐️ キャンセルラッシュコンボ
 ● 下中P>キャンセル中K>下大P>強スピン>弱ライノ〜
@@ -559,6 +562,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ● 強スピン（Pc）弱コロ弱派生>ラッシュ下弱P>中スピン弱コロ中派生>弱ライノ>中昇竜〆（4143）+25
 ▶︎ 上のコンボより10ダメージ高い
+![無敵ガード後確定反撃実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-kakuhan.mp4)
 
 ⭐️ SA3コンボ
 ● 大PTC（Pc）>ラッシュ下大P>中スピン弱コロ中派生>中ライノ>SA3〆（5825）
@@ -566,6 +570,7 @@ export const ELENA_CLASSIC_COMPLETE_GUIDE: Article = {
 
 ● 大PTC（Pc）>ラッシュ下大P>キャンセル下大P（ディレイ）>キャンセル下大P（ディレイ）>中スピン弱コロ中派生>中ライノ>SA3〆（6178）
 ▶︎ キャンセル下大Pにはディレイをかける（最速だとコンボが繋がらない）
+![ディレイ下大Pコンボ実戦映像](https://pub-1a55ecfddec143f294e16acab7355c85.r2.dev/erena-delirei.mp4)
 
 ❺ シミー
 ● 下中P（Pc）>強スピン>弱ライノ>強昇竜〆（3390）+22

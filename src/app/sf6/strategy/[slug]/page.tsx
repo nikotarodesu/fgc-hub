@@ -390,7 +390,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               </Link>
             ) : (
               <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-200 dark:border-neutral-800 text-xs text-neutral-400 flex items-center justify-center">
-                <span>全25記事を修了しました！（上級 STEP 6）</span>
+                <span>全26記事を修了しました！（上級 STEP 6）</span>
               </div>
             )}
           </section>
@@ -402,7 +402,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-sm hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>SF6共通技術 一覧ポータル（全25記事）へ戻る</span>
+              <span>SF6共通技術 一覧ポータル（全26記事）へ戻る</span>
             </Link>
           </div>
         </main>

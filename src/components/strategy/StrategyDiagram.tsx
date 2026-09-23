@@ -401,7 +401,7 @@ export default function StrategyDiagram({ articleNumber, diagramIndex, rawCommen
   // =========================================================================
   // 動的ダイアグラムレンダラー
   // コメント（<!-- SVG-XX ... -->）から目的・要素・対比・循環を解析し、
-  // 全25記事の図解ポイントを美しいSVG/インフォグラフィックカードとして動的描画
+  // 全26記事の図解ポイントを美しいSVG/インフォグラフィックカードとして動的描画
   // =========================================================================
   if (rawComment) {
     const parsed = parseRawDiagramComment(rawComment, articleNumber, diagramIndex);

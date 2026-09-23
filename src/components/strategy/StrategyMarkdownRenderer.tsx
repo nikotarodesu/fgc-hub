@@ -12,7 +12,7 @@ interface StrategyMarkdownRendererProps {
   articleNumber: number;
 }
 
-// 25記事のタイトルと対応slugの対応マップ（本文内言及を自動リンク化するため）
+// 26記事のタイトルと対応slugの対応マップ（本文内言及を自動リンク化するため）
 const TECHNIQUE_LINKS: Record<string, string> = {
   '置き・差し・差し返し': '/sf6/strategy/oki-sashi-sashikaeshi',
   '歩きガードから差す': '/sf6/strategy/aruki-guard-kara-sasu',
@@ -39,6 +39,8 @@ const TECHNIQUE_LINKS: Record<string, string> = {
   'バーンアウト攻めの組み立て方': '/sf6/strategy/burnout-zeme-no-kumikatekata',
   '弾で相手を動かす': '/sf6/strategy/tama-de-aite-wo-ugokasu',
   '判断を減らす練習': '/sf6/strategy/handan-wo-herasu-renshu',
+  '判断を減らす練習【思考・設計編】': '/sf6/strategy/handan-wo-herasu-renshu',
+  '判断を減らす練習【実践・トレーニング編】': '/sf6/strategy/handan-wo-herasu-jissen',
 };
 
 // インライン文字装飾（太字、内部/外部リンク、コード、改行タグ）

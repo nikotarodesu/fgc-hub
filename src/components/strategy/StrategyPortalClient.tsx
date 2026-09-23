@@ -34,8 +34,8 @@ const THEME_OPTIONS: Array<{ id: ThemeFilter; label: string }> = [
 ];
 
 const DIFFICULTY_OPTIONS: Array<{ id: DifficultyFilter; label: string; countSuffix: string }> = [
-  { id: 'all', label: 'すべて (25)', countSuffix: '全25記事' },
-  { id: 'beginner', label: '初級 (9)', countSuffix: 'STEP 1〜9' },
+  { id: 'all', label: 'すべて (26)', countSuffix: '全26記事' },
+  { id: 'beginner', label: '初級 (10)', countSuffix: 'STEP 1〜10' },
   { id: 'intermediate', label: '中級 (10)', countSuffix: 'STEP 1〜10' },
   { id: 'advanced', label: '上級 (6)', countSuffix: 'STEP 1〜6' },
 ];
@@ -103,14 +103,14 @@ export default function StrategyPortalClient({ articles }: StrategyPortalClientP
             どこから読めばいいか迷ったら？
           </h2>
           <p className="text-sm sm:text-base text-cyan-50 leading-relaxed mb-4">
-            まずは初級STEP 1の「判断を減らす練習」からスタートしましょう。
+            まずは初級STEP 1の「判断を減らす練習【思考・設計編】」からスタートしましょう。
             技の選択肢をあらかじめ絞る思考法を身につけることで、その後の地上戦・差し返し・防御の吸収スピードが劇的に上がります。
           </p>
           <Link
             href="/sf6/strategy/handan-wo-herasu-renshu"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-cyan-800 font-bold text-sm hover:bg-cyan-50 transition-all shadow-sm group"
           >
-            <span>初級 STEP 1「判断を減らす練習」から始める</span>
+            <span>初級 STEP 1「判断を減らす練習【思考・設計編】」から始める</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -202,7 +202,7 @@ export default function StrategyPortalClient({ articles }: StrategyPortalClientP
         {/* 件数表示 & リセット */}
         <div className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
           <div>
-            表示中: <span className="font-bold text-neutral-900 dark:text-white text-sm">{filteredArticles.length}</span> 件 / 全25件
+            表示中: <span className="font-bold text-neutral-900 dark:text-white text-sm">{filteredArticles.length}</span> 件 / 全{articles.length}件
           </div>
           {(selectedDifficulty !== 'all' || selectedTheme !== 'all' || searchQuery) && (
             <button

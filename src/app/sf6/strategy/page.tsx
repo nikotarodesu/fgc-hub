@@ -6,16 +6,16 @@ import StrategyPortalClient from '@/components/strategy/StrategyPortalClient';
 import { GraduationCap, ArrowLeft, BookOpen, Layers, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全25記事】 - にこ太郎の格ゲーLAB',
+  title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全26記事】 - にこ太郎の格ゲーLAB',
   description:
-    'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全25記事。初級・中級・上級の推奨ステップ順に完全無料公開。',
+    'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全26記事。初級・中級・上級の推奨ステップ順に完全無料公開。',
   alternates: {
     canonical: 'https://nikotaro.com/sf6/strategy',
   },
   openGraph: {
-    title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全25記事】 - にこ太郎の格ゲーLAB',
+    title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全26記事】 - にこ太郎の格ゲーLAB',
     description:
-      'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全25記事。初級・中級・上級の推奨ステップ順に完全無料公開。',
+      'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全26記事。初級・中級・上級の推奨ステップ順に完全無料公開。',
     url: 'https://nikotaro.com/sf6/strategy',
     siteName: 'にこ太郎の格ゲーLAB',
     locale: 'ja_JP',
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全25記事】 - にこ太郎の格ゲーLAB',
-    description: 'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全25記事。',
+    title: 'SF6共通技術 攻略ガイド一覧【初級・中級・上級 全26記事】 - にこ太郎の格ゲーLAB',
+    description: 'ストリートファイター6の立ち回り、地上戦、防御、ゲージ管理、読み合いを体系的に学べる共通技術全26記事。',
     creator: '@nikotarosun',
   },
 };
@@ -43,7 +43,7 @@ const DIFFICULTY_WEIGHT: Record<string, number> = {
   advanced: 3,
 };
 
-// 学習推奨順（初級1〜9 → 中級1〜10 → 上級1〜6）にソートされた全記事
+// 学習推奨順（初級1〜10 → 中級1〜10 → 上級1〜6）にソートされた全記事
 const ORDERED_ARTICLES = [...SF6_COMMON_TECHNIQUES_ARTICLES].sort((a, b) => {
   const diffA = DIFFICULTY_WEIGHT[a.difficulty || 'beginner'] || 99;
   const diffB = DIFFICULTY_WEIGHT[b.difficulty || 'beginner'] || 99;
@@ -58,7 +58,7 @@ export default function SF6StrategySeriesPage() {
       {
         '@type': 'CollectionPage',
         headline: 'SF6共通技術 攻略ガイド一覧',
-        description: 'ストリートファイター6の共通技術を体系的に学べる全25記事のポータルページ',
+        description: 'ストリートファイター6の共通技術を体系的に学べる全26記事のポータルページ',
         url: 'https://nikotaro.com/sf6/strategy',
       },
       {
@@ -117,7 +117,7 @@ export default function SF6StrategySeriesPage() {
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-200 dark:border-cyan-800">
               <GraduationCap className="w-3.5 h-3.5" />
-              <span>全25記事 体系的攻略シリーズ</span>
+              <span>全26記事 体系的攻略シリーズ</span>
             </span>
             <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -132,7 +132,7 @@ export default function SF6StrategySeriesPage() {
 
           {/* 説明文 */}
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 max-w-3xl leading-relaxed">
-            キャラクターの個性に左右されない、ストリートファイター6の立ち回り・地上戦・防御・リソース管理の土台となる技術を全25記事に体系化。
+            キャラクターの個性に左右されない、ストリートファイター6の立ち回り・地上戦・防御・リソース管理の土台となる技術を全26記事に体系化。
             初級・中級・上級の推奨ステップ順に学習することで、実戦での迷いを無くし、再現性のある勝利を掴みましょう。
           </p>
         </div>

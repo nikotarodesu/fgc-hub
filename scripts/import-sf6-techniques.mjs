@@ -5,12 +5,12 @@ const desktopDir = 'C:/Users/秀喜/Desktop/SF6kyotu';
 const outFilePath = path.resolve('src/data/articles/sf6CommonTechniques.ts');
 
 const metaList = [
-  // 初級 1〜9
+  // 初級 1〜10
   {
     num: 25,
     pattern: '25-handan-wo-herasu-renshu',
     slug: 'handan-wo-herasu-renshu',
-    title: '判断を減らす練習',
+    title: '判断を減らす練習【思考・設計編】',
     difficulty: 'beginner',
     difficultyLabel: '初級',
     difficultyOrder: 1,
@@ -23,6 +23,32 @@ const metaList = [
       '「見る」と「選ぶ」を分離し、押す技を事前に決めておくことで相手の動作に集中できる',
     ],
     actionStep: {
+      task: '各距離の主力行動を3つ以内に絞り込み、技名ではなく「前進・置き・差し」の役割で整理する',
+      steps: [
+        '遠距離・中距離・近距離で振る主力技を各3つ選定する',
+        'それぞれの技が果たす役割（ライン上げ、前進止め、空振り狩り等）を明確にする',
+        '実戦で決めた3つの技以外を無理に振らない意識で1戦プレイする',
+      ],
+    },
+    nextArticleReason: '思考と事前設計の基本を理解したら、次はそれを指先に落とし込む「実践・トレーニング編」へ進みます。',
+  },
+  {
+    num: 26,
+    pattern: '25-handan-wo-herasu-renshu',
+    slug: 'handan-wo-herasu-jissen',
+    title: '判断を減らす練習【実践・トレーニング編】',
+    difficulty: 'beginner',
+    difficultyLabel: '初級',
+    difficultyOrder: 2,
+    theme: 'training',
+    themeLabel: '判断・練習設計',
+    targetAudience: '頭では理解していても実戦で迷ってしまう、効率的なトレモと振り返り方を知りたい初級者',
+    keyTakeaways: [
+      'コンボが成功する練習ではなく、「自分に都合の悪い状態（対策された瞬間）」をトレモで再現する',
+      '対空や確定反撃など、リターンが確実な行動から順番に自動化していく',
+      '試合後は勝敗ではなく「迷って止まった瞬間」や「意味なく技を振った瞬間」を探して課題を1つに絞る',
+    ],
+    actionStep: {
       task: 'トレモで「対空」のボタンを1種類だけに固定し、相手のジャンプに最速で出す練習を5分行う',
       steps: [
         'ダミーのレコードに垂直ジャンプと前ジャンプを記録する',
@@ -30,7 +56,7 @@ const metaList = [
         '「どの技で落とすか」の迷いを完全に捨て、ダミーが浮いた瞬間に決めたボタンを押す感覚を掴む',
       ],
     },
-    nextArticleReason: '判断を減らす基本思考を整理したら、次は地上戦で最も根幹となる3要素「置き・差し・差し返し」の三すくみと循環構造を学びます。',
+    nextArticleReason: '判断を減らす練習法を掴んだら、いよいよ地上戦の最も根幹となる「置き・差し・差し返し」の三すくみと循環構造を学びます。',
   },
   {
     num: 1,
@@ -39,7 +65,7 @@ const metaList = [
     title: '置き・差し・差し返し',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 2,
+    difficultyOrder: 3,
     theme: 'ground',
     themeLabel: '地上戦・間合い',
     targetAudience: '地上戦で何を振ればよいか分からない、技の三すくみの関係性を整理したい初級者',
@@ -65,7 +91,7 @@ const metaList = [
     title: '歩きガードから差す',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 3,
+    difficultyOrder: 4,
     theme: 'ground',
     themeLabel: '地上戦・間合い',
     targetAudience: '前歩きすると相手の技に当たってしまう、安全にラインを上げたい初級者',
@@ -91,7 +117,7 @@ const metaList = [
     title: '打ち返しの判断と対策',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 4,
+    difficultyOrder: 5,
     theme: 'advantage',
     themeLabel: '有利・不利の攻防',
     targetAudience: '相手の技をガードした後にボタンを押すべきか迷い、反撃を受けがちな初級者',
@@ -117,7 +143,7 @@ const metaList = [
     title: '微有利の攻防',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 5,
+    difficultyOrder: 6,
     theme: 'advantage',
     themeLabel: '有利・不利の攻防',
     targetAudience: '小技を当てた後やガードさせた後の攻め継続が上手くいかない初級者',
@@ -143,7 +169,7 @@ const metaList = [
     title: '遅らせ投げの使い方',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 6,
+    difficultyOrder: 7,
     theme: 'defense',
     themeLabel: '防御・リスク管理',
     targetAudience: '起き上がりや密着で打撃と投げの二択に毎回負けてしまう初級者',
@@ -169,7 +195,7 @@ const metaList = [
     title: '生ラッシュの通し方',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 7,
+    difficultyOrder: 8,
     theme: 'ground',
     themeLabel: '地上戦・間合い',
     targetAudience: 'パリィからの生ラッシュが相手の通常技に止められてしまう初級者',
@@ -195,7 +221,7 @@ const metaList = [
     title: 'ラッシュ止め対策',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 8,
+    difficultyOrder: 9,
     theme: 'defense',
     themeLabel: '防御・リスク管理',
     targetAudience: '相手の生ラッシュに突っ込まれて簡単に画面端へ運ばれてしまう初級者',
@@ -221,7 +247,7 @@ const metaList = [
     title: '防御のリスク管理',
     difficulty: 'beginner',
     difficultyLabel: '初級',
-    difficultyOrder: 9,
+    difficultyOrder: 10,
     theme: 'defense',
     themeLabel: '防御・リスク管理',
     targetAudience: '被弾が多くて体力がすぐに溶けてしまう、守りの基準を持ちたい初級者',
@@ -238,7 +264,7 @@ const metaList = [
         '相手の打撃暴れ潰しを完全に空振り・ガードさせる安心感を体感する',
       ],
     },
-    nextArticleReason: '初級の全9ステップを修了しました！次からは中級編。地上戦の真骨頂である「差し返しの作り方」へステップアップします。',
+    nextArticleReason: '初級の全10ステップを修了しました！次からは中級編。地上戦の真骨頂である「差し返しの作り方」へステップアップします。',
   },
 
   // 中級 1〜10
@@ -632,7 +658,7 @@ const metaList = [
         '画面端でドライブインパクトを当ててスタンさせる理想の詰め手順を確立する',
       ],
     },
-    nextArticleReason: 'バーンアウト攻めを極めたら、共通技術全25記事の集大成「弾で相手を動かす」へ進みます。',
+    nextArticleReason: 'バーンアウト攻めを極めたら、共通技術全26記事の集大成「弾で相手を動かす」へ進みます。',
   },
   {
     num: 24,
@@ -658,7 +684,7 @@ const metaList = [
         'その距離の内側では弾を撃たずに対空や差し返しで待つ立ち回りを徹底する',
       ],
     },
-    nextArticleReason: 'おめでとうございます！SF6共通技術全25記事をすべて修了しました。学んだ知識を実戦で試し、自分自身の立ち回りに昇華させていきましょう！',
+    nextArticleReason: 'おめでとうございます！SF6共通技術全26記事をすべて修了しました。学んだ知識を実戦で試し、自分自身の立ち回りに昇華させていきましょう！',
   },
 ];
 
@@ -673,8 +699,11 @@ const articles = metaList.map(m => {
   const raw = fs.readFileSync(path.join(desktopDir, fileName), 'utf8').replace(/\r\n/g, '\n');
 
   // H1抽出
-  const h1Match = raw.match(/^#\s+(.+)$/m);
-  const title = h1Match ? h1Match[1].trim() : m.title;
+  let title = m.title;
+  if (m.num !== 25 && m.num !== 26) {
+    const h1Match = raw.match(/^#\s+(.+)$/m);
+    if (h1Match) title = h1Match[1].trim();
+  }
 
   // Antigravityメモの分離
   let mainMarkdown = raw;
@@ -761,8 +790,28 @@ const articles = metaList.map(m => {
     .join('\n')
     .trim();
 
+  // ⑥ 代表記事（25番ファイル）の分割処理（前編: 思考・設計編 / 後編: 実践・トレーニング編）
+  if (m.num === 25) {
+    // 前編：思考・設計編
+    const splitIndex = mainMarkdown.indexOf('## 自分に都合の悪い状態を練習する');
+    if (splitIndex !== -1) {
+      let part1 = mainMarkdown.slice(0, splitIndex).trim();
+      part1 = part1.replace(/^#\s+.+$/m, '# 判断を減らす練習【思考・設計編】');
+      part1 += `\n\n## 設計編のまとめ\n\n強いプレイヤーは、試合中にすべての選択肢を高速で比較しているわけではありません。\n\n- **前提条件で不要な候補を消す**: 距離・フレーム・ゲージ・画面位置・相手傾向から、使えない行動を先に削り落とします。\n- **各距離の主力は3つに絞る**: 強い技を並べるのではなく、「前進」「置き」「差し」など役割が重複しない3つの行動に整理します。\n- **基本単位は3点セット**: 「1つの主力行動」「1つの代表対策」「1つの返し」を用意し、返しを見せることで主力へ戻る循環を作ります。\n\n事前の設計ができたら、次はこれを指先に馴染ませるための[判断を減らす練習【実践・トレーニング編】](/sf6/strategy/handan-wo-herasu-jissen)へ進みましょう。`;
+      mainMarkdown = part1;
+    }
+  } else if (m.num === 26) {
+    // 後編：実践・トレーニング編
+    const splitIndex = mainMarkdown.indexOf('## 自分に都合の悪い状態を練習する');
+    if (splitIndex !== -1) {
+      let part2 = mainMarkdown.slice(splitIndex).trim();
+      const header = `# 判断を減らす練習【実践・トレーニング編】\n\n## 結論\n\n前編の[判断を減らす練習【思考・設計編】](/sf6/strategy/handan-wo-herasu-renshu)で整理した「主力・代表対策・返し」を実戦で機能させるには、通常のコンボ練習とは異なるトレーニングが必要です。\n\n技が当たる成功場面だけを練習しても、実戦で相手に対策された瞬間に判断が止まってしまいます。\n\nトレーニングモードでは、**「自分に都合の悪い状態（対策された瞬間）」をあらかじめ再現し、指先を慣らしておくこと**が最も重要です。\n\n対空や確定反撃などリターンが確実な行動から順番に自動化し、試合後は勝敗ではなく「迷った瞬間」を探して課題を一つずつ消化していきましょう。\n\n`;
+      mainMarkdown = header + part2;
+    }
+  }
+
   // サマリー抽出（H1以降の最初のテキスト段落）
-  const linesAfterH1 = raw.replace(/^#\s+.+$/m, '').trim().split('\n');
+  const linesAfterH1 = mainMarkdown.replace(/^#\s+.+$/m, '').trim().split('\n');
   let summaryParas = [];
   for (const line of linesAfterH1) {
     const trimmed = line.trim();
@@ -779,7 +828,7 @@ const articles = metaList.map(m => {
   const summary = summaryParas.join(' ') || `${title}の解説。実戦における判断と立ち回りの基本を整理します。`;
 
   // 読了時間（文字数から算出、約500文字で1分）
-  const charCount = raw.length;
+  const charCount = mainMarkdown.length;
   const readMinutes = Math.max(3, Math.round(charCount / 500));
   const readTime = `${readMinutes}分`;
 

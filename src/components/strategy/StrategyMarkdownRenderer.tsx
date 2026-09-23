@@ -41,12 +41,15 @@ const TECHNIQUE_LINKS: Record<string, string> = {
   '判断を減らす練習': '/sf6/strategy/handan-wo-herasu-renshu',
 };
 
-// インライン文字装飾（太字、内部/外部リンク、コード）
+// インライン文字装飾（太字、内部/外部リンク、コード、改行タグ）
 function renderInlineText(text: string): React.ReactNode[] {
-  // **bold** | [link](url) | `code`
-  const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\)|`.*?`)/g);
+  // **bold** | [link](url) | `code` | <br> / <br/> / <br />
+  const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\)|`.*?`|<br\s*\/?>)/gi);
 
   return parts.map((part, idx) => {
+    if (/^<br\s*\/?>$/i.test(part)) {
+      return <br key={idx} />;
+    }
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={idx} className="font-bold text-neutral-900 dark:text-white">

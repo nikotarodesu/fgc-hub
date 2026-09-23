@@ -15,7 +15,7 @@ export const ELENA_COMPLETE_GUIDE: Article = {
   eyecatchImage: '/images/characters/elena/sns.jpg',
   author: ELENA_CLASSIC_COMPLETE_GUIDE.author,
   publishedAt: '2025-06-10',
-  updatedAt: '2026-09-19',
+  updatedAt: '2026-09-23',
   patchDate: '2026-08-03',
   patchVersion: '2026.08.03 Update',
   readTime: '20分',

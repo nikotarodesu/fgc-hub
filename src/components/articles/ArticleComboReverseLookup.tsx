@@ -25,6 +25,15 @@ interface ArticleComboReverseLookupProps {
   character?: string;
 }
 
+// レシピから「SA3締め」かどうかを厳密に判定するヘルパー（SA1〆やSA2〆で終わるコンボを除外）
+function isSa3Finisher(c: ArticleComboItem): boolean {
+  const recipe = `${c.classicRecipe || ''} ${c.modernRecipe || ''}`;
+  if (recipe.includes('SA1〆') || recipe.includes('SA2〆')) {
+    return false;
+  }
+  return recipe.includes('SA3') || recipe.includes('CA');
+}
+
 export default function ArticleComboReverseLookup({
   controlType,
   isUnlocked,
@@ -54,9 +63,10 @@ export default function ArticleComboReverseLookup({
       if (selectedStarter !== 'all' && c.starterCategory !== selectedStarter) {
         return false;
       }
-      // 必要ダメージ（指定ダメージ以上をすべて抽出。SA3かつincludeCa時はCA締めの+250を含めて判定）
+      // 必要ダメージ（指定ダメージ以上をすべて抽出。SA3締めかつincludeCa時はCA締めの+250を含めて判定）
       if (targetDamage > 0) {
-        const effectiveDamage = includeCa && c.saCost === 3 ? c.damage + 250 : c.damage;
+        const isSa3 = isSa3Finisher(c);
+        const effectiveDamage = includeCa && isSa3 ? c.damage + 250 : c.damage;
         if (effectiveDamage < targetDamage) {
           return false;
         }
@@ -84,8 +94,10 @@ export default function ArticleComboReverseLookup({
     }).sort((a, b) => {
       // リーサル指定時は targetDamage を上回り、かつ targetDamage に近い順（昇順）
       if (targetDamage > 0) {
-        const effA = includeCa && a.saCost === 3 ? a.damage + 250 : a.damage;
-        const effB = includeCa && b.saCost === 3 ? b.damage + 250 : b.damage;
+        const isSa3A = isSa3Finisher(a);
+        const isSa3B = isSa3Finisher(b);
+        const effA = includeCa && isSa3A ? a.damage + 250 : a.damage;
+        const effB = includeCa && isSa3B ? b.damage + 250 : b.damage;
         if (effA !== effB) {
           return effA - effB;
         }
@@ -550,32 +562,17 @@ export default function ArticleComboReverseLookup({
                       )}
                     </span>
 
-                    {/* SA3コンボ：CA締め（+250 dmg）の明示表示 */}
-                    {combo.saCost === 3 && (
+                    {/* SA3締めコンボのみ：CA締め（+250 dmg）の明示表示 */}
+                    {isSa3Finisher(combo) && (
                       <span
-                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-bold font-mono transition-all ${
-                          targetDamage > combo.damage && targetDamage <= combo.damage + 250
-                            ? 'bg-rose-600 text-white border-rose-500 shadow-xs animate-pulse ring-2 ring-rose-400/50'
-                            : 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/80 dark:border-rose-800'
-                        }`}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-bold font-mono bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/80 dark:border-rose-800"
                         title="体力25%以下（黄色ゲージ）でCA締め可能：一律+250ダメージ"
                       >
-                        <span
-                          className={`px-1 py-[0.5px] rounded text-[8px] font-black leading-none ${
-                            targetDamage > combo.damage && targetDamage <= combo.damage + 250
-                              ? 'bg-white text-rose-600'
-                              : 'bg-rose-600 text-white'
-                          }`}
-                        >
+                        <span className="px-1 py-[0.5px] rounded text-[8px] font-black leading-none bg-rose-600 text-white">
                           CA
                         </span>
                         <span>{(combo.damage + 250).toLocaleString()} dmg</span>
                         <span className="text-[9px] opacity-80">(+250)</span>
-                        {targetDamage > combo.damage && targetDamage <= combo.damage + 250 && (
-                          <span className="text-[9px] font-black bg-white/20 px-1 rounded ml-0.5">
-                            CAでリーサル!
-                          </span>
-                        )}
                       </span>
                     )}
 
@@ -683,7 +680,7 @@ export default function ArticleComboReverseLookup({
                       );
                     })()}
                     {combo.note}
-                    {combo.saCost === 3 && !combo.note.includes('CA') && (
+                    {isSa3Finisher(combo) && !combo.note.includes('CA') && (
                       <span className="inline-block text-[10px] text-rose-600 dark:text-rose-400 font-semibold ml-1.5">
                         ※CA締めで＋250ダメージ（計 {(combo.damage + 250).toLocaleString()} dmg）
                       </span>

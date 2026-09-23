@@ -49,9 +49,20 @@ export default function TokushoPage() {
               <div className="sm:col-span-2">クレジットカード決済完了後、即時にWebブラウザ上で閲覧可能となります。</div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
-              <div className="font-bold text-neutral-500">返品・キャンセルについて</div>
+              <div className="font-bold text-neutral-500">定期購入の自動更新と解約</div>
+              <div className="sm:col-span-2 leading-relaxed space-y-1.5">
+                <p>
+                  プレミアム会員プランは月額制の定期購入（サブスクリプション）です。契約締結日より毎月同日に自動更新され、登録されたクレジットカードより月額料金（¥980税込）が自動引き落としされます。
+                </p>
+                <p>
+                  <strong>解約・自動更新の停止：</strong> 次回更新日の前日まで、Stripe決済通知メール内の管理リンク、マイページ、または<Link href="/contact" className="text-[#00a3c4] underline font-medium">お問い合わせフォーム</Link>よりいつでも解約・自動更新停止が可能です。契約期間の縛りや解約手数料・違約金等は一切発生いたしません。
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-3 border-b border-neutral-100">
+              <div className="font-bold text-neutral-500">返品・キャンセル特約</div>
               <div className="sm:col-span-2 leading-relaxed">
-                デジタルコンテンツの性質上、決済完了後の返金・返品は原則としてお受けできません。定期購読（プレミアム会員）は、Stripeから送付される決済・領収書メール内の管理リンク、または<Link href="/contact" className="text-[#00a3c4] underline font-medium">お問い合わせフォーム</Link>へ登録メールアドレスを添えてご連絡いただくことで、次回更新日の前日までいつでも解約・自動更新の停止が可能です（解約金や違約金等は一切発生いたしません）。
+                デジタルコンテンツおよびオンラインサービスの性質上、購入・決済完了後の返金、返品、日割り計算による返金は原則としてお受けできません。詳細は<Link href="/legal/terms" className="text-[#00a3c4] underline font-medium">利用規約</Link>をご確認ください。
               </div>
             </div>
           </div>

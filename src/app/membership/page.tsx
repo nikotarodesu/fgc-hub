@@ -427,6 +427,10 @@ export default function MembershipPage() {
             </button>
             <p className="text-[11px] text-neutral-400 mt-2.5">
               ご登録の際は、
+              <Link href="/legal/terms" className="text-cyan-300 underline underline-offset-2 hover:text-white mx-1">
+                利用規約
+              </Link>
+              、
               <Link href="/privacy" className="text-cyan-300 underline underline-offset-2 hover:text-white mx-1">
                 プライバシーポリシー
               </Link>

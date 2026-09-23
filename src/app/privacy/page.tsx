@@ -247,22 +247,20 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
 
-        {/* 9. 免責事項およびコンテンツ利用に関するルール */}
+        {/* 9. 免責事項および利用規約 */}
         <section className="bg-white dark:bg-neutral-900 rounded-2xl p-6 sm:p-8 border border-neutral-200/80 dark:border-neutral-800 shadow-xs space-y-4">
           <div className="flex items-center gap-2.5 text-neutral-900 dark:text-white font-black text-base sm:text-lg border-b border-neutral-100 dark:border-neutral-800 pb-3">
             <Scale className="w-5 h-5 text-neutral-700 dark:text-neutral-300 shrink-0" />
-            <h2>9. 免責事項および利用規約（無断転載・アカウント共有の禁止）</h2>
+            <h2>9. 免責事項および利用規約の遵守</h2>
           </div>
           <div className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-3">
             <p>
               <strong>【攻略情報に関する免責】</strong><br />
-              当サイトに掲載されている情報（コンボダメージ、フレームデータ、起き攻め状況等）については、筆者の実戦検証および公式情報に基づき正確を期すよう努めておりますが、ゲームのバージョンアップデートやパッチ適用、仕様変更により、一時的に実際の挙動と異なる場合がございます。当サイトの掲載内容によって生じた直接的・間接的な損害やトラブルについて、当サイト運営者は一切の責任を負いかねますので、あらかじめご了承ください。
+              当サイトに掲載されている情報（コンボダメージ、フレームデータ、起き攻め状況等）については、筆者の実戦検証および公式情報に基づき正確を期すよう努めておりますが、ゲームのバージョンアップデートやパッチ適用、仕様変更により、一時的に実際の挙動と異なる場合がございます。当サイト運営者に故意または重大な過失がある場合を除き、当サイトの利用に関して生じた損害について運営者は責任を負いかねます。
             </p>
             <p>
-              <strong>【有料コンテンツの無断転載・アカウント共有の禁止】</strong><br />
-              当サイトで提供している有料記事の本文・画像・データ、および逆引きリーサルツール等の知的財産権は当サイト運営者に帰属します。
-              <strong>有料記事の無断転載、全文コピー、第三者への再配布、および1つの有料会員アカウントを複数人で共有・使い回す行為を固く禁じます。</strong>
-              不正行為が確認された場合、事前通知なくアカウントの停止および利用資格の剥奪等の厳正な措置を講じる場合があります。
+              <strong>【利用規約の遵守・アカウント共有の禁止】</strong><br />
+              当サイトのすべてのサービスのご利用にあたっては、別途定める<Link href="/legal/terms" className="text-cyan-600 dark:text-cyan-400 underline font-bold mx-1">利用規約（Terms of Service）</Link>が適用されます。有料記事やツールの無断転載・再配布、および1つのアカウントを複数人で共有・使い回す行為は固く禁止されており、違反が確認された場合はアカウントの停止措置等を講じます。
             </p>
           </div>
         </section>

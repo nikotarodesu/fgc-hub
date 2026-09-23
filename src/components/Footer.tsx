@@ -136,6 +136,7 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-neutral-900 dark:text-white mb-3">法務・ポリシー</h4>
             <ul className="space-y-2 text-neutral-500 dark:text-neutral-400">
+              <li><Link href="/legal/terms" className="hover:text-neutral-900 dark:hover:text-white transition-colors">利用規約（Terms of Service）</Link></li>
               <li><Link href="/privacy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">プライバシーポリシー &amp; 免責事項</Link></li>
               <li><Link href="/legal/tokusho" className="hover:text-neutral-900 dark:hover:text-white transition-colors">特定商取引法に基づく表記</Link></li>
               <li><Link href="/contact" className="hover:text-neutral-900 dark:hover:text-white transition-colors">お問い合わせ</Link></li>
@@ -149,19 +150,26 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-neutral-100 dark:border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-400 dark:text-neutral-500">
-          <p>
-            <button
-              type="button"
-              onClick={handleCopyrightClick}
-              className="cursor-pointer select-none inline-block hover:text-neutral-800 dark:hover:text-neutral-200 active:scale-125 transition-transform"
-              aria-label="Copyright"
-            >
-              ©
-            </button>{' '}
-            {new Date().getFullYear()} にこ太郎の格ゲーLAB (nikotaro.com). All rights reserved.
+        <div className="border-t border-neutral-100 dark:border-neutral-800 pt-6 space-y-2 text-[11px] text-neutral-400 dark:text-neutral-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>
+              <button
+                type="button"
+                onClick={handleCopyrightClick}
+                className="cursor-pointer select-none inline-block hover:text-neutral-800 dark:hover:text-neutral-200 active:scale-125 transition-transform"
+                aria-label="Copyright"
+              >
+                ©
+              </button>{' '}
+              {new Date().getFullYear()} にこ太郎の格ゲーLAB (nikotaro.com). All rights reserved.
+            </p>
+            <p className="text-center sm:text-right">
+              ※ STREET FIGHTERは株式会社カプコンの登録商標です。©CAPCOM / ©CAPCOM U.S.A., INC. ALL RIGHTS RESERVED.
+            </p>
+          </div>
+          <p className="text-center sm:text-left text-[10.5px] text-neutral-400/80">
+            ※ 本サイトは対戦格闘ゲームの攻略研究を目的とした個人の非公式ファンメディアであり、株式会社カプコンの公式サービスではありません。
           </p>
-          <p>※ 本サイトは個人の非公式攻略メディアであり、株式会社カプコンの公式サービスではありません。</p>
         </div>
       </div>
 

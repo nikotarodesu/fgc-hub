@@ -25,7 +25,6 @@ const QUICK_CHARACTERS = [
   { name: 'エド', image: '/images/characters/ed/sns.jpg' },
   { name: 'ベガ', image: '/images/characters/bison/sns.jpg' },
   { name: '春麗', image: '/images/characters/chunli/sns.jpg' },
-  { name: 'キャミィ', image: '/images/characters/cammy/sns.jpg' },
   { name: 'ブランカ', image: '/images/characters/blanka/sns.jpg' },
   { name: 'JP', image: '/images/characters/jp/sns.jpg' },
   { name: 'ザンギエフ', image: '/images/characters/zangief/sns.jpg' },

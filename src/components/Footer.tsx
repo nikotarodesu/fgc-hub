@@ -68,8 +68,8 @@ export default function Footer() {
   return (
     <footer className="bg-white dark:bg-neutral-950 border-t border-neutral-200/80 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 text-xs mt-24 transition-colors relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          <div className="md:col-span-2 space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          <div className="sm:col-span-2 md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-800 bg-neutral-100 dark:bg-neutral-800 shrink-0">
                 <Image
@@ -131,6 +131,16 @@ export default function Footer() {
                 <ExternalLink className="w-3 h-3 text-neutral-400" />
               </a>
             </div>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-neutral-900 dark:text-white mb-3">攻略コンテンツ</h4>
+            <ul className="space-y-2 text-neutral-500 dark:text-neutral-400">
+              <li><Link href="/glossary" className="hover:text-neutral-900 dark:hover:text-white transition-colors">格ゲー用語解説・スト6辞典</Link></li>
+              <li><Link href="/sf6/strategy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">スト6共通技術・上達論</Link></li>
+              <li><Link href="/membership" className="hover:text-neutral-900 dark:hover:text-white transition-colors">プレミアム会員案内</Link></li>
+              <li><Link href="/author" className="hover:text-neutral-900 dark:hover:text-white transition-colors">著者紹介・実績</Link></li>
+            </ul>
           </div>
 
           <div>

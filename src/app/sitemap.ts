@@ -54,6 +54,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    // 格ゲー用語解説・スト6攻略辞典
+    {
+      url: `${baseUrl}/glossary`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
     // キャラクター別ハブ
     ...characterHubUrls,
     // キャラクター別コンボツール

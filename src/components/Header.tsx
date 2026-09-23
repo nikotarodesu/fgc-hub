@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Crown, User as UserIcon } from 'lucide-react';
+import { Crown, User as UserIcon, BookOpen } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import FontSizeToggle from './FontSizeToggle';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,7 +43,20 @@ export default function Header() {
           </Link>
 
           {/* 右側アクション */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <Link
+              href="/glossary"
+              className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-colors shrink-0 whitespace-nowrap ${
+                pathname === '/glossary'
+                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              }`}
+              title="格ゲー用語解説・スト6攻略辞典"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>用語解説</span>
+            </Link>
+
             <FontSizeToggle />
             <ThemeToggle />
             {isPremium ? (

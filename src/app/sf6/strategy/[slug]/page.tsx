@@ -104,6 +104,11 @@ export default async function StrategyArticlePage({ params }: PageProps) {
 
   const article = ORDERED_TECHNIQUES[orderedIndex];
 
+  // 初心者向け（初級・初心者タグ）記事かどうかの判定
+  const isBeginner =
+    article.difficulty === 'beginner' ||
+    (article.tags && (article.tags.includes('初級') || article.tags.includes('初心者')));
+
   // 推奨学習順での前後ナビゲーション（最初と最後の記事でも破綻しない）
   const prevArticle = orderedIndex > 0 ? ORDERED_TECHNIQUES[orderedIndex - 1] : null;
   const nextArticle = orderedIndex < ORDERED_TECHNIQUES.length - 1 ? ORDERED_TECHNIQUES[orderedIndex + 1] : null;
@@ -323,6 +328,7 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             <StrategyMarkdownRenderer
               content={article.markdownContent || ''}
               articleNumber={article.articleNumber || 0}
+              enableGlossaryTooltip={isBeginner}
             />
           </div>
 

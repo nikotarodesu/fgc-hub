@@ -6,10 +6,16 @@ import { Camera } from 'lucide-react';
 import StrategyDiagram from './StrategyDiagram';
 import { generateHeadingId } from './tocUtils';
 import { useAuth } from '@/contexts/AuthContext';
+import GlossaryTooltip from '@/components/glossary/GlossaryTooltip';
+import { GLOSSARY_TERMS } from '@/data/glossary';
+import { GLOSSARY_KEYWORDS } from '@/data/glossaryKeywords';
+
+const GLOSSARY_TERMS_MAP = new Map(GLOSSARY_TERMS.map((t) => [t.id, t]));
 
 interface StrategyMarkdownRendererProps {
   content: string;
   articleNumber: number;
+  enableGlossaryTooltip?: boolean;
 }
 
 // 26記事のタイトルと対応slugの対応マップ（本文内言及を自動リンク化するため）
@@ -43,8 +49,80 @@ const TECHNIQUE_LINKS: Record<string, string> = {
   '判断を減らす練習【実践・トレーニング編】': '/sf6/strategy/handan-wo-herasu-jissen',
 };
 
-// インライン文字装飾（太字、内部/外部リンク、コード、改行タグ）
-function renderInlineText(text: string): React.ReactNode[] {
+// プレーンテキスト部分から未登場の格ゲー用語を検索し、初出の1回目だけツールチップ化する
+function processGlossaryTerms(
+  text: string,
+  seenTermIds: Set<string>,
+  enabled: boolean
+): React.ReactNode[] {
+  if (!enabled || !text) {
+    return [text];
+  }
+
+  // まだ記事内で登場していない用語のキーワードのみを対象とする
+  const activeKeywords = GLOSSARY_KEYWORDS.filter(
+    (kw) => !seenTermIds.has(kw.termId)
+  );
+
+  if (activeKeywords.length === 0) {
+    return [text];
+  }
+
+  let earliestPos = -1;
+  let matchedKw: (typeof GLOSSARY_KEYWORDS)[0] | null = null;
+
+  for (const kwEntry of activeKeywords) {
+    let pos = -1;
+    if (kwEntry.exactWord) {
+      // 英字略称（CR, BO, DI, OD, SA, CA）の場合は前後に英数字がないことを確認
+      const regex = new RegExp(`(?<![a-zA-Z0-9])${kwEntry.keyword}(?![a-zA-Z0-9])`, 'g');
+      const match = regex.exec(text);
+      if (match) {
+        pos = match.index;
+      }
+    } else {
+      pos = text.indexOf(kwEntry.keyword);
+    }
+
+    if (pos !== -1) {
+      if (earliestPos === -1 || pos < earliestPos) {
+        earliestPos = pos;
+        matchedKw = kwEntry;
+      }
+    }
+  }
+
+  if (earliestPos === -1 || !matchedKw) {
+    return [text];
+  }
+
+  const term = GLOSSARY_TERMS_MAP.get(matchedKw.termId);
+  if (!term) {
+    return [text];
+  }
+
+  // 初出として記録（これ以降、同じ記事内ではマッチしない）
+  seenTermIds.add(matchedKw.termId);
+
+  const before = text.slice(0, earliestPos);
+  const matched = matchedKw.keyword;
+  const after = text.slice(earliestPos + matched.length);
+
+  return [
+    before,
+    <GlossaryTooltip key={`glossary-${matchedKw.termId}-${earliestPos}`} term={term}>
+      {matched}
+    </GlossaryTooltip>,
+    ...processGlossaryTerms(after, seenTermIds, enabled),
+  ];
+}
+
+// インライン文字装飾（太字、内部/外部リンク、コード、改行タグ、用語ツールチップ）
+function renderInlineText(
+  text: string,
+  seenTermIds: Set<string>,
+  enableGlossary: boolean
+): React.ReactNode[] {
   // **bold** | [link](url) | `code` | <br> / <br/> / <br />
   const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\)|`.*?`|<br\s*\/?>)/gi);
 
@@ -53,9 +131,10 @@ function renderInlineText(text: string): React.ReactNode[] {
       return <br key={idx} />;
     }
     if (part.startsWith('**') && part.endsWith('**')) {
+      const inner = part.slice(2, -2);
       return (
         <strong key={idx} className="font-bold text-neutral-900 dark:text-white">
-          {part.slice(2, -2)}
+          {processGlossaryTerms(inner, seenTermIds, enableGlossary)}
         </strong>
       );
     }
@@ -100,7 +179,6 @@ function renderInlineText(text: string): React.ReactNode[] {
     }
 
     // 他記事タイトルへの自動内部リンク置換
-    // リンク外のプレーンテキストから一致するタイトルを探す
     for (const [techTitle, techUrl] of Object.entries(TECHNIQUE_LINKS)) {
       if (part.includes(techTitle)) {
         const subParts = part.split(techTitle);
@@ -116,7 +194,7 @@ function renderInlineText(text: string): React.ReactNode[] {
                     {techTitle}
                   </Link>
                 )}
-                {sp}
+                {processGlossaryTerms(sp, seenTermIds, enableGlossary)}
               </React.Fragment>
             ))}
           </React.Fragment>
@@ -124,7 +202,11 @@ function renderInlineText(text: string): React.ReactNode[] {
       }
     }
 
-    return <span key={idx}>{part}</span>;
+    return (
+      <React.Fragment key={idx}>
+        {processGlossaryTerms(part, seenTermIds, enableGlossary)}
+      </React.Fragment>
+    );
   });
 }
 
@@ -146,9 +228,11 @@ export { extractTocFromMarkdown } from './tocUtils';
 export default function StrategyMarkdownRenderer({
   content,
   articleNumber,
+  enableGlossaryTooltip = false,
 }: StrategyMarkdownRendererProps) {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const seenTermIds = new Set<string>();
 
   useEffect(() => {
     const adminMode =
@@ -430,7 +514,7 @@ export default function StrategyMarkdownRenderer({
                     <tr className="bg-neutral-100 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
                       {block.header.map((head, hIdx) => (
                         <th key={hIdx} className="py-2.5 px-3.5 font-bold tracking-wide">
-                          {renderInlineText(head)}
+                          {renderInlineText(head, seenTermIds, false)}
                         </th>
                       ))}
                     </tr>
@@ -446,7 +530,7 @@ export default function StrategyMarkdownRenderer({
                             key={cIdx}
                             className="py-2.5 px-3.5 text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed"
                           >
-                            {renderInlineText(cell)}
+                            {renderInlineText(cell, seenTermIds, enableGlossaryTooltip)}
                           </td>
                         ))}
                       </tr>
@@ -467,7 +551,9 @@ export default function StrategyMarkdownRenderer({
                   className="flex items-start gap-2.5 text-[16.5px] sm:text-[18px] leading-relaxed"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 mt-3 shrink-0" />
-                  <div className="flex-1 min-w-0 break-words">{renderInlineText(item)}</div>
+                  <div className="flex-1 min-w-0 break-words">
+                    {renderInlineText(item, seenTermIds, enableGlossaryTooltip)}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -485,7 +571,9 @@ export default function StrategyMarkdownRenderer({
                   <span className="font-bold text-neutral-900 dark:text-white font-mono text-xs sm:text-sm shrink-0 mt-0.5 w-4">
                     {itemIdx + 1}.
                   </span>
-                  <div className="flex-1 min-w-0 break-words">{renderInlineText(item)}</div>
+                  <div className="flex-1 min-w-0 break-words">
+                    {renderInlineText(item, seenTermIds, enableGlossaryTooltip)}
+                  </div>
                 </li>
               ))}
             </ol>
@@ -500,7 +588,7 @@ export default function StrategyMarkdownRenderer({
             >
               {block.lines.map((qLine, qIdx) => (
                 <p key={qIdx} className={qIdx > 0 ? 'mt-1' : ''}>
-                  {renderInlineText(qLine)}
+                  {renderInlineText(qLine, seenTermIds, enableGlossaryTooltip)}
                 </p>
               ))}
             </blockquote>
@@ -546,7 +634,7 @@ export default function StrategyMarkdownRenderer({
             {block.lines.map((l, lIdx) => (
               <React.Fragment key={lIdx}>
                 {lIdx > 0 && <br />}
-                {renderInlineText(l)}
+                {renderInlineText(l, seenTermIds, enableGlossaryTooltip)}
               </React.Fragment>
             ))}
           </p>

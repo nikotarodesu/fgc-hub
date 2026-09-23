@@ -234,16 +234,6 @@ export default function ArticleComboReverseLookup({
         </div>
       </div>
 
-      {/* 全完全攻略共通仕様の案内バナー */}
-      <div className="px-3.5 sm:px-4 py-2 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-b border-amber-500/20 text-xs text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
-        <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-white shrink-0">
-          全攻略共通
-        </span>
-        <span className="text-[11px] leading-tight">
-          SA3フィニッシュは、体力25%以下（黄色ゲージ）で<strong>CA（クリティカルアーツ）締めにすると一律＋250ダメージ</strong>になります。
-        </span>
-      </div>
-
       {/* フィルターコントロール群 */}
       <div className="p-3 sm:p-4 space-y-3 bg-neutral-50/70 dark:bg-neutral-900/90 border-b border-neutral-200/80 dark:border-neutral-800">
         {/* 0. ステージ状況・位置タブ（画面中央 / 画面端） */}

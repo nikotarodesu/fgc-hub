@@ -84,7 +84,20 @@ export function parseVisualCombo(
     cleanRecipe.includes('中KTC') ||
     cleanRecipe.includes('中PTC');
 
-  const steps = rawParts.flatMap((part) => parsePartToSteps(part, controlType, isElena));
+  const isChunli =
+    character === '春麗' ||
+    character === 'chunli' ||
+    cleanRecipe.includes('百烈') ||
+    cleanRecipe.includes('百裂') ||
+    cleanRecipe.includes('スピバ') ||
+    cleanRecipe.includes('天昇') ||
+    cleanRecipe.includes('気功') ||
+    cleanRecipe.includes('覇山') ||
+    cleanRecipe.includes('鷹爪') ||
+    cleanRecipe.includes('鷹嘴') ||
+    cleanRecipe.includes('構え');
+
+  const steps = rawParts.flatMap((part) => parsePartToSteps(part, controlType, isElena, isChunli));
 
   // 構え後のスピバの特別仕様判定
   // （春麗は構えを経由したスピバのみ下溜め免除で「↓↑＋中K（OD時は下上KK）」で出せる仕様）
@@ -118,7 +131,12 @@ export function parseVisualCombo(
   return steps;
 }
 
-function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep[] {
+function parsePartToSteps(
+  text: string,
+  controlType: 'classic' | 'modern' = 'classic',
+  isElena: boolean = false,
+  isChunli: boolean = false
+): VisualStep[] {
   let remaining = text.trim();
 
   // 先頭の【...】や脱出パターンA：等のラベルを除去
@@ -212,6 +230,57 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
     lower.includes('択')
   ) {
     return [];
+  }
+
+  // 春麗複合パーツ判定：鷹爪脚二段目>鷹嘴連拳（または 鷹爪脚二段目鷹嘴連拳）
+  if (isChunli && (lower.includes('鷹爪') && lower.includes('鷹嘴'))) {
+    return [
+      {
+        original: '鷹爪脚二段目',
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓'],
+        arrowStr: '↓',
+        isTC: true,
+        tcText: 'J下中K・J下中K',
+        tcButtons: [
+          { color: 'yellow', iconText: 'K', label: 'J下中K' },
+          { color: 'yellow', iconText: 'K', label: 'J下中K' },
+        ],
+        button: {
+          kind: 'kick',
+          color: 'yellow',
+          label: '鷹爪脚',
+          description: '鷹爪脚（ジャンプ中↓＋中K×2）',
+          iconText: 'K',
+          showLabel: false,
+        },
+        tip: 'ジャンプ中に下＋中Kを2回入力（鷹爪脚2段）',
+      },
+      {
+        original: '鷹嘴連拳',
+        arrows: [],
+        arrowStr: '',
+        isTC: true,
+        tcText: 'J大P・J大P',
+        tcButtons: [
+          { color: 'red', iconText: 'P', label: 'J大P' },
+          { color: 'red', iconText: 'P', label: 'J大P' },
+        ],
+        button: {
+          kind: 'punch',
+          color: 'red',
+          label: '鷹嘴連拳',
+          description: '鷹嘴連拳（ジャンプ中大P×2）',
+          iconText: 'P',
+          showLabel: false,
+        },
+        suffix,
+        tip: '鷹爪脚ヒット後に大Pを2回入力（鷹嘴連拳）',
+      },
+    ];
   }
 
   // エレナ複合パーツ判定（例: 中スピン弱コロ中派生、ODスピン弱コロ中派生、強スピン（Pc）弱コロ弱派生、中スピン弱コロ（ディレイ）中派生等）
@@ -990,15 +1059,25 @@ function parsePartToSteps(text: string, controlType: 'classic' | 'modern' = 'cla
   }
 
   // 通常パーツは1ステップ
-  return [parseSinglePart(text, controlType, isElena)];
+  return [parseSinglePart(text, controlType, isElena, isChunli)];
 }
 
-function parseSinglePart(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep {
-  const step = parseSinglePartInternal(text, controlType, isElena);
+function parseSinglePart(
+  text: string,
+  controlType: 'classic' | 'modern' = 'classic',
+  isElena: boolean = false,
+  isChunli: boolean = false
+): VisualStep {
+  const step = parseSinglePartInternal(text, controlType, isElena, isChunli);
   return controlType === 'modern' ? cleanupModernStep(step) : step;
 }
 
-function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern' = 'classic', isElena: boolean = false): VisualStep {
+function parseSinglePartInternal(
+  text: string,
+  controlType: 'classic' | 'modern' = 'classic',
+  isElena: boolean = false,
+  isChunli: boolean = false
+): VisualStep {
   let remaining = text.trim();
 
   // 先頭の【...】や脱出パターンA：等のラベルを除去
@@ -1601,10 +1680,198 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 構え（行雲流水）
-  if (lower.startsWith('構え') || lower.startsWith('行雲流水')) {
+  // -------------------------------------------------------------
+  // 春麗専用技およびコマンド
+  // -------------------------------------------------------------
+  // 1. 鷹爪脚二段目 / 鷹爪脚（TC: J下中K・J下中K）
+  if (lower.includes('鷹爪脚') || lower.includes('鷹爪')) {
     return {
-      original: '構え',
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓'],
+      arrowStr: '↓',
+      isTC: true,
+      tcText: 'J下中K・J下中K',
+      tcButtons: [
+        { color: 'yellow', iconText: 'K', label: 'J下中K' },
+        { color: 'yellow', iconText: 'K', label: 'J下中K' },
+      ],
+      button: {
+        kind: 'kick',
+        color: 'yellow',
+        label: '鷹爪脚',
+        description: '鷹爪脚（ジャンプ中↓＋中K×2）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'ジャンプ中に下＋中Kを2回入力（鷹爪脚2段）',
+    };
+  }
+
+  // 2. 鷹嘴連拳（TC: J大P・J大P）
+  if (lower.includes('鷹嘴連拳') || lower.includes('鷹嘴')) {
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      isTC: true,
+      tcText: 'J大P・J大P',
+      tcButtons: [
+        { color: 'red', iconText: 'P', label: 'J大P' },
+        { color: 'red', iconText: 'P', label: 'J大P' },
+      ],
+      button: {
+        kind: 'punch',
+        color: 'red',
+        label: '鷹嘴連拳',
+        description: '鷹嘴連拳（ジャンプ中大P×2）',
+        iconText: 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: '鷹爪脚ヒット後に大Pを2回入力（鷹嘴連拳）',
+    };
+  }
+
+  // 3. OD百烈の派生（前+K）
+  if ((lower.includes('派生') || lower === '前+k' || lower === '前k') && (isChunli || lower.includes('百烈') || lower.includes('百裂'))) {
+    return {
+      original: '前+K',
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['→'],
+      arrowStr: '→',
+      button: {
+        kind: 'kick',
+        color: 'blue',
+        label: '前+K',
+        description: 'OD百烈派生（前＋K）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'OD百烈脚ヒット中に前＋キックボタンで派生（前+K）',
+    };
+  }
+
+  // 4. 百烈脚（空中百烈 / 百烈脚: 236K）
+  if (lower.includes('百烈') || lower.includes('百裂')) {
+    const isAir = lower.includes('空中') || lower.includes('j');
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↘', '→'],
+      arrowStr: '↓↘→',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? (isAir ? 'OD空中百烈' : 'OD百烈') : `${strength}百烈`,
+        description: isAir
+          ? `${strength}空中百烈脚（ジャンプ中 236+${isOD ? 'KK' : btnK}）`
+          : `${strength}百烈脚（236+${isOD ? 'KK' : btnK}）`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: isAir
+        ? `ジャンプ中にテンキー236+${isOD ? 'KK' : btnK}（空中百烈脚）`
+        : `テンキー236+${isOD ? 'KK' : btnK}（百烈脚）`,
+    };
+  }
+
+  // 5. 天昇脚（下下K、強天昇は下下大K）
+  if (lower.includes('天昇')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+    const label = isOD ? 'OD天昇' : isHeavy ? '下下大K' : isLight ? '下下弱K' : '下下中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↓'],
+      arrowStr: '↓↓',
+      button: {
+        kind: 'kick',
+        color,
+        label,
+        description: `${strength}天昇脚（↓↓＋${isOD ? 'KK' : btnK}）`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: `テンキー↓↓+${isOD ? 'KK' : btnK}（${strength}天昇脚）`,
+    };
+  }
+
+  // 6. スピバ（スピニングバードキック: 下溜め上K）
+  if (lower.includes('スピバ') || lower.includes('スピニング')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↓', '↑'],
+      chargeArrows: [true, false],
+      arrowStr: '↓溜め↑',
+      button: {
+        kind: 'kick',
+        color,
+        label: isOD ? 'ODスピバ' : `${strength}スピバ`,
+        description: `${strength}スピニングバードキック（↓溜め↑＋${isOD ? 'KK' : btnK}）`,
+        iconText: isOD ? 'KK' : 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: `下溜め↑+${isOD ? 'KK' : btnK}（スピニングバードキック）`,
+    };
+  }
+
+  // 7. 覇山（覇山蹴: 214K）
+  if (lower.includes('覇山')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnK = isOD ? 'KK' : isHeavy ? '大K' : isLight ? '弱K' : '中K';
+
+    return {
+      original: remaining,
       isCancel,
       isRush,
       rushText,
@@ -1612,15 +1879,147 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       arrows: ['↓', '↙', '←'],
       arrowStr: '↓↙←',
       button: {
-        kind: 'punch',
-        color: 'neutral',
-        label: '構え',
-        description: 'パンチボタン（Pの強度は問わない）',
-        iconText: 'P',
+        kind: 'kick',
+        color,
+        label: isOD ? 'OD覇山' : `${strength}覇山`,
+        description: `${strength}覇山蹴（214+${isOD ? 'KK' : btnK}）`,
+        iconText: isOD ? 'KK' : 'K',
         showLabel: false,
       },
       suffix,
-      tip: 'Pの強度は問わない',
+      tip: `テンキー214+${isOD ? 'KK' : btnK}（覇山蹴）`,
+    };
+  }
+
+  // 8. 弾（気功拳: 後ろ溜め前P）
+  if ((lower.includes('弾') && !lower.includes('気功拳') && !lower.includes('波動')) || lower.includes('気功')) {
+    const isOD = lower.includes('od');
+    const isHeavy = lower.includes('強') || lower.includes('大');
+    const isLight = lower.includes('弱');
+    const strength = isOD ? 'OD' : isHeavy ? '強' : isLight ? '弱' : '中';
+    const color: ButtonColor = isOD ? 'purple' : isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btnP = isOD ? 'PP' : isHeavy ? '大P' : isLight ? '弱P' : '中P';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['←', '→'],
+      chargeArrows: [true, false],
+      arrowStr: '←溜め→',
+      button: {
+        kind: 'punch',
+        color,
+        label: isOD ? 'OD弾' : `${strength}弾`,
+        description: `${strength}気功拳（←溜め→＋${isOD ? 'PP' : btnP}）`,
+        iconText: isOD ? 'PP' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: `後ろ溜め前+${isOD ? 'PP' : btnP}（気功拳）`,
+    };
+  }
+
+  // 9. 構え（行雲流水: 214P / 派生技）
+  if (lower.startsWith('構え') || lower === '構え' || lower.startsWith('行雲流水')) {
+    if (lower === '構え' || lower === '行雲流水') {
+      return {
+        original: '構え',
+        isCancel,
+        isRush,
+        rushText,
+        prefix,
+        arrows: ['↓', '↙', '←'],
+        arrowStr: '↓↙←',
+        button: {
+          kind: 'punch',
+          color: 'neutral',
+          label: '構え',
+          description: '行雲流水（構え: 214+P）',
+          iconText: 'P',
+          showLabel: false,
+        },
+        suffix,
+        tip: 'テンキー214+パンチ（行雲流水・構え）',
+      };
+    }
+    const isKick = lower.includes('k') || lower.includes('脚') || lower.includes('蹴');
+    const isHeavy = lower.includes('大') || lower.includes('強');
+    const isLight = lower.includes('弱');
+    const strength = isHeavy ? '大' : isLight ? '弱' : '中';
+    const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
+    const btn = isKick ? `${strength}K` : `${strength}P`;
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: [],
+      arrowStr: '',
+      button: {
+        kind: isKick ? 'kick' : 'punch',
+        color,
+        label: `構え${btn}`,
+        description: `構え中${btn}`,
+        iconText: isKick ? 'K' : 'P',
+        showLabel: false,
+      },
+      suffix,
+      tip: `構え中に${btn}を入力`,
+    };
+  }
+
+  // 10. 春麗のSA2（鳳翼扇: 236236K）
+  if (isChunli && lower.includes('sa2')) {
+    return {
+      original: remaining || 'SA2',
+      isCancel,
+      isRush,
+      rushText,
+      prefix: prefix || 'SA2',
+      arrows: ['↓', '↘', '→', '↓', '↘', '→'],
+      arrowStr: '↓↘→↓↘→',
+      button: {
+        kind: 'kick',
+        color: 'gold',
+        label: 'SA2',
+        description: '金のSA2ボタン（鳳翼扇: 236236+K）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: 'テンキー236を2回素早く入力+キック（鳳翼扇: 236236K）',
+    };
+  }
+
+  // 11. 春麗のSA3 / CA（気天流敬: 214214K）
+  if (isChunli && (lower.includes('sa3') || lower.includes('ca'))) {
+    const isCa = lower.includes('ca');
+    const saLabel = isCa ? 'CA' : 'SA3';
+    return {
+      original: remaining || saLabel,
+      isCancel,
+      isRush,
+      rushText,
+      prefix: prefix || saLabel,
+      arrows: ['↓', '↙', '←', '↓', '↙', '←'],
+      arrowStr: '↓↙←↓↙←',
+      button: {
+        kind: 'kick',
+        color: 'gold',
+        label: saLabel,
+        description: isCa ? '金のCAボタン（気天流敬: 214214+K）' : '金のSA3ボタン（気天流敬: 214214+K）',
+        iconText: 'K',
+        showLabel: false,
+      },
+      suffix,
+      tip: isCa
+        ? '体力25%以下で発動：テンキー214を2回素早く入力+キック（気天流敬: 214214K）'
+        : 'テンキー214を2回素早く入力+キック（気天流敬: 214214K）',
     };
   }
 
@@ -3347,12 +3746,47 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
     };
   }
 
-  // 9. 後ろ入れ特殊技（引大P, 引大, 引き強P, 4HP, 後大K等）
+  // 8.5 斜め前下入れ特殊技（3大P, 3大K, 3中P等）
+  if (lower.startsWith('3') || lower.startsWith('３')) {
+    const isModern = controlType === 'modern';
+    const isKick = lower.includes('k') || lower.includes('キック');
+    const isHeavy = lower.includes('大') || lower.includes('強');
+    const color: ButtonColor = isHeavy ? 'red' : 'yellow';
+    const kind: ButtonKind = isKick ? 'kick' : 'punch';
+    const label = isModern ? (isHeavy ? '大' : '中') : isKick ? 'K' : 'P';
+
+    return {
+      original: remaining,
+      isCancel,
+      isRush,
+      rushText,
+      prefix,
+      arrows: ['↘'],
+      arrowStr: '↘',
+      button: {
+        kind,
+        color,
+        label,
+        description: isHeavy
+          ? (isModern ? '赤いボタン（大）' : isKick ? '赤いボタン（強K）' : '赤いボタン（強P）')
+          : (isModern ? '黄色いボタン（中）' : isKick ? '黄色いボタン（中K）' : '黄色いボタン（中P）'),
+        iconText: label,
+        showLabel: false,
+      },
+      suffix,
+    };
+  }
+
+  // 9. 後ろ入れ特殊技（引大P, 引中P, 引大, 引き強P, 4HP, 後大K等）
   if (lower.includes('引') || lower.startsWith('4') || lower.includes('後大') || lower.includes('後強')) {
     const isModern = controlType === 'modern';
     const isKick = lower.includes('k') || lower.includes('hk') || lower.includes('キック');
+    const isHeavy = lower.includes('大') || lower.includes('強');
+    const isLight = lower.includes('弱');
+    const isMed = lower.includes('中') || (!isHeavy && !isLight);
+    const color: ButtonColor = isHeavy ? 'red' : isLight ? 'blue' : 'yellow';
     const kind: ButtonKind = isKick ? 'kick' : 'punch';
-    const label = isModern ? '大' : isKick ? 'K' : 'P';
+    const label = isModern ? (isHeavy ? '大' : isLight ? '弱' : '中') : isKick ? 'K' : 'P';
 
     return {
       original: remaining,
@@ -3364,9 +3798,11 @@ function parseSinglePartInternal(text: string, controlType: 'classic' | 'modern'
       arrowStr: '←',
       button: {
         kind,
-        color: 'red',
+        color,
         label,
-        description: isModern ? '赤いボタン（大）' : isKick ? '赤いボタン（強K）' : '赤いボタン（強P）',
+        description: isHeavy
+          ? (isModern ? '赤いボタン（大）' : isKick ? '赤いボタン（強K）' : '赤いボタン（強P）')
+          : (isModern ? '黄色いボタン（中）' : isKick ? '黄色いボタン（中K）' : '黄色いボタン（中P）'),
         iconText: label,
         showLabel: false,
       },

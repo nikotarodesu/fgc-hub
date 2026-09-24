@@ -1376,12 +1376,12 @@ export default function ArticleDetailPage() {
                         return (
                           <React.Fragment key={idx}>
                             {/* 実戦コンボ逆引きデータベース */}
-                            {isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ') && isCenterComboSec && (
+                            {isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ' || slug.includes('chunli') || article?.character === '春麗') && isCenterComboSec && (
                               <div id="combo-reverse-lookup" className="pt-2 mb-8 scroll-mt-24 sm:scroll-mt-28">
                                 <ArticleComboReverseLookup
                                   controlType={activeControlType}
                                   isUnlocked={true}
-                                  character={article?.character || (slug.includes('elena') ? 'エレナ' : 'リュウ')}
+                                  character={article?.character || (slug.includes('elena') ? 'エレナ' : slug.includes('chunli') ? '春麗' : 'リュウ')}
                                 />
                               </div>
                             )}

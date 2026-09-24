@@ -8,6 +8,7 @@ import {
   RYU_ARTICLE_COMBOS,
 } from '@/data/articles/ryuCombosData';
 import { ELENA_ARTICLE_COMBOS } from '@/data/articles/elenaCombosData';
+import { CHUNLI_ARTICLE_COMBOS } from '@/data/articles/chunliCombosData';
 import InteractiveComboRow from '@/components/InteractiveComboRow';
 import { getOkizemeDataByCharacter } from '@/data/articles/okizemeRegistry';
 import {
@@ -51,7 +52,12 @@ export default function ArticleComboReverseLookup({
 
   // フィルタリング処理
   const filteredCombos = useMemo(() => {
-    const combos = character === 'エレナ' ? ELENA_ARTICLE_COMBOS : RYU_ARTICLE_COMBOS;
+    const combos =
+      character === 'エレナ'
+        ? ELENA_ARTICLE_COMBOS
+        : character === '春麗'
+        ? CHUNLI_ARTICLE_COMBOS
+        : RYU_ARTICLE_COMBOS;
     return combos.filter((c) => {
       // ステージ状況・位置（画面中央 / 画面端）
       if (selectedPosition !== 'all') {
@@ -230,7 +236,7 @@ export default function ArticleComboReverseLookup({
 
           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
             <span className="text-xs text-neutral-300 font-mono bg-white/10 px-2.5 py-1 rounded-lg">
-              該当 <strong className="text-cyan-400 font-black text-sm">{filteredCombos.length}</strong> / {character === 'エレナ' ? ELENA_ARTICLE_COMBOS.length : RYU_ARTICLE_COMBOS.length} 件
+              該当 <strong className="text-cyan-400 font-black text-sm">{filteredCombos.length}</strong> / {character === 'エレナ' ? ELENA_ARTICLE_COMBOS.length : character === '春麗' ? CHUNLI_ARTICLE_COMBOS.length : RYU_ARTICLE_COMBOS.length} 件
             </span>
             {isFilterActive && (
               <button

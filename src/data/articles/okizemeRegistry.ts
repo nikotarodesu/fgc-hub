@@ -6,6 +6,7 @@
 
 import { FrameOkizemeData, findOkizemeData as findRyuOkizemeData } from './ryuOkizemeData';
 import { findElenaOkizemeData } from './elenaOkizemeData';
+import { findChunliOkizemeData } from './chunliOkizemeData';
 
 export type { FrameOkizemeData };
 
@@ -21,6 +22,10 @@ export function getOkizemeDataByCharacter(
 
   if (character === 'エレナ') {
     return findElenaOkizemeData(rawStr);
+  }
+
+  if (character === '春麗') {
+    return findChunliOkizemeData(rawStr);
   }
 
   // 他キャラクターへのフォールバックは一切行わない

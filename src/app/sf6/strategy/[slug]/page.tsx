@@ -17,11 +17,10 @@ import {
   Target,
   Sparkles,
   Layers,
-  ShoppingBag,
-  ExternalLink,
 } from 'lucide-react';
 import StrategyQuickJump from '@/components/strategy/StrategyQuickJump';
-import { AFFILIATE_PRODUCTS } from '@/data/affiliateProducts';
+import StrategyAffiliateBanner from '@/components/strategy/StrategyAffiliateBanner';
+import { getStrategyInitialProduct } from '@/data/affiliateProducts';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -332,33 +331,8 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             />
           </div>
 
-          {/* さりげないAmazonアソシエイト商品リンク（リンク切れしにくい検索型URL・指サック/ギアケア） */}
-          <div className="mt-6 p-4 rounded-xl bg-neutral-50/90 dark:bg-neutral-900/60 border border-neutral-200/70 dark:border-neutral-800 text-xs">
-            <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                <ShoppingBag className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-                <span>トレモ・対戦を快適にする筆者おすすめギア</span>
-              </span>
-              <span className="text-[10px] text-neutral-400 dark:text-neutral-500">PR・Amazonアソシエイト</span>
-            </div>
-            <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed mb-2 text-[11px] sm:text-xs">
-              長時間のランクマや入力練習で指や手首の引っかかり・疲労を防ぐ定番ケアアイテム。滑らかな操作感を維持してコマンド抜けを防止します。
-            </p>
-            <div className="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-neutral-200/50 dark:border-neutral-800/60">
-              <span className="font-bold text-neutral-900 dark:text-white truncate max-w-xs">
-                {AFFILIATE_PRODUCTS['gaming-finger-sleeve'].name}
-              </span>
-              <a
-                href={AFFILIATE_PRODUCTS['gaming-finger-sleeve'].amazonUrl}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400 hover:underline text-xs shrink-0"
-              >
-                <span>Amazonで見る</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </div>
+          {/* Amazonアソシエイト商品リンク（飲料・軽食・ゲームデスク周りから毎回ランダム/記事ごとに切り替え） */}
+          <StrategyAffiliateBanner initialProduct={getStrategyInitialProduct(article.slug)} />
 
           {/* 前後の記事ナビゲーション（推奨学習順） */}
           <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">

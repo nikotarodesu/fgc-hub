@@ -44,6 +44,11 @@ const CHARACTER_EXTRA_CONTENT: Record<string, { label: string; url: string; desc
     url: '/articles/elena-complete-guide#combo-reverse-lookup',
     description: '相手残り体力やゲージ状況から倒し切りルートを逆引き検索できます。',
   },
+  春麗: {
+    label: '春麗の完全攻略ガイド＆起き攻め表',
+    url: '/articles/chunli-complete-guide',
+    description: '立ち回り方針・有利F別起き攻め・中央＆端の厳選コンボを網羅しています。',
+  },
   キャミィ: {
     label: 'キャミィの技表・フレームデータ・実戦コンボ',
     url: '/sf6/cammy',
@@ -141,6 +146,7 @@ export default function HomePage() {
     if (selectedCategory !== 'all' || searchQuery.trim() || selectedTag) return null;
     if (!selectedCharacter || selectedCharacter === 'リュウ') return 'ryu-complete-guide';
     if (selectedCharacter === 'エレナ') return 'elena-complete-guide';
+    if (selectedCharacter === '春麗') return 'chunli-complete-guide';
     return null;
   }, [selectedCategory, selectedCharacter, searchQuery, selectedTag]);
 

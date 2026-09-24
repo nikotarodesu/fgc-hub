@@ -36,11 +36,13 @@ export default function ArticleDetailPage() {
   const params = useParams();
   const router = useRouter();
   const rawSlug = params?.slug as string;
-  const isModernAlias = rawSlug === 'ryu-modern-complete-guide' || rawSlug === 'elena-modern-complete-guide';
+  const isModernAlias = rawSlug === 'ryu-modern-complete-guide' || rawSlug === 'elena-modern-complete-guide' || rawSlug === 'chunli-modern-complete-guide';
   const slug = (rawSlug === 'ryu-classic-complete-guide' || rawSlug === 'ryu-modern-complete-guide')
     ? 'ryu-complete-guide'
     : (rawSlug === 'elena-classic-complete-guide' || rawSlug === 'elena-modern-complete-guide')
     ? 'elena-complete-guide'
+    : (rawSlug === 'chunli-classic-complete-guide' || rawSlug === 'chunli-modern-complete-guide')
+    ? 'chunli-complete-guide'
     : rawSlug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === slug);
@@ -157,7 +159,12 @@ export default function ArticleDetailPage() {
               (localStorage.getItem('fgc_secret_unlocked_elena') === 'true' ||
                 localStorage.getItem('fgc_secret_unlocked_elena-complete-guide') === 'true' ||
                 localStorage.getItem('fgc_secret_unlocked_elena-classic-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_elena-modern-complete-guide') === 'true'));
+                localStorage.getItem('fgc_secret_unlocked_elena-modern-complete-guide') === 'true')) ||
+            (slug.includes('chunli') &&
+              (localStorage.getItem('fgc_secret_unlocked_chunli') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_chunli-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_chunli-classic-complete-guide') === 'true' ||
+                localStorage.getItem('fgc_secret_unlocked_chunli-modern-complete-guide') === 'true'));
 
           if (isGlobalAdmin || isSecretUnlocked) {
             setIsUnlocked(true);
@@ -217,6 +224,12 @@ export default function ArticleDetailPage() {
         localStorage.setItem('fgc_secret_unlocked_elena-classic-complete-guide', 'true');
         localStorage.setItem('fgc_secret_unlocked_elena-modern-complete-guide', 'true');
       }
+      if (char === 'chunli' || slug.includes('chunli')) {
+        localStorage.setItem('fgc_secret_unlocked_chunli', 'true');
+        localStorage.setItem('fgc_secret_unlocked_chunli-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_chunli-classic-complete-guide', 'true');
+        localStorage.setItem('fgc_secret_unlocked_chunli-modern-complete-guide', 'true');
+      }
     } catch {}
     const msg = secretConfig?.toastMessage || 'シークレット解放（note購入者特典）: 有料コンテンツを開放しました！';
     showToast(msg);
@@ -249,6 +262,12 @@ export default function ArticleDetailPage() {
         localStorage.removeItem('fgc_secret_unlocked_elena-classic-complete-guide');
         localStorage.removeItem('fgc_secret_unlocked_elena-modern-complete-guide');
       }
+      if (slug.includes('chunli')) {
+        localStorage.removeItem('fgc_secret_unlocked_chunli');
+        localStorage.removeItem('fgc_secret_unlocked_chunli-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_chunli-classic-complete-guide');
+        localStorage.removeItem('fgc_secret_unlocked_chunli-modern-complete-guide');
+      }
     } catch {}
     showToast('通常表示（ロック状態）に戻しました');
   };
@@ -274,6 +293,8 @@ export default function ArticleDetailPage() {
       ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
       : targetSlug.includes('elena')
       ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
+      : targetSlug.includes('chunli')
+      ? ['chunli-complete-guide', 'chunli-classic-complete-guide', 'chunli-modern-complete-guide']
       : [targetSlug];
 
     async function checkTokenAccess() {
@@ -361,6 +382,8 @@ export default function ArticleDetailPage() {
       ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
       : article.slug.includes('elena')
       ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
+      : article.slug.includes('chunli')
+      ? ['chunli-complete-guide', 'chunli-classic-complete-guide', 'chunli-modern-complete-guide']
       : [article.slug];
 
     try {

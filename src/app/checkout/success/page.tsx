@@ -43,6 +43,8 @@ function SuccessContent() {
               ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
               : data.slug.includes('elena')
               ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
+              : data.slug.includes('chunli')
+              ? ['chunli-complete-guide', 'chunli-classic-complete-guide', 'chunli-modern-complete-guide']
               : [data.slug];
             relatedSlugs.forEach((s) => {
               localStorage.setItem(`fgc_unlocked_${s}`, data.token);

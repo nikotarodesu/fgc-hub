@@ -13,6 +13,8 @@ export async function generateMetadata({
       ? 'ryu-complete-guide'
       : slug === 'elena-classic-complete-guide' || slug === 'elena-modern-complete-guide'
       ? 'elena-complete-guide'
+      : slug === 'chunli-classic-complete-guide' || slug === 'chunli-modern-complete-guide'
+      ? 'chunli-complete-guide'
       : slug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === canonicalSlug);
@@ -47,6 +49,8 @@ export default async function ArticleLayout({
       ? 'ryu-complete-guide'
       : slug === 'elena-classic-complete-guide' || slug === 'elena-modern-complete-guide'
       ? 'elena-complete-guide'
+      : slug === 'chunli-classic-complete-guide' || slug === 'chunli-modern-complete-guide'
+      ? 'chunli-complete-guide'
       : slug;
 
   const article = ARTICLES_DATA.find((a) => a.slug === canonicalSlug);

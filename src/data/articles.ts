@@ -2,6 +2,8 @@ import { RYU_COMPLETE_GUIDE } from './articles/ryuCompleteGuide';
 import { ELENA_COMPLETE_GUIDE } from './articles/elenaCompleteGuide';
 import { ELENA_CLASSIC_COMPLETE_GUIDE } from './articles/elenaClassicCompleteGuide';
 import { ELENA_MODERN_COMPLETE_GUIDE } from './articles/elenaModernCompleteGuide';
+import { CHUNLI_COMPLETE_GUIDE } from './articles/chunliCompleteGuide';
+import { CHUNLI_CLASSIC_COMPLETE_GUIDE } from './articles/chunliClassicCompleteGuide';
 import { COACHING_JURI_1400MR } from './articles/coachingJuri1400mr';
 import { COACHING_BLANKA_1500MR } from './articles/coachingBlanka1500mr';
 import { COACHING_ED_1300MR_KEN } from './articles/coachingEd1300mrKen';
@@ -392,6 +394,7 @@ export const ARTICLES_DATA: Article[] = [
       sections: [],
     },
   },
+  CHUNLI_COMPLETE_GUIDE,
   RYU_COMPLETE_GUIDE,
   ...SF6_COMMON_TECHNIQUES_ARTICLES,
 ];
@@ -404,6 +407,12 @@ export function parseArticleTitle(title: string): { mainTitle: string; subtitle?
   return { mainTitle: title };
 }
 
-export { ELENA_COMPLETE_GUIDE, ELENA_CLASSIC_COMPLETE_GUIDE, ELENA_MODERN_COMPLETE_GUIDE };
+export {
+  ELENA_COMPLETE_GUIDE,
+  ELENA_CLASSIC_COMPLETE_GUIDE,
+  ELENA_MODERN_COMPLETE_GUIDE,
+  CHUNLI_COMPLETE_GUIDE,
+  CHUNLI_CLASSIC_COMPLETE_GUIDE,
+};
 
 

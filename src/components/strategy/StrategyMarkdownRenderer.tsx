@@ -220,6 +220,7 @@ type Block =
   | { type: 'quote'; lines: string[] }
   | { type: 'diagram'; index: number; raw: string }
   | { type: 'admin-image'; note: string }
+  | { type: 'image'; src: string; alt: string }
   | { type: 'p'; lines: string[] };
 
 export type { TocItem } from './tocUtils';
@@ -296,6 +297,20 @@ export default function StrategyMarkdownRenderer({
       blocks.push({
         type: 'admin-image',
         note,
+      });
+      continue;
+    }
+
+    // 画像・動画埋め込み (![alt](url))
+    const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      blocks.push({
+        type: 'image',
+        alt: imgMatch[1].trim(),
+        src: imgMatch[2].trim(),
       });
       continue;
     }
@@ -622,6 +637,38 @@ export default function StrategyMarkdownRenderer({
                 📸 {block.note}
               </p>
             </aside>
+          );
+        }
+
+        if (block.type === 'image') {
+          const isVideo = /\.(mp4|webm)$/i.test(block.src);
+          return (
+            <figure
+              key={idx}
+              className="my-5 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 overflow-hidden shadow-2xs max-w-2xl mx-auto"
+            >
+              {isVideo ? (
+                <video
+                  src={block.src}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-auto max-h-[520px] mx-auto block bg-black"
+                />
+              ) : (
+                <img
+                  src={block.src}
+                  alt={block.alt || '解説画像'}
+                  loading="lazy"
+                  className="w-full h-auto object-cover max-h-[520px] mx-auto block"
+                />
+              )}
+              {block.alt && (
+                <figcaption className="p-2 sm:px-3 text-xs text-neutral-500 dark:text-neutral-400 bg-neutral-100/80 dark:bg-neutral-900/80 border-t border-neutral-200/60 dark:border-neutral-800 text-center font-medium">
+                  {block.alt}
+                </figcaption>
+              )}
+            </figure>
           );
         }
 

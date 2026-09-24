@@ -165,8 +165,12 @@ function getLineType(line: string): LineType {
 }
 
 interface ParsedBlock {
-  type: Exclude<LineType, 'empty'>;
+  type: Exclude<LineType, 'empty'> | 'table';
   lines: string[];
+  tableData?: {
+    header: string[];
+    rows: string[][];
+  };
 }
 
 function parseContentToBlocks(content: string): ParsedBlock[] {
@@ -174,12 +178,53 @@ function parseContentToBlocks(content: string): ParsedBlock[] {
   const blocks: ParsedBlock[] = [];
   let currentBlock: ParsedBlock | null = null;
 
-  for (const rawLine of rawLines) {
+  for (let i = 0; i < rawLines.length; i++) {
+    const rawLine = rawLines[i];
     const trimmed = rawLine.trim();
     if (!trimmed) {
       if (currentBlock) {
         blocks.push(currentBlock);
         currentBlock = null;
+      }
+      continue;
+    }
+
+    // Markdown Table 検出
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      if (currentBlock) {
+        blocks.push(currentBlock);
+        currentBlock = null;
+      }
+
+      const tableLines: string[] = [trimmed];
+      while (i + 1 < rawLines.length && rawLines[i + 1].trim().startsWith('|') && rawLines[i + 1].trim().endsWith('|')) {
+        i++;
+        tableLines.push(rawLines[i].trim());
+      }
+
+      if (tableLines.length >= 2) {
+        const parseRow = (rowStr: string) =>
+          rowStr
+            .slice(1, -1)
+            .split('|')
+            .map((c) => c.trim());
+
+        const header = parseRow(tableLines[0]);
+        const startIndex = /^\|[\s\-:|]+\|$/.test(tableLines[1]) ? 2 : 1;
+        const rows: string[][] = [];
+
+        for (let r = startIndex; r < tableLines.length; r++) {
+          rows.push(parseRow(tableLines[r]));
+        }
+
+        blocks.push({
+          type: 'table',
+          lines: tableLines,
+          tableData: {
+            header,
+            rows,
+          },
+        });
       }
       continue;
     }
@@ -476,6 +521,51 @@ export default function RichContent({
   const displayGroups = groupBlocksForSticky(blocks);
 
   const renderBlock = (block: ParsedBlock, blockKey: string | number) => {
+    // 0.4 Markdown Table（表組み）
+    if (block.type === 'table' && block.tableData) {
+      return (
+        <div
+          key={blockKey}
+          className="my-5 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-[#151c28] shadow-2xs overflow-hidden"
+        >
+          {/* スマホ用横スクロール案内 */}
+          <div className="sm:hidden px-3 py-1 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
+            ← 左右にスクロールして全体を表示 →
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[480px]">
+              <thead>
+                <tr className="bg-neutral-100/90 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
+                  {block.tableData.header.map((head, hIdx) => (
+                    <th key={hIdx} className="py-2.5 px-3.5 font-bold tracking-wide">
+                      {renderInline(head)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-200/60 dark:divide-neutral-800">
+                {block.tableData.rows.map((row, rIdx) => (
+                  <tr
+                    key={rIdx}
+                    className="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors"
+                  >
+                    {row.map((cell, cIdx) => (
+                      <td
+                        key={cIdx}
+                        className="py-2.5 px-3.5 text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium align-middle"
+                      >
+                        {renderInline(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     // 0.5 インライン画像・GIF（![キャプション](URL)）
     if (block.type === 'image') {
       return (

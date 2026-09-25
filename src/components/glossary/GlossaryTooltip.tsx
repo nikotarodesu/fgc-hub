@@ -94,12 +94,16 @@ export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps
 
   return (
     <>
-      {/* 初心者向け用語タップ可能トリガー（文字色は通常の文章と同じ、下の青色破線のみ） */}
+      {/* 初心者向け用語タップ可能トリガー（② ステルス・薄グレー点線：通常時は本文に自然に馴染み、ホバー・展開時にハイライト） */}
       <button
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="inline cursor-pointer text-inherit font-inherit underline decoration-dashed decoration-cyan-500 underline-offset-4 decoration-[1.5px] hover:decoration-solid hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors p-0 bg-transparent border-0 leading-inherit align-baseline text-left select-text"
+        className={`inline cursor-pointer text-inherit font-inherit underline decoration-dotted underline-offset-4 decoration-1 transition-colors p-0 bg-transparent border-0 leading-inherit align-baseline text-left select-text ${
+          isOpen
+            ? 'decoration-solid decoration-cyan-500 text-cyan-600 dark:text-cyan-400 font-medium'
+            : 'decoration-neutral-300 dark:decoration-neutral-600 hover:decoration-solid hover:decoration-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400'
+        }`}
         aria-label={`${term.term}の用語解説を表示`}
         aria-expanded={isOpen}
       >

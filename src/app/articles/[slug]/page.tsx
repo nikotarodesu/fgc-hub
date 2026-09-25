@@ -460,11 +460,12 @@ export default function ArticleDetailPage() {
     });
   });
   paidSections.forEach((sec, idx) => {
-    if (isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ') && sec.title.includes('画面中央のコンボ')) {
+    if (isCompleteGuide && (slug.includes('ryu') || article?.character === 'リュウ' || slug.includes('elena') || article?.character === 'エレナ' || slug.includes('chunli') || article?.character === '春麗') && sec.title.includes('画面中央のコンボ')) {
       allSectionsList.push({
         id: 'combo-reverse-lookup',
-        title: '⚡ 実戦コンボ逆引きデータベース',
+        title: 'ツール：コンボ逆引きデータベース',
         isPaid: true,
+        isTool: true,
       });
     }
     allSectionsList.push({
@@ -691,7 +692,7 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 w-full min-w-0">
           {/* メイン記事本文（8 / 12） */}
-          <main className="lg:col-span-8 bg-white dark:bg-[#151c28] px-5 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-xs min-w-0 max-w-full">
+          <main className="lg:col-span-8 bg-white dark:bg-[#151c28] px-3.5 xs:px-4 sm:px-8 md:p-10 py-5 sm:py-8 rounded-none sm:rounded-xl border-x-0 sm:border border-b sm:border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-xs min-w-0 max-w-full">
             {/* 記事ヘッダー（冒頭情報の整理・重複排除） */}
             <header className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-neutral-200/80 dark:border-neutral-800/80 min-w-0">
               {/* カテゴリ・ゲームバッジ */}
@@ -807,24 +808,10 @@ export default function ArticleDetailPage() {
                 </details>
               )}
 
-              {/* アイキャッチビジュアル（16:9比率を保ち見切れを防止） */}
-              <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative">
-                <div className="aspect-[16/9] w-full relative overflow-hidden flex items-center justify-center bg-neutral-950">
-                  <img
-                    src={getArticleEyecatch(article)}
-                    alt={`${article.character || 'ストリートファイター6'} 公式アイキャッチ`}
-                    className="w-full h-full object-cover object-center"
-                  />
-                </div>
-              </div>
-            </header>
-
-            {/* 本文コンテナ */}
-            <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6 min-w-0 max-w-full">
               {/* 3. クラシック / モダン切り替えスイッチ */}
               {article.variants && (
-                <div className="p-2.5 sm:p-3 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
-                  <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1.5 sm:px-2 pt-1 pb-1.5 flex items-center justify-between">
+                <div className="mt-3 sm:mt-4 p-2.5 sm:p-3 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100 dark:from-neutral-800/80 dark:via-neutral-900/60 dark:to-neutral-800/80 rounded-xl sm:rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs">
+                  <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1.5 sm:px-2 pt-0.5 pb-1.5 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 font-sans text-neutral-700 dark:text-neutral-300 font-bold">
                       <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
                       操作タイプ切り替え（クラシック / モダン）
@@ -833,28 +820,42 @@ export default function ArticleDetailPage() {
                       ワンクリックで即座に切り替え
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-1">
+                  <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-1" role="tablist" aria-label="操作タイプ選択">
                     <button
                       type="button"
+                      role="tab"
+                      aria-selected={activeControlType === 'classic'}
                       onClick={() => setActiveControlType('classic')}
                       className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'classic'
-                          ? 'bg-[#8B5BB7] text-white shadow-sm ring-1 ring-[#8B5BB7]'
+                          ? 'bg-[#8B5BB7] text-white shadow-sm ring-2 ring-[#8B5BB7] ring-offset-1 dark:ring-offset-neutral-900'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#8B5BB7] dark:hover:text-[#b38ee0] hover:bg-[#8B5BB7]/10 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="truncate sm:inline">クラシック<span className="hidden sm:inline"> (Classic)</span></span>
+                      <span className="truncate">クラシック<span className="hidden sm:inline"> (Classic)</span></span>
+                      {activeControlType === 'classic' && (
+                        <span className="text-[10px] bg-white/25 px-1.5 py-0.2 rounded font-normal shrink-0">
+                          選択中
+                        </span>
+                      )}
                     </button>
                     <button
                       type="button"
+                      role="tab"
+                      aria-selected={activeControlType === 'modern'}
                       onClick={() => setActiveControlType('modern')}
                       className={`py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 sm:gap-2 transition-all cursor-pointer min-w-0 ${
                         activeControlType === 'modern'
-                          ? 'bg-[#D8843F] text-white shadow-sm ring-1 ring-[#D8843F]'
+                          ? 'bg-[#D8843F] text-white shadow-sm ring-2 ring-[#D8843F] ring-offset-1 dark:ring-offset-neutral-900'
                           : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-300 hover:text-[#D8843F] dark:hover:text-[#f0a668] hover:bg-[#D8843F]/10 border border-neutral-200/60 dark:border-neutral-700'
                       }`}
                     >
-                      <span className="truncate sm:inline">モダン<span className="hidden sm:inline"> (Modern)</span></span>
+                      <span className="truncate">モダン<span className="hidden sm:inline"> (Modern)</span></span>
+                      {activeControlType === 'modern' && (
+                        <span className="text-[10px] bg-white/25 px-1.5 py-0.2 rounded font-normal shrink-0">
+                          選択中
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -862,7 +863,7 @@ export default function ArticleDetailPage() {
 
               {/* 4. 完全攻略記事限定：購入済みクイックナビゲーション（冒頭表示） */}
               {isCompleteGuide && isUnlocked && (
-                <div className="my-3 sm:my-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-50 dark:from-neutral-900 dark:via-emerald-950/20 dark:to-neutral-900 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
+                <div className="mt-3 sm:mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-50 dark:from-neutral-900 dark:via-emerald-950/20 dark:to-neutral-900 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-3 border-b border-emerald-200/60 dark:border-emerald-800/40">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
@@ -943,11 +944,11 @@ export default function ArticleDetailPage() {
 
               {/* 5. 完全攻略記事限定：未購入時の「攻略を読む」「逆引きを使う」導線ボタン */}
               {isCompleteGuide && !isUnlocked && (
-                <div className="my-3 sm:my-4 grid grid-cols-2 gap-2 sm:gap-3">
+                <div className="mt-3 sm:mt-4 grid grid-cols-2 gap-2 sm:gap-3">
                   <button
                     type="button"
                     onClick={() => handleJumpToSection('sec-free-0')}
-                    className="py-3 px-3 sm:px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                    className="py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95 min-h-[44px]"
                   >
                     <BookOpen className="w-4 h-4 shrink-0" />
                     <span>攻略を読む</span>
@@ -958,7 +959,7 @@ export default function ArticleDetailPage() {
                       handleJumpToSection('paywall-card-box');
                       showToast('逆引きツールのご利用には、記事のご購入またはプレミアム会員登録が必要です');
                     }}
-                    className="py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95"
+                    className="py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs transition-all cursor-pointer active:scale-95 min-h-[44px]"
                   >
                     <Sparkles className="w-4 h-4 shrink-0" />
                     <span>逆引きを使う</span>
@@ -968,6 +969,21 @@ export default function ArticleDetailPage() {
                   </button>
                 </div>
               )}
+
+              {/* アイキャッチビジュアル（16:9比率を保ち見切れを防止） */}
+              <div className="mt-4 sm:mt-5 overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-950 shadow-sm relative">
+                <div className="aspect-[16/9] w-full relative overflow-hidden flex items-center justify-center bg-neutral-950">
+                  <img
+                    src={getArticleEyecatch(article)}
+                    alt={`${article.character || 'ストリートファイター6'} 公式アイキャッチ`}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+            </header>
+
+            {/* 本文コンテナ */}
+            <article className="text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base space-y-6 min-w-0 max-w-full">
 
               {/* リード文（空の場合は表示しない） */}
               {introText && introText.trim() ? (

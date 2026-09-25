@@ -15,7 +15,7 @@ import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJum
 import DiagramDispatcher from '@/components/articles/DiagramDispatcher';
 import ArticleComboReverseLookup from '@/components/articles/ArticleComboReverseLookup';
 import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
-import RecommendedGear from '@/components/RecommendedGear';
+import DeviceEndArticlePromo from '@/components/devices/DeviceEndArticlePromo';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -1601,9 +1601,9 @@ export default function ArticleDetailPage() {
               </div>
             )}
 
-            {/* 筆者の愛用アイテム＆アソシエイト（無料記事のみ表示） */}
+            {/* おすすめデバイス・プレイ環境ガイド（無料記事のみ表示） */}
             {!article.isPaid && (
-              <RecommendedGear productIds={article.recommendedGearIds} />
+              <DeviceEndArticlePromo sourcePage={`/articles/${article.slug}`} />
             )}
 
             {/* 読後リアクション・シェア */}

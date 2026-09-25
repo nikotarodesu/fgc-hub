@@ -51,25 +51,41 @@ export default function DeviceEndArticlePromo({ sourcePage }: DeviceEndArticlePr
             キーボード・レバーレス・モニター・PCの選び方をまとめています。
           </p>
           <div className="flex items-center gap-3 pt-1 text-[11px] text-neutral-500 dark:text-neutral-400 flex-wrap">
-            <span className="flex items-center gap-1">
+            <Link
+              href="/sf6/devices/keyboard"
+              onClick={() => handleClick('keyboard')}
+              className="inline-flex items-center gap-1 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            >
               <Keyboard className="w-3.5 h-3.5 text-neutral-400" />
-              <span>キーボード</span>
-            </span>
+              <span className="underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2">キーボード</span>
+            </Link>
             <span>•</span>
-            <span className="flex items-center gap-1">
+            <Link
+              href="/sf6/devices/leverless"
+              onClick={() => handleClick('leverless')}
+              className="inline-flex items-center gap-1 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            >
               <Gamepad2 className="w-3.5 h-3.5 text-neutral-400" />
-              <span>レバーレス</span>
-            </span>
+              <span className="underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2">レバーレス</span>
+            </Link>
             <span>•</span>
-            <span className="flex items-center gap-1">
+            <Link
+              href="/sf6/devices/gaming-pc"
+              onClick={() => handleClick('gaming-pc')}
+              className="inline-flex items-center gap-1 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            >
               <Laptop className="w-3.5 h-3.5 text-neutral-400" />
-              <span>ゲーミングPC</span>
-            </span>
+              <span className="underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2">ゲーミングPC</span>
+            </Link>
             <span>•</span>
-            <span className="flex items-center gap-1">
+            <Link
+              href="/sf6/devices/monitor"
+              onClick={() => handleClick('monitor')}
+              className="inline-flex items-center gap-1 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+            >
               <Monitor className="w-3.5 h-3.5 text-neutral-400" />
-              <span>モニター</span>
-            </span>
+              <span className="underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2">モニター</span>
+            </Link>
           </div>
         </div>
 

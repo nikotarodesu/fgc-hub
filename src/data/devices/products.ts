@@ -33,6 +33,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://www.razer.com/jp-jp/gaming-keyboards/razer-huntsman-v3-pro-mini',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://m.media-amazon.com/images/I/712r-1xpO9L._AC_SL1500_.jpg',
     authorVerified: true,
     authorComment:
       'レバーレスを長年使い込んできましたが、現在は本機をメインコントローラーとして使用しています。特に歩きガードの「前入れからガードへの戻り」がラピッドトリガーにより指のわずかな戻りで成立するため、被弾率が目に見えて減りました。',
@@ -84,6 +85,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://jp.steelseries.com/gaming-keyboards/apex-pro-tkl-gen-3',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://images.ctfassets.net/hmm5mo4qf4mf/2qRjmq8sglugWCZZQVCgPx/48adf4a522bdee3cd98c3e3ba4784c8c/apex_pro_tkl_black_img_buy_01.png__1920x1080_crop-fit_optimize_subsampling-2-3764.png',
     authorVerified: false,
     merchantLinks: [
       {
@@ -132,6 +134,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://gaming.logicool.co.jp/ja-jp/products/gaming-keyboards/pro-x-tkl-wireless-keyboard.html',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://resource.logitechg.com/content/dam/gaming/en/products/pro-x-tkl-rapid/gallery/pro-x-tkl-rapid-black-gallery-1-us.png',
     authorVerified: false,
     merchantLinks: [
       {
@@ -323,6 +326,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://zowie.benq.com/ja-jp/monitor/xl2546k.html',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://image.benq.com/is/image/benqco/01-xl2546k-xl-black-front-6?$ResponsivePreset$',
     authorVerified: false,
     merchantLinks: [
       {
@@ -371,6 +375,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://www.benq.com/ja-jp/monitor/gaming/ex2510s.html',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://image.benq.com/is/image/benqco/ex2510s-right45-2?$ResponsivePreset$',
     authorVerified: false,
     merchantLinks: [
       {
@@ -419,6 +424,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://www.asus.com/jp/displays-desktops/monitors/tuf-gaming/tuf-gaming-vg259qr/',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://dlcdnwebimgs.asus.com/gain/ad0edd0b-2554-4cd5-89ef-0a285f93ff66/',
     authorVerified: false,
     merchantLinks: [
       {
@@ -470,6 +476,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://punkworkshop.top/',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://punkworkshop.jp/cdn/shop/files/m0.jpg',
     authorVerified: true,
     authorComment:
       'レバーレスを何台も乗り換えてきましたが、PUNK WORKSHOPのボタンストロークの短さと入力の軽さは群を抜いています。指先を滑らせるような入力でも正確に技が出ます。',
@@ -520,6 +527,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://haute42.com/',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://haute42.com/wp-content/uploads/2024/03/T16.png',
     authorVerified: false,
     merchantLinks: [
       {
@@ -568,6 +576,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     ],
     officialUrl: 'https://www.hitboxarcade.com/',
     officialVerifiedDate: '2026-09-25',
+    imageUrl: 'https://www.hitboxarcade.com/cdn/shop/files/Hit_Box_-_HB_Logo_-_black-red_91ff14a8-3044-49fa-8fa6-47d717f17da2_1200x1200.png',
     authorVerified: false,
     merchantLinks: [
       {

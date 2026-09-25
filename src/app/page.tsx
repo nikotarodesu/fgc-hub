@@ -34,28 +34,6 @@ const QUICK_CHARACTERS = [
   { name: 'ガイル', image: '/images/characters/guile/sns.jpg' },
 ];
 
-const CHARACTER_EXTRA_CONTENT: Record<string, { label: string; url: string; description: string }> = {
-  リュウ: {
-    label: 'リュウの逆引きリーサルツール＆起き攻め表',
-    url: '/articles/ryu-complete-guide#combo-reverse-lookup',
-    description: '相手残り体力やゲージ状況から倒し切りルートを逆引き検索できます。',
-  },
-  エレナ: {
-    label: 'エレナの逆引きリーサルツール＆起き攻め表',
-    url: '/articles/elena-complete-guide#combo-reverse-lookup',
-    description: '相手残り体力やゲージ状況から倒し切りルートを逆引き検索できます。',
-  },
-  春麗: {
-    label: '春麗の完全攻略ガイド＆起き攻め表',
-    url: '/articles/chunli-complete-guide',
-    description: '立ち回り方針・有利F別起き攻め・中央＆端の厳選コンボを網羅しています。',
-  },
-  キャミィ: {
-    label: 'キャミィの技表・フレームデータ・実戦コンボ',
-    url: '/sf6/cammy',
-    description: '基本技の発生・硬直差フレームおよび実戦コンボデータを閲覧できます。',
-  },
-};
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'character' | 'neutral' | 'coaching' | 'system'>('all');
@@ -479,68 +457,58 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. 選択中の条件、該当件数、条件解除バー */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-2">
-        <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
-          <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="font-bold text-neutral-500 dark:text-neutral-400">表示中の条件:</span>
-            {selectedCharacter ? (
+      {/* 3. 選択中の条件、該当件数、条件解除バー（キャラクター選択時のみ表示） */}
+      {selectedCharacter && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="font-bold text-neutral-500 dark:text-neutral-400">表示中の条件:</span>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold text-xs">
                 {selectedCharacter}
               </span>
-            ) : (
-              <span className="font-medium text-neutral-800 dark:text-neutral-200">全キャラクター</span>
-            )}
 
-            {selectedCategory !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-[11px]">
-                {selectedCategory === 'character'
-                  ? '攻略記事'
-                  : selectedCategory === 'neutral'
-                  ? '立ち回り'
-                  : selectedCategory === 'coaching'
-                  ? 'コーチング'
-                  : '共通技術'}
-              </span>
-            )}
+              {selectedCategory !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-[11px]">
+                  {selectedCategory === 'character'
+                    ? '攻略記事'
+                    : selectedCategory === 'neutral'
+                    ? '立ち回り'
+                    : selectedCategory === 'coaching'
+                    ? 'コーチング'
+                    : '共通技術'}
+                </span>
+              )}
 
-            {selectedCategory === 'system' && (
-              <span
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-bold text-[11px] ${
-                  selectedDifficulty === 'beginner'
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+              {selectedCategory === 'system' && (
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-bold text-[11px] ${
+                    selectedDifficulty === 'beginner'
+                      ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                      : selectedDifficulty === 'intermediate'
+                      ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                      : 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
+                  }`}
+                >
+                  {selectedDifficulty === 'beginner'
+                    ? '初級'
                     : selectedDifficulty === 'intermediate'
-                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-                    : 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
-                }`}
-              >
-                {selectedDifficulty === 'beginner'
-                  ? '初級'
-                  : selectedDifficulty === 'intermediate'
-                  ? '中級'
-                  : '上級'}
-              </span>
-            )}
+                    ? '中級'
+                    : '上級'}
+                </span>
+              )}
 
-            {searchQuery.trim() && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 text-[11px]">
-                &quot;{searchQuery}&quot;
-              </span>
-            )}
+              {searchQuery.trim() && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 text-[11px]">
+                  &quot;{searchQuery}&quot;
+                </span>
+              )}
 
-            <span className="text-neutral-400 dark:text-neutral-500">|</span>
-            <span className="text-neutral-600 dark:text-neutral-300 font-medium">
-              該当 記事 <strong className="text-neutral-900 dark:text-white font-black text-sm">{filteredArticles.length}</strong> 件
-            </span>
-            {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800">
-                <Sparkles className="w-3 h-3" />
-                <span>ツール・データあり</span>
+              <span className="text-neutral-400 dark:text-neutral-500">|</span>
+              <span className="text-neutral-600 dark:text-neutral-300 font-medium">
+                該当 記事 <strong className="text-neutral-900 dark:text-white font-black text-sm">{filteredArticles.length}</strong> 件
               </span>
-            )}
-          </div>
+            </div>
 
-          {(selectedCharacter || selectedCategory !== 'all' || searchQuery || selectedTag) && (
             <button
               type="button"
               onClick={handleResetFilters}
@@ -549,38 +517,13 @@ export default function HomePage() {
               <RotateCcw className="w-3 h-3" />
               <span>条件を解除して全件表示</span>
             </button>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* 4. 結果一覧エリア */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          {/* 選択中キャラクターの利用可能なツール・データ案内 */}
-          {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
-            <div className="p-3 sm:p-3.5 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-800/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shadow-2xs">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="px-2 py-0.5 rounded-md bg-cyan-600 text-white text-[10px] font-black shrink-0">
-                  TOOL / DATA
-                </span>
-                <div className="min-w-0">
-                  <span className="text-xs font-bold text-neutral-900 dark:text-white block sm:inline mr-2">
-                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].label}
-                  </span>
-                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:inline">
-                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].description}
-                  </span>
-                </div>
-              </div>
-              <Link
-                href={CHARACTER_EXTRA_CONTENT[selectedCharacter].url}
-                className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:text-cyan-900 dark:hover:text-white transition-colors shrink-0 whitespace-nowrap self-end sm:self-auto"
-              >
-                <span>ツールを開く</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          )}
 
           {/* ピックアップ枠（未絞り込み時または選択キャラに完全攻略が存在する場合のみ表示） */}
           {pickupArticle && (
@@ -666,9 +609,6 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* デバイス・プレイ環境コーナー案内（横長バナー） */}
-          <DeviceHomeBanner />
-
           {/* 該当記事一覧 */}
           {filteredArticles.length === 0 ? (
             <div className="p-8 sm:p-10 text-center bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 text-neutral-500 text-sm space-y-4 shadow-xs">
@@ -678,28 +618,6 @@ export default function HomePage() {
               <p className="text-xs text-neutral-400 max-w-md mx-auto">
                 選択中の条件（{selectedCharacter || '全キャラ'} / {selectedCategory === 'all' ? '全記事' : selectedCategory}）に合致する記事が現在ありません。条件を解除して他の記事をご覧ください。
               </p>
-
-              {/* 同キャラで利用可能なコンテンツがある場合はその入口を案内 */}
-              {selectedCharacter && CHARACTER_EXTRA_CONTENT[selectedCharacter] && (
-                <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-left max-w-md mx-auto space-y-1.5">
-                  <div className="text-xs font-bold text-cyan-800 dark:text-cyan-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
-                    <span>{selectedCharacter}の利用可能なツール・データ：</span>
-                  </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                    {CHARACTER_EXTRA_CONTENT[selectedCharacter].description}
-                  </p>
-                  <div className="pt-1">
-                    <Link
-                      href={CHARACTER_EXTRA_CONTENT[selectedCharacter].url}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:underline"
-                    >
-                      <span>{CHARACTER_EXTRA_CONTENT[selectedCharacter].label} を見る</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              )}
 
               <div className="pt-1">
                 <button
@@ -867,6 +785,11 @@ export default function HomePage() {
               })}
             </div>
           )}
+
+          {/* デバイス・プレイ環境コーナー案内（横長バナー：記事表示の下、フッターの上に配置） */}
+          <div className="pt-2 sm:pt-4">
+            <DeviceHomeBanner />
+          </div>
         </div>
       </main>
     </div>

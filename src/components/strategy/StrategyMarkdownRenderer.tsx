@@ -731,7 +731,7 @@ export default function StrategyMarkdownRenderer({
                   src={block.src}
                   alt={block.alt || '解説画像'}
                   loading="lazy"
-                  className="w-full h-auto object-cover max-h-[520px] mx-auto block"
+                  className={`w-full h-auto mx-auto block ${/\.svg$/i.test(block.src) ? 'object-contain bg-white' : 'object-cover max-h-[520px]'}`}
                 />
               )}
               {block.alt && (

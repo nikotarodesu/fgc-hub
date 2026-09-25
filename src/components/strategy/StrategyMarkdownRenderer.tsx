@@ -49,6 +49,78 @@ const TECHNIQUE_LINKS: Record<string, string> = {
   '判断を減らす練習【実践・トレーニング編】': '/sf6/strategy/handan-wo-herasu-jissen',
 };
 
+interface TableColumnTheme {
+  headerCls: string;
+  cellCls: string;
+}
+
+/**
+ * 表の列ごとに視認性を高める配色テーマを返す
+ * ライトモード／ダークモード双方でコントラスト比WCAG AA以上を維持
+ */
+function getTableColumnTheme(
+  headerText: string,
+  colIdx: number,
+  totalCols: number
+): TableColumnTheme {
+  const text = headerText.trim();
+  const isLast = colIdx === totalCols - 1;
+  const dividerCls = isLast ? '' : 'border-r border-neutral-200/80 dark:border-neutral-800';
+
+  // 1. 赤・コーラル系（削る・外す・失敗・悪手・リスク・デメリット・弱点・被弾・注意点）
+  if (/削る|外す|失敗|悪手|リスク|デメリット|弱点|被弾|注意点/.test(text)) {
+    return {
+      headerCls: `bg-rose-100/90 text-rose-950 dark:bg-rose-950/60 dark:text-rose-200 ${dividerCls}`,
+      cellCls: `bg-rose-50/50 text-rose-950 dark:bg-rose-950/20 dark:text-rose-100 ${dividerCls}`,
+    };
+  }
+
+  // 2. 緑・ミント系（残す・改善・リターン・メリット・推奨・最適・安定・解決・効果・成功・対策）
+  if (/残す|改善|リターン|メリット|推奨|最適|安定|解決|効果|成功/.test(text)) {
+    return {
+      headerCls: `bg-emerald-100/90 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-200 ${dividerCls}`,
+      cellCls: `bg-emerald-50/50 text-emerald-950 dark:bg-emerald-950/20 dark:text-emerald-100 ${dividerCls}`,
+    };
+  }
+
+  // 3. 琥珀・イエロー系（原因・理由・狙い・フレーム・着眼点）
+  if (/原因|理由|狙い|フレーム|着眼点/.test(text)) {
+    return {
+      headerCls: `bg-amber-100/80 text-amber-950 dark:bg-amber-950/50 dark:text-amber-200 ${dividerCls}`,
+      cellCls: `bg-amber-50/40 text-amber-950 dark:bg-amber-950/15 dark:text-amber-100 ${dividerCls}`,
+    };
+  }
+
+  // 4. 青・シアン系（アクション・技術・具体・練習・ポイント）
+  if (/アクション|具体|技術|練習|ポイント/.test(text)) {
+    return {
+      headerCls: `bg-sky-100/80 text-sky-950 dark:bg-sky-950/50 dark:text-sky-200 ${dividerCls}`,
+      cellCls: `bg-sky-50/40 text-sky-950 dark:bg-sky-950/15 dark:text-sky-100 ${dividerCls}`,
+    };
+  }
+
+  // 5. 1列目（前提条件・項目・状況・行動など見出しキー列）
+  if (colIdx === 0) {
+    return {
+      headerCls: `bg-slate-100 text-slate-900 dark:bg-neutral-800 dark:text-neutral-100 ${dividerCls}`,
+      cellCls: `bg-slate-50/80 font-bold text-slate-900 dark:bg-neutral-900/60 dark:text-neutral-100 ${dividerCls}`,
+    };
+  }
+
+  // 6. 汎用フォールバック（列インデックスによる穏やかなトーン分け）
+  if (colIdx % 2 === 1) {
+    return {
+      headerCls: `bg-neutral-100/90 text-neutral-900 dark:bg-neutral-800/90 dark:text-neutral-100 ${dividerCls}`,
+      cellCls: `bg-white text-neutral-800 dark:bg-neutral-900/30 dark:text-neutral-200 ${dividerCls}`,
+    };
+  }
+
+  return {
+    headerCls: `bg-neutral-50 text-neutral-900 dark:bg-neutral-800/70 dark:text-neutral-100 ${dividerCls}`,
+    cellCls: `bg-neutral-50/50 text-neutral-800 dark:bg-neutral-900/50 dark:text-neutral-200 ${dividerCls}`,
+  };
+}
+
 // プレーンテキスト部分から未登場の格ゲー用語を検索し、初出の1回目だけツールチップ化する
 function processGlossaryTerms(
   text: string,
@@ -515,6 +587,7 @@ export default function StrategyMarkdownRenderer({
 
         if (block.type === 'table') {
           const isTwoColumns = block.header.length === 2;
+          const isThreeColumns = block.header.length === 3;
           return (
             <div
               key={idx}
@@ -527,43 +600,58 @@ export default function StrategyMarkdownRenderer({
                 </div>
               )}
               <div className={isTwoColumns ? 'w-full' : 'overflow-x-auto'}>
-                <table className={`w-full text-left text-xs sm:text-sm border-collapse ${isTwoColumns ? 'table-fixed' : 'min-w-[500px]'}`}>
+                <table
+                  className={`w-full text-left text-xs sm:text-sm border-collapse ${
+                    isTwoColumns ? 'table-fixed' : 'min-w-[500px]'
+                  }`}
+                >
                   <thead>
-                    <tr className="bg-neutral-100 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
-                      {block.header.map((head, hIdx) => (
-                        <th
-                          key={hIdx}
-                          className={`py-2.5 px-3 sm:px-3.5 font-bold tracking-wide ${
-                            isTwoColumns && hIdx === 0
-                              ? 'w-[38%] sm:w-[28%]'
-                              : isTwoColumns && hIdx === 1
-                              ? 'w-[62%] sm:w-[72%]'
-                              : ''
-                          }`}
-                        >
-                          {renderInlineText(head, seenTermIds, false)}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-200/60 dark:divide-neutral-800">
-                    {block.rows.map((row, rIdx) => (
-                      <tr
-                        key={rIdx}
-                        className="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors"
-                      >
-                        {row.map((cell, cIdx) => (
-                          <td
-                            key={cIdx}
-                            className={`py-2.5 px-3 sm:px-3.5 text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed break-words align-top ${
-                              isTwoColumns && cIdx === 0
-                                ? 'font-bold text-neutral-900 dark:text-neutral-100'
+                    <tr className="border-b border-neutral-200 dark:border-neutral-700">
+                      {block.header.map((head, hIdx) => {
+                        const theme = getTableColumnTheme(head, hIdx, block.header.length);
+                        return (
+                          <th
+                            key={hIdx}
+                            className={`py-3 px-3.5 sm:px-4 font-bold tracking-wide text-xs sm:text-sm ${theme.headerCls} ${
+                              isTwoColumns && hIdx === 0
+                                ? 'w-[38%] sm:w-[28%]'
+                                : isTwoColumns && hIdx === 1
+                                ? 'w-[62%] sm:w-[72%]'
+                                : isThreeColumns && hIdx === 0
+                                ? 'w-[22%] sm:w-[20%]'
+                                : isThreeColumns
+                                ? 'w-[39%] sm:w-[40%]'
                                 : ''
                             }`}
                           >
-                            {renderInlineText(cell, seenTermIds, enableGlossaryTooltip)}
-                          </td>
-                        ))}
+                            {renderInlineText(head, seenTermIds, false)}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-200/70 dark:divide-neutral-800">
+                    {block.rows.map((row, rIdx) => (
+                      <tr
+                        key={rIdx}
+                        className="group hover:brightness-[0.98] dark:hover:brightness-110 transition-all"
+                      >
+                        {row.map((cell, cIdx) => {
+                          const headText = block.header[cIdx] || '';
+                          const theme = getTableColumnTheme(headText, cIdx, block.header.length);
+                          return (
+                            <td
+                              key={cIdx}
+                              className={`py-3 px-3.5 sm:px-4 leading-relaxed break-words align-top ${theme.cellCls} ${
+                                isTwoColumns && cIdx === 0
+                                  ? 'font-bold'
+                                  : ''
+                              }`}
+                            >
+                              {renderInlineText(cell, seenTermIds, enableGlossaryTooltip)}
+                            </td>
+                          );
+                        })}
                       </tr>
                     ))}
                   </tbody>

@@ -266,59 +266,6 @@ export default async function StrategyArticlePage({ params }: PageProps) {
       <div className="max-w-6xl mx-auto px-2 sm:px-6 py-4 sm:py-8 flex flex-col lg:flex-row gap-8 items-start justify-center">
         {/* 本文メインカラム（最大幅 max-w-3xl で日本語の最適な可読性を維持） */}
         <main className="w-full lg:max-w-3xl min-w-0">
-          {/* この記事の要点（3項目ハイライトカード） */}
-          {article.keyTakeaways && article.keyTakeaways.length > 0 && (
-            <section
-              aria-label="この記事の要点"
-              className="mb-5 p-3.5 sm:p-5 rounded-xl border border-cyan-300 dark:border-cyan-800/80 bg-cyan-50/70 dark:bg-cyan-950/30 shadow-xs"
-            >
-              <div className="flex items-center gap-2 mb-3 text-cyan-800 dark:text-cyan-300 font-bold text-sm sm:text-base">
-                <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                <span>この記事の要点</span>
-              </div>
-              <ul className="space-y-2">
-                {article.keyTakeaways.map((point, pIdx) => (
-                  <li
-                    key={pIdx}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed"
-                  >
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                    <span className="flex-1 font-medium">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* まず試すこと（1課題＋手順ハイライトカード） */}
-          {article.actionStep && (
-            <section
-              aria-label="まず試すこと"
-              className="mb-6 sm:mb-8 p-3.5 sm:p-5 rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50/70 dark:bg-amber-950/30 shadow-xs"
-            >
-              <div className="flex items-center gap-2 mb-2 text-amber-800 dark:text-amber-300 font-bold text-sm sm:text-base">
-                <Target className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                <span>まず試すこと（トレーニング課題）</span>
-              </div>
-              <p className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-3 bg-white/70 dark:bg-neutral-900/60 p-2.5 rounded-lg border border-amber-200/80 dark:border-amber-900/50 leading-relaxed">
-                🎯 {article.actionStep.task}
-              </p>
-              <ol className="space-y-1.5 pl-1">
-                {article.actionStep.steps.map((step, sIdx) => (
-                  <li
-                    key={sIdx}
-                    className="flex items-start gap-2 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed"
-                  >
-                    <span className="font-bold text-amber-700 dark:text-amber-400 font-mono text-xs shrink-0 mt-0.5">
-                      STEP {sIdx + 1}.
-                    </span>
-                    <span className="flex-1">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-
           {/* モバイル用開閉式目次 */}
           <StrategyToc items={tocItems} />
 

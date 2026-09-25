@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Camera } from 'lucide-react';
+import { Camera, Sparkles, CheckCircle2 } from 'lucide-react';
 import StrategyDiagram from './StrategyDiagram';
 import { generateHeadingId } from './tocUtils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -514,21 +514,33 @@ export default function StrategyMarkdownRenderer({
         }
 
         if (block.type === 'table') {
+          const isTwoColumns = block.header.length === 2;
           return (
             <div
               key={idx}
               className="my-6 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden"
             >
-              {/* スマホ用横スクロール案内 */}
-              <div className="sm:hidden px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
-                ← 左右にスクロールして全体を表示 →
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[500px]">
+              {/* 3列以上の表の場合のみスマホ用横スクロール案内を表示 */}
+              {!isTwoColumns && (
+                <div className="sm:hidden px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
+                  ← 左右にスクロールして全体を表示 →
+                </div>
+              )}
+              <div className={isTwoColumns ? 'w-full' : 'overflow-x-auto'}>
+                <table className={`w-full text-left text-xs sm:text-sm border-collapse ${isTwoColumns ? 'table-fixed' : 'min-w-[500px]'}`}>
                   <thead>
                     <tr className="bg-neutral-100 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
                       {block.header.map((head, hIdx) => (
-                        <th key={hIdx} className="py-2.5 px-3.5 font-bold tracking-wide">
+                        <th
+                          key={hIdx}
+                          className={`py-2.5 px-3 sm:px-3.5 font-bold tracking-wide ${
+                            isTwoColumns && hIdx === 0
+                              ? 'w-[38%] sm:w-[28%]'
+                              : isTwoColumns && hIdx === 1
+                              ? 'w-[62%] sm:w-[72%]'
+                              : ''
+                          }`}
+                        >
                           {renderInlineText(head, seenTermIds, false)}
                         </th>
                       ))}
@@ -543,7 +555,11 @@ export default function StrategyMarkdownRenderer({
                         {row.map((cell, cIdx) => (
                           <td
                             key={cIdx}
-                            className="py-2.5 px-3.5 text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed"
+                            className={`py-2.5 px-3 sm:px-3.5 text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed break-words align-top ${
+                              isTwoColumns && cIdx === 0
+                                ? 'font-bold text-neutral-900 dark:text-neutral-100'
+                                : ''
+                            }`}
                           >
                             {renderInlineText(cell, seenTermIds, enableGlossaryTooltip)}
                           </td>
@@ -596,6 +612,61 @@ export default function StrategyMarkdownRenderer({
         }
 
         if (block.type === 'quote') {
+          const firstLine = block.lines[0] || '';
+          const isTakeaways = firstLine.includes('この記事の要点') || firstLine.includes('要点（3行まとめ）');
+
+          if (isTakeaways) {
+            // 要点カードとしてアイコンと番号バッジで高視認性にレンダリング
+            const titleMatch = firstLine.match(/^\*\*(.*?)\*\*$/) || [null, firstLine];
+            const titleText = titleMatch[1] || 'この記事の要点（3行まとめ）';
+            const itemLines = block.lines.slice(1);
+
+            return (
+              <section
+                key={idx}
+                aria-label="この記事の要点"
+                className="my-5 sm:my-7 rounded-xl sm:rounded-2xl border border-cyan-300 dark:border-cyan-800 bg-gradient-to-br from-cyan-50/90 via-sky-50/40 to-white dark:from-cyan-950/40 dark:via-neutral-900/90 dark:to-neutral-900 p-4 sm:p-5 shadow-xs"
+              >
+                {/* ヘッダー */}
+                <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-cyan-200/80 dark:border-cyan-800/60 text-cyan-900 dark:text-cyan-200">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <h3 className="font-extrabold text-sm sm:text-base tracking-tight m-0 text-cyan-950 dark:text-cyan-100">
+                    {titleText}
+                  </h3>
+                </div>
+
+                {/* 3行リスト */}
+                <ul className="space-y-2.5 sm:space-y-3 m-0 p-0 list-none">
+                  {itemLines.map((line, lIdx) => {
+                    const matchNum = line.match(/^(\d+)[\.|\)]\s*(.*)$/);
+                    const numBadge = matchNum ? matchNum[1] : null;
+                    const contentText = matchNum ? matchNum[2] : line;
+
+                    return (
+                      <li
+                        key={lIdx}
+                        className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-[14.5px] text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal"
+                      >
+                        {numBadge ? (
+                          <span className="w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full bg-cyan-600 dark:bg-cyan-500 text-white font-mono font-bold text-[11px] sm:text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs select-none">
+                            {numBadge}
+                          </span>
+                        ) : (
+                          <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          {renderInlineText(contentText, seenTermIds, enableGlossaryTooltip)}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          }
+
           return (
             <blockquote
               key={idx}

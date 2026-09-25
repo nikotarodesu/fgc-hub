@@ -167,23 +167,35 @@ export default function DeviceProductCard({ product, articleSlug }: DeviceProduc
             .map((link, idx) => {
               const isAmazon = link.merchantName.toLowerCase().includes('amazon');
               return (
-                <a
-                  key={idx}
-                  href={link.url}
-                  target="_blank"
-                  rel={link.isSponsored ? 'noopener noreferrer sponsored' : 'noopener noreferrer'}
-                  onClick={() =>
-                    handleLinkClick(link.merchantName, link.isSponsored ? 'sponsored' : 'official')
-                  }
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
-                    link.isSponsored
-                      ? 'bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100'
-                      : 'bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200'
-                  }`}
-                >
-                  <span>{link.label || `${link.merchantName}で見る`}</span>
-                  <ExternalLink className="w-3 h-3 opacity-70 shrink-0" />
-                </a>
+                <React.Fragment key={idx}>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel={link.isSponsored ? 'noopener noreferrer sponsored' : 'noopener noreferrer'}
+                    onClick={() =>
+                      handleLinkClick(link.merchantName, link.isSponsored ? 'sponsored' : 'official')
+                    }
+                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
+                      link.isSponsored
+                        ? 'bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100'
+                        : 'bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200'
+                    }`}
+                  >
+                    <span>{link.label || `${link.merchantName}で見る`}</span>
+                    <ExternalLink className="w-3 h-3 opacity-70 shrink-0" />
+                  </a>
+                  {link.trackingPixelUrl && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={link.trackingPixelUrl}
+                      width={1}
+                      height={1}
+                      alt=""
+                      className="hidden"
+                      loading="lazy"
+                    />
+                  )}
+                </React.Fragment>
               );
             })}
         </div>

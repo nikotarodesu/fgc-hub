@@ -189,6 +189,14 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     authorVerified: false,
     merchantLinks: [
       {
+        merchantName: 'OZ GAMING',
+        url: 'https://px.a8.net/svt/ejp?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        trackingPixelUrl: 'https://www18.a8.net/0.gif?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        isSponsored: true,
+        label: 'OZ GAMINGでRTX4060構成を見る',
+        isActive: true,
+      },
+      {
         merchantName: 'ドスパラ（GALLERIA）',
         url: 'https://www.dospara.co.jp/TC30',
         isSponsored: false,
@@ -237,6 +245,14 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     authorVerified: false,
     merchantLinks: [
       {
+        merchantName: 'OZ GAMING',
+        url: 'https://px.a8.net/svt/ejp?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        trackingPixelUrl: 'https://www18.a8.net/0.gif?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        isSponsored: true,
+        label: 'OZ GAMINGで上位構成を見る',
+        isActive: true,
+      },
+      {
         merchantName: 'ドスパラ（GALLERIA）',
         url: 'https://www.dospara.co.jp/TC30',
         isSponsored: false,
@@ -283,6 +299,14 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     officialVerifiedDate: '2026-09-25',
     authorVerified: false,
     merchantLinks: [
+      {
+        merchantName: 'OZ GAMING',
+        url: 'https://px.a8.net/svt/ejp?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        trackingPixelUrl: 'https://www18.a8.net/0.gif?a8mat=4BCJJV+A4E2A+5U1O+5YJRM',
+        isSponsored: true,
+        label: 'OZ GAMINGでエントリー構成を見る',
+        isActive: true,
+      },
       {
         merchantName: 'ドスパラ（中古・整備品含む）',
         url: 'https://www.dospara.co.jp/TC30',

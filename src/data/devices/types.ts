@@ -6,6 +6,7 @@ export interface DeviceMerchantLink {
   isSponsored: boolean; // 広告リンクなら true (rel="sponsored")
   label?: string; // ボタン表示ラベル（例: "Amazonで見る", "公式サイトで仕様を見る"）
   isActive: boolean; // 有効フラグ。falseなら表示しない
+  trackingPixelUrl?: string; // ASPの計測用1x1ビーコン画像URL（A8.net等の成果追跡用）
 }
 
 export interface DeviceProduct {

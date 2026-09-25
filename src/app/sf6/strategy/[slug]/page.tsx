@@ -19,8 +19,8 @@ import {
   Layers,
 } from 'lucide-react';
 import StrategyQuickJump from '@/components/strategy/StrategyQuickJump';
-import StrategyAffiliateBanner from '@/components/strategy/StrategyAffiliateBanner';
-import { getStrategyInitialProduct } from '@/data/affiliateProducts';
+import DeviceEndArticlePromo from '@/components/devices/DeviceEndArticlePromo';
+import DeviceSidebarPromo from '@/components/devices/DeviceSidebarPromo';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -278,9 +278,6 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             />
           </div>
 
-          {/* Amazonアソシエイト商品リンク（飲料・軽食・ゲームデスク周りから毎回ランダム/記事ごとに切り替え） */}
-          <StrategyAffiliateBanner initialProduct={getStrategyInitialProduct(article.slug)} />
-
           {/* 前後の記事ナビゲーション（推奨学習順） */}
           <section aria-label="前後記事へのリンク" className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {prevArticle ? (
@@ -321,6 +318,9 @@ export default async function StrategyArticlePage({ params }: PageProps) {
               </div>
             )}
           </section>
+
+          {/* デバイス・プレイ環境案内カード（指示書に基づきAmazonランダム枠を置き換え、回遊導線の直後に配置） */}
+          <DeviceEndArticlePromo sourcePage={`/sf6/strategy/${article.slug}`} />
 
           {/* 共通技術一覧ポータルへ戻るリンク */}
           <div className="mt-8 text-center">
@@ -363,6 +363,9 @@ export default async function StrategyArticlePage({ params }: PageProps) {
             ) : (
               <p className="text-xs text-neutral-400">見出しがありません</p>
             )}
+
+            {/* サイドバー下部のデバイス案内カード */}
+            <DeviceSidebarPromo sourcePage={`/sf6/strategy/${article.slug}`} />
           </div>
         </aside>
       </div>

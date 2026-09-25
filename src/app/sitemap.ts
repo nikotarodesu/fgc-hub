@@ -61,6 +61,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
+    // スト6おすすめデバイス・プレイ環境（ハブ ＆ 個別ガイド）
+    {
+      url: `${baseUrl}/sf6/devices`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/sf6/devices/keyboard`,
+      lastModified: new Date('2026-09-25'),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/sf6/devices/gaming-pc`,
+      lastModified: new Date('2026-09-25'),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/sf6/devices/monitor`,
+      lastModified: new Date('2026-09-25'),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
     // キャラクター別ハブ
     ...characterHubUrls,
     // キャラクター別コンボツール

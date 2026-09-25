@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ARTICLES_DATA, getArticleEyecatch, parseArticleTitle } from '@/data/articles';
 import TechniqueEyecatch from '@/components/strategy/TechniqueEyecatch';
+import DeviceHomeBanner from '@/components/devices/DeviceHomeBanner';
 import {
   Search,
   Lock,
@@ -664,6 +665,9 @@ export default function HomePage() {
               </Link>
             </div>
           )}
+
+          {/* デバイス・プレイ環境コーナー案内（横長バナー） */}
+          <DeviceHomeBanner />
 
           {/* 該当記事一覧 */}
           {filteredArticles.length === 0 ? (

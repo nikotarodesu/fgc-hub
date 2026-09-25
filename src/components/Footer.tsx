@@ -136,6 +136,7 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-neutral-900 dark:text-white mb-3">攻略コンテンツ</h4>
             <ul className="space-y-2 text-neutral-500 dark:text-neutral-400">
+              <li><Link href="/sf6/devices" className="hover:text-neutral-900 dark:hover:text-white transition-colors">デバイス・プレイ環境</Link></li>
               <li><Link href="/glossary" className="hover:text-neutral-900 dark:hover:text-white transition-colors">格ゲー用語解説・スト6辞典</Link></li>
               <li><Link href="/sf6/strategy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">スト6共通技術・上達論</Link></li>
               <li><Link href="/membership" className="hover:text-neutral-900 dark:hover:text-white transition-colors">プレミアム会員案内</Link></li>

@@ -1,0 +1,80 @@
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { Gamepad2, ChevronRight, Keyboard, Laptop, Monitor } from 'lucide-react';
+import { trackDeviceEntryView, trackDeviceEntryClick } from '@/lib/analytics';
+
+export default function DeviceHomeBanner() {
+  const hasTrackedView = useRef(false);
+
+  useEffect(() => {
+    if (!hasTrackedView.current) {
+      hasTrackedView.current = true;
+      trackDeviceEntryView({
+        location: 'home',
+        sourcePage: '/',
+        destination: '/sf6/devices',
+      });
+    }
+  }, []);
+
+  const handleClick = (category?: string) => {
+    trackDeviceEntryClick({
+      location: 'home',
+      sourcePage: '/',
+      destination: '/sf6/devices',
+      category: category || 'all',
+    });
+  };
+
+  return (
+    <section className="mb-6">
+      <Link
+        href="/sf6/devices"
+        onClick={() => handleClick('hub')}
+        className="group block p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white shadow-xs hover:ring-2 hover:ring-cyan-500/50 transition-all"
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="space-y-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-cyan-400/20 text-cyan-300 text-[10px] font-black border border-cyan-400/30 shrink-0">
+                プレイ環境
+              </span>
+              <h2 className="text-sm sm:text-base font-black text-white group-hover:text-cyan-300 transition-colors truncate">
+                スト6おすすめデバイス・プレイ環境
+              </h2>
+            </div>
+            <p className="text-xs text-neutral-300 line-clamp-1">
+              スト6に合うキーボード・モニター・PCを、用途と予算から選べます。
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+            <div className="hidden md:flex items-center gap-2 text-[11px] text-neutral-400">
+              <span className="inline-flex items-center gap-1">
+                <Keyboard className="w-3 h-3 text-cyan-400" />
+                <span>キーボード</span>
+              </span>
+              <span>•</span>
+              <span className="inline-flex items-center gap-1">
+                <Laptop className="w-3 h-3 text-cyan-400" />
+                <span>PCスペック</span>
+              </span>
+              <span>•</span>
+              <span className="inline-flex items-center gap-1">
+                <Monitor className="w-3 h-3 text-cyan-400" />
+                <span>モニター</span>
+              </span>
+            </div>
+
+            <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:text-white transition-colors">
+              <span>選び方ガイドを見る</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </section>
+  );
+}

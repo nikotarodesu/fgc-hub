@@ -113,3 +113,66 @@ export function trackOutboundClick(url: string, label: string) {
     link_label: label,
   });
 }
+
+/**
+ * デバイスコーナー導線表示イベント
+ */
+export function trackDeviceEntryView({
+  location,
+  sourcePage,
+  destination,
+}: {
+  location: 'header' | 'mobile_menu' | 'home' | 'article_end' | 'sidebar' | 'contextual' | 'hub' | 'footer';
+  sourcePage: string;
+  destination: string;
+}) {
+  trackEvent('device_entry_view', {
+    entry_location: location,
+    source_page: sourcePage,
+    destination_url: destination,
+  });
+}
+
+/**
+ * デバイスコーナー導線クリックイベント
+ */
+export function trackDeviceEntryClick({
+  location,
+  sourcePage,
+  destination,
+  category,
+}: {
+  location: 'header' | 'mobile_menu' | 'home' | 'article_end' | 'sidebar' | 'contextual' | 'hub' | 'footer';
+  sourcePage: string;
+  destination: string;
+  category?: string;
+}) {
+  trackEvent('device_entry_click', {
+    entry_location: location,
+    source_page: sourcePage,
+    destination_url: destination,
+    device_category: category || 'all',
+  });
+}
+
+/**
+ * デバイス販売店・公式サイトリンククリック計測
+ */
+export function trackDeviceMerchantClick({
+  articleSlug,
+  productId,
+  merchant,
+  linkType,
+}: {
+  articleSlug: string;
+  productId: string;
+  merchant: string;
+  linkType: 'sponsored' | 'official' | 'note';
+}) {
+  trackEvent('device_merchant_click', {
+    article_slug: articleSlug,
+    product_id: productId,
+    merchant_name: merchant,
+    link_type: linkType,
+  });
+}

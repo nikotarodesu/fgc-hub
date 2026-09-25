@@ -46,6 +46,21 @@ export const DEVICE_ARTICLES: DeviceArticleMeta[] = [
     isFree: true,
     products: ['benq-zowie-xl2546k', 'benq-mobiuz-ex2510s', 'asus-tuf-vg259qr'],
   },
+  {
+    slug: 'leverless',
+    path: '/sf6/devices/leverless',
+    title: 'スト6向けレバーレスの選び方とおすすめ',
+    h1: 'スト6向けレバーレスの選び方とおすすめ',
+    description:
+      'スト6におけるレバーレスコントローラーの選び方とおすすめモデルを徹底解説。歩きガードや最速ダッシュの入力メリット、PS5/PC対応状況、ボタンサイズや配置、薄型とフルサイズの違いまで比較します。',
+    category: 'leverless',
+    categoryLabel: '操作機器（レバーレス）',
+    updatedAt: '2026-09-25',
+    publishedAt: '2026-09-25',
+    readTime: '9分',
+    isFree: true,
+    products: ['punk-workshop-mini-hitbox', 'haute42-t16', 'hitbox-original'],
+  },
 ];
 
 export function getDeviceArticleBySlug(slug: string): DeviceArticleMeta | undefined {

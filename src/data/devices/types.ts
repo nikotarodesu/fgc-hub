@@ -24,6 +24,7 @@ export interface DeviceProduct {
   officialVerifiedDate?: string; // 公式情報の確認日（例: '2026-09-25'）
   authorVerified?: boolean; // 著者の実機検証・使用実績があるか
   authorComment?: string; // 著者の確認済み実戦コメント（ある場合のみ）
+  imageUrl?: string; // 商品画像URL（Amazon公式画像や許諾素材）
   merchantLinks: DeviceMerchantLink[]; // 販売店・公式サイトリンク
   noteReviewUrl?: string; // noteの本人執筆レビューがある場合のURL
 }

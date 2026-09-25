@@ -75,6 +75,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
+      url: `${baseUrl}/sf6/devices/leverless`,
+      lastModified: new Date('2026-09-25'),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/sf6/devices/gaming-pc`,
       lastModified: new Date('2026-09-25'),
       changeFrequency: 'weekly',

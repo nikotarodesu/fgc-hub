@@ -5,6 +5,7 @@ import {
   Keyboard,
   Laptop,
   Monitor,
+  Gamepad2,
   ChevronRight,
   ShieldCheck,
   Sparkles,
@@ -19,14 +20,14 @@ import { DEVICE_PRODUCTS } from '@/data/devices/products';
 export const metadata: Metadata = {
   title: 'スト6おすすめデバイス・プレイ環境｜にこ太郎の格ゲーLAB',
   description:
-    'スト6（ストリートファイター6）に合うキーボード・モニター・PCを、用途と予算から選べます。全キャラ1800MR以上の視点から、操作機器と動作環境の選び方を徹底解説。',
+    'スト6（ストリートファイター6）に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。全キャラ1800MR以上の視点から、操作機器と動作環境の選び方を徹底解説。',
   alternates: {
     canonical: 'https://nikotaro.com/sf6/devices',
   },
   openGraph: {
     title: 'スト6おすすめデバイス・プレイ環境｜にこ太郎の格ゲーLAB',
     description:
-      'スト6に合うキーボード・モニター・PCを、用途と予算から選べます。全キャラ1800MR以上の視点から、操作機器と動作環境の選び方を徹底解説。',
+      'スト6に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。全キャラ1800MR以上の視点から、操作機器と動作環境の選び方を徹底解説。',
     url: 'https://nikotaro.com/sf6/devices',
     type: 'website',
   },
@@ -65,7 +66,7 @@ export default function DevicesHubPage() {
         '@type': 'CollectionPage',
         name: 'スト6おすすめデバイス・プレイ環境',
         description:
-          'スト6に合うキーボード・モニター・PCを、用途と予算から選べます。',
+          'スト6に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。',
         url: 'https://nikotaro.com/sf6/devices',
       },
     ],
@@ -123,7 +124,7 @@ export default function DevicesHubPage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl mb-4">
-            スト6に合うキーボード・モニター・PCを、用途と予算から選べます。対戦での操作性や表示遅延の仕組みを整理し、無駄のない環境選びをサポートします。
+            スト6に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。対戦での操作性や表示遅延の仕組みを整理し、無駄のない環境選びをサポートします。
           </p>
 
           {/* PR・広告利用の説明 */}
@@ -147,7 +148,7 @@ export default function DevicesHubPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* 1. キーボード */}
             <Link
               href="/sf6/devices/keyboard"
@@ -172,7 +173,31 @@ export default function DevicesHubPage() {
               </div>
             </Link>
 
-            {/* 2. ゲーミングPC */}
+            {/* 2. レバーレス */}
+            <Link
+              href="/sf6/devices/leverless"
+              className="group p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 hover:border-cyan-500/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+                  <Gamepad2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                    レバーレスで遊びたい
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 leading-relaxed">
+                    CPT公式ルール対応とボタン配置から選ぶ。薄型軽量から定番大型モデルまで徹底比較。
+                  </p>
+                </div>
+              </div>
+              <div className="pt-4 mt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-bold text-neutral-800 dark:text-neutral-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                <span>レバーレス記事へ</span>
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </Link>
+
+            {/* 3. ゲーミングPC */}
             <Link
               href="/sf6/devices/gaming-pc"
               className="group p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 hover:border-cyan-500/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
@@ -196,7 +221,7 @@ export default function DevicesHubPage() {
               </div>
             </Link>
 
-            {/* 3. モニター */}
+            {/* 4. モニター */}
             <Link
               href="/sf6/devices/monitor"
               className="group p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 hover:border-cyan-500/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
@@ -241,6 +266,13 @@ export default function DevicesHubPage() {
             >
               <Keyboard className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>キーボード</span>
+            </Link>
+            <Link
+              href="/sf6/devices/leverless"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
+            >
+              <Gamepad2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>レバーレス</span>
             </Link>
 
             <span className="text-neutral-300 dark:text-neutral-700 mx-1">|</span>

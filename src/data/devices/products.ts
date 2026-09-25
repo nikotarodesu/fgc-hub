@@ -40,7 +40,7 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
     merchantLinks: [
       {
         merchantName: 'Amazon',
-        url: 'https://www.amazon.co.jp/dp/B0CN952T9S?tag=nikotarosf6-22',
+        url: 'https://www.amazon.co.jp/s?k=Razer+Huntsman+V3+Pro+Mini+JP&tag=nikotarosf6-22',
         isSponsored: true,
         label: 'Amazonで詳細を見る',
         isActive: true,
@@ -431,6 +431,155 @@ export const DEVICE_PRODUCTS: Record<string, DeviceProduct> = {
       {
         merchantName: 'ASUS公式サイト',
         url: 'https://www.asus.com/jp/displays-desktops/monitors/tuf-gaming/tuf-gaming-vg259qr/',
+        isSponsored: false,
+        label: '公式サイトで仕様を見る',
+        isActive: true,
+      },
+    ],
+  },
+
+  // ==========================================
+  // レバーレスコントローラー
+  // ==========================================
+  'punk-workshop-mini-hitbox': {
+    id: 'punk-workshop-mini-hitbox',
+    name: 'PUNK WORKSHOP Mini HitBox (薄型レバーレス)',
+    category: 'leverless',
+    categoryLabel: 'レバーレス',
+    compatibility: ['PC (Windows)', 'PS5 (要対応基板またはコンバーター)'],
+    targetUser: 'プロ大会や競技シーンで支持される超高速反応・薄型軽量モデルを求める方',
+    badge: '競技シーン定番・超低遅延',
+    summary:
+      '世界中のトッププロが愛用する超薄型レバーレスコントローラー。独自開発の超低ストロークキースイッチとRaspberry Pi Pico（GP2040-CE）またはBrook基板による極小の入力遅延を実現。',
+    pros: [
+      '押し込みストロークが極めて浅く、最速のダッシュ・対空・コマンド入力が可能',
+      '膝置き・机置きのどちらでも安定するマグネット開閉式の軽量スリムボディ',
+      '天板が簡単に開閉でき、キースイッチの交換やメンテナンスが非常に容易',
+      'スト6の追加ボタン需要（パリィやインパクト専用ボタン）に応える拡張ボタン配置',
+    ],
+    cons: [
+      '人気のため公式ショップや国内代理店での入荷待ち・予約販売になることが多い',
+      'PS5で直接プレイする場合はPS5対応基板モデルの選択またはBrook Wingman等のコンバーターが必要',
+    ],
+    specHighlights: [
+      { label: 'タイプ', value: '超薄型レバーレスコントローラー' },
+      { label: 'スイッチ', value: 'PUNK WORKSHOP独自メカニカルスイッチ' },
+      { label: '基板', value: 'Raspberry Pi Pico (GP2040-CE) / Brook' },
+      { label: '接続方式', value: '有線USB Type-C' },
+      { label: 'SOCD', value: '上優先 / ニュートラル切替対応（CPT準拠）' },
+    ],
+    officialUrl: 'https://punkworkshop.top/',
+    officialVerifiedDate: '2026-09-25',
+    authorVerified: true,
+    authorComment:
+      'レバーレスを何台も乗り換えてきましたが、PUNK WORKSHOPのボタンストロークの短さと入力の軽さは群を抜いています。指先を滑らせるような入力でも正確に技が出ます。',
+    merchantLinks: [
+      {
+        merchantName: 'Amazon',
+        url: 'https://www.amazon.co.jp/s?k=PUNK+WORKSHOP+%E3%83%AC%E3%83%90%E3%83%BC%E3%83%AC%E3%82%B9&tag=nikotarosf6-22',
+        isSponsored: true,
+        label: 'Amazonで詳細を見る',
+        isActive: true,
+      },
+      {
+        merchantName: 'PUNK WORKSHOP公式サイト',
+        url: 'https://punkworkshop.top/',
+        isSponsored: false,
+        label: '公式サイトでラインナップを見る',
+        isActive: true,
+      },
+    ],
+  },
+
+  'haute42-t16': {
+    id: 'haute42-t16',
+    name: 'Haute42 T16 / G16 シリーズ (高コスパレバーレス)',
+    category: 'leverless',
+    categoryLabel: 'レバーレス',
+    compatibility: ['PC (Windows)', 'Switch', 'PS4', 'PS5 (要パススルー対応ドングル)'],
+    targetUser: '1万円台前半で始められる高性能・多ボタンなレバーレスを探している方',
+    badge: 'コスパ最強・入門おすすめ',
+    summary:
+      '1万円前後という驚異の価格でオープンソース基板「GP2040-CE」と1ms未満の極小遅延を実現した大人気レバーレス。16ボタン構成でインパクトやパリィの押し分けが抜群にやりやすい。',
+    pros: [
+      '1万円台前半で購入できる圧倒的なコストパフォーマンス',
+      'ボタン数が16個あり、親指や小指周辺にパリィ・インパクトを自由にアサイン可能',
+      '小型OLEDディスプレイを搭載し、入力キーや現在のSOCDモードが一目で確認可能',
+      'Kailhロープロファイルスイッチ採用でキータッチが軽快かつ静音性も良好',
+    ],
+    cons: [
+      'PS5単体での直接認識はできず、パススルー用のUSBドングル（Booter 5等）が別途必要',
+      'アクリル積層ボディのため、高価格帯の金属製モデルに比べるとやや軽め（膝置きは滑り止め推奨）',
+    ],
+    specHighlights: [
+      { label: 'タイプ', value: '16ボタン薄型アクリルレバーレス' },
+      { label: 'スイッチ', value: 'Kailh Low Profile スイッチ' },
+      { label: '基板', value: 'GP2040-CE（オープンソース超低遅延）' },
+      { label: '接続方式', value: '有線USB Type-C' },
+      { label: 'ディスプレイ', value: '小型OLEDスクリーン搭載' },
+    ],
+    officialUrl: 'https://haute42.com/',
+    officialVerifiedDate: '2026-09-25',
+    authorVerified: false,
+    merchantLinks: [
+      {
+        merchantName: 'Amazon',
+        url: 'https://www.amazon.co.jp/s?k=Haute42+%E3%83%AC%E3%83%90%E3%83%BC%E3%83%AC%E3%82%B9&tag=nikotarosf6-22',
+        isSponsored: true,
+        label: 'Amazonで詳細を見る',
+        isActive: true,
+      },
+      {
+        merchantName: 'Haute42公式サイト',
+        url: 'https://haute42.com/',
+        isSponsored: false,
+        label: '公式サイトで仕様を見る',
+        isActive: true,
+      },
+    ],
+  },
+
+  'hitbox-original': {
+    id: 'hitbox-original',
+    name: 'Hit Box（ヒットボックス）公式オリジナルモデル',
+    category: 'leverless',
+    categoryLabel: 'レバーレス',
+    compatibility: ['PC (Windows)', 'PS4', 'PS5 (公式コンバーターまたはPS4版動作)'],
+    targetUser: '頑丈な金属筐体と三和電子製ボタンで、膝置きでどっしり安定してプレイしたい方',
+    badge: 'レバーレスの元祖・高剛性',
+    summary:
+      'レバーレスコントローラーのパイオニア「Hit Box Arcade」のオリジナル機。堅牢なスチール製筐体にアーケード純正の三和電子製24mm/30mmボタンを搭載した元祖・王道モデル。',
+    pros: [
+      '金属製筐体による適度な重量（約2kg）で、激しい対戦でも膝の上やデスクで一切ブレない',
+      'ゲームセンターと同じ三和電子製ボタンを採用しており、打鍵感と耐久性が抜群',
+      'CPT（CAPCOM Pro Tour）公認の歴史があり、大会利用の安心感が最も高い',
+      '底面全体に滑り止めフォームパッドが貼られており膝置きの快適性が最高クラス',
+    ],
+    cons: [
+      '薄型レバーレスに比べると厚み・重量があり、持ち運びには専用バッグ等が必要',
+      '価格帯が約4万円前後と高価格帯',
+    ],
+    specHighlights: [
+      { label: 'タイプ', value: 'フルサイズ金属筐体レバーレス' },
+      { label: 'ボタン', value: '三和電子製 24mm×11 / 30mm×1' },
+      { label: '重量', value: '約2.1kg（抜群の安定感）' },
+      { label: '接続方式', value: '着脱式航空コネクタUSBケーブル' },
+      { label: '底面', value: '全面ラバー滑り止め加工' },
+    ],
+    officialUrl: 'https://www.hitboxarcade.com/',
+    officialVerifiedDate: '2026-09-25',
+    authorVerified: false,
+    merchantLinks: [
+      {
+        merchantName: 'Amazon',
+        url: 'https://www.amazon.co.jp/s?k=Hit+Box+%E3%83%AC%E3%83%90%E3%83%BC%E3%83%AC%E3%82%B9&tag=nikotarosf6-22',
+        isSponsored: true,
+        label: 'Amazonで詳細を見る',
+        isActive: true,
+      },
+      {
+        merchantName: 'Hit Box公式サイト',
+        url: 'https://www.hitboxarcade.com/',
         isSponsored: false,
         label: '公式サイトで仕様を見る',
         isActive: true,

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Monitor, Keyboard, Laptop, ChevronRight } from 'lucide-react';
+import { Monitor, Keyboard, Laptop, Gamepad2, ChevronRight } from 'lucide-react';
 import { trackDeviceEntryView, trackDeviceEntryClick } from '@/lib/analytics';
 
 interface DeviceEndArticlePromoProps {
@@ -48,12 +48,17 @@ export default function DeviceEndArticlePromo({ sourcePage }: DeviceEndArticlePr
             </h3>
           </div>
           <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            キーボード・モニター・PCの選び方をまとめています。
+            キーボード・レバーレス・モニター・PCの選び方をまとめています。
           </p>
-          <div className="flex items-center gap-3 pt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+          <div className="flex items-center gap-3 pt-1 text-[11px] text-neutral-500 dark:text-neutral-400 flex-wrap">
             <span className="flex items-center gap-1">
               <Keyboard className="w-3.5 h-3.5 text-neutral-400" />
               <span>キーボード</span>
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Gamepad2 className="w-3.5 h-3.5 text-neutral-400" />
+              <span>レバーレス</span>
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">

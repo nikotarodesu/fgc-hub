@@ -46,7 +46,7 @@ export default function DeviceHomeBanner() {
               </h2>
             </div>
             <p className="text-xs text-neutral-300 line-clamp-1">
-              スト6に合うキーボード・モニター・PCを、用途と予算から選べます。
+              スト6に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。
             </p>
           </div>
 
@@ -55,6 +55,11 @@ export default function DeviceHomeBanner() {
               <span className="inline-flex items-center gap-1">
                 <Keyboard className="w-3 h-3 text-cyan-400" />
                 <span>キーボード</span>
+              </span>
+              <span>•</span>
+              <span className="inline-flex items-center gap-1">
+                <Gamepad2 className="w-3 h-3 text-cyan-400" />
+                <span>レバーレス</span>
               </span>
               <span>•</span>
               <span className="inline-flex items-center gap-1">

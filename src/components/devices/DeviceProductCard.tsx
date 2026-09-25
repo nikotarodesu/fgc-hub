@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { DeviceProduct } from '@/data/devices/types';
 import { CheckCircle2, AlertCircle, ExternalLink, BookOpen, ShieldCheck, Check } from 'lucide-react';
 import { trackDeviceMerchantClick } from '@/lib/analytics';
@@ -44,6 +45,19 @@ export default function DeviceProductCard({ product, articleSlug }: DeviceProduc
           </span>
         )}
       </div>
+
+      {/* 商品画像（登録されている場合のみ表示） */}
+      {product.imageUrl && (
+        <div className="relative w-full max-w-sm mx-auto aspect-[16/10] bg-neutral-50 dark:bg-neutral-800/40 rounded-xl overflow-hidden border border-neutral-200/60 dark:border-neutral-700/60 flex items-center justify-center p-3">
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 100vw, 384px"
+          />
+        </div>
+      )}
 
       {/* 商品名 */}
       <div>

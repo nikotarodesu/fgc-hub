@@ -4,6 +4,7 @@ import React from 'react';
 import { findRyuNeutralMoveKeyFrame, KeyFrameInfo } from '@/data/sf6/ryuFrameData';
 import { findElenaNeutralMoveKeyFrame } from '@/data/sf6/elenaFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
+import YouTubeEmbed from './YouTubeEmbed';
 import { Star, Zap, Film, Eye, ChevronDown, ChevronUp, Play, Pause } from 'lucide-react';
 import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import { getMediaUrl } from '@/lib/media';
@@ -119,9 +120,30 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
+// YouTube URLから動画IDを抽出するヘルパー
+export function extractYouTubeVideoId(url: string): string | null {
+  const trimmed = url.trim();
+  const match = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  return match ? match[1] : null;
+}
+
+// 行が単独のYouTubeリンク（URL直接またはMarkdownリンク）かを判定
+function isYouTubeLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (/^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s]+$/.test(trimmed)) {
+    return !!extractYouTubeVideoId(trimmed);
+  }
+  const mdMatch = trimmed.match(/^\[(.*?)\]\((https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s\)]+)\)$/);
+  if (mdMatch) {
+    return !!extractYouTubeVideoId(mdMatch[2]);
+  }
+  return false;
+}
+
 type LineType =
   | 'empty'
   | 'image'
+  | 'youtube'
   | 'quote'
   | 'numbered_heading'
   | 'star_heading'
@@ -139,6 +161,7 @@ function getLineType(line: string): LineType {
   const trimmed = line.trim();
   if (!trimmed) return 'empty';
   if (trimmed.startsWith('![') && trimmed.includes('](') && trimmed.endsWith(')')) return 'image';
+  if (isYouTubeLine(trimmed)) return 'youtube';
   if (trimmed.startsWith('>')) return 'quote';
   if (/^[①-⑳❶-❿➊-➓⓫-⓴]/.test(trimmed)) return 'numbered_heading';
   if (trimmed.startsWith('⭐️') || trimmed.startsWith('⭐')) return 'star_heading';
@@ -581,6 +604,29 @@ export default function RichContent({
       );
     }
 
+    // 0.55 インラインYouTube埋め込み
+    if (block.type === 'youtube') {
+      return (
+        <div key={blockKey} className="my-4 sm:my-6 space-y-4">
+          {block.lines.map((line, lIdx) => {
+            const trimmed = line.trim();
+            const mdMatch = trimmed.match(/^\[(.*?)\]\((https?:\/\/[^\s\)]+)\)$/);
+            const url = mdMatch ? mdMatch[2] : trimmed;
+            const caption = mdMatch ? mdMatch[1] : '実戦コンボ・解説動画（YouTube）';
+            const videoId = extractYouTubeVideoId(url);
+            if (!videoId) return null;
+            return (
+              <YouTubeEmbed
+                key={lIdx}
+                videoId={videoId}
+                caption={caption}
+              />
+            );
+          })}
+        </div>
+      );
+    }
+
     // 1. 引用・コールアウト
     if (block.type === 'quote' && block.lines) {
       const quoteText = block.lines
@@ -651,18 +697,31 @@ export default function RichContent({
           {block.lines.map((line, lIdx) => {
             const cleanText = line.trim().replace(/^[⭐️⭐]\s*/, '');
             const itemId = `${sectionId}-star-${blockKey}-${lIdx}`;
+
+            // 括弧内の補足説明を分離（大文字・太字ではなくさりげなく表記）
+            const parenMatch = cleanText.match(/^([^(（]+)[(（](.*?)[)）](.*)$/);
+            const mainTitle = parenMatch ? parenMatch[1].trim() : cleanText;
+            const subNote = parenMatch ? parenMatch[2].trim() : null;
+            const extraTrailing = parenMatch ? parenMatch[3].trim() : '';
+
             return (
               <div
                 key={lIdx}
                 id={itemId}
                 data-item-heading={`⭐️ ${cleanText}`}
-                className={`flex items-center gap-2 ${isCoaching ? 'px-2.5 py-1.5 sm:px-3 sm:py-2 text-[14.5px] sm:text-[16.5px]' : 'px-3 py-2 text-[16px] sm:text-[17px]'} rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold tracking-tight scroll-mt-24`}
+                className={`flex items-baseline gap-2 ${isCoaching ? 'px-2.5 py-1.5 sm:px-3 sm:py-2 text-[14.5px] sm:text-[16.5px]' : 'px-3 py-2 text-[16px] sm:text-[17px]'} rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 text-neutral-900 dark:text-white font-bold tracking-tight scroll-mt-24`}
               >
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-yellow-400/25 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold shrink-0 select-none self-center">
                   <Star className="w-3.5 h-3.5 fill-current" />
                 </span>
-                <h4 className={`font-bold ${isCoaching ? 'text-[14.5px] sm:text-[16.5px]' : 'text-[16px] sm:text-[17px]'} text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug`}>
-                  {renderInline(cleanText)}
+                <h4 className={`font-bold ${isCoaching ? 'text-[14.5px] sm:text-[16.5px]' : 'text-[16px] sm:text-[17px]'} text-yellow-950 dark:text-yellow-100 tracking-tight leading-snug flex-1 flex flex-wrap items-baseline gap-x-1.5`}>
+                  <span>{renderInline(mainTitle)}</span>
+                  {subNote && (
+                    <span className="text-xs sm:text-[13px] font-normal text-neutral-600 dark:text-neutral-400 tracking-normal opacity-90 inline-block">
+                      （{renderInline(subNote)}）
+                    </span>
+                  )}
+                  {extraTrailing && <span>{renderInline(extraTrailing)}</span>}
                 </h4>
               </div>
             );

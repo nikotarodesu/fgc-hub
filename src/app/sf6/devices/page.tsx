@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { DEVICE_ARTICLES } from '@/data/devices/articles';
 import { DEVICE_PRODUCTS } from '@/data/devices/products';
+import DeviceEditorialPolicy from '@/components/devices/DeviceEditorialPolicy';
 
 export const metadata: Metadata = {
   title: 'スト6おすすめデバイス・プレイ環境｜にこ太郎の格ゲーLAB',
@@ -114,6 +115,9 @@ export default function DevicesHubPage() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>完全無料コーナー</span>
             </span>
+            <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded border border-neutral-200/80 dark:border-neutral-700">
+              PR・広告を含む
+            </span>
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
               更新日: 2026年9月25日
             </span>
@@ -123,18 +127,9 @@ export default function DevicesHubPage() {
             スト6おすすめデバイス・プレイ環境
           </h1>
 
-          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl mb-4">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl">
             スト6に合うキーボード・レバーレス・モニター・PCを、用途と予算から選べます。対戦での操作性や表示遅延の仕組みを整理し、無駄のない環境選びをサポートします。
           </p>
-
-          {/* PR・広告利用の説明 */}
-          <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/60 text-[11px] text-neutral-500 dark:text-neutral-400 flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
-            <p className="leading-relaxed">
-              <strong>掲載方針・広告表記について：</strong>
-              本コーナーの記事では、Amazonアソシエイトなどのアフィリエイト広告リンクを利用しています。商品の推薦や評価は公式仕様・実戦知見・客観的データに基づいており、報酬の多寡によって掲載順位や推薦理由を歪めることはありません。
-            </p>
-          </div>
         </div>
       </header>
 
@@ -398,6 +393,9 @@ export default function DevicesHubPage() {
             ))}
           </div>
         </section>
+
+        {/* 掲載方針・広告表記について（フッター直上） */}
+        <DeviceEditorialPolicy />
       </main>
     </div>
   );

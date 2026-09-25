@@ -15,6 +15,7 @@ import {
 import { DEVICE_PRODUCTS } from '@/data/devices/products';
 import DeviceProductCard from '@/components/devices/DeviceProductCard';
 import DeviceComparisonTable from '@/components/devices/DeviceComparisonTable';
+import DeviceEditorialPolicy from '@/components/devices/DeviceEditorialPolicy';
 
 export const metadata: Metadata = {
   title: 'スト6向けレバーレスの選び方とおすすめ｜にこ太郎の格ゲーLAB',
@@ -137,6 +138,9 @@ export default function LeverlessDevicePage() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>完全無料ガイド</span>
             </span>
+            <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded border border-neutral-200/80 dark:border-neutral-700">
+              PR・広告を含む
+            </span>
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
               操作機器（レバーレス）
             </span>
@@ -162,14 +166,6 @@ export default function LeverlessDevicePage() {
 
       {/* 記事メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10 text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base">
-        {/* 広告利用の明記 */}
-        <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 flex items-start gap-2">
-          <ShieldCheck className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
-          <p className="leading-relaxed">
-            当記事ではメーカー公式サイトおよびAmazonアソシエイトなどのリンクを含みます。スト6の実戦知見と公式大会ルール（CPT規格）に基づき公平に比較・解説しています。
-          </p>
-        </div>
-
         {/* 1. 結論 */}
         <section className="p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3">
           <div className="flex items-center gap-2">
@@ -356,6 +352,9 @@ export default function LeverlessDevicePage() {
             </Link>
           </div>
         </section>
+
+        {/* 掲載方針・広告表記について（フッター直上） */}
+        <DeviceEditorialPolicy />
       </main>
     </div>
   );

@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 512" width="680" height="512">
+  <defs>
+    <style>
+      .hdr-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, "Yu Gothic", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .col1-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, "Yu Gothic", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        fill: #1E293B;
+      }
+      .col2-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, "Yu Gothic", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        fill: #4A1B0C;
+      }
+      .col3-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, "Yu Gothic", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        fill: #04342C;
+      }
+    </style>
+    <clipPath id="table-rounded">
+      <rect x="60" y="40" width="560" height="432" rx="4" ry="4" />
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="512" fill="#FFFFFF" />
+
+  <!-- Table Content with rounded clip -->
+  <g clip-path="url(#table-rounded)">
+    <!-- Column 1: 前提条件 background -->
+    <rect x="60" y="40" width="110" height="32" fill="#EEF2F6" />
+    <rect x="60" y="72" width="110" height="400" fill="#F8FAFC" />
+
+    <!-- Column 2: 削る行動 background -->
+    <rect x="170" y="40" width="225" height="32" fill="#F5D5CB" />
+    <rect x="170" y="72" width="225" height="400" fill="#FAECE7" />
+
+    <!-- Column 3: 残す行動 background -->
+    <rect x="395" y="40" width="225" height="32" fill="#CBEFE0" />
+    <rect x="395" y="72" width="225" height="400" fill="#E1F5EE" />
+
+    <!-- Horizontal Dividers -->
+    <line x1="60" y1="72" x2="620" y2="72" stroke="#CBD5E1" stroke-width="0.75" />
+    <line x1="60" y1="152" x2="620" y2="152" stroke="#CBD5E1" stroke-width="0.75" />
+    <line x1="60" y1="232" x2="620" y2="232" stroke="#CBD5E1" stroke-width="0.75" />
+    <line x1="60" y1="312" x2="620" y2="312" stroke="#CBD5E1" stroke-width="0.75" />
+    <line x1="60" y1="392" x2="620" y2="392" stroke="#CBD5E1" stroke-width="0.75" />
+
+    <!-- Vertical Dividers -->
+    <line x1="170" y1="40" x2="170" y2="472" stroke="#CBD5E1" stroke-width="0.75" />
+    <line x1="395" y1="40" x2="395" y2="472" stroke="#CBD5E1" stroke-width="0.75" />
+
+    <!-- Header Texts -->
+    <text x="115" y="56" text-anchor="middle" dominant-baseline="central" class="hdr-text" fill="#1E293B">前提条件</text>
+    <text x="282.5" y="56" text-anchor="middle" dominant-baseline="central" class="hdr-text" fill="#4A1B0C">削る行動（やらない）</text>
+    <text x="507.5" y="56" text-anchor="middle" dominant-baseline="central" class="hdr-text" fill="#04342C">残す行動（これだけやる）</text>
+
+    <!-- Row 1: 距離 (y: 72..152) -->
+    <text x="115" y="112" text-anchor="middle" dominant-baseline="central" class="col1-text">距離</text>
+    <text x="186" y="106" class="col2-text">
+      <tspan x="186" dy="0">届かない小技、</tspan>
+      <tspan x="186" dy="20">空振りリスクの高い大技</tspan>
+    </text>
+    <text x="411" y="106" class="col3-text">
+      <tspan x="411" dy="0">その距離で機能する主力技</tspan>
+      <tspan x="411" dy="20">（前進・置き・差し）</tspan>
+    </text>
+
+    <!-- Row 2: フレーム (y: 152..232) -->
+    <text x="115" y="192" text-anchor="middle" dominant-baseline="central" class="col1-text">フレーム</text>
+    <text x="186" y="186" class="col2-text">
+      <tspan x="186" dy="0">不利時の最速暴れ、</tspan>
+      <tspan x="186" dy="20">有利時の不要な様子見</tspan>
+    </text>
+    <text x="411" y="186" class="col3-text">
+      <tspan x="411" dy="0">ガード安定、</tspan>
+      <tspan x="411" dy="20">有利フレームは確実に埋める</tspan>
+    </text>
+
+    <!-- Row 3: ゲージ (y: 232..312) -->
+    <text x="115" y="272" text-anchor="middle" dominant-baseline="central" class="col1-text">ゲージ</text>
+    <text x="186" y="266" class="col2-text">
+      <tspan x="186" dy="0">Dゲージ不足時のOD・</tspan>
+      <tspan x="186" dy="20">キャンセルラッシュ</tspan>
+    </text>
+    <text x="411" y="266" class="col3-text">
+      <tspan x="411" dy="0">ノーゲージ安定行動、</tspan>
+      <tspan x="411" dy="20">ゲージが回復するまで待つ</tspan>
+    </text>
+
+    <!-- Row 4: 画面位置 (y: 312..392) -->
+    <text x="115" y="352" text-anchor="middle" dominant-baseline="central" class="col1-text">画面位置</text>
+    <text x="186" y="346" class="col2-text">
+      <tspan x="186" dy="0">端背負い時の後退・</tspan>
+      <tspan x="186" dy="20">無意味な後退</tspan>
+    </text>
+    <text x="411" y="346" class="col3-text">
+      <tspan x="411" dy="0">前ジャンプ、位置入れ替え、</tspan>
+      <tspan x="411" dy="20">ガード</tspan>
+    </text>
+
+    <!-- Row 5: 相手の傾向 (y: 392..472) -->
+    <text x="115" y="432" text-anchor="middle" dominant-baseline="central" class="col1-text">相手の傾向</text>
+    <text x="186" y="426" class="col2-text">
+      <tspan x="186" dy="0">相手が使ってこない</tspan>
+      <tspan x="186" dy="20">行動への過剰な意識</tspan>
+    </text>
+    <text x="411" y="426" class="col3-text">
+      <tspan x="411" dy="0">相手が頻繁に見せる行動への</tspan>
+      <tspan x="411" dy="20">1点対策</tspan>
+    </text>
+  </g>
+
+  <!-- Table Outer Border -->
+  <rect x="60" y="40" width="560" height="432" rx="4" ry="4" fill="none" stroke="#CBD5E1" stroke-width="1" />
+</svg>

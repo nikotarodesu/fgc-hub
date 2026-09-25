@@ -161,49 +161,42 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 推奨動作環境・提携パートナー枠（RECOMMENDED BTO PARTNER） */}
-        <div className="mb-10 p-4 sm:p-5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200/80 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start gap-2">
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
-                RECOMMENDED BTO PARTNER
-              </span>
-              <span className="text-[10px] text-neutral-400 font-bold">
-                PR
-              </span>
-            </div>
-            <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-              スト6推奨ゲーミングPC提携ブランド：OZ GAMING
-            </p>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-              当メディアではスト6対戦を快適に行える高コスパ・高冷却なBTOゲーミングPC環境を推奨しています。
-            </p>
+        {/* パートナー・提携バナー枠 (プロチーム・公式メディア風) */}
+        <div className="mb-10 text-center">
+          <div className="inline-flex items-center gap-1.5 mb-3">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-400 dark:text-neutral-500 font-semibold">
+              PARTNERS
+            </span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-400 font-medium leading-none">
+              PR
+            </span>
           </div>
-
-          <div className="shrink-0 flex flex-col items-center">
-            <a
-              href="https://px.a8.net/svt/ejp?a8mat=4BCJJV+A4E2A+5U1O+5YZ75"
-              rel="noopener noreferrer sponsored"
-              target="_blank"
-              className="group block rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 hover:border-cyan-500 transition-all shadow-xs hover:shadow-md"
-            >
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <div className="flex flex-col items-center">
+              <a
+                href="https://px.a8.net/svt/ejp?a8mat=4BCJJV+A4E2A+5U1O+5YZ75"
+                rel="noopener noreferrer sponsored"
+                target="_blank"
+                className="group block rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all opacity-90 hover:opacity-100 shadow-2xs hover:shadow-xs"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  width={120}
+                  height={60}
+                  alt="BTOゲーミングPC OZ GAMING"
+                  src="https://www22.a8.net/svt/bgt?aid=260925691017&wid=001&eno=01&mid=s00000027222001003000&mc=1"
+                  className="block"
+                />
+              </a>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                width={120}
-                height={60}
-                alt="BTOゲーミングPC OZ GAMING"
-                src="https://www22.a8.net/svt/bgt?aid=260925691017&wid=001&eno=01&mid=s00000027222001003000&mc=1"
-                className="block"
+                width={1}
+                height={1}
+                src="https://www19.a8.net/0.gif?a8mat=4BCJJV+A4E2A+5U1O+5YZ75"
+                alt=""
+                className="hidden"
               />
-            </a>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              width={1}
-              height={1}
-              src="https://www19.a8.net/0.gif?a8mat=4BCJJV+A4E2A+5U1O+5YZ75"
-              alt=""
-              className="hidden"
-            />
+            </div>
           </div>
         </div>
 

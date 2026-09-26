@@ -251,62 +251,66 @@ export default function DevicesHubPage() {
             <span className="text-[11px] text-neutral-400">※公開中カテゴリのみ表示</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mr-1">
-              操作機器:
-            </span>
-            <Link
-              href="/sf6/devices/keyboard"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
-            >
-              <Keyboard className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>キーボード</span>
-            </Link>
-            <Link
-              href="/sf6/devices/leverless"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
-            >
-              <Gamepad2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>レバーレス</span>
-            </Link>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-wrap text-xs">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-medium text-neutral-500 dark:text-neutral-400 shrink-0">
+                操作機器:
+              </span>
+              <Link
+                href="/sf6/devices/keyboard"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
+              >
+                <Keyboard className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>キーボード</span>
+              </Link>
+              <Link
+                href="/sf6/devices/leverless"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
+              >
+                <Gamepad2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>レバーレス</span>
+              </Link>
+            </div>
 
-            <span className="text-neutral-300 dark:text-neutral-700 mx-1">|</span>
+            <span className="hidden sm:inline text-neutral-300 dark:text-neutral-700">|</span>
 
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mr-1">
-              映像・動作環境:
-            </span>
-            <Link
-              href="/sf6/devices/gaming-pc"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
-            >
-              <Laptop className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>ゲーミングPC</span>
-            </Link>
-            <Link
-              href="/sf6/devices/monitor"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
-            >
-              <Monitor className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>モニター</span>
-            </Link>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-medium text-neutral-500 dark:text-neutral-400 shrink-0">
+                映像・動作環境:
+              </span>
+              <Link
+                href="/sf6/devices/gaming-pc"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
+              >
+                <Laptop className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>ゲーミングPC</span>
+              </Link>
+              <Link
+                href="/sf6/devices/monitor"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-cyan-50 dark:hover:bg-neutral-700 font-bold text-neutral-700 dark:text-neutral-200 transition-colors"
+              >
+                <Monitor className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>モニター</span>
+              </Link>
+            </div>
           </div>
         </section>
 
         {/* 4-4. にこ太郎の使用環境（確認済み情報のみ掲載） */}
         {authorKeyboard && authorKeyboard.authorComment && (
           <section aria-labelledby="heading-author-gear" className="p-5 sm:p-6 rounded-2xl bg-neutral-900 text-white border border-neutral-800 shadow-sm">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
-              <div>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 mb-4">
+              <div className="min-w-0 flex-1">
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   著者使用機材
                 </span>
-                <h2 id="heading-author-gear" className="text-base sm:text-lg font-bold text-white mt-1">
+                <h2 id="heading-author-gear" className="text-base sm:text-lg font-bold text-white mt-1 break-words">
                   筆者のメイン使用機材：{authorKeyboard.name}
                 </h2>
               </div>
               <Link
                 href="/sf6/devices/keyboard"
-                className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 hover:text-white transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 hover:text-white transition-colors shrink-0"
               >
                 <span>キーボード選びの解説を読む</span>
                 <ArrowRight className="w-3.5 h-3.5" />

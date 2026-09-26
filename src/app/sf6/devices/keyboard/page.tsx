@@ -168,9 +168,9 @@ export default function KeyboardDevicePage() {
       {/* 記事メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10 text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base">
         {/* 1. 結論 */}
-        <section className="p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3">
+        <section className="p-4 sm:p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs">
+            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs shrink-0">
               結論
             </span>
             <h2 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">
@@ -180,18 +180,30 @@ export default function KeyboardDevicePage() {
           <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
             PC版（Steam）でスト6をプレイする場合、キーボードはレバーレスコントローラーと同等以上の高い入力精度を持つ非常に有力な選択肢です。
           </p>
-          <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・最速の反応と対戦特化を求める方：</span>
-              <span>ラピッドトリガー（キーをわずかに戻した瞬間にニュートラル復帰する機能）搭載の磁気/オプティカル式（例: Razer Huntsman V3 Pro Mini）が最適です。</span>
+          <ul className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・最速の反応と対戦特化を求める方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                ラピッドトリガー（キーをわずかに戻した瞬間にニュートラル復帰する機能）搭載の磁気/オプティカル式（例: Razer Huntsman V3 Pro Mini）が最適です。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・日常のPC作業や仕事と両立したい方：</span>
-              <span>矢印キーやファンクションキーが独立したテンキーレス（TKL）モデル（例: SteelSeries Apex Pro TKL）が快適です。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・日常のPC作業や仕事と両立したい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                矢印キーやファンクションキーが独立したテンキーレス（TKL）モデル（例: SteelSeries Apex Pro TKL）が快適です。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・手持ちのキーボードで始めたい方：</span>
-              <span>同時押し（Nキーロールオーバー）に対応していれば、まずは手持ちのキーボードで十分に対戦を始められます。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・手持ちのキーボードで始めたい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                同時押し（Nキーロールオーバー）に対応していれば、まずは手持ちのキーボードで十分に対戦を始められます。
+              </span>
             </li>
           </ul>
         </section>

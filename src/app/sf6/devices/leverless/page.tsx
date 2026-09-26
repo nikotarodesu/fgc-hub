@@ -167,9 +167,9 @@ export default function LeverlessDevicePage() {
       {/* 記事メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10 text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base">
         {/* 1. 結論 */}
-        <section className="p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3">
+        <section className="p-4 sm:p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs">
+            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs shrink-0">
               結論
             </span>
             <h2 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">
@@ -179,18 +179,30 @@ export default function LeverlessDevicePage() {
           <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
             レバーレスコントローラーは、方向入力をレバーではなくボタンで行うコントローラーです。スト6において「歩きガードの切り替え速度」「前ステップの最速入力」「対空昇龍拳の安定化」に絶大な威力を発揮します。
           </p>
-          <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・競技志向で最速反応・薄型を求める方：</span>
-              <span>キーストロークが浅く反応速度に特化した「PUNK WORKSHOP Mini HitBox」が現代のプロ・ハイエンド標準です。</span>
+          <ul className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・競技志向で最速反応・薄型を求める方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                キーストロークが浅く反応速度に特化した「PUNK WORKSHOP Mini HitBox」が現代のプロ・ハイエンド標準です。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・低予算（1万円台）で多ボタンを試したい方：</span>
-              <span>16ボタンで超低遅延基板を備えた「Haute42 T16」がコストパフォーマンス圧倒的No.1です。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・低予算（1万円台）で多ボタンを試したい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                16ボタンで超低遅延基板を備えた「Haute42 T16」がコストパフォーマンス圧倒的No.1です。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・膝置きでどっしり安定してプレイしたい方：</span>
-              <span>金属製重厚ボディと三和電子ボタンを採用した元祖「Hit Box」が長時間の対戦でも抜群の安定感を誇ります。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・膝置きでどっしり安定してプレイしたい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                金属製重厚ボディと三和電子ボタンを採用した元祖「Hit Box」が長時間の対戦でも抜群の安定感を誇ります。
+              </span>
             </li>
           </ul>
         </section>

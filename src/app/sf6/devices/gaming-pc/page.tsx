@@ -168,9 +168,9 @@ export default function GamingPcDevicePage() {
       {/* 記事メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10 text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base">
         {/* 1. 結論 */}
-        <section className="p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3">
+        <section className="p-4 sm:p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs">
+            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs shrink-0">
               結論
             </span>
             <h2 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">
@@ -180,18 +180,30 @@ export default function GamingPcDevicePage() {
           <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
             スト6の対戦バトル（Fighting Ground）は、競技性の観点から<strong>「最大60fps固定」</strong>で動作する設計になっています。そのため、無駄に高額な最上位グラフィックボードを揃える必要はありません。
           </p>
-          <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・フルHDで快適に対戦したい方（一番人気）：</span>
-              <span>「Core i5 / Ryzen 5 + GeForce RTX 4060 + メモリ16GB」構成（約15〜18万円）で最高画質でも60fps張り付きでプレイできます。</span>
+          <ul className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・フルHDで快適に対戦したい方（一番人気）：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                「Core i5 / Ryzen 5 + GeForce RTX 4060 + メモリ16GB」構成（約15〜18万円）で最高画質でも60fps張り付きでプレイできます。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・OBS配信・録画・動画編集も同時に行いたい方：</span>
-              <span>「Core i7 / Ryzen 7 + GeForce RTX 4070 SUPER + メモリ32GB」構成（約23〜28万円）が安心です。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・OBS配信・録画・動画編集も同時に行いたい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                「Core i7 / Ryzen 7 + GeForce RTX 4070 SUPER + メモリ32GB」構成（約23〜28万円）が安心です。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・予算重視で始めたい方：</span>
-              <span>画質設定を「標準〜中」に落とすことで、RTX 3050等のエントリー構成（約10万〜12万円）でも対戦に必要な60fpsを安定確保できます。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・予算重視で始めたい方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                画質設定を「標準〜中」に落とすことで、RTX 3050等のエントリー構成（約10万〜12万円）でも対戦に必要な60fpsを安定確保できます。
+              </span>
             </li>
           </ul>
         </section>

@@ -160,19 +160,24 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* プレミアム会員へのコンパクトな案内バー */}
-          <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="px-2 py-0.5 rounded-md bg-cyan-400/20 text-cyan-300 text-[10px] font-black border border-cyan-400/30 shrink-0">
-                PREMIUM
-              </span>
-              <span className="text-xs text-neutral-200 truncate">
-                公開中の全攻略記事・実戦添削コーチング・逆引きリーサルツールが読み放題（¥980/月）
-              </span>
+          {/* プレミアム会員への案内バー（スマホ3段構成・PC横並び） */}
+          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 text-white flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 shadow-sm border border-neutral-800">
+            <div className="space-y-1.5 min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-2 py-0.5 rounded-md bg-cyan-400/20 text-cyan-300 text-[10px] font-black border border-cyan-400/30 shrink-0 tracking-wider">
+                  PREMIUM
+                </span>
+                <span className="text-xs font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20 shrink-0">
+                  ¥980 / 月
+                </span>
+              </div>
+              <p className="text-xs text-neutral-200 leading-relaxed break-words">
+                公開中の全攻略記事・実戦添削コーチング・逆引きリーサルツールがすべて読み放題
+              </p>
             </div>
             <Link
               href="/membership"
-              className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 hover:text-white transition-colors shrink-0 whitespace-nowrap self-end sm:self-auto"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-neutral-950 transition-colors shrink-0 w-full sm:w-auto shadow-xs"
             >
               <span>特典・会員案内を見る</span>
               <ChevronRight className="w-3.5 h-3.5" />

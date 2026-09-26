@@ -168,9 +168,9 @@ export default function MonitorDevicePage() {
       {/* 記事メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10 text-neutral-800 dark:text-neutral-200 leading-relaxed text-sm sm:text-base">
         {/* 1. 結論 */}
-        <section className="p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3">
+        <section className="p-4 sm:p-6 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200/80 dark:border-cyan-800/60 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs">
+            <span className="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-xs shrink-0">
               結論
             </span>
             <h2 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">
@@ -180,18 +180,30 @@ export default function MonitorDevicePage() {
           <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
             結論として、<strong>「144Hz〜165Hz以上のゲーミングモニターの導入は強く推奨」</strong>されます。スト6のゲーム内挙動は60fps固定ですが、モニター側が高周波数で描画更新を行うことで、<strong>「画面表示の遅延（内部バッファ待ち時間）を確実に短縮できる」</strong>ためです。
           </p>
-          <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300">
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・最もおすすめなコスパ標準帯：</span>
-              <span>144Hz〜165Hz・IPSパネル・応答速度1msクラス（約2万〜3万円）。対戦時の遅延軽減と美しい画質を完璧に両立できます。</span>
+          <ul className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・最もおすすめなコスパ標準帯：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                144Hz〜165Hz・IPSパネル・応答速度1msクラス（約2万〜3万円）。対戦時の遅延軽減と美しい画質を完璧に両立できます。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・大会シーンや残像ゼロを追求する競技勢：</span>
-              <span>240Hz・DyAc+搭載モデル（例: BenQ ZOWIE XL2546K）。ラッシュ初動の視認性やヒット確認の明瞭さを極限まで高めたい方向けです。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・大会シーンや残像ゼロを追求する競技勢：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                240Hz・DyAc+搭載モデル（例: BenQ ZOWIE XL2546K）。ラッシュ初動の視認性やヒット確認の明瞭さを極限まで高めたい方向けです。
+              </span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-cyan-700 dark:text-cyan-400 shrink-0">・一般的な60Hzテレビや事務用モニターで遊んでいる方：</span>
-              <span>テレビ特有の映像処理による大きな表示遅延（数十ms）を解消するため、ゲーミングモニターへの買い替え効果が最も体感できます。</span>
+            <li className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-cyan-800 dark:text-cyan-300 break-words">
+                ・一般的な60Hzテレビや事務用モニターで遊んでいる方：
+              </span>
+              <span className="text-neutral-700 dark:text-neutral-300 leading-relaxed break-words pl-2.5 sm:pl-3 border-l-2 border-cyan-400/50 dark:border-cyan-600/50">
+                テレビ特有の映像処理による大きな表示遅延（数十ms）を解消するため、ゲーミングモニターへの買い替え効果が最も体感できます。
+              </span>
             </li>
           </ul>
         </section>

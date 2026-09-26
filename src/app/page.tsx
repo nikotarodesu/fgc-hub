@@ -837,14 +837,14 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-bold text-sm text-neutral-900 dark:text-white">にこ太郎</span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
-                    全キャラ1800MR+
+                    全キャラ1800MR+（4キャラ2000MR）
                   </span>
                   <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
                     note大会2連覇
                   </span>
                 </div>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                  トレモでの受け身両対応確認・フレーム検証に基づき執筆。訂正方針や過去のコーチングアーカイブの位置づけを公開しています。
+                  PC版トレモでの受け身両対応確認・フレーム検証に基づき執筆。訂正方針や過去のコーチングアーカイブの位置づけを公開しています。
                 </p>
               </div>
             </div>

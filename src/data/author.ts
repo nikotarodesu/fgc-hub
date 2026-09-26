@@ -6,11 +6,9 @@ export interface AuthorInfo {
   noteFollowers?: string;
   noteSales?: string;
   xFollowers?: string;
-  youtubeSubscribers?: string;
   bio: string;
   xUrl?: string;
   xHandle?: string;
-  youtubeUrl?: string;
   noteUrl?: string;
   championshipArticles?: { title: string; url: string }[];
 }
@@ -18,16 +16,14 @@ export interface AuthorInfo {
 export const AUTHOR_INFO: AuthorInfo = {
   name: 'にこ太郎',
   avatar: '/icon.png',
-  mrRating: '全キャラ1800MR以上',
+  mrRating: '全キャラ1800MR以上（4キャラ2000MR超）',
   award: 'note大会 2連覇達成 🏆',
   noteFollowers: '2,500人',
   noteSales: '累計2,000部突破',
   xFollowers: '2,100人',
-  youtubeSubscribers: '1,000人',
-  bio: 'スト6全キャラ1800MR以上。note大会で2連覇を達成🏆。note有料記事は累計2,000部突破・フォロワー2,500人。勝率に直結する立ち回り理論やコンボ・起き攻めを発信中。',
+  bio: 'スト6全キャラ1800MR以上（ベガ、エド、ブランカ、ダルシムの4体は2000MR以上到達）。note大会で2連覇を達成🏆。note有料記事は累計2,000部突破・フォロワー2,500人。勝率に直結する立ち回り理論やコンボ・起き攻めを発信中。',
   xUrl: 'https://x.com/nikotarosun',
   xHandle: '@nikotarosun',
-  youtubeUrl: 'https://www.youtube.com/@nikotarosun',
   noteUrl: 'https://note.com/nikotarosun',
   championshipArticles: [
     {

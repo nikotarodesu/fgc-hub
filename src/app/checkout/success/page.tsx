@@ -114,9 +114,14 @@ function SuccessContent() {
                 </div>
               )}
 
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 pt-1 leading-relaxed">
-                ※専用の閲覧トークンURLを記載した購入完了メールもお送りしています。別の端末（スマホやタブレット）でもメール内のURLからご覧いただけます。
-              </p>
+              <div className="pt-2 border-t border-neutral-200/60 dark:border-neutral-700/60 space-y-1.5">
+                <span className="text-neutral-600 dark:text-neutral-300 text-[11px] font-bold block">
+                  📱 別の端末（PC・タブレット）でも読む場合：
+                </span>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  PCや別端末で同じGoogleアカウントまたはメールアドレスでログインしていただくと、追加料金なしで自動的に全編アンロックされます。
+                </p>
+              </div>
             </div>
           )}
 

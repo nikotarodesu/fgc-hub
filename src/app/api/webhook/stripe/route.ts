@@ -261,12 +261,12 @@ async function handleArticlePurchase(
     ? ["chunli-complete-guide", "chunli-classic-complete-guide", "chunli-modern-complete-guide"]
     : [slug];
 
-  const rows = relatedSlugs.map((s) => ({
+  const rows = relatedSlugs.map((s, idx) => ({
     user_id: userId,
     slug: s,
     title,
     amount: session.amount_total || 500,
-    stripe_session_id: session.id,
+    stripe_session_id: idx === 0 ? session.id : `${session.id}_${s}`,
     created_at: new Date().toISOString(),
   }));
 

@@ -1746,31 +1746,33 @@ export default function ArticleDetailPage() {
               </div>
             )}
 
-            {/* この記事を読んだ人におすすめ（関連記事） */}
-            <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
-              <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-3">
-                あわせて読みたい記事
+            {/* この記事を読んだ人におすすめ（関連記事：hideRelatedArticles指定時は非表示） */}
+            {!article?.hideRelatedArticles && relatedArticles.length > 0 && (
+              <div className="p-5 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
+                <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider mb-3">
+                  あわせて読みたい記事
+                </div>
+                <div className="space-y-4">
+                  {relatedArticles.map((rel) => (
+                    <Link
+                      key={rel.id}
+                      href={`/articles/${rel.slug}`}
+                      className="block group"
+                    >
+                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500 block mb-1">
+                        {rel.game === 'sf6' ? 'スト6' : '共通理論'}
+                      </span>
+                      <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 line-clamp-2 leading-snug mb-1">
+                        {rel.title}
+                      </h4>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
+                        {rel.summary}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-4">
-                {relatedArticles.map((rel) => (
-                  <Link
-                    key={rel.id}
-                    href={`/articles/${rel.slug}`}
-                    className="block group"
-                  >
-                    <span className="text-[10px] text-neutral-400 dark:text-neutral-500 block mb-1">
-                      {rel.game === 'sf6' ? 'スト6' : '共通理論'}
-                    </span>
-                    <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 line-clamp-2 leading-snug mb-1">
-                      {rel.title}
-                    </h4>
-                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
-                      {rel.summary}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            )}
 
             {/* プレミアム会員案内カード */}
             <div className="p-5 bg-neutral-900 dark:bg-neutral-950 text-white rounded-xl border border-neutral-800 dark:border-neutral-800 shadow-sm">

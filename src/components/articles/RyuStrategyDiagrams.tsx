@@ -218,3 +218,344 @@ export function MindsetComparisonTable() {
     </div>
   );
 }
+
+/**
+ * 図1：中距離での「止まる」と「踏み込む」
+ * 上段：リュウが相手の通常技の先端外で止まる（止まる・空振り待ち）
+ * 下段：リュウが一歩入り、自分の通常技を当てる（踏み込む・接触）
+ */
+export function RyuSpacingStepinDiagram() {
+  return (
+    <figure className="my-6 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-900 text-white overflow-hidden shadow-sm">
+      <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Crosshair className="w-4 h-4 text-cyan-400" />
+          <span className="text-xs font-bold text-cyan-300 tracking-wider">
+            図1：中距離での「止まる」と「踏み込む」（位置関係の例）
+          </span>
+        </div>
+        <span className="text-[11px] text-neutral-400 bg-neutral-800 px-2 py-0.5 rounded">
+          間合いの概念図
+        </span>
+      </div>
+
+      <div className="p-4 sm:p-6 bg-gradient-to-b from-neutral-900 to-neutral-950">
+        <svg
+          viewBox="0 0 680 320"
+          className="w-full h-auto"
+          aria-labelledby="ryu-fig1-title ryu-fig1-desc"
+          role="img"
+        >
+          <title id="ryu-fig1-title">中距離での「止まる」と「踏み込む」</title>
+          <desc id="ryu-fig1-desc">
+            上段では相手の牽制の先端外で止まり空振りを待ち、下段では一歩踏み込んで大Pや下中Kで接触する位置関係の概念図。
+          </desc>
+          <defs>
+            <linearGradient id="ryuBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+            <linearGradient id="oppGray" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4b5563" />
+              <stop offset="100%" stopColor="#374151" />
+            </linearGradient>
+          </defs>
+
+          {/* === 上段：先端外で止まる（空振り待ち） === */}
+          <g transform="translate(10, 20)">
+            <rect x="0" y="0" width="220" height="24" rx="4" fill="#1e293b" />
+            <text x="10" y="16" fill="#38bdf8" fontSize="13" fontWeight="bold">
+              上段：先端の外で待つ（止まる）
+            </text>
+
+            <line x1="0" y1="105" x2="660" y2="105" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* リュウ */}
+            <rect x="60" y="45" width="80" height="60" rx="8" fill="url(#ryuBlue)" stroke="#60a5fa" strokeWidth="1.5" />
+            <text x="100" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="100" y="91" fill="#bfdbfe" fontSize="11" textAnchor="middle">止まる</text>
+
+            {/* 空振り待ちラベル */}
+            <rect x="155" y="55" width="105" height="36" rx="6" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
+            <text x="207" y="77" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">空振り待ち</text>
+
+            {/* 相手の牽制範囲（淡い帯：位置関係の例） */}
+            <rect x="275" y="52" width="195" height="48" rx="6" fill="#f59e0b" fillOpacity="0.12" stroke="#f59e0b" strokeDasharray="3 3" strokeWidth="1" />
+            <text x="372" y="73" fill="#fbbf24" fontSize="12" textAnchor="middle">相手の牽制範囲</text>
+            <text x="372" y="89" fill="#fde68a" fontSize="10" textAnchor="middle">（位置関係の例・先端が届かない）</text>
+
+            {/* 相手 */}
+            <rect x="480" y="45" width="80" height="60" rx="8" fill="url(#oppGray)" stroke="#9ca3af" strokeWidth="1.5" />
+            <text x="520" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">相手</text>
+            <text x="520" y="91" fill="#d1d5db" fontSize="11" textAnchor="middle">牽制技を振る</text>
+          </g>
+
+          {/* 区切り線 */}
+          <line x1="20" y1="160" x2="660" y2="160" stroke="#333333" strokeWidth="1" />
+
+          {/* === 下段：一歩入って当てる（踏み込む・接触） === */}
+          <g transform="translate(10, 180)">
+            <rect x="0" y="0" width="220" height="24" rx="4" fill="#064e3b" />
+            <text x="10" y="16" fill="#34d399" fontSize="13" fontWeight="bold">
+              下段：一歩入って当てる（踏み込む）
+            </text>
+
+            <line x1="0" y1="105" x2="660" y2="105" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* リュウ（踏み込んで前進） */}
+            <rect x="180" y="45" width="80" height="60" rx="8" fill="url(#ryuBlue)" stroke="#60a5fa" strokeWidth="1.5" />
+            <text x="220" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="220" y="91" fill="#a7f3d0" fontSize="11" fontWeight="bold" textAnchor="middle">踏み込む</text>
+
+            {/* 前進の矢印 */}
+            <path d="M 120 75 L 165 75 M 155 68 L 165 75 L 155 82" stroke="#34d399" strokeWidth="2.5" fill="none" />
+            <text x="140" y="64" fill="#34d399" fontSize="10" fontWeight="bold" textAnchor="middle">歩き</text>
+
+            {/* 接触ゾーン（大P・下中Kが届く） */}
+            <rect x="275" y="52" width="195" height="48" rx="6" fill="#10b981" fillOpacity="0.18" stroke="#10b981" strokeWidth="1.5" />
+            <text x="372" y="73" fill="#34d399" fontSize="13" fontWeight="bold" textAnchor="middle">大P・下中Kで接触！</text>
+            <text x="372" y="90" fill="#a7f3d0" fontSize="10" textAnchor="middle">（ヒット確認・Dゲージ削りへ）</text>
+
+            {/* 相手（上段と同位置） */}
+            <rect x="480" y="45" width="80" height="60" rx="8" fill="url(#oppGray)" stroke="#9ca3af" strokeWidth="1.5" />
+            <text x="520" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">相手</text>
+            <text x="520" y="91" fill="#d1d5db" fontSize="11" textAnchor="middle">ガード・被弾</text>
+          </g>
+        </svg>
+      </div>
+
+      <figcaption className="px-4 py-3 bg-neutral-950 border-t border-neutral-800 text-xs text-neutral-400 leading-relaxed">
+        相手の牽制の外で待つ時間と、自分の技を届かせる時間を分けます。相手と使う技によって境界は変わります。
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
+ * 図2：ダウン後の時間の使い道
+ * 上段：前進・起き攻め（距離を詰める矢印）
+ * 下段：電刃の取得（電刃状態を示す簡潔な記号）
+ */
+export function RyuDenjinOrOkiDiagram() {
+  return (
+    <figure className="my-6 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-900 text-white overflow-hidden shadow-sm">
+      <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Crosshair className="w-4 h-4 text-amber-400" />
+          <span className="text-xs font-bold text-amber-300 tracking-wider">
+            図2：ダウン後の時間の使い道（概念図）
+          </span>
+        </div>
+        <span className="text-[11px] text-neutral-400 bg-neutral-800 px-2 py-0.5 rounded">
+          状況別の選択肢
+        </span>
+      </div>
+
+      <div className="p-4 sm:p-6 bg-gradient-to-b from-neutral-900 to-neutral-950">
+        <svg
+          viewBox="0 0 680 300"
+          className="w-full h-auto"
+          aria-labelledby="ryu-fig2-title ryu-fig2-desc"
+          role="img"
+        >
+          <title id="ryu-fig2-title">ダウン後の時間の使い道</title>
+          <desc id="ryu-fig2-desc">
+            足刀ヒット等のダウン後、上段では前進して起き攻めを継続し、下段では電刃錬気を取得して次の接触を強化する二大選択肢の比較概念図。
+          </desc>
+          <defs>
+            <linearGradient id="ryuBlue2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+            <linearGradient id="ryuDenjinGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#d97706" />
+              <stop offset="100%" stopColor="#b45309" />
+            </linearGradient>
+          </defs>
+
+          {/* === 上段パネル：前進・起き攻め === */}
+          <g transform="translate(10, 15)">
+            <rect x="0" y="0" width="230" height="24" rx="4" fill="#064e3b" />
+            <text x="10" y="16" fill="#34d399" fontSize="13" fontWeight="bold">
+              選択肢A：前進・起き攻めの継続
+            </text>
+
+            <line x1="0" y1="95" x2="660" y2="95" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* リュウ */}
+            <rect x="50" y="38" width="90" height="54" rx="8" fill="url(#ryuBlue2)" stroke="#60a5fa" strokeWidth="1.5" />
+            <text x="95" y="64" fill="#ffffff" fontSize="14" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="95" y="81" fill="#bfdbfe" fontSize="11" textAnchor="middle">前ステップ・歩き</text>
+
+            {/* 距離を詰める前進矢印 */}
+            <g transform="translate(155, 45)">
+              <rect x="0" y="0" width="260" height="40" rx="6" fill="#047857" fillOpacity="0.2" stroke="#10b981" strokeWidth="1.2" />
+              <path d="M 20 20 L 230 20 M 215 12 L 230 20 L 215 28" stroke="#34d399" strokeWidth="2.5" fill="none" />
+              <text x="125" y="15" fill="#34d399" fontSize="12" fontWeight="bold" textAnchor="middle">距離を詰めて密着有利へ</text>
+            </g>
+
+            {/* ダウン中の相手 */}
+            <rect x="450" y="50" width="100" height="42" rx="6" fill="#374151" stroke="#6b7280" strokeWidth="1.5" />
+            <text x="500" y="70" fill="#9ca3af" fontSize="12" fontWeight="bold" textAnchor="middle">相手（ダウン）</text>
+            <text x="500" y="84" fill="#d1d5db" fontSize="10" textAnchor="middle">打撃・投げの二択へ</text>
+          </g>
+
+          {/* 区切り線 */}
+          <line x1="20" y1="150" x2="660" y2="150" stroke="#333333" strokeWidth="1" />
+
+          {/* === 下段パネル：電刃の取得 === */}
+          <g transform="translate(10, 165)">
+            <rect x="0" y="0" width="230" height="24" rx="4" fill="#78350f" />
+            <text x="10" y="16" fill="#fde68a" fontSize="13" fontWeight="bold">
+              選択肢B：電刃錬気の取得
+            </text>
+
+            <line x1="0" y1="95" x2="660" y2="95" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* リュウ（電刃取得・雷オーラ） */}
+            <rect x="50" y="38" width="90" height="54" rx="8" fill="url(#ryuDenjinGlow)" stroke="#fbbf24" strokeWidth="2" />
+            <text x="95" y="62" fill="#ffffff" fontSize="14" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="95" y="80" fill="#fef08a" fontSize="11" fontWeight="bold" textAnchor="middle">⚡️ 電刃取得</text>
+
+            {/* 電刃強化の説明 */}
+            <g transform="translate(155, 45)">
+              <rect x="0" y="0" width="260" height="40" rx="6" fill="#78350f" fillOpacity="0.25" stroke="#f59e0b" strokeWidth="1.2" />
+              <text x="130" y="17" fill="#fbbf24" fontSize="12" fontWeight="bold" textAnchor="middle">次の波動・波掌撃を強化</text>
+              <text x="130" y="32" fill="#fde68a" fontSize="10" textAnchor="middle">（弾速アップ・ガード有利の布石）</text>
+            </g>
+
+            {/* ダウン中の相手（距離は離れたまま復帰） */}
+            <rect x="450" y="50" width="100" height="42" rx="6" fill="#374151" stroke="#6b7280" strokeWidth="1.5" />
+            <text x="500" y="70" fill="#9ca3af" fontSize="12" fontWeight="bold" textAnchor="middle">相手（ダウン）</text>
+            <text x="500" y="84" fill="#9ca3af" fontSize="10" textAnchor="middle">間合いを保ち復帰</text>
+          </g>
+        </svg>
+      </div>
+
+      <figcaption className="px-4 py-3 bg-neutral-950 border-t border-neutral-800 text-xs text-neutral-400 leading-relaxed">
+        今の位置と攻めを取るか、次の接触を強くする準備を取るかを選びます。すべてのダウンで両方が安全に成立する図ではありません。
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
+ * 図3：画面端で当てる時間と逃がさない時間
+ * 端の位置を統一した上下2パネル
+ * 上段：地上打撃を当てる位置（前大K・大Pで触る）
+ * 下段：技を出さず飛びを見る位置（相手の前ジャンプ軌道と昇竜迎撃方向）
+ */
+export function RyuCornerEscapeCheckDiagram() {
+  return (
+    <figure className="my-6 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-neutral-900 text-white overflow-hidden shadow-sm">
+      <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Crosshair className="w-4 h-4 text-rose-400" />
+          <span className="text-xs font-bold text-rose-300 tracking-wider">
+            図3：画面端で当てる時間と逃がさない時間（概念図）
+          </span>
+        </div>
+        <span className="text-[11px] text-neutral-400 bg-neutral-800 px-2 py-0.5 rounded">
+          画面端の攻防
+        </span>
+      </div>
+
+      <div className="p-4 sm:p-6 bg-gradient-to-b from-neutral-900 to-neutral-950">
+        <svg
+          viewBox="0 0 680 320"
+          className="w-full h-auto"
+          aria-labelledby="ryu-fig3-title ryu-fig3-desc"
+          role="img"
+        >
+          <title id="ryu-fig3-title">画面端で当てる時間と逃がさない時間</title>
+          <desc id="ryu-fig3-desc">
+            画面端では、上段のように後退できない相手へ地上打撃でプレッシャーをかける時間と、下段のように技を出さず入れ替え飛びを昇竜拳で落とす時間の使い分けを示す概念図。
+          </desc>
+          <defs>
+            <linearGradient id="ryuBlue3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+            <linearGradient id="oppCorner" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4b5563" />
+              <stop offset="100%" stopColor="#374151" />
+            </linearGradient>
+          </defs>
+
+          {/* === 上段：地上打撃を当てる時間 === */}
+          <g transform="translate(10, 20)">
+            <rect x="0" y="0" width="220" height="24" rx="4" fill="#1e293b" />
+            <text x="10" y="16" fill="#38bdf8" fontSize="13" fontWeight="bold">
+              上段：地上打撃で触る（後退不可）
+            </text>
+
+            <line x1="0" y1="105" x2="660" y2="105" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* 画面端の壁（赤） */}
+            <rect x="625" y="25" width="25" height="85" fill="#450a0a" stroke="#ef4444" strokeWidth="2" />
+            <text x="638" y="60" fill="#fca5a5" fontSize="12" fontWeight="bold" textAnchor="middle" transform="rotate(90, 638, 60)">
+              画面端
+            </text>
+
+            {/* リュウ（打撃で接触） */}
+            <rect x="250" y="45" width="85" height="60" rx="8" fill="url(#ryuBlue3)" stroke="#60a5fa" strokeWidth="1.5" />
+            <text x="292" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="292" y="91" fill="#bfdbfe" fontSize="11" textAnchor="middle">前大K・大P</text>
+
+            {/* 打撃判定（リーチゾーン） */}
+            <rect x="345" y="55" width="165" height="40" rx="6" fill="#0284c7" fillOpacity="0.2" stroke="#38bdf8" strokeWidth="1.2" />
+            <text x="427" y="75" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">後退で外されない打撃！</text>
+            <text x="427" y="90" fill="#bae6fd" fontSize="10" textAnchor="middle">（ガード削り・ヒット確認）</text>
+
+            {/* 相手（壁際で防戦） */}
+            <rect x="520" y="45" width="85" height="60" rx="8" fill="url(#oppCorner)" stroke="#9ca3af" strokeWidth="1.5" />
+            <text x="562" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">相手</text>
+            <text x="562" y="91" fill="#fca5a5" fontSize="11" textAnchor="middle">後退スペース無</text>
+          </g>
+
+          {/* 区切り線 */}
+          <line x1="20" y1="160" x2="660" y2="160" stroke="#333333" strokeWidth="1" />
+
+          {/* === 下段：技を出さず飛びを見る時間 === */}
+          <g transform="translate(10, 180)">
+            <rect x="0" y="0" width="220" height="24" rx="4" fill="#4c0519" />
+            <text x="10" y="16" fill="#f43f5e" fontSize="13" fontWeight="bold">
+              下段：技を出さず脱出を迎撃
+            </text>
+
+            <line x1="0" y1="105" x2="660" y2="105" stroke="#404040" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* 画面端の壁（赤・共通位置） */}
+            <rect x="625" y="25" width="25" height="85" fill="#450a0a" stroke="#ef4444" strokeWidth="2" />
+            <text x="638" y="60" fill="#fca5a5" fontSize="12" fontWeight="bold" textAnchor="middle" transform="rotate(90, 638, 60)">
+              画面端
+            </text>
+
+            {/* リュウ（技を出さず足を止める） */}
+            <rect x="250" y="45" width="85" height="60" rx="8" fill="url(#ryuBlue3)" stroke="#60a5fa" strokeWidth="1.5" />
+            <text x="292" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">リュウ</text>
+            <text x="292" y="91" fill="#fde047" fontSize="11" fontWeight="bold" textAnchor="middle">対空待ち！</text>
+
+            {/* 昇竜迎撃矢印（斜め上） */}
+            <path d="M 335 48 L 415 10 M 398 10 L 415 10 L 415 27" stroke="#fbbf24" strokeWidth="2.5" fill="none" />
+            <text x="350" y="20" fill="#fbbf24" fontSize="12" fontWeight="bold">昇竜拳で迎撃！</text>
+
+            {/* 相手（前ジャンプで位置入れ替えを試みる軌道） */}
+            <path d="M 540 45 Q 450 -15 320 35" stroke="#f43f5e" strokeWidth="2" strokeDasharray="4 3" fill="none" />
+            <polygon points="320,35 328,25 334,35" fill="#f43f5e" />
+            <text x="470" y="8" fill="#fda4af" fontSize="11" fontWeight="bold">前ジャンプ脱出軌道</text>
+
+            {/* 相手 */}
+            <rect x="520" y="45" width="85" height="60" rx="8" fill="url(#oppCorner)" stroke="#f43f5e" strokeWidth="1.5" />
+            <text x="562" y="73" fill="#ffffff" fontSize="15" fontWeight="bold" textAnchor="middle">相手</text>
+            <text x="562" y="91" fill="#fda4af" fontSize="11" textAnchor="middle">焦って前飛び</text>
+          </g>
+        </svg>
+      </div>
+
+      <figcaption className="px-4 py-3 bg-neutral-950 border-t border-neutral-800 text-xs text-neutral-400 leading-relaxed">
+        後退で技を外されにくい位置を活かし、ガード後は入れ替えの飛びにも備えます。常に次の打撃を出す必要はありません。
+      </figcaption>
+    </figure>
+  );
+}

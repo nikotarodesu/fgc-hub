@@ -23,6 +23,7 @@ export const AKUMA_NEUTRAL_STRATEGY: Article = {
   difficultyLabel: '中級',
   tags: ['立ち回り', '豪鬼'],
   likesCount: 348,
+  hideRelatedArticles: true,
   freeContent: {
     intro: `豪鬼は、速い歩きと波動を土台に、斬空波動や百鬼、朧といった接近手段を重ねられるキャラです。一方で体力が低く、相手の大きな攻撃を受けながら強引に押し切る組み立てには負担があります。攻める手段の多さを、被弾を抑えて得意な状況へ入るために使うことが重要です。
 

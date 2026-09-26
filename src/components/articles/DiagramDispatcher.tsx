@@ -1,7 +1,14 @@
 'use client';
 
 import React from 'react';
-import { HadokenFlowDiagram, DistanceMeterDiagram, MindsetComparisonTable } from './RyuStrategyDiagrams';
+import {
+  HadokenFlowDiagram,
+  DistanceMeterDiagram,
+  MindsetComparisonTable,
+  RyuSpacingStepinDiagram,
+  RyuDenjinOrOkiDiagram,
+  RyuCornerEscapeCheckDiagram,
+} from './RyuStrategyDiagrams';
 import NeutralTriangleDiagram from './NeutralTriangleDiagram';
 import FuzzyTimelineDiagram from './FuzzyTimelineDiagram';
 import {
@@ -34,6 +41,12 @@ export default function DiagramDispatcher({ diagramType }: DiagramDispatcherProp
       return <AkumaHadokenDecisionDiagram />;
     case 'akuma-corner-spacing':
       return <AkumaCornerSpacingDiagram />;
+    case 'ryu-spacing-stepin':
+      return <RyuSpacingStepinDiagram />;
+    case 'ryu-denjin-or-oki':
+      return <RyuDenjinOrOkiDiagram />;
+    case 'ryu-corner-escape-check':
+      return <RyuCornerEscapeCheckDiagram />;
     default:
       return null;
   }

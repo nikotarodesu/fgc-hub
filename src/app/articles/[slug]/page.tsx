@@ -193,31 +193,21 @@ export default function ArticleDetailPage() {
     }
   }, [slug]);
 
-  // 管理者モード・キャラ別シークレット解放の自動復元（localStorage & カスタムイベント）
+  // 管理者モードの自動復元（localStorage & カスタムイベント）
   useEffect(() => {
     const checkUnlockStatus = () => {
       try {
         if (typeof window !== 'undefined') {
-          const isGlobalAdmin = localStorage.getItem('fgc_admin_mode') === 'true';
-          const isSecretUnlocked =
-            localStorage.getItem(`fgc_secret_unlocked_${slug}`) === 'true' ||
-            (slug.includes('ryu') &&
-              (localStorage.getItem('fgc_secret_unlocked_ryu') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_ryu-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_ryu-classic-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_ryu-modern-complete-guide') === 'true')) ||
-            (slug.includes('elena') &&
-              (localStorage.getItem('fgc_secret_unlocked_elena') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_elena-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_elena-classic-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_elena-modern-complete-guide') === 'true')) ||
-            (slug.includes('chunli') &&
-              (localStorage.getItem('fgc_secret_unlocked_chunli') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_chunli-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_chunli-classic-complete-guide') === 'true' ||
-                localStorage.getItem('fgc_secret_unlocked_chunli-modern-complete-guide') === 'true'));
+          // 過去のイースターエッグシークレットトークンの残骸があれば安全に削除
+          localStorage.removeItem(`fgc_secret_unlocked_${slug}`);
+          localStorage.removeItem('fgc_secret_unlocked_ryu');
+          localStorage.removeItem('fgc_secret_unlocked_ryu-complete-guide');
+          localStorage.removeItem('fgc_secret_unlocked_ryu-classic-complete-guide');
+          localStorage.removeItem('fgc_secret_unlocked_ryu-modern-complete-guide');
 
-          if (isGlobalAdmin || isSecretUnlocked) {
+          const isGlobalAdmin = localStorage.getItem('fgc_admin_mode') === 'true';
+
+          if (isGlobalAdmin) {
             setIsUnlocked(true);
             setIsAdminMode(true);
             setAuthChecked(true);

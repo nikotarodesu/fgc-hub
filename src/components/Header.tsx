@@ -259,7 +259,7 @@ export default function Header() {
                 </Link>
 
                 <Link
-                  href="/sf6/strategy/handan-wo-herasu-renshu"
+                  href="/sf6/strategy"
                   className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl font-medium transition-colors ${
                     pathname?.startsWith('/sf6/strategy')
                       ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold'

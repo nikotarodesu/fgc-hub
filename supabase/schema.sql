@@ -96,3 +96,53 @@ SELECT
   'free'
 FROM auth.users
 ON CONFLICT (id) DO NOTHING;
+
+-- 8. 記事単品購入テーブル (article_purchases)
+CREATE TABLE IF NOT EXISTS public.article_purchases (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  slug TEXT NOT NULL,
+  title TEXT,
+  amount INTEGER NOT NULL DEFAULT 500,
+  stripe_session_id TEXT UNIQUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  UNIQUE (user_id, slug)
+);
+
+CREATE INDEX IF NOT EXISTS idx_article_purchases_user_slug ON public.article_purchases(user_id, slug);
+
+ALTER TABLE public.article_purchases ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own article purchases" ON public.article_purchases;
+CREATE POLICY "Users can view own article purchases"
+  ON public.article_purchases FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- 9. お気に入り（ブックマーク）同期テーブル (user_bookmarks)
+CREATE TABLE IF NOT EXISTS public.user_bookmarks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  target_key TEXT NOT NULL,
+  section_id TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  UNIQUE (user_id, target_key, section_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_bookmarks_user ON public.user_bookmarks(user_id, target_key);
+
+ALTER TABLE public.user_bookmarks ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own bookmarks" ON public.user_bookmarks;
+CREATE POLICY "Users can view own bookmarks"
+  ON public.user_bookmarks FOR SELECT
+  USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own bookmarks" ON public.user_bookmarks;
+CREATE POLICY "Users can insert own bookmarks"
+  ON public.user_bookmarks FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete own bookmarks" ON public.user_bookmarks;
+CREATE POLICY "Users can delete own bookmarks"
+  ON public.user_bookmarks FOR DELETE
+  USING (auth.uid() = user_id);

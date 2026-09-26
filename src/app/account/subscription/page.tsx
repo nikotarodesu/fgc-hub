@@ -41,10 +41,42 @@ function SubscriptionContent() {
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [purchasedArticles, setPurchasedArticles] = useState<{ slug: string; title: string; created_at: string }[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsAdmin(localStorage.getItem("fgc_admin_mode") === "true" || user?.role === "admin");
+    }
+  }, [user]);
+
+  // Supabaseから購入済み個別記事（買い切り: 500円）を取得
+  useEffect(() => {
+    if (user?.id) {
+      const loadPurchases = async () => {
+        try {
+          const { createClient } = await import("@/lib/supabase/client");
+          const supabase = createClient();
+          const { data } = await supabase
+            .from("article_purchases")
+            .select("slug, title, created_at")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false });
+
+          if (data && data.length > 0) {
+            const seen = new Set();
+            const unique = data.filter((item) => {
+              const key = item.title || item.slug;
+              if (seen.has(key)) return false;
+              seen.add(key);
+              return true;
+            });
+            setPurchasedArticles(unique);
+          }
+        } catch (e) {
+          console.warn("Could not load article purchases:", e);
+        }
+      };
+      loadPurchases();
     }
   }, [user]);
 
@@ -357,6 +389,40 @@ function SubscriptionContent() {
           </div>
         )}
       </div>
+
+      {/* 単品購入（買い切り: 500円）した攻略記事一覧 */}
+      {purchasedArticles.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>購入済みの攻略記事（買い切り・永久閲覧）</span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {purchasedArticles.map((art) => (
+              <Link
+                key={art.slug}
+                href={`/articles/${art.slug}`}
+                className="p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-cyan-500 dark:hover:border-cyan-400 transition-all flex items-center justify-between group shadow-xs"
+              >
+                <div className="min-w-0 pr-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                      購入済み
+                    </span>
+                    <span className="text-[11px] text-neutral-400 font-mono">
+                      {new Date(art.created_at).toLocaleDateString("ja-JP")}
+                    </span>
+                  </div>
+                  <h3 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
+                    {art.title || art.slug}
+                  </h3>
+                </div>
+                <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all shrink-0" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* プレミアム特典へのクイックアクセス */}
       <div className="space-y-4">

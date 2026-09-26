@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -26,8 +27,13 @@ import { trackDeviceEntryClick } from '@/lib/analytics';
 export default function Header() {
   const pathname = usePathname();
   const { user, isPremium } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentFontSize, setCurrentFontSize] = useState<'normal' | 'large' | 'xlarge'>('normal');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ルート遷移時にメニューを自動で閉じる
   useEffect(() => {
@@ -189,24 +195,24 @@ export default function Header() {
         </div>
       </div>
 
-      {/* スマホ用 ドロワーモーダルメニュー */}
-      {isMobileMenuOpen && (
+      {/* スマホ用 ドロワーモーダルメニュー（createPortalでbody直下に展開してbackdrop-filterの包含ブロック制約を回避） */}
+      {mounted && isMobileMenuOpen && createPortal(
         <div
           id="mobile-navigation-drawer"
-          className="fixed inset-0 z-50 md:hidden flex justify-end"
+          className="fixed inset-0 z-[9999] md:hidden flex justify-end"
           role="dialog"
           aria-modal="true"
           aria-label="ナビゲーションメニュー"
         >
           {/* 背景オーバーレイ */}
           <div
-            className="fixed inset-0 bg-neutral-950/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-neutral-950/70 backdrop-blur-xs transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* ドロワーパネル */}
-          <div className="relative w-full max-w-[320px] h-full bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xl flex flex-col z-10 border-l border-neutral-200 dark:border-neutral-800 animate-in slide-in-from-right duration-200">
+          <div className="relative w-full max-w-[320px] h-screen h-[100dvh] bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xl flex flex-col z-10 border-l border-neutral-200 dark:border-neutral-800 animate-in slide-in-from-right duration-200">
             {/* ドロワーヘッダー */}
             <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800 min-h-[56px]">
               <div className="flex items-center gap-2">
@@ -399,7 +405,8 @@ export default function Header() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

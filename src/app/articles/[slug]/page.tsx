@@ -18,6 +18,7 @@ import OkizemeQuickModal from '@/components/articles/OkizemeQuickModal';
 import DeviceEndArticlePromo from '@/components/devices/DeviceEndArticlePromo';
 import { getSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import { useAuth } from '@/contexts/AuthContext';
+import { loadBookmarksWithSync, toggleBookmarkWithSync } from '@/lib/bookmarks';
 import {
   Heart,
   Share2,
@@ -82,13 +83,46 @@ export default function ArticleDetailPage() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
-  // プレミアム会員の場合は自動アンロック
+  // プレミアム会員または記事購入済みの場合は自動アンロック（PC・スマホ端末間同期）
   useEffect(() => {
     if (isPremium) {
       setIsUnlocked(true);
       setAuthChecked(true);
+      return;
     }
-  }, [isPremium]);
+
+    if (user && slug) {
+      const checkPurchase = async () => {
+        try {
+          const { createClient } = await import('@/lib/supabase/client');
+          const supabase = createClient();
+          const relatedSlugs = slug.includes('ryu')
+            ? ['ryu-complete-guide', 'ryu-classic-complete-guide', 'ryu-modern-complete-guide']
+            : slug.includes('elena')
+            ? ['elena-complete-guide', 'elena-classic-complete-guide', 'elena-modern-complete-guide']
+            : slug.includes('chunli')
+            ? ['chunli-complete-guide', 'chunli-classic-complete-guide', 'chunli-modern-complete-guide']
+            : [slug];
+
+          const { data } = await supabase
+            .from('article_purchases')
+            .select('id')
+            .eq('user_id', user.id)
+            .in('slug', relatedSlugs)
+            .limit(1)
+            .maybeSingle();
+
+          if (data) {
+            setIsUnlocked(true);
+            setAuthChecked(true);
+          }
+        } catch (e) {
+          console.warn('Could not check article purchase from Supabase:', e);
+        }
+      };
+      checkPurchase();
+    }
+  }, [isPremium, user, slug]);
   const [forceShowTokenInput, setForceShowTokenInput] = useState(false);
   const [lastReadSectionId, setLastReadSectionId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -291,15 +325,12 @@ export default function ArticleDetailPage() {
 
   useEffect(() => {
     if (!article) return;
-    try {
-      const saved = localStorage.getItem(`fgc_bookmarks_${article.id}`);
-      if (saved) {
-        setBookmarks(JSON.parse(saved));
-      }
-    } catch {
-      // ignore
-    }
-  }, [article]);
+    const storageKey = `fgc_bookmarks_${article.id}`;
+    const targetKey = article.slug || article.id;
+    loadBookmarksWithSync(storageKey, targetKey, user?.id).then((list) => {
+      setBookmarks(list);
+    });
+  }, [article, user?.id]);
 
   // 有料記事トークンの自動検証とアンロック
   useEffect(() => {
@@ -553,14 +584,10 @@ export default function ArticleDetailPage() {
 
   const handleToggleBookmark = (id: string) => {
     if (!article) return;
-    setBookmarks((prev) => {
-      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
-      try {
-        localStorage.setItem(`fgc_bookmarks_${article.id}`, JSON.stringify(next));
-      } catch {
-        // ignore
-      }
-      return next;
+    const storageKey = `fgc_bookmarks_${article.id}`;
+    const targetKey = article.slug || article.id;
+    toggleBookmarkWithSync(storageKey, targetKey, id, bookmarks, user?.id).then((next) => {
+      setBookmarks(next);
     });
   };
 

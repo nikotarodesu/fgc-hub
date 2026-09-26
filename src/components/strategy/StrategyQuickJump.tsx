@@ -1,10 +1,11 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Crown, Sparkles, X } from 'lucide-react';
 import ArticleQuickJump, { QuickJumpSection } from '@/components/ArticleQuickJump';
 import { useAuth } from '@/contexts/AuthContext';
+import { loadBookmarksWithSync, toggleBookmarkWithSync } from '@/lib/bookmarks';
 
 interface StrategyQuickJumpProps {
   sections: QuickJumpSection[];
@@ -12,7 +13,7 @@ interface StrategyQuickJumpProps {
 }
 
 export default function StrategyQuickJump({ sections, slug }: StrategyQuickJumpProps) {
-  const { isPremium } = useAuth();
+  const { user, isPremium } = useAuth();
   const [activeSectionId, setActiveSectionId] = useState<string>(
     sections[0]?.id || ''
   );
@@ -20,17 +21,13 @@ export default function StrategyQuickJump({ sections, slug }: StrategyQuickJumpP
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showBars, setShowBars] = useState(false);
 
-  // お気に入りのローカルストレージ同期（プレミアム会員用）
+  // お気に入りのローカル＆Supabaseクラウド同期
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`fgc_strategy_bookmarks_${slug}`);
-      if (saved) {
-        setBookmarks(JSON.parse(saved));
-      }
-    } catch {
-      // ignore
-    }
-  }, [slug]);
+    const storageKey = `fgc_strategy_bookmarks_${slug}`;
+    loadBookmarksWithSync(storageKey, slug, user?.id).then((list) => {
+      setBookmarks(list);
+    });
+  }, [slug, user?.id]);
 
   // スクロール検知：現在のアクティブセクションとバーの表示切り替え
   useEffect(() => {
@@ -93,15 +90,10 @@ export default function StrategyQuickJump({ sections, slug }: StrategyQuickJumpP
       return;
     }
 
-    // プレミアム会員はお気に入りを保存/解除
-    setBookmarks((prev) => {
-      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
-      try {
-        localStorage.setItem(`fgc_strategy_bookmarks_${slug}`, JSON.stringify(next));
-      } catch {
-        // ignore
-      }
-      return next;
+    // プレミアム会員はお気に入りを保存/解除（ローカル即時 + Supabaseクラウド同期）
+    const storageKey = `fgc_strategy_bookmarks_${slug}`;
+    toggleBookmarkWithSync(storageKey, slug, id, bookmarks, user?.id).then((next) => {
+      setBookmarks(next);
     });
   };
 

@@ -45,10 +45,13 @@ export async function POST(req: NextRequest) {
         const customerId = session.customer as string;
         const userId = session.metadata?.userId;
         const plan = (session.metadata?.plan as "monthly" | "yearly") || "monthly";
+        const planType = session.metadata?.planType;
 
-        console.log(`[Stripe Webhook] Checkout completed: customer=${customerId}, user=${userId}, plan=${plan}`);
+        console.log(`[Stripe Webhook] Checkout completed: customer=${customerId}, user=${userId}, plan=${plan}, planType=${planType}, mode=${session.mode}`);
 
-        if (session.subscription) {
+        if (session.mode === "payment" || planType === "article") {
+          await handleArticlePurchase(supabase, session);
+        } else if (session.subscription) {
           const subscriptionId = typeof session.subscription === "string" 
             ? session.subscription 
             : session.subscription.id;
@@ -219,3 +222,62 @@ async function handleSubscriptionDeleted(
     console.log(`[Stripe Sync] Reverted user ${targetUserId} to free role.`);
   }
 }
+
+/**
+ * 記事単品購入（買い切り: 500円）をSupabaseのarticle_purchasesに記録
+ */
+async function handleArticlePurchase(
+  supabase: ReturnType<typeof createAdminClient>,
+  session: Stripe.Checkout.Session
+) {
+  let userId = session.metadata?.userId;
+  const slug = session.metadata?.slug;
+  const title = session.metadata?.title || "攻略記事";
+  const customerEmail = session.customer_details?.email || session.customer_email;
+
+  // 1. userId が空の場合、メールアドレスからユーザーを特定
+  if ((!userId || userId === "anonymous") && customerEmail) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", customerEmail)
+      .maybeSingle();
+
+    if (profile?.id) {
+      userId = profile.id;
+    }
+  }
+
+  if (!userId || !slug) {
+    console.warn(`[Stripe Webhook Article] Cannot record purchase: missing userId (${userId}) or slug (${slug})`);
+    return;
+  }
+
+  const relatedSlugs = slug.includes("ryu")
+    ? ["ryu-complete-guide", "ryu-classic-complete-guide", "ryu-modern-complete-guide"]
+    : slug.includes("elena")
+    ? ["elena-complete-guide", "elena-classic-complete-guide", "elena-modern-complete-guide"]
+    : slug.includes("chunli")
+    ? ["chunli-complete-guide", "chunli-classic-complete-guide", "chunli-modern-complete-guide"]
+    : [slug];
+
+  const rows = relatedSlugs.map((s) => ({
+    user_id: userId,
+    slug: s,
+    title,
+    amount: session.amount_total || 500,
+    stripe_session_id: session.id,
+    created_at: new Date().toISOString(),
+  }));
+
+  const { error } = await supabase
+    .from("article_purchases")
+    .upsert(rows, { onConflict: "user_id,slug" });
+
+  if (error) {
+    console.error("[Stripe Webhook Article] Failed to insert article_purchases:", error.message);
+  } else {
+    console.log(`[Stripe Webhook Article] Successfully recorded article purchase for user ${userId}, slugs: ${relatedSlugs.join(", ")}`);
+  }
+}
+

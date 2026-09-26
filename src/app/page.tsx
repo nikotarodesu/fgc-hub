@@ -324,73 +324,93 @@ export default function HomePage() {
           </div>
 
           {/* 記事種別タブ（全記事 / 攻略記事 / 立ち回り / 共通技術 / コーチング） */}
-          <div className="pt-1 flex flex-wrap items-center justify-between gap-2.5">
-            <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/80 p-1 rounded-lg border border-neutral-200/60 dark:border-neutral-700/60 overflow-x-auto">
-              <button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedDifficulty('beginner');
-                }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  selectedCategory === 'all'
-                    ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                全記事
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedCategory('character');
-                  setSelectedDifficulty('beginner');
-                }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  selectedCategory === 'character'
-                    ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                攻略記事
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedCategory('neutral');
-                  setSelectedDifficulty('beginner');
-                }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  selectedCategory === 'neutral'
-                    ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                立ち回り
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedCategory('system');
-                  setSelectedDifficulty('beginner');
-                }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  selectedCategory === 'system'
-                    ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                共通技術
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedCategory('coaching');
-                  setSelectedDifficulty('beginner');
-                }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-                  selectedCategory === 'coaching'
-                    ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                コーチング
-              </button>
+          <div className="pt-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+            {/* スマホ表示時専用：横スライド案内 */}
+            <div className="flex items-center justify-between sm:hidden w-full px-0.5">
+              <span className="text-[11px] font-bold text-neutral-500 dark:text-neutral-400">
+                記事カテゴリ
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded-full border border-cyan-200/80 dark:border-cyan-800">
+                <span>スライドでコーチング等を表示</span>
+                <span className="text-xs font-black">→</span>
+              </span>
+            </div>
+
+            <div className="relative w-full sm:w-auto max-w-full">
+              <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/80 p-1 rounded-lg border border-neutral-200/60 dark:border-neutral-700/60 overflow-x-auto scrollbar-none pr-8 sm:pr-1">
+                <button
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setSelectedDifficulty('beginner');
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === 'all'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  全記事
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedCategory('character');
+                    setSelectedDifficulty('beginner');
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === 'character'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  攻略記事
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedCategory('neutral');
+                    setSelectedDifficulty('beginner');
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === 'neutral'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  立ち回り
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedCategory('system');
+                    setSelectedDifficulty('beginner');
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === 'system'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  共通技術
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedCategory('coaching');
+                    setSelectedDifficulty('beginner');
+                  }}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategory === 'coaching'
+                      ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-bold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  コーチング
+                </button>
+              </div>
+
+              {/* スマホ表示時専用：右端フェード＆矢印スクロールインジケーター */}
+              <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 flex items-center pr-2.5 pl-6 bg-gradient-to-l from-neutral-100 dark:from-neutral-800 via-neutral-100/90 dark:via-neutral-800/90 to-transparent rounded-r-lg">
+                <span className="text-cyan-600 dark:text-cyan-400 text-xs font-black animate-pulse">
+                  →
+                </span>
+              </div>
             </div>
 
             {/* 操作タイプ切り替え（攻略記事選択時） */}

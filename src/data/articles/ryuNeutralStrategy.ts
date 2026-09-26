@@ -20,8 +20,6 @@ export const RYU_NEUTRAL_STRATEGY: Article = {
   readTime: '6分',
   isPaid: false,
   controlType: 'classic',
-  difficulty: 'intermediate',
-  difficultyLabel: '中級',
   tags: ['立ち回り', 'リュウ'],
   likesCount: 562,
   recommendedGearIds: ['razer-huntsman-v3-pro-mini', 'gaming-finger-sleeve'],

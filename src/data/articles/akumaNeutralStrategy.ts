@@ -19,8 +19,6 @@ export const AKUMA_NEUTRAL_STRATEGY: Article = {
   readTime: '7分',
   isPaid: false,
   controlType: 'classic',
-  difficulty: 'intermediate',
-  difficultyLabel: '中級',
   tags: ['立ち回り', '豪鬼'],
   likesCount: 348,
   hideRelatedArticles: true,

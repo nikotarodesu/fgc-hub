@@ -1,7 +1,14 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Flame, Home, ArrowLeft, ShieldAlert } from 'lucide-react';
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = constructMetadata({
+  title: '404 ページが見つかりません',
+  noIndex: true,
+});
 
 export default function NotFound() {
   return (

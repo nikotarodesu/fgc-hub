@@ -136,6 +136,20 @@ export default function HomePage() {
 
   const isPickupVisible = Boolean(pickupArticle);
 
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'にこ太郎の格ゲーLAB',
+    alternateName: ['格ゲーLAB', 'にこ太郎LAB'],
+    url: 'https://nikotaro.com',
+    description: '全キャラ1800MR以上の筆者「にこ太郎」によるスト6攻略メディア。実戦コンボ・起き攻めデータ・立ち回り徹底解説を発信中。',
+    publisher: {
+      '@type': 'Person',
+      name: 'にこ太郎',
+      url: 'https://nikotaro.com/author',
+    },
+  };
+
   const handleResetFilters = () => {
     setSelectedCharacter(null);
     setSelectedCategory('all');
@@ -147,16 +161,24 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       
-      {/* 1. コンパクトなサイト紹介・主見出し（押し下げない構成） */}
+      {/* 1. コンパクトなサイト紹介・主見出し（ブランドコピーと目的を明示） */}
       <section className="bg-white dark:bg-neutral-900 border-b border-neutral-200/80 dark:border-neutral-800 pt-5 pb-4 sm:pt-6 sm:pb-5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-3.5">
           <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 text-[11px] font-bold mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>読んで強くなる スト6攻略メディア</span>
+            </div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-neutral-900 dark:text-white tracking-tight leading-tight">
-              スト6のキャラ攻略・立ち回り・実戦ツール
+              スト6の立ち回りを、理由から理解する。
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-              全キャラ1800MR以上の視点から、実戦で差がつく立ち回り理論・状況別コンボ・起き攻めデータを体系化。
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 mt-1.5 leading-relaxed">
+              全キャラ1800MR以上の視点から、実戦で差がつく立ち回り理論・状況別コンボ・起き攻めデータを体系化。実戦の疑問をトレモで確認し、迷わず対戦で使える攻略を発信中。
             </p>
           </div>
 
@@ -797,6 +819,42 @@ export default function HomePage() {
           {/* デバイス・プレイ環境コーナー案内（横長バナー：記事表示の下、フッターの上に配置） */}
           <div className="pt-2 sm:pt-4">
             <DeviceHomeBanner />
+          </div>
+
+          {/* 著者紹介＆検証方針案内（第4.2章推奨順序：共通技術・記事 → デバイス → 著者・検証情報） */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 ring-2 ring-cyan-500/20 shrink-0">
+                <Image
+                  src="/icon.png"
+                  alt="にこ太郎"
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm text-neutral-900 dark:text-white">にこ太郎</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                    全キャラ1800MR+
+                  </span>
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                    note大会2連覇
+                  </span>
+                </div>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  トレモでの受け身両対応確認・フレーム検証に基づき執筆。訂正方針や過去のコーチングアーカイブの位置づけを公開しています。
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/author"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 transition-colors shrink-0 w-full sm:w-auto"
+            >
+              <span>著者・検証方針を見る</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </main>

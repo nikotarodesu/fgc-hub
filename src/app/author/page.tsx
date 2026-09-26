@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AUTHOR_INFO } from '@/data/author';
 import { constructMetadata } from '@/lib/seo';
-import { Trophy, ExternalLink, ChevronRight, CheckCircle2, ShieldCheck, Mail, ArrowLeft } from 'lucide-react';
+import { Trophy, ExternalLink, ChevronRight, CheckCircle2, ShieldCheck, Mail, ArrowLeft, MonitorCheck } from 'lucide-react';
 
 export const metadata: Metadata = constructMetadata({
   title: '著者紹介（にこ太郎）',
@@ -13,8 +13,41 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function AuthorPage() {
+  const profileSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: {
+      '@type': 'Person',
+      name: AUTHOR_INFO.name,
+      alternateName: AUTHOR_INFO.xHandle ? AUTHOR_INFO.xHandle.replace('@', '') : undefined,
+      url: 'https://nikotaro.com/author',
+      image: 'https://nikotaro.com/icon.png',
+      description: AUTHOR_INFO.bio,
+      sameAs: [
+        AUTHOR_INFO.xUrl,
+        AUTHOR_INFO.noteUrl,
+        AUTHOR_INFO.youtubeUrl,
+      ].filter(Boolean),
+      jobTitle: '格闘ゲーム攻略ライター / サイト運営者',
+      knowsAbout: [
+        'Street Fighter 6',
+        'ストリートファイター6',
+        '格闘ゲーム',
+        '立ち回り理論',
+        'フレームデータ',
+        '差し返し',
+      ],
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
+      {/* 構造化データ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileSchema) }}
+      />
+
       {/* パンくずナビゲーション */}
       <div className="border-b border-neutral-200/80 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xs">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-11 flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
@@ -86,7 +119,21 @@ export default function AuthorPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 transition-colors"
                   >
-                    <span>note</span>
+                    <span>note ({AUTHOR_INFO.noteSales || '有料記事累計2,000部'})</span>
+                    <ExternalLink className="w-3 h-3 opacity-60" />
+                  </a>
+                )}
+                {AUTHOR_INFO.youtubeUrl && (
+                  <a
+                    href={AUTHOR_INFO.youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/60 transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5 fill-current text-red-600 dark:text-red-400" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    <span>YouTube</span>
                     <ExternalLink className="w-3 h-3 opacity-60" />
                   </a>
                 )}
@@ -103,19 +150,26 @@ export default function AuthorPage() {
               プレイヤー実績・活動記録
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 space-y-1.5">
               <span className="text-xs font-bold text-neutral-500 dark:text-neutral-400">ストリートファイター6 実績</span>
               <p className="text-sm font-bold text-neutral-900 dark:text-white">全キャラクター 1800MR以上到達</p>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                全キャラクターをマスターランクおよび1800MR以上まで実際にプレイし、各キャラクターの強み・弱点・立ち回り構造を実戦を通じて網羅的に把握しています。
+                2023年発売初期より継続プレイ。全キャラクターをMR1800以上まで自力到達させ、全キャラのリーチ・判定・立ち回り構造を実戦とトレモの両面から把握しています。
               </p>
             </div>
             <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 space-y-1.5">
               <span className="text-xs font-bold text-neutral-500 dark:text-neutral-400">執筆実績</span>
               <p className="text-sm font-bold text-neutral-900 dark:text-white">note大会 2連覇達成 🏆</p>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                note上での格闘ゲーム攻略記事コンテストにて2連覇を達成。有料攻略記事は累計2,000部以上の購読実績があります。
+                note格ゲー攻略コンテストにて2連覇を達成。立ち回り思考を体系化した有料攻略記事は累計2,000部以上が購読されています。
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/70 dark:border-neutral-700/60 space-y-1.5">
+              <span className="text-xs font-bold text-neutral-500 dark:text-neutral-400">検証環境</span>
+              <p className="text-sm font-bold text-neutral-900 dark:text-white">PC / PS5 トレモ実機検証</p>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                フレームメーター、当たり判定・やられ判定表示、ダミーのガードリバーサル機能を用いた反撃確定テスト、受け身両対応の持続確認を徹底しています。
               </p>
             </div>
           </div>

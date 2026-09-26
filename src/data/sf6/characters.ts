@@ -112,4 +112,17 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     version: 'Ver.1.05',
     updatedAt: '2026-09-26',
   },
+  elena: {
+    slug: 'elena',
+    name: 'エレナ',
+    nameEn: 'Elena',
+    archetype: 'リーチ制圧・ヒーリング・変幻自在のステップ',
+    description: '長い手足から繰り出す牽制技と、ヒーリング（SA2）による驚異の粘り強さを併せ持つカポエイラ使い。当サイトにてクラシック・モダン両対応の完全攻略も公開中。',
+    strengths: ['リーチの長い通常技牽制', 'ノーゲージ起き攻めと弾抜け', 'SA2ヒーリングの高回転運用'],
+    defaultHp: 10000,
+    hasTool: false,
+    comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-09-26',
+  },
 };

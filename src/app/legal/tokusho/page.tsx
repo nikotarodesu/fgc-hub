@@ -1,4 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = constructMetadata({
+  title: '特定商取引法に基づく表記',
+  description: 'にこ太郎の格ゲーLAB 特定商取引法に基づく表記です。',
+  canonicalUrl: '/legal/tokusho',
+});
 
 export default function TokushoPage() {
   return (

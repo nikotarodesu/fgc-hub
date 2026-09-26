@@ -45,9 +45,9 @@ export default function ComboCard({ name, recipe, damage, driveGauge, situation,
         title="タップして矢印コマンドを表示"
       >
         <span className="font-semibold text-white whitespace-normal [overflow-wrap:anywhere] break-all leading-relaxed">{recipe}</span>
-        <span className="text-[10px] sm:text-[11px] text-cyan-400 group-hover:text-cyan-300 flex items-center gap-1 shrink-0 font-sans font-medium mt-0.5 sm:mt-0">
-          <Gamepad2 className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">{showCommands ? 'コマンドを隠す' : 'コマンド展開'}</span>
+        <span className="text-[11px] sm:text-xs text-cyan-400 group-hover:text-cyan-300 flex items-center gap-1 shrink-0 font-sans font-bold mt-0.5 sm:mt-0 bg-cyan-950/60 sm:bg-transparent px-2 py-1 sm:p-0 rounded border border-cyan-800/80 sm:border-none">
+          <Gamepad2 className="w-3.5 h-3.5 text-cyan-400" />
+          <span>{showCommands ? 'コマンド収納' : 'コマンド展開'}</span>
           {showCommands ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </span>
       </div>

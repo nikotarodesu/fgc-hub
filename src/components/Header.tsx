@@ -18,6 +18,7 @@ import {
   Moon,
   Type,
   ChevronRight,
+  Flame,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import FontSizeToggle from './FontSizeToggle';
@@ -259,6 +260,21 @@ export default function Header() {
                 </Link>
 
                 <Link
+                  href="/sf6"
+                  className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl font-medium transition-colors ${
+                    pathname === '/sf6'
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                      : 'hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Flame className="w-4 h-4 text-orange-500" />
+                    <span>スト6攻略ハブ</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-neutral-400" />
+                </Link>
+
+                <Link
                   href="/sf6/strategy"
                   className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl font-medium transition-colors ${
                     pathname?.startsWith('/sf6/strategy')
@@ -307,6 +323,21 @@ export default function Header() {
                   <div className="flex items-center gap-2.5">
                     <BookOpen className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                     <span>格ゲー用語解説</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-neutral-400" />
+                </Link>
+
+                <Link
+                  href="/author"
+                  className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl font-medium transition-colors ${
+                    pathname === '/author'
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
+                      : 'hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <UserIcon className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                    <span>著者紹介（にこ太郎）</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-neutral-400" />
                 </Link>

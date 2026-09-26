@@ -176,3 +176,61 @@ export function trackDeviceMerchantClick({
     link_type: linkType,
   });
 }
+
+/**
+ * 関連記事・内部リンククリック計測
+ */
+export function trackRelatedArticleClick({
+  fromArticle,
+  toArticle,
+  location,
+}: {
+  fromArticle: string;
+  toArticle: string;
+  location: 'footer' | 'inline' | 'sidebar' | 'card';
+}) {
+  trackEvent('related_article_click', {
+    source_article_id: fromArticle,
+    destination_article_id: toArticle,
+    link_location: location,
+  });
+}
+
+/**
+ * メンバーシップ・有料プランCTAクリック計測（個人情報は一切含めない安全設計）
+ */
+export function trackMembershipCtaClick({
+  sourcePage,
+  planId,
+  ctaLocation,
+}: {
+  sourcePage: string;
+  planId?: string;
+  ctaLocation: 'header' | 'article_gate' | 'membership_page' | 'footer';
+}) {
+  trackEvent('membership_cta_click', {
+    source_page: sourcePage,
+    plan_id: planId || 'standard',
+    cta_location: ctaLocation,
+  });
+}
+
+/**
+ * 公式サイト・外部リソースリンククリック計測
+ */
+export function trackOutboundOfficialClick({
+  sourcePage,
+  destinationDomain,
+  linkType,
+}: {
+  sourcePage: string;
+  destinationDomain: string;
+  linkType: 'capcom_official' | 'note' | 'x' | 'youtube' | 'device';
+}) {
+  trackEvent('outbound_official_click', {
+    source_page: sourcePage,
+    destination_domain: destinationDomain,
+    link_type: linkType,
+  });
+}
+

@@ -27,6 +27,7 @@ import { COACHING_MARISA_1500MR } from './articles/coachingMarisa1500mr';
 import { COACHING_AKUMA_1200MR } from './articles/coachingAkuma1200mr';
 import { AKUMA_NEUTRAL_STRATEGY } from './articles/akumaNeutralStrategy';
 import { RYU_NEUTRAL_STRATEGY } from './articles/ryuNeutralStrategy';
+import { ZANGIEF_NEUTRAL_STRATEGY } from './articles/zangiefNeutralStrategy';
 import { SF6_COMMON_TECHNIQUES_ARTICLES } from './articles/sf6CommonTechniques';
 
 export interface ArticleVariant {
@@ -327,6 +328,7 @@ export const ARTICLES_DATA: Article[] = [
   COACHING_AKUMA_1200MR,
   COACHING_CHUNLI_1600MR,
   RYU_NEUTRAL_STRATEGY,
+  ZANGIEF_NEUTRAL_STRATEGY,
   CHUNLI_COMPLETE_GUIDE,
   RYU_COMPLETE_GUIDE,
   ...SF6_COMMON_TECHNIQUES_ARTICLES,
@@ -343,6 +345,7 @@ export function parseArticleTitle(title: string): { mainTitle: string; subtitle?
 export {
   AKUMA_NEUTRAL_STRATEGY,
   RYU_NEUTRAL_STRATEGY,
+  ZANGIEF_NEUTRAL_STRATEGY,
   ELENA_COMPLETE_GUIDE,
   ELENA_CLASSIC_COMPLETE_GUIDE,
   ELENA_MODERN_COMPLETE_GUIDE,

@@ -16,6 +16,11 @@ import {
   AkumaHadokenDecisionDiagram,
   AkumaCornerSpacingDiagram,
 } from './AkumaStrategyDiagrams';
+import {
+  ZangiefDistanceGoalsDiagram,
+  ZangiefResourceDecisionDiagram,
+  ZangiefCornerSpacingDiagram,
+} from './ZangiefStrategyDiagrams';
 
 interface DiagramDispatcherProps {
   diagramType?: string;
@@ -47,6 +52,15 @@ export default function DiagramDispatcher({ diagramType }: DiagramDispatcherProp
       return <RyuDenjinOrOkiDiagram />;
     case 'ryu-corner-escape-check':
       return <RyuCornerEscapeCheckDiagram />;
+    case 'zangief-distance-goals':
+    case 'fig-distance':
+      return <ZangiefDistanceGoalsDiagram />;
+    case 'zangief-resource-decision':
+    case 'fig-oki':
+      return <ZangiefResourceDecisionDiagram />;
+    case 'zangief-corner-spacing':
+    case 'fig-corner':
+      return <ZangiefCornerSpacingDiagram />;
     default:
       return null;
   }

@@ -99,4 +99,17 @@ export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
     version: 'Ver.1.05',
     updatedAt: '2026-05-20',
   },
+  zangief: {
+    slug: 'zangief',
+    name: 'ザンギエフ',
+    nameEn: 'Zangief',
+    archetype: '投げキャラの頂点・スクリュー・高耐久アーマー',
+    description: '圧倒的な投げ間合いと破壊力を誇るスクリューパイルドライバーを軸に、地上戦と打撃で相手を画面端へと追い詰める。',
+    strengths: ['脅威の威力・間合いを誇るスクリュー', '大Pや中Kによる長い地上牽制', '上半身アーマーやダブラリによる迎撃'],
+    defaultHp: 11000,
+    hasTool: false,
+    comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-09-26',
+  },
 };

@@ -25,6 +25,7 @@ import { COACHING_KEN_1700MR } from './articles/coachingKen1700mr';
 import { COACHING_KEN_1300MR } from './articles/coachingKen1300mr';
 import { COACHING_MARISA_1500MR } from './articles/coachingMarisa1500mr';
 import { COACHING_AKUMA_1200MR } from './articles/coachingAkuma1200mr';
+import { AKUMA_NEUTRAL_STRATEGY } from './articles/akumaNeutralStrategy';
 import { SF6_COMMON_TECHNIQUES_ARTICLES } from './articles/sf6CommonTechniques';
 
 export interface ArticleVariant {
@@ -44,6 +45,7 @@ export interface Article {
   id: string;
   slug: string;
   title: string;
+  metaTitle?: string;
   subtitle?: string;
   coachingDate?: string;
   summary: string;
@@ -89,6 +91,7 @@ export interface Article {
     intro: string;
     sections: {
       title: string;
+      anchorId?: string;
       body: string;
       image?: {
         src: string;
@@ -298,6 +301,7 @@ export const CHARACTERS_SF6 = [
 
 // 攻略記事データ一覧
 export const ARTICLES_DATA: Article[] = [
+  AKUMA_NEUTRAL_STRATEGY,
   ELENA_COMPLETE_GUIDE,
   COACHING_JURI_1400MR,
   COACHING_BLANKA_1500MR,
@@ -408,6 +412,7 @@ export function parseArticleTitle(title: string): { mainTitle: string; subtitle?
 }
 
 export {
+  AKUMA_NEUTRAL_STRATEGY,
   ELENA_COMPLETE_GUIDE,
   ELENA_CLASSIC_COMPLETE_GUIDE,
   ELENA_MODERN_COMPLETE_GUIDE,

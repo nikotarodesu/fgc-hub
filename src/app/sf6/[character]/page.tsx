@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SF6_CHARACTERS } from '@/data/sf6/characters';
+import { ARTICLES_DATA, getArticleEyecatch, parseArticleTitle } from '@/data/articles';
 import { constructMetadata } from '@/lib/seo';
-import { ChevronRight, Zap, CheckCircle2, Flame, ShieldCheck, ArrowRight, BookOpen } from 'lucide-react';
+import { ChevronRight, Zap, CheckCircle2, Flame, ShieldCheck, ArrowRight, BookOpen, FileText } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ character: string }>;
@@ -123,6 +124,59 @@ export default async function CharacterHubPage({ params }: PageProps) {
             ))}
           </div>
         </section>
+
+        {/* 公開中の攻略・立ち回り記事 */}
+        {(() => {
+          const characterArticles = ARTICLES_DATA.filter((a) => a.character === char.name);
+          if (characterArticles.length === 0) return null;
+
+          return (
+            <section className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
+              <h2 className="font-black text-base text-neutral-900 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#00a3c4]" />
+                <span>{char.name}の攻略・立ち回り記事（{characterArticles.length}件）</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {characterArticles.map((art) => {
+                  const titleInfo = parseArticleTitle(art.title);
+                  return (
+                    <Link
+                      key={art.slug}
+                      href={`/articles/${art.slug}`}
+                      className="group p-4 rounded-xl bg-neutral-50 hover:bg-white border border-neutral-200/80 hover:border-[#00a3c4] transition-all shadow-xs flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00a3c4]/10 text-[#00a3c4]">
+                            {art.category === 'neutral' ? '立ち回り' : art.category === 'coaching' ? 'コーチング' : '完全攻略'}
+                          </span>
+                          <span className="text-[10px] text-neutral-400 font-mono">
+                            {art.updatedAt || art.publishedAt}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-sm text-neutral-900 group-hover:text-[#00a3c4] transition-colors leading-snug">
+                          {titleInfo.mainTitle}
+                        </h3>
+                        {titleInfo.subtitle && (
+                          <p className="text-xs text-neutral-500 mt-0.5 font-medium line-clamp-1">
+                            {titleInfo.subtitle}
+                          </p>
+                        )}
+                        <p className="text-xs text-neutral-600 mt-2 line-clamp-2 leading-relaxed">
+                          {art.summary}
+                        </p>
+                      </div>
+                      <div className="mt-3 pt-2.5 border-t border-neutral-200/60 flex items-center justify-between text-xs text-[#00a3c4] font-bold">
+                        <span>記事を読む</span>
+                        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* 関連ナビゲーション */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

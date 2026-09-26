@@ -28,7 +28,7 @@ export async function generateMetadata({
   const eyecatch = getArticleEyecatch(article);
 
   return constructMetadata({
-    title: article.title,
+    title: article.metaTitle || article.title,
     description: article.summary,
     image: eyecatch,
     canonicalUrl: `/articles/${canonicalSlug}`,

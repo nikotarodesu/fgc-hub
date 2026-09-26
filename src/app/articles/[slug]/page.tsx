@@ -142,6 +142,23 @@ export default function ArticleDetailPage() {
     }
   }, [article]);
 
+  // URLハッシュ（アンカー）が存在する場合のスムーズスクロール
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const rawHash = window.location.hash.replace('#', '');
+      if (rawHash) {
+        setTimeout(() => {
+          const el = document.getElementById(rawHash);
+          if (el) {
+            const yOffset = -100;
+            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 150);
+      }
+    }
+  }, [slug]);
+
   // 管理者モード・キャラ別シークレット解放の自動復元（localStorage & カスタムイベント）
   useEffect(() => {
     const checkUnlockStatus = () => {
@@ -1182,7 +1199,13 @@ export default function ArticleDetailPage() {
                 const isCollapsed = Boolean(isCompleteGuide && collapsedSections[secId]);
 
                 return (
-                  <div key={idx} id={secId} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28">
+                  <div key={idx} id={secId} className="pt-8 sm:pt-10 scroll-mt-24 sm:scroll-mt-28 relative">
+                    {section.anchorId && (
+                      <span
+                        id={section.anchorId}
+                        className="scroll-mt-24 sm:scroll-mt-28 absolute -top-2 left-0 invisible pointer-events-none"
+                      />
+                    )}
                     <div
                       onClick={isCompleteGuide ? () => toggleSectionCollapse(secId) : undefined}
                       className={`flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5 px-3.5 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl bg-neutral-50/90 dark:bg-neutral-800/60 border border-neutral-200/90 dark:border-neutral-700/80 shadow-2xs transition-all ${

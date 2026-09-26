@@ -5,6 +5,7 @@ import { findRyuNeutralMoveKeyFrame, KeyFrameInfo } from '@/data/sf6/ryuFrameDat
 import { findElenaNeutralMoveKeyFrame } from '@/data/sf6/elenaFrameData';
 import InteractiveComboRow from './InteractiveComboRow';
 import YouTubeEmbed from './YouTubeEmbed';
+import DiagramDispatcher from './articles/DiagramDispatcher';
 import { Star, Zap, Film, Eye, ChevronDown, ChevronUp, Play, Pause } from 'lucide-react';
 import { CharacterSecretUnlockConfig } from '@/data/articles/secretUnlockConfig';
 import { getMediaUrl } from '@/lib/media';
@@ -144,6 +145,7 @@ type LineType =
   | 'empty'
   | 'image'
   | 'youtube'
+  | 'diagram'
   | 'quote'
   | 'numbered_heading'
   | 'star_heading'
@@ -161,6 +163,7 @@ function getLineType(line: string): LineType {
   const trimmed = line.trim();
   if (!trimmed) return 'empty';
   if (trimmed.startsWith('![') && trimmed.includes('](') && trimmed.endsWith(')')) return 'image';
+  if (trimmed.startsWith('[diagram:') && trimmed.endsWith(']')) return 'diagram';
   if (isYouTubeLine(trimmed)) return 'youtube';
   if (trimmed.startsWith('>')) return 'quote';
   if (/^[①-⑳❶-❿➊-➓⓫-⓴]/.test(trimmed)) return 'numbered_heading';
@@ -555,12 +558,12 @@ export default function RichContent({
           <div className="sm:hidden px-3 py-1 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
             ← 左右にスクロールして全体を表示 →
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[480px]">
+          <div className="overflow-x-auto [scrollbar-width:thin]">
+            <table className="w-full text-left text-sm sm:text-[15px] border-collapse min-w-[540px]">
               <thead>
                 <tr className="bg-neutral-100/90 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
                   {block.tableData.header.map((head, hIdx) => (
-                    <th key={hIdx} className="py-2.5 px-3.5 font-bold tracking-wide">
+                    <th key={hIdx} className="py-3 px-3.5 font-bold tracking-wide">
                       {renderInline(head)}
                     </th>
                   ))}
@@ -575,7 +578,7 @@ export default function RichContent({
                     {row.map((cell, cIdx) => (
                       <td
                         key={cIdx}
-                        className="py-2.5 px-3.5 text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium align-middle"
+                        className="py-3 px-3.5 text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium align-middle"
                       >
                         {renderInline(cell)}
                       </td>
@@ -585,6 +588,19 @@ export default function RichContent({
               </tbody>
             </table>
           </div>
+        </div>
+      );
+    }
+
+    // 0.48 インラインダイアグラム（[diagram:akuma-win-plan] など）
+    if (block.type === 'diagram') {
+      return (
+        <div key={blockKey} className="my-4 sm:my-6">
+          {block.lines.map((line, lIdx) => {
+            const match = line.trim().match(/^\[diagram:(.*?)\]$/);
+            if (!match) return null;
+            return <DiagramDispatcher key={lIdx} diagramType={match[1]} />;
+          })}
         </div>
       );
     }

@@ -28,6 +28,7 @@ function SubscriptionContent() {
   const { 
     user, 
     isPremium, 
+    refreshUser,
     cancelSubscription, 
     resumeSubscription, 
     upgradeToPremium, 
@@ -49,10 +50,13 @@ function SubscriptionContent() {
 
   // URLパラメータのチェック（Stripe Checkout後のリダイレクト等）
   useEffect(() => {
-    if (searchParams.get("upgraded") === "true" || searchParams.get("demo_upgraded") === "true") {
+    if (searchParams.get("upgraded") === "true") {
+      setActionMessage("プレミアム会員へのご登録が完了いたしました！すべての限定コンテンツをお楽しみください。");
+      refreshUser();
+    } else if (searchParams.get("demo_upgraded") === "true") {
       setActionMessage("プレミアム会員へのご登録が完了いたしました！すべての限定コンテンツをお楽しみください。");
     }
-  }, [searchParams]);
+  }, [searchParams, refreshUser]);
 
   // 解約処理（解約予約）
   const handleCancel = async () => {

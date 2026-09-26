@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { User, UserRole, SubscriptionPlan, UserSubscription } from "@/types/auth";
+import { User, UserRole, SubscriptionPlan, SubscriptionStatus, UserSubscription } from "@/types/auth";
 import { SUBSCRIPTION_CONFIG } from "@/config/subscription";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
@@ -13,6 +13,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isPremium: boolean;
   isConfigured: boolean;
+  refreshUser: () => Promise<void>;
   loginWithGoogle: (redirectTo?: string) => Promise<{ success: boolean; error?: string }>;
   login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   register: (email: string, name?: string, password?: string) => Promise<{ success: boolean; error?: string }>;
@@ -26,12 +27,125 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Supabase DB（profiles, subscriptions）からユーザー詳細・課金情報を取得
+ */
+async function loadUserFromSupabase(sessionUser: any): Promise<User> {
+  const supabase = createClient();
+  let role: UserRole = "free";
+  let subscription: UserSubscription | undefined = undefined;
+  let name =
+    sessionUser.user_metadata?.full_name ||
+    sessionUser.user_metadata?.name ||
+    sessionUser.email?.split("@")[0] ||
+    "格ゲーLAB会員";
+  let avatarUrl = sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture;
+  let stripeCustomerId: string | undefined = undefined;
+
+  try {
+    // 1. profiles テーブルから取得
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", sessionUser.id)
+      .maybeSingle();
+
+    if (profile) {
+      if (profile.role) role = profile.role as UserRole;
+      if (profile.name) name = profile.name;
+      if (profile.avatar_url) avatarUrl = profile.avatar_url;
+      if (profile.stripe_customer_id) stripeCustomerId = profile.stripe_customer_id;
+    } else {
+      // profile が未作成の場合は補完 upsert を試行
+      try {
+        await supabase.from("profiles").upsert({
+          id: sessionUser.id,
+          email: sessionUser.email || "",
+          name,
+          avatar_url: avatarUrl,
+          role: "free",
+        });
+      } catch (err) {
+        console.warn("Could not upsert profile:", err);
+      }
+    }
+
+    // 2. subscriptions テーブルから最新サブスクを取得
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", sessionUser.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (sub) {
+      const isActive = sub.status === "active" || sub.status === "trialing";
+      if (isActive && role !== "admin") {
+        role = "premium";
+      }
+      subscription = {
+        plan: (sub.plan as SubscriptionPlan) || "monthly",
+        status: (sub.status as SubscriptionStatus) || (isActive ? "active" : "none"),
+        currentPeriodStart: sub.current_period_start ? new Date(sub.current_period_start).getTime() : Date.now(),
+        currentPeriodEnd: sub.current_period_end ? new Date(sub.current_period_end).getTime() : Date.now() + 30 * 24 * 60 * 60 * 1000,
+        cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
+        stripeCustomerId: stripeCustomerId,
+        stripeSubscriptionId: sub.id,
+      };
+    }
+  } catch (err) {
+    console.warn("Supabase profile/subscription query failed, checking fallback:", err);
+  }
+
+  // もしDB初期化前などで取得できず、既存localStorageに情報がある場合は保持
+  if (role === "free" && !subscription) {
+    try {
+      const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.role === "premium") {
+          role = "premium";
+          subscription = parsed.subscription;
+        }
+      }
+    } catch {}
+  }
+
+  return {
+    id: sessionUser.id,
+    email: sessionUser.email || "",
+    name,
+    avatarUrl,
+    authProvider: (sessionUser.app_metadata?.provider as any) || "google",
+    role,
+    subscription,
+    createdAt: new Date(sessionUser.created_at).getTime(),
+    updatedAt: Date.now(),
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const isConfigured = isSupabaseConfigured();
 
-  // 初期ロード：Supabase セッション確認 ＆ localStorage / トークン互換
+  // ユーザー最新情報を再取得する関数
+  const refreshUser = useCallback(async () => {
+    if (!isSupabaseConfigured()) return;
+    try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const refreshed = await loadUserFromSupabase(session.user);
+        setUser(refreshed);
+      }
+    } catch (err) {
+      console.warn("Failed to refresh user:", err);
+    }
+  }, []);
+
+  // 初期ロード：管理者モード ＆ Supabase セッション ＆ localStorage
   useEffect(() => {
     let mounted = true;
 
@@ -61,37 +175,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // 1. Supabaseが設定されている場合、Supabaseのセッションを確認
+        // 1. Supabaseが設定されている場合、Supabaseのセッションを確認してDBから取得
         if (isSupabaseConfigured()) {
           const supabase = createClient();
           const { data: { session } } = await supabase.auth.getSession();
 
           if (session?.user && mounted) {
-            let storedMeta: any = {};
-            try {
-              const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-              if (stored) storedMeta = JSON.parse(stored);
-            } catch {}
-
-            const googleUser: User = {
-              id: session.user.id,
-              email: session.user.email || "",
-              name:
-                session.user.user_metadata?.full_name ||
-                session.user.user_metadata?.name ||
-                session.user.email?.split("@")[0] ||
-                "格ゲーLAB会員",
-              avatarUrl: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
-              authProvider: (session.user.app_metadata?.provider as any) || "google",
-              role: storedMeta?.role || "free",
-              subscription: storedMeta?.subscription,
-              createdAt: new Date(session.user.created_at).getTime(),
-              updatedAt: Date.now(),
-            };
-
-            setUser(googleUser);
-            setIsLoading(false);
-            return;
+            const loadedUser = await loadUserFromSupabase(session.user);
+            if (mounted) {
+              setUser(loadedUser);
+              setIsLoading(false);
+              return;
+            }
           }
         }
 
@@ -99,7 +194,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const stored = localStorage.getItem(AUTH_STORAGE_KEY);
         if (stored && mounted) {
           const parsed: User = JSON.parse(stored);
-          // 有効期限のチェック
           if (parsed.role !== "admin" && parsed.subscription && parsed.subscription.currentPeriodEnd) {
             const isExpired = Date.now() > parsed.subscription.currentPeriodEnd;
             if (isExpired && parsed.subscription.status === "canceled") {
@@ -151,27 +245,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data } = supabase.auth.onAuthStateChange(async (_event, session) => {
           if (!mounted) return;
           if (session?.user) {
-            let storedMeta: any = {};
-            try {
-              const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-              if (stored) storedMeta = JSON.parse(stored);
-            } catch {}
-
-            setUser({
-              id: session.user.id,
-              email: session.user.email || "",
-              name:
-                session.user.user_metadata?.full_name ||
-                session.user.user_metadata?.name ||
-                session.user.email?.split("@")[0] ||
-                "格ゲーLAB会員",
-              avatarUrl: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
-              authProvider: (session.user.app_metadata?.provider as any) || "google",
-              role: storedMeta?.role || "free",
-              subscription: storedMeta?.subscription,
-              createdAt: new Date(session.user.created_at).getTime(),
-              updatedAt: Date.now(),
-            });
+            const loadedUser = await loadUserFromSupabase(session.user);
+            if (mounted) {
+              setUser(loadedUser);
+            }
           }
         });
         authListener = data;
@@ -184,18 +261,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const handleAdminModeEvent = (e: Event) => {
       if (!mounted) return;
       const customEvent = e as CustomEvent<{ enabled: boolean }>;
-      const isEnabled = customEvent.detail ? customEvent.detail.enabled : localStorage.getItem('fgc_admin_mode') === 'true';
+      const isEnabled = customEvent.detail ? customEvent.detail.enabled : localStorage.getItem("fgc_admin_mode") === "true";
 
       if (isEnabled) {
         const adminUser: User = {
-          id: 'admin_user',
-          email: 'admin@nikotaro.com',
-          name: '管理者（全権限）',
-          authProvider: 'demo',
-          role: 'admin',
+          id: "admin_user",
+          email: "admin@nikotaro.com",
+          name: "管理者（全権限）",
+          authProvider: "demo",
+          role: "admin",
           subscription: {
-            plan: 'monthly',
-            status: 'active',
+            plan: "monthly",
+            status: "active",
             currentPeriodStart: Date.now(),
             currentPeriodEnd: Date.now() + 365 * 24 * 60 * 60 * 1000,
             cancelAtPeriodEnd: false,
@@ -205,26 +282,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         setUser(adminUser);
         try {
-          localStorage.setItem('fgc_membership_token', 'active_admin_session');
+          localStorage.setItem("fgc_membership_token", "active_admin_session");
         } catch {}
       } else {
         setUser(null);
         try {
-          localStorage.removeItem('fgc_membership_token');
+          localStorage.removeItem("fgc_membership_token");
           localStorage.removeItem(AUTH_STORAGE_KEY);
         } catch {}
       }
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('fgc_admin_mode_changed', handleAdminModeEvent);
+    if (typeof window !== "undefined") {
+      window.addEventListener("fgc_admin_mode_changed", handleAdminModeEvent);
     }
 
     return () => {
       mounted = false;
       if (authListener) authListener.subscription.unsubscribe();
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('fgc_admin_mode_changed', handleAdminModeEvent);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("fgc_admin_mode_changed", handleAdminModeEvent);
       }
     };
   }, []);
@@ -235,7 +312,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       if (user) {
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-        // プレミアム会員の場合は既存トークンも保存
         if (user.role === "premium" || user.role === "admin") {
           localStorage.setItem("fgc_membership_token", "active_premium_session");
         }
@@ -402,7 +478,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.error || "決済セッションの作成に失敗しました");
       } catch (e: any) {
         console.error("Upgrade error:", e);
-        // フォールバック: デモアップグレード
         const now = Date.now();
         const periodEnd = now + (plan === "yearly" ? 365 : 30) * 24 * 60 * 60 * 1000;
         const newSubscription: UserSubscription = {
@@ -448,10 +523,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       id: `demo_${role}_user`,
       email: role === "free" ? "free_user@example.com" : "premium_user@nikotaro.com",
       name: role === "premium" ? "スト6実力派プレイヤー" : "一般ユーザー",
+      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       authProvider: "demo",
       role,
       subscription:
-        role === "premium"
+        role === "premium" || role === "admin"
           ? {
               plan,
               status: "active",
@@ -478,6 +554,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         isPremium,
         isConfigured,
+        refreshUser,
         loginWithGoogle,
         login,
         register,

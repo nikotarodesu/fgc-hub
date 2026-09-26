@@ -62,19 +62,50 @@ export async function POST(req: NextRequest) {
           },
         ];
 
+    let customerId: string | undefined = undefined;
+    if (userId && userId !== "anonymous") {
+      try {
+        const { isSupabaseAdminConfigured, createAdminClient } = await import("@/lib/supabase/admin");
+        if (isSupabaseAdminConfigured()) {
+          const supabaseAdmin = createAdminClient();
+          const { data: profile } = await supabaseAdmin
+            .from("profiles")
+            .select("stripe_customer_id")
+            .eq("id", userId)
+            .single();
+          if (profile?.stripe_customer_id) {
+            customerId = profile.stripe_customer_id;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch customerId from profile:", err);
+      }
+    }
+
     const sessionParams: any = {
       mode: "subscription",
       billing_address_collection: "auto",
-      customer_email: userEmail || undefined,
       line_items: lineItems,
       managed_payments: { enabled: false },
       metadata: {
         userId: userId || "anonymous",
         plan,
       },
+      subscription_data: {
+        metadata: {
+          userId: userId || "anonymous",
+          plan,
+        },
+      },
       success_url: `${appUrl}/account/subscription?session_id={CHECKOUT_SESSION_ID}&upgraded=true&plan=${plan}`,
       cancel_url: `${appUrl}/membership?canceled=true`,
     };
+
+    if (customerId) {
+      sessionParams.customer = customerId;
+    } else if (userEmail) {
+      sessionParams.customer_email = userEmail;
+    }
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 

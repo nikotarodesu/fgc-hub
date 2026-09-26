@@ -18,7 +18,6 @@ export const ZANGIEF_NEUTRAL_STRATEGY: Article = {
   updatedAt: '2026-09-26',
   readTime: '7分',
   isPaid: false,
-  controlType: 'classic',
   tags: ['立ち回り', 'ザンギエフ'],
   likesCount: 420,
   recommendedGearIds: ['razer-huntsman-v3-pro-mini', 'gaming-finger-sleeve'],

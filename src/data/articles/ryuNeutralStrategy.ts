@@ -19,7 +19,6 @@ export const RYU_NEUTRAL_STRATEGY: Article = {
   updatedAt: '2026-09-26',
   readTime: '6分',
   isPaid: false,
-  controlType: 'classic',
   tags: ['立ち回り', 'リュウ'],
   likesCount: 562,
   recommendedGearIds: ['razer-huntsman-v3-pro-mini', 'gaming-finger-sleeve'],

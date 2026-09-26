@@ -709,19 +709,22 @@ export default function HomePage() {
                                 コーチング
                               </span>
                             )}
-                            {article.controlType === 'both' ? (
-                              <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] font-bold">
-                                <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#8B5BB7]">C</span>
-                                <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#D8843F]">M</span>
-                              </span>
-                            ) : article.controlType ? (
-                              <span
-                                className="text-[9px] sm:text-[10px] font-bold text-white px-1.5 py-0.2 rounded shrink-0"
-                                style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
-                              >
-                                {article.controlType === 'classic' ? 'C' : 'M'}
-                              </span>
-                            ) : null}
+                            {/* 操作タイプバッジ（立ち回り記事では非表示） */}
+                            {!(article.category === 'neutral' || article.tags.includes('立ち回り')) && (
+                              article.controlType === 'both' ? (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] font-bold">
+                                  <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#8B5BB7]">C</span>
+                                  <span className="px-1 py-0.2 rounded text-white text-[8px] sm:text-[9px] font-bold bg-[#D8843F]">M</span>
+                                </span>
+                              ) : article.controlType ? (
+                                <span
+                                  className="text-[9px] sm:text-[10px] font-bold text-white px-1.5 py-0.2 rounded shrink-0"
+                                  style={{ backgroundColor: article.controlType === 'classic' ? '#8B5BB7' : '#D8843F' }}
+                                >
+                                  {article.controlType === 'classic' ? 'C' : 'M'}
+                                </span>
+                              ) : null
+                            )}
 
                             {/* コーチング実施年月 */}
                             {article.coachingDate && (

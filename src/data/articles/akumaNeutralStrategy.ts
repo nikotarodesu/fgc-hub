@@ -18,7 +18,6 @@ export const AKUMA_NEUTRAL_STRATEGY: Article = {
   updatedAt: '2026-09-26',
   readTime: '7分',
   isPaid: false,
-  controlType: 'classic',
   tags: ['立ち回り', '豪鬼'],
   likesCount: 348,
   hideRelatedArticles: true,

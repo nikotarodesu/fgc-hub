@@ -339,11 +339,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         callbackUrl.searchParams.set("next", redirectTo);
       }
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: callbackUrl.toString(),
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -353,36 +352,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         return { success: false, error: error.message };
-      }
-
-      if (!data?.url) {
-        return { success: false, error: "認証URLの取得に失敗しました" };
-      }
-
-      // プロバイダーがSupabase側で有効化されているか事前チェック
-      try {
-        const checkRes = await fetch(data.url, { method: "GET" });
-        if (!checkRes.ok) {
-          const body = await checkRes.json().catch(() => ({}));
-          if (body?.msg?.includes("provider is not enabled") || body?.code === 400) {
-            return {
-              success: false,
-              error: "Supabase側でGoogle認証（Providers > Google）がまだ有効化されていないか、Client ID/Secretが未設定です。Supabaseダッシュボードの設定をご確認いただくか、下のメールアドレスログインをご利用ください。",
-            };
-          }
-          return {
-            success: false,
-            error: body?.msg || "Googleログインの開始に失敗しました。時間をおいてお試しください。",
-          };
-        }
-      } catch (checkErr) {
-        // CORS等でfetchが通らない環境の場合は直接リダイレクトを試みる
-        console.warn("OAuth pre-check skipped due to network/CORS:", checkErr);
-      }
-
-      // 正常な場合はGoogle認証画面へ遷移
-      if (typeof window !== "undefined") {
-        window.location.assign(data.url);
       }
       return { success: true };
     } catch (error: any) {

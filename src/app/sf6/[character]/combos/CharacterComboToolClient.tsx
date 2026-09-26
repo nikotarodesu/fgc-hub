@@ -301,14 +301,14 @@ export default function CharacterComboToolClient({ character }: ClientProps) {
               {character.name} のコンボデータベースは近日公開予定です
             </h3>
             <p className="text-xs sm:text-sm text-neutral-500 max-w-md mx-auto leading-relaxed">
-              全キャラ1800MR以上の筆者による実戦検証・+42F詐欺飛びセットプレイのデータ化を進めております。現在は「キャミィ」のコンボツールをご利用いただけます。
+              全キャラ1800MR（4キャラ2000MR超）の筆者による実戦検証・フレームデータ化を進めております。公開まで今しばらくお待ちください。
             </p>
             <div className="pt-2">
               <Link
-                href="/sf6/cammy/combos"
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#00a3c4] text-white hover:bg-[#008ba8] transition-colors shadow-sm"
+                href={`/sf6/${character.slug}`}
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold bg-neutral-900 text-white hover:bg-neutral-800 transition-colors shadow-sm"
               >
-                <span>キャミィのコンボツールを見る</span>
+                <span>{character.name}の解説ページを見る</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>

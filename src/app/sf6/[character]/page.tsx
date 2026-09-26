@@ -93,7 +93,7 @@ export default async function CharacterHubPage({ params }: PageProps) {
               <p className="text-xs text-neutral-400 mb-4 leading-relaxed">
                 {char.hasTool
                   ? `全${char.comboCount}件の実戦コンボ・+42F詐欺飛びを搭載！`
-                  : '実戦検証データを作成中。先行してキャミィツールが稼働中。'}
+                  : 'トレモでのフレームメーター検証・実戦データを作成中。順次公開予定です。'}
               </p>
               <Link
                 href={`/sf6/${char.slug}/combos`}

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
   if (!char.hasTool || char.comboCount === 0) {
     return constructMetadata({
       title: `${char.name} 実戦コンボ・起き攻めデータ（準備中）`,
-      description: `スト6 ${char.name}の実戦コンボ・起き攻めデータは現在トレーニングモード検証および準備中です。キャミィの実戦コンボ検索ツールや、${char.name}の立ち回り攻略記事をご活用ください。`,
+      description: `スト6 ${char.name}の実戦コンボ・起き攻めデータは現在トレーニングモード検証および準備中です。${char.name}の立ち回り攻略記事や共通技術ガイドをご活用ください。`,
       canonicalUrl: `/sf6/${character}/combos`,
       noIndex: true,
     });

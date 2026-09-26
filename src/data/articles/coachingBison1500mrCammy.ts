@@ -27,7 +27,7 @@ export const COACHING_BISON_1500MR_CAMMY: Article = {
     'スト6',
     'ベガ',
     'クラシック',
-    'キャミィ',
+    'キャラ対策',
     'ジュリ',
     '1500MR',
     'コーチング',

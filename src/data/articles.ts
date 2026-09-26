@@ -296,7 +296,7 @@ export const CHARACTERS_SF6 = [
   { id: 'ken', name: 'ケン (Ken)', type: '万能攻勢', color: 'from-orange-500 to-red-600' },
   { id: 'ryu', name: 'リュウ (Ryu)', type: '胴着道', color: 'from-blue-600 to-indigo-800' },
   { id: 'luke', name: 'ルーク (Luke)', type: '制空・中距離', color: 'from-amber-500 to-yellow-600' },
-  { id: 'cammy', name: 'キャミィ (Cammy)', type: '高速ラッシュ', color: 'from-emerald-600 to-teal-800' },
+  { id: 'bison', name: 'ベガ (Bison)', type: 'サイコパワー・制圧', color: 'from-purple-900 to-rose-950' },
   { id: 'ed', name: 'エド (Ed)', type: 'アウトボクシング', color: 'from-purple-600 to-indigo-700' },
   { id: 'mai', name: '不知火舞 (Mai)', type: 'DLC第2弾', color: 'from-pink-600 to-rose-700' },
   { id: 'elena', name: 'エレナ (Elena)', type: 'リーチ・ヒーリング', color: 'from-amber-500 to-orange-600' },

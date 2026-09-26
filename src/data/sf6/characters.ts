@@ -1,4 +1,3 @@
-import cammyJson from './characters/cammy.json';
 import { CharacterDataFile } from '@/types/sf6';
 
 export interface CharacterDetail {
@@ -16,23 +15,34 @@ export interface CharacterDetail {
 }
 
 // キャラクター別JSONデータ（完全分離されたデータストア）
-export const SF6_CHARACTER_DATA: Record<string, CharacterDataFile> = {
-  cammy: cammyJson as unknown as CharacterDataFile,
-};
+export const SF6_CHARACTER_DATA: Record<string, CharacterDataFile> = {};
 
 export const SF6_CHARACTERS: Record<string, CharacterDetail> = {
-  cammy: {
-    slug: 'cammy',
-    name: cammyJson.name,
-    nameEn: cammyJson.nameEn,
-    archetype: cammyJson.archetype,
-    description: cammyJson.description,
-    strengths: cammyJson.strengths,
-    defaultHp: cammyJson.defaultHp,
-    hasTool: cammyJson.hasTool,
-    comboCount: cammyJson.combos.length,
-    version: cammyJson.version,
-    updatedAt: cammyJson.updatedAt,
+  bison: {
+    slug: 'bison',
+    name: 'ベガ',
+    nameEn: 'M.Bison',
+    archetype: 'サイコパワー・怒涛の制圧・サイコマイン',
+    description: 'サイコマイン付与からの強力な起き攻めと、ダブルニープレス・サイコクラッシャーによる圧倒的な制圧力を誇る。当サイトにてMR2000到達視点の実戦コーチング記事を多数公開中。',
+    strengths: ['サイコマイン起爆による超高火力連携', 'ガードさせて隙の少ないダブルニープレス', '弾抜け・対空に優れたサイコクラッシャー'],
+    defaultHp: 10000,
+    hasTool: false,
+    comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-09-26',
+  },
+  ed: {
+    slug: 'ed',
+    name: 'エド',
+    nameEn: 'Ed',
+    archetype: 'アウトボクシング・フリッカー制圧・ドリームコンボ',
+    description: '長大なリーチを誇るサイコフリッカーとキルステップの変幻自在な機動力、SA2による大逆転ドリームコンボを持つ。当サイトにてMR2000到達視点の実戦コーチング記事を公開中。',
+    strengths: ['サイコフリッカーによる中距離支配', '大Pや弱Kを活かした高い差し返し適性', 'SA2サイコキャノンからの高火力ドリームコンボ'],
+    defaultHp: 10000,
+    hasTool: false,
+    comboCount: 0,
+    version: 'Ver.1.05',
+    updatedAt: '2026-09-26',
   },
   ryu: {
     slug: 'ryu',

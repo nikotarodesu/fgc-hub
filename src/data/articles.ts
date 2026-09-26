@@ -341,7 +341,7 @@ export const ARTICLES_DATA: Article[] = [
     updatedAt: '2026-09-17',
     readTime: '5分',
     isPaid: false,
-    tags: ['スト6', 'リュウ', '立ち回り', '波動拳', '対空', '共通技術', '上達論'],
+    tags: ['立ち回り', 'リュウ'],
     likesCount: 562,
     recommendedGearIds: ['razer-huntsman-v3-pro-mini', 'gaming-finger-sleeve'],
     freeContent: {

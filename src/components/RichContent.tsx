@@ -121,6 +121,78 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
+interface TableColumnTheme {
+  headerCls: string;
+  cellCls: string;
+}
+
+/**
+ * 表の列ごとに視認性を高める配色テーマを返す
+ * 共通技術記事（StrategyMarkdownRenderer）と同様に、意味合いに応じた視認性の高い配色を実現
+ */
+function getRichTableColumnTheme(
+  headerText: string,
+  colIdx: number,
+  totalCols: number
+): TableColumnTheme {
+  const text = headerText.trim();
+  const isLast = colIdx === totalCols - 1;
+  const dividerCls = isLast ? '' : 'border-r border-neutral-200/80 dark:border-neutral-800';
+
+  // 1. 赤・コーラル系（削る・外す・失敗・悪手・リスク・デメリット・弱点・被弾・注意点・減らす・負け・困る）
+  if (/削る|外す|失敗|悪手|リスク|デメリット|弱点|被弾|注意点|減らす|負け|困る/.test(text)) {
+    return {
+      headerCls: `bg-rose-100/90 text-rose-950 dark:bg-rose-950/60 dark:text-rose-200 ${dividerCls}`,
+      cellCls: `bg-rose-50/50 text-rose-950 dark:bg-rose-950/20 dark:text-rose-100 ${dividerCls}`,
+    };
+  }
+
+  // 2. 緑・ミント系（残す・改善・リターン・メリット・推奨・最適・安定・解決・効果・成功・優先・勝ち）
+  if (/残す|改善|リターン|メリット|推奨|最適|安定|解決|効果|成功|優先|勝ち/.test(text)) {
+    return {
+      headerCls: `bg-emerald-100/90 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-200 ${dividerCls}`,
+      cellCls: `bg-emerald-50/50 text-emerald-950 dark:bg-emerald-950/20 dark:text-emerald-100 ${dividerCls}`,
+    };
+  }
+
+  // 3. 琥珀・イエロー系（原因・理由・狙い・フレーム・着眼点・見直す・状況・制約・心理・癖）
+  if (/原因|理由|狙い|フレーム|着眼点|見直す|状況|制約|心理|癖/.test(text)) {
+    return {
+      headerCls: `bg-amber-100/80 text-amber-950 dark:bg-amber-950/50 dark:text-amber-200 ${dividerCls}`,
+      cellCls: `bg-amber-50/40 text-amber-950 dark:bg-amber-950/15 dark:text-amber-100 ${dividerCls}`,
+    };
+  }
+
+  // 4. 青・スカイ系（アクション・具体・技術・練習・ポイント・変える・確認・方針・使い方・追加・対策・誘導・狩り方・本命）
+  if (/アクション|具体|技術|練習|ポイント|変える|確認|方針|使い方|追加|対策|誘導|狩り方|本命/.test(text)) {
+    return {
+      headerCls: `bg-sky-100/80 text-sky-950 dark:bg-sky-950/50 dark:text-sky-200 ${dividerCls}`,
+      cellCls: `bg-sky-50/40 text-sky-950 dark:bg-sky-950/15 dark:text-sky-100 ${dividerCls}`,
+    };
+  }
+
+  // 5. 1列目（前提条件・項目・場面・強み・行動など見出しキー列）
+  if (colIdx === 0) {
+    return {
+      headerCls: `bg-slate-100 text-slate-900 dark:bg-neutral-800 dark:text-neutral-100 ${dividerCls}`,
+      cellCls: `bg-slate-50/80 font-bold text-slate-900 dark:bg-neutral-900/60 dark:text-neutral-100 ${dividerCls}`,
+    };
+  }
+
+  // 6. 汎用フォールバック（列インデックスによる穏やかなトーン分け）
+  if (colIdx % 2 === 1) {
+    return {
+      headerCls: `bg-neutral-100/90 text-neutral-900 dark:bg-neutral-800/90 dark:text-neutral-100 ${dividerCls}`,
+      cellCls: `bg-white text-neutral-800 dark:bg-neutral-900/30 dark:text-neutral-200 ${dividerCls}`,
+    };
+  }
+
+  return {
+    headerCls: `bg-neutral-50 text-neutral-900 dark:bg-neutral-800/70 dark:text-neutral-100 ${dividerCls}`,
+    cellCls: `bg-neutral-50/50 text-neutral-800 dark:bg-neutral-900/50 dark:text-neutral-200 ${dividerCls}`,
+  };
+}
+
 // YouTube URLから動画IDを抽出するヘルパー
 export function extractYouTubeVideoId(url: string): string | null {
   const trimmed = url.trim();
@@ -549,40 +621,70 @@ export default function RichContent({
   const renderBlock = (block: ParsedBlock, blockKey: string | number) => {
     // 0.4 Markdown Table（表組み）
     if (block.type === 'table' && block.tableData) {
+      const isTwoColumns = block.tableData.header.length === 2;
+      const isThreeColumns = block.tableData.header.length === 3;
       return (
         <div
           key={blockKey}
-          className="my-5 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-[#151c28] shadow-2xs overflow-hidden"
+          className="my-5 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden"
         >
-          {/* スマホ用横スクロール案内 */}
-          <div className="sm:hidden px-3 py-1 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
-            ← 左右にスクロールして全体を表示 →
-          </div>
-          <div className="overflow-x-auto [scrollbar-width:thin]">
-            <table className="w-full text-left text-sm sm:text-[15px] border-collapse min-w-[540px]">
+          {/* 3列以上の表の場合のみスマホ用横スクロール案内を表示 */}
+          {!isTwoColumns && (
+            <div className="sm:hidden px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 text-center font-medium">
+              ← 左右にスクロールして全体を表示 →
+            </div>
+          )}
+          <div className={isTwoColumns ? 'w-full' : 'overflow-x-auto [scrollbar-width:thin]'}>
+            <table
+              className={`w-full text-left text-xs sm:text-sm border-collapse ${
+                isTwoColumns ? 'table-fixed' : 'min-w-[500px]'
+              }`}
+            >
               <thead>
-                <tr className="bg-neutral-100/90 dark:bg-neutral-800/90 border-b border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white">
-                  {block.tableData.header.map((head, hIdx) => (
-                    <th key={hIdx} className="py-3 px-3.5 font-bold tracking-wide">
-                      {renderInline(head)}
-                    </th>
-                  ))}
+                <tr className="border-b border-neutral-200 dark:border-neutral-700">
+                  {block.tableData.header.map((head, hIdx) => {
+                    const theme = getRichTableColumnTheme(head, hIdx, block.tableData!.header.length);
+                    return (
+                      <th
+                        key={hIdx}
+                        className={`py-3 px-3.5 sm:px-4 font-bold tracking-wide text-xs sm:text-sm ${theme.headerCls} ${
+                          isTwoColumns && hIdx === 0
+                            ? 'w-[38%] sm:w-[28%]'
+                            : isTwoColumns && hIdx === 1
+                            ? 'w-[62%] sm:w-[72%]'
+                            : isThreeColumns && hIdx === 0
+                            ? 'w-[24%] sm:w-[22%]'
+                            : isThreeColumns
+                            ? 'w-[38%] sm:w-[39%]'
+                            : ''
+                        }`}
+                      >
+                        {renderInline(head)}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200/60 dark:divide-neutral-800">
+              <tbody className="divide-y divide-neutral-200/70 dark:divide-neutral-800">
                 {block.tableData.rows.map((row, rIdx) => (
                   <tr
                     key={rIdx}
-                    className="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors"
+                    className="group hover:brightness-[0.98] dark:hover:brightness-110 transition-all"
                   >
-                    {row.map((cell, cIdx) => (
-                      <td
-                        key={cIdx}
-                        className="py-3 px-3.5 text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium align-middle"
-                      >
-                        {renderInline(cell)}
-                      </td>
-                    ))}
+                    {row.map((cell, cIdx) => {
+                      const headText = block.tableData!.header[cIdx] || '';
+                      const theme = getRichTableColumnTheme(headText, cIdx, block.tableData!.header.length);
+                      return (
+                        <td
+                          key={cIdx}
+                          className={`py-3 px-3.5 sm:px-4 leading-relaxed break-words align-top ${theme.cellCls} ${
+                            isTwoColumns && cIdx === 0 ? 'font-bold' : ''
+                          }`}
+                        >
+                          {renderInline(cell)}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>

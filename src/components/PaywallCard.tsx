@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2, Trophy, ExternalLink } from 'lucide-react';
+import { Lock, CreditCard, KeyRound, CheckCircle2, Loader2, Trophy, ExternalLink, ShieldCheck } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface PaywallCardProps {
   price?: number;
@@ -38,6 +39,7 @@ export default function PaywallCard({
   hideBenefits = false,
   description,
 }: PaywallCardProps) {
+  const { user } = useAuth();
   const [showTokenInput, setShowTokenInput] = useState(false);
   const [inputToken, setInputToken] = useState('');
   const [tokenLoading, setTokenLoading] = useState(false);
@@ -304,9 +306,25 @@ export default function PaywallCard({
                   ¥{price.toLocaleString()}{' '}
                   <span className="text-sm font-bold text-neutral-600 dark:text-neutral-400">（買い切り）</span>
                 </div>
-                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-4 leading-relaxed font-normal">
+                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-3 leading-relaxed font-normal">
                   クラシック・モダン両対応（1回の購入で両方閲覧可能）。今後のアップデート追記も含め追加料金なしで閲覧できます。
                 </p>
+
+                {!user ? (
+                  <div className="mb-3.5 p-2.5 rounded-lg bg-cyan-50/80 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-800/80 text-[11px] text-cyan-900 dark:text-cyan-200 leading-snug flex items-start gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-cyan-600 dark:text-cyan-400 mt-0.5" />
+                    <span>
+                      <strong>PC・スマホ端末間同期：</strong>購入ボタンを押すとログイン画面へ進みます。ログインして購入することで、別端末でも追加料金なしでいつでも読めるようになります。
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mb-3.5 p-2 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 text-[11px] text-emerald-800 dark:text-emerald-300 leading-snug flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                    <span className="truncate">
+                      <strong>{user.email}</strong> で購入（端末間同期対応）
+                    </span>
+                  </div>
+                )}
               </div>
               <button
                 type="button"
@@ -314,7 +332,7 @@ export default function PaywallCard({
                 className="w-full py-3 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <CreditCard className="w-4 h-4" />
-                <span>記事を購入する</span>
+                <span>{user ? "記事を購入する" : "ログインして記事を購入"}</span>
               </button>
             </div>
 
